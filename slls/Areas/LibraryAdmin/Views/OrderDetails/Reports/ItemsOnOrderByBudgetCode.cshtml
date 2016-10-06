@@ -1,0 +1,72 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.OrderReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@foreach (var budgetCode in Model.BudgetCodes.OrderBy(b => b.BudgetCode1))
+{
+    var budgetCodeName = string.IsNullOrEmpty(budgetCode.BudgetCode1) ? "[no name]" : budgetCode.BudgetCode1;
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="report_h4">@budgetCodeName</h4>
+            <hr class="hr-compact" />
+            @{
+    var allOrders = from o in budgetCode.OrderDetails
+                    where o.ReceivedDate == null && o.Cancelled == null
+                    select o;
+
+    var budgetCodeSum = allOrders.Sum(o => o.Price);
+
+    <table id="budgetCode_orders" class="table table-condensed table-striped" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="width: 45%;">
+                    Title
+                </th>
+                <th style="width: 30%;">
+                    Item
+                </th>
+                <th style="width: 15%;">
+                    Expected
+                </th>
+                <th style="width: 10%;">
+                    Price
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in allOrders.OrderBy(o => o.Title.Title1.Substring(o.Title.NonFilingChars)))
+            {
+                var price = order.Price;
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.Title.Title1)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.Item)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.Expected)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => order.Price)
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="3" style="padding-top: 15px;"><strong>Total for @budgetCodeName</strong></td>
+                <td><strong>@string.Format("{0:C}", budgetCodeSum)</strong></td>
+            </tr>
+        </tfoot>
+    </table>
+            }
+
+        </div>
+    </div>
+}
+<strong>Total value of items on order: @string.Format("{0:C}", ViewData["TotalSum"])</strong>

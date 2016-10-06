@@ -1,0 +1,40 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.SubjectIndexAddViewModel
+
+@Html.Partial("_ModalAddHeader")
+
+@using (Html.BeginForm("Add", "SubjectIndexes", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+            @Html.HiddenFor(model => model.TitleId)
+
+            <div class="alert alert-info">
+                <span>You may add multiple <span class="text-lowercase">@DbRes.T("Keywords.Keyword", "FieldDisplayName")</span>s at once by clicking on the required items whilst holding down the CTRL key.</span>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.ListBoxFor(x => x.SelectedKeywords, Model.AvailableKeywords, new {size = 15, @class = "form-control"})
+                    @Html.ValidationMessageFor(model => model.KeywordId, "", new {@class = "text-danger"})
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button id="add_btn" type="submit" value="Add" class="btn btn-success" ><span class="glyphicon glyphicon-ok"></span> Add selected @DbRes.T("Keywords.Keyword", "FieldDisplayName")s</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+

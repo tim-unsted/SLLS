@@ -1,0 +1,11 @@
+﻿@model slls.Models.Classmark
+
+@using (Html.BeginForm("_add", "Classmarks", FormMethod.Post, new { id = "addClassmarkForm" }))
+{
+    <div class="form-group">
+        <br />
+        @Html.EditorFor(model => model.Classmark1, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Classmark1, "", new { @class = "text-danger" })
+    </div>
+    
+}

@@ -1,0 +1,249 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.NewLoanViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+@using (Html.BeginForm("DoNewLoan", "Loans", FormMethod.Post, new { id = "frmNewloan" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @if (TempData["SuccessMsg"] != null)
+        {
+            @Html.Partial("_PostSuccess", TempData["SuccessMsg"])
+        }
+
+        <div class="well">
+            
+            <div class="form-group has-feedback" id="barcodeGroup">
+                @Html.Label(DbRes.T("Borrowing.Item_To_Loan", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode) } })
+                    @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
+                    <i class="glyphicon glyphicon-barcode form-control-feedback"></i>
+                </div>
+            </div>
+
+            <div class="form-group" id="_barcodeInvalid" style="display: none;">
+                <div class="col-md-2"></div>
+                <div class="col-md-10">
+                    <span id="errMsg" class="text-danger field-validation-error"></span>
+                </div>
+            </div>
+
+            <div id="_barcodeDetails" style="display: none;">
+                <dl class="dl-horizontal">
+                    <dt>@DbRes.T("Titles.Title", "FieldDisplayName")</dt>
+                    <dd><span id="title"></span></dd>
+                </dl>
+            </div>
+
+            <div class="form-group has-feedback">
+                @Html.Label(DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-9">
+                    @Html.DropDownList("UserID", Model.Users, "Select a Borrower", htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.UserID, "", new { @class = "text-danger" })
+                    <i class="glyphicon glyphicon-user form-control-feedback"></i>
+                </div>
+            </div>
+
+            @*@{ Html.EnableClientValidation(false); }*@
+
+            <div class="form-group has-feedback">
+                @Html.Label(DbRes.T("Borrowing.Borrowed", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-sm-3">
+                    @Html.EditorFor(model => model.Borrowed, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Borrowed, "", new { @class = "text-danger" })
+                    <i class="glyphicon glyphicon-calendar form-control-feedback"></i>
+                </div>
+            </div>
+
+            @*@{ Html.EnableClientValidation(true); }*@
+
+            <div class="form-group has-feedback">
+                @Html.Label(DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-sm-3">
+                    @Html.EditorFor(model => model.ReturnDue, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.ReturnDue, "", new {@class = "text-danger"})
+                    <i class="glyphicon glyphicon-calendar form-control-feedback"></i>
+                </div>
+            </div>
+
+            
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" value="Do Loan" class="btn btn-success" id="cmdOk"><span class="glyphicon glyphicon-ok"></span> Do Loan</button>
+                    &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" onclick="window.history.back();">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="form-horizontal">
+    <div class="alert alert-info">
+
+        <p>
+            <strong>Tip: </strong>If you don't know the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") of the item you wish to lend, use the following select lists to help find it:
+        </p>
+        <br />
+        <div class="form-group">
+            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-9">
+                @Html.DropDownList("TitleID", Model.Titles, "1. Select a " + DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("CopyID", Model.Copies, "2. Select a " + DbRes.T("Copies.Copy_Number", "FieldDisplayName"), htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(DbRes.T("CopyItems.Barcode", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-4">
+                @Html.DropDownList("VolumeID", Model.Volumes, "3. Select a " + DbRes.T("CopyItems.Barcode", "FieldDisplayName"), htmlAttributes: new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        //$('#DatePicker').removeAttr("data-val-date");
+        
+        //Get a list of available copies for the selected title ...
+        $("#TitleID").change(function () {
+            var select = $("#CopyID");
+            select.empty();
+
+            var selectedTitleId = { titleId: $("#TitleID").val() };
+
+            $.ajax({
+                url: '@Url.Action("GetAvailableCopies", "Loans")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedTitleId),
+                success: function (data) {
+                    if (data.success) {
+                        $.each(data.AvailableCopies, function (index, itemData) {
+                            select.append($('<option/>', {
+                                value: itemData.Value,
+                                text: itemData.Text
+                            }));
+                        }
+                        );
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+            var copyId = $('#CopyID option:first-child').val();
+            DoVolumes(copyId);
+        });
+
+        //Get a list of available volumes for a selected title/copy ...
+        function DoVolumes(copyId) {
+            var select = $("#VolumeID");
+            var barcodeField = $("#Barcode");
+            select.empty();
+
+            var selectedCopyId = { copyId: copyId };
+
+            $.ajax({
+                url: '@Url.Action("GetAvailableVolumes", "Loans")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedCopyId),
+                success: function (data) {
+                    if (data.success) {
+                        $.each(data.AvailableVolumes, function (index, itemData) {
+                            select.append($('<option/>', {
+                                value: itemData.Value,
+                                text: itemData.Text
+                            }));
+                        }
+                        );
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+            //Write the first available barcode in the barcode input field ...
+            var barcode = $('#VolumeID option:first-child').text();
+            barcodeField.val(barcode);
+            doTitleCopyDetails();
+            $("#barcodeInvalid").hide();
+            $("#barcodeGroup").removeClass("has-error");
+            $("#cmdOk").prop('disabled', false);
+        }
+
+        function doTitleCopyDetails() {
+            var details = $("#_barcodeDetails");
+            var title = $("#title");
+            var returnDue = $("#ReturnDue");
+            var errorDiv = $("#_barcodeInvalid");
+            var errorMsg = $("#errMsg");
+            var barcodeGroup = $("#barcodeGroup");
+            var button = $("#cmdOk");
+            var selectedBarcode = { barcode: $("#Barcode").val() };
+
+            $.ajax({
+                url: '@Url.Action("GetBarcodeDetails", "Loans")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedBarcode),
+                success: function (data) {
+                    if (data.success) {
+                        details.show();
+                        title.text(data.BarcodeDetails);
+                        //alert(data.ReturnDue);
+                        //var dt = new Date(data.ReturnDue);
+                        //returnDue.val(dt.toLocaleDateString().replace(/[^ -~]/g, ''));
+                        //returnDue.val(dt);
+                        returnDue.val(data.ReturnDue);
+                        errorDiv.hide();
+                        barcodeGroup.removeClass("has-error");
+                        button.prop('disabled', false);
+
+                    } else {
+                        details.hide();
+                        errorMsg.text(data.BarcodeDetails);
+                        errorDiv.show();
+                        barcodeGroup.addClass("has-error ");
+                        button.prop('disabled', true);
+                    }
+                },
+                async: false
+            });
+        }
+
+        $("#CopyID").change(function () {
+            DoVolumes($("#CopyID").val());
+        });
+
+        $("#VolumeID").change(function () {
+            var barcode = $("#VolumeID option:selected").text();
+            $("#Barcode").val(barcode);
+            doTitleCopyDetails();
+        });
+
+        //Do something to display the title and copy details of the selected barcode ...
+        $("#Barcode").change(function () {
+            doTitleCopyDetails();
+        });
+
+    })
+</script>

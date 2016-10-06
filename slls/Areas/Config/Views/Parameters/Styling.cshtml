@@ -1,0 +1,70 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.ParameterIndexViewModel
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#parameters').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": 100,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            }
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div class="alert alert-info">
+    <p>
+        Use this feature to control a number of styling settings (css) used throughout the system. These settings are all stored in the database.
+    </p>
+    <p>
+        <strong>Tip: </strong>If you need to change the styling of an element that is not covered in this list, you can manually add the element and the required styles to the "../Customer/Styles/styling.css" file. Please ask <a href="mailto:support@baileysolutions.co.uk" title="Email support at Bailey Solutions">support</a> for further advice.
+    </p>
+</div>
+
+<table class="table" id="parameters">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Parameters.FirstOrDefault().ParameterID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Parameters.FirstOrDefault().ParameterValue)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Parameters.FirstOrDefault().ParamUsage)
+        </th>
+
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Parameters)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.ParameterName, "EditStyle", "Parameters", new { id = item.RecID }, new { @class = "modal-link" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParameterValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParamUsage)
+                </td>
+
+                <td class="just-right">
+                    @if (item.CanDelete && Model.IsBaileyAdmin)
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.RecID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("EditStyle", new {id = item.RecID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

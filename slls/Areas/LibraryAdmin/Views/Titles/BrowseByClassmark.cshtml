@@ -1,0 +1,17 @@
+﻿@model slls.ViewModels.TitlesListViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+@using (Html.BeginForm(null, null, FormMethod.Get, new { id = "TitlesTable" }))
+{
+    <div class="well well-default">
+        <div class="form-group">
+            @Html.DropDownList("ListClassmarks", null, new { @class = "form-control", onchange = "this.form.submit();" })
+        </div>
+    </div>
+}
+        
+<div id="TitlesTable">
+    @Html.Partial("_Index", Model)
+</div>
+

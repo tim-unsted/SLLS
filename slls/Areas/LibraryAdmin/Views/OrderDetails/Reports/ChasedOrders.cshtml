@@ -1,0 +1,76 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.OrderReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@foreach (var supplier in Model.Suppliers.OrderBy(s => s.SupplierName))
+{
+    var supplierName = string.IsNullOrEmpty(supplier.SupplierName) ? "[s.n.]" : supplier.SupplierName;
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="report_h4">@supplierName</h4>
+            <hr class="hr-compact" />
+            @{
+    var allChasedOrders = from o in supplier.OrderDetails
+                          where o.ReceivedDate == null && o.Cancelled == null && (o.Chased != null || !string.IsNullOrEmpty(o.Report))
+                          select o;
+
+                        <table id="chased_orders" class="table table-condensed table-striped" style="width: 100%;">
+                            <thead>
+                                <tr>
+                                    <th style="width: 45%;">
+                                        Title
+                                    </th>
+                                    <th style="width: 30%;">
+                                        Item
+                                    </th>
+                                    <th style="width: 10%;">
+                                        Price
+                                    </th>
+                                    <th style="width: 15%;">
+                                        Expected
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+
+                                @foreach (var order in allChasedOrders.OrderBy(o => o.Title.Title1.Substring(o.Title.NonFilingChars)))
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Title.Title1)
+                                            <table style="width: 100%;">
+                                                <tr>
+                                                    <td style="width: 20%; padding: 10px;">&nbsp;</td>
+                                                    <td>@Html.DisplayFor(modelItem => order.Chased)</td>
+                                                    <td>@Html.DisplayFor(modelItem => order.Report)</td>
+                                                </tr>
+                                            </table>
+
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Item)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Price)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => order.Expected)
+                                        </td>
+                                    </tr>
+                                    @*<tr>
+                                            <td></td>
+                                            <td colspan="3">dsdsddsdsdsdd</td>
+                                        </tr>*@
+                                }
+                            </tbody>
+                        </table>
+            }
+        </div>
+    </div>
+}
+<hr class="hr-compact" />
+<strong>Total value of items on order: @string.Format("{0:C}", ViewData["TotalSum"])</strong>

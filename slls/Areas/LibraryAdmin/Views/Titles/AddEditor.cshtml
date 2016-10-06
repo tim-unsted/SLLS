@@ -1,0 +1,7 @@
+﻿@using slls.Utils.Helpers
+@model slls.ViewModels.TitleAddViewModel
+@{
+    Layout = null;
+}
+    @Html.EditorForMany(x => x.Editors, x => x.Index)
+

@@ -1,0 +1,27 @@
+﻿@model IEnumerable<slls.Models.SupplierPeopleComm>
+
+<table class="table">
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @if (String.IsNullOrEmpty(item.CommMethodType.Method))
+                {
+                    @Html.ActionLink(" ", "Edit", "SupplierPeopleComms", new { id = item.CommID }, new { @class = "modal-link" })
+                }
+                else
+                {
+                    @Html.ActionLink(item.CommMethodType.Method, "Edit", "SupplierPeopleComms", new { id = item.CommID }, new { @class = "modal-link" })
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Detail)
+            </td>
+            <td class="just-right">
+                <a href="@Url.Action("Edit", new {id = item.CommID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("Delete", new { id = item.CommID })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+            </td>
+        </tr>
+    }
+
+</table>

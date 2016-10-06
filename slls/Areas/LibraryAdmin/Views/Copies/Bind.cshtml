@@ -1,0 +1,37 @@
+﻿@model slls.ViewModels.AddToBindingViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title" id="titleLabel">@ViewBag.Title</h3>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("Available Copies:", htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.ListBoxFor(x => x.SelectedCopies, Model.CopiesToBind, new { size = 15,  @class = "form-control" })
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" id="btnSave" class="btn btn-primary">Add</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+}
+
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSave').click(function () {
+            $('#lrgModal').modal('hide');
+        });        
+    });
+</script>

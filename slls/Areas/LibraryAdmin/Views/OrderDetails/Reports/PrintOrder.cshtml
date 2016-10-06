@@ -1,0 +1,171 @@
+﻿@using Westwind.Globalization
+@model slls.Models.OrderDetail
+
+@*@Html.Partial("_PrintHeader")*@
+@*The 'Print' and 'Close' part ...*@
+<div class="noprint" style="float: right;">
+    <div style="margin-top: 22px;">
+        <button type="button" class="btn btn-primary" onclick="window.print();"><span class="glyphicon glyphicon-print"></span> Print</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" onclick="window.history.back();">@DbRes.T("Buttons.Close", "Terminology")</button>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        Internal use only:
+        <table class="table table-compact table-no-border table-bordered-outeronly">
+            <tr>
+                <td>
+                    Order No.
+                </td>
+                <td>
+                    @Html.DisplayFor(x => Model.OrderNo)
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    Order Date
+                </td>
+                <td>
+                    @Html.DisplayFor(x => Model.OrderDate)
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<br/>
+<br/>
+
+<div class="row">
+    <div class="col-md-12">
+        <div style="text-align: left;">
+            @Html.DisplayFor(x => Model.Supplier.SupplierName)
+            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Address1)
+            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Address2)
+            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Town_City)
+            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().County)
+            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Postcode)
+            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Country)
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-offset-9" style="text-align: right;">
+            <dl class="dl-horizontal">
+                <dt>Fax:</dt>
+                <dd>@Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().MainFax)</dd>
+                <dt>Tel:</dt>
+                <dd>@Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().MainTel)</dd>
+                <dt>Account:</dt>
+                <dd>@Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Account)</dd>
+                <dt>Date:</dt>
+                <dd>@System.DateTime.Today.ToLongDateString()</dd>
+            </dl>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-12">
+        <div style="text-align: left;">
+            <p>Dear Sir or Madam,</p>
+            <p>Please supply the following item(s):</p>
+        </div>
+    </div>
+</div>
+
+<br />
+
+<div class="row">
+    <div class="col-md-9">
+        <div style="text-align: left;">
+            <table class="table table-compact table-no-border">
+                <tr>
+                    <td>
+                        Title/Edition
+                    </td>
+                    <td>
+                        <strong>@Model.Title.TitleAndEdition</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        ISBN
+                    </td>
+                    <td>
+                        @Model.Title.Isbn
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Author/Editor
+                    </td>
+                    <td>
+                        @Model.Title.AuthorEditorString
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        Requirements
+                    </td>
+                    <td>
+                        @Model.Item
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        On Approval?
+                    </td>
+                    <td>
+                        @Html.DisplayFor(x => Model.OnApproval)
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div style="text-align: left;">
+            <table class="table table-compact table-no-border">
+                <tr>
+                    <td>
+                        Order Price:
+                    </td>
+                    <td>
+                        @Html.DisplayFor(x => Model.Price)
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        VAT:
+                    </td>
+                    <td>
+                        @Html.DisplayFor(x => Model.VAT)
+                    </td>
+                </tr>
+                <tr style="border-top: solid 1px #ccc">
+                    <td>
+                        Total:
+                    </td>
+                    <td>
+                        @Html.DisplayFor(x => Model.PriceGross)
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+
+<div class="row">
+    <div class="col-md-12">
+        <div style="text-align: left;">
+            <p>Thank you</p>
+            <p>Yours faithfully</p>
+        </div>
+    </div>
+</div>

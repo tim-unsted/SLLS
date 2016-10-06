@@ -1,0 +1,95 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.MediaType>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#mediatypes').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+            {
+                "width": "40%",
+                "targets": [0, 1]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": true,
+                "orderSequence": ["desc", "asc"],
+                "targets": [2]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [3]
+            }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "MediaTypes")" title="Add new @DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="mediatypes" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("MediaTypes.Loan_Type", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Titles", "EntityType")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @if (String.IsNullOrEmpty(item.Media))
+                {
+                    @Html.ActionLink(" ", "Edit", "MediaTypes", new {id = item.MediaID}, new {@class = "modal-link"})
+                }
+                else
+                {
+                    @Html.ActionLink(item.Media, "Edit", "MediaTypes", new {id = item.MediaID}, new {@class = "modal-link"})
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelitem => item.LoanType.LoanTypeName)
+            </td>
+            <td>
+                @if (item.Titles.Count > 0)
+                {
+                    <a href="@Url.Action("ByMedia", "Titles", new { id = item.MediaID })" title="View all items with this @DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")"><span class="badge badge-link">@item.Titles.Count</span></a>
+                }
+            </td>
+            <td class="just-right">
+                @if (item.CanDelete && !item.Titles.Any())
+                {
+                    <a href="@Url.Action("Delete", new {id = item.MediaID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                }
+                <a href="@Url.Action("Edit", new {id = item.MediaID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+

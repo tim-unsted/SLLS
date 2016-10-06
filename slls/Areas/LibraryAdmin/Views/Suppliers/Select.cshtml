@@ -1,0 +1,21 @@
+﻿@using Westwind.Globalization
+@model slls.Models.Supplier
+
+<h2>@ViewBag.Title</h2>
+@*@Html.Partial("_HeaderSeeAlso", Model)*@
+
+<div class="well">
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <form>
+            <div class="form-group" title="@ViewBag.Message">
+                @Html.DropDownList("SupplierId", null, new { onchange = "window.location.href = 'Edit/' + this.options[this.selectedIndex].value;", @class = "form-control" })
+            </div>
+        </form>
+    }
+
+    <a href="@Url.Action("Create", "Suppliers")" title="Add new @DbRes.T("Suppliers.Supplier", "FieldDisplayName")" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Suppliers.Supplier", "FieldDisplayName")</a>
+</div>
+

@@ -1,0 +1,16 @@
+﻿@model slls.ViewModels.TitlesListViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+@{
+    if (Model.Titles.Any())
+    {
+        <div class="alert alert-danger fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Warning!</strong> <p>This page lists all Catalogue Titles that have no copies assigned to them.  Without a copy, an item will not be found via a search or be viewable on the OPAC Catalogue items without copies will not show in the web OPAC so it is important to make sure that all your Catalogue records have copy records.</p>
+        </div>
+    }
+}
+
+<div>
+    @Html.Partial("_IndexNoCopies", Model)
+</div>

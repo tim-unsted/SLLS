@@ -1,0 +1,164 @@
+﻿@model slls.ViewModels.MenuViewModel
+
+<div>
+    <div class="panel panel-success">
+        <div class="panel-heading">
+            <span class="panel-title">Menu Item Attributes:</span>
+        </div>
+        <div class="panel-body">
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Title)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Title)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Parent)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Parent)
+                </dd>
+
+                @*<dt>
+                    @Html.DisplayNameFor(model => model.MenuArea)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.MenuArea)
+                </dd>*@
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Controller)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Controller)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Action)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Action)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.LinkArea)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.LinkArea)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DataToggle)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DataToggle)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.DataTarget)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.DataTarget)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Url)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Url)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.ToolTip)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.ToolTip)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Target)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Target)
+                </dd>
+
+                @*<dt>
+                    @Html.DisplayNameFor(model => model.Class)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Class)
+                </dd>*@
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsDivider)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsDivider)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsSelectable)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsSelectable)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsEnabled)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsEnabled)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.IsVisible)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.IsVisible)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.SortOrder)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.SortOrder)
+                </dd>
+
+            </dl>
+        </div>
+        <div class="panel-footer">
+            <span class="pull-right">
+                <a href="@Url.Action("MoveUp", new {id = Model.ID})" class="btn btn-default" title="Move selected item up one place" ><span class="glyphicon glyphicon-arrow-up"></span></a>
+                <a href="@Url.Action("MoveDown", new {id = Model.ID})" class="btn btn-default" title="Move selected item down one place"><span class="glyphicon glyphicon-arrow-down"></span></a>
+                <a href="@Url.Action("Create", new {id = Model.ID})" class="btn btn-success" title="Add New" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-plus-sign"></span> Add</a>
+                <a href="@Url.Action("Delete", new {id = Model.ID})" class="btn btn-danger modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+                <a href="@Url.Action("Edit", new {id = Model.ID})" class="btn btn-primary" title="Edit" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-pencil"></span> Edit</a>                
+                
+            </span>
+            <button type="button" id="clearDetails" class="btn btn-link">Clear</button>
+        </div>
+    </div>
+</div>
+        <p>
+            
+        </p>
+

@@ -1,0 +1,63 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.TitlesReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+        <h2>@ViewBag.Title</h2>
+        <hr />
+
+        <h2>@Html.DisplayFor(x => Model.Location.ParentLocation.Location1) - @Html.DisplayFor(x => Model.Location.Location1)</h2>
+        
+        @foreach (var classmark in Model.Classmarks.OrderBy(s => string.IsNullOrEmpty(s.Classmark1) ? "xxx" : s.Classmark1))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="report_h3">@DbRes.T("Classmarks.Classmark", "FieldDisplayName") : @Html.DisplayFor(x => classmark.ClassmarkDisplay)</h3>
+
+                    @{
+                        DbEntities db = new DbEntities();
+                        var titles = (from t in classmark.Titles
+                                      join c in db.Copies on t.TitleID equals c.TitleID
+                                      where c.StatusID != null && c.LocationID == Model.Location.LocationID && Model.StatusTypes.Contains(c.StatusID.Value)
+                                      select t).Distinct();
+                    
+                        foreach (var title in titles.OrderBy(x => x.CatalogueByAuthor))
+                        {
+                            <div class="row">
+                                <div class="col-md-12 col-md-push-1">
+                                    <h4 class="report_h4">@Html.DisplayFor(x => title.CatalogueByAuthor)</h4>
+                                    <p>@Html.DisplayFor(x => title.DescriptionAndImprint)</p>
+
+                                   @{
+                                       var copies = from c in title.Copies
+                                           where c.StatusID != null && c.LocationID == Model.Location.LocationID && Model.StatusTypes.Contains(c.StatusID.Value)
+                                           select c;
+
+                                        foreach (var copy in copies.OrderBy(c => c.CopyNumber))
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-12 col-md-push-1">
+                                                    <p>@Html.DisplayFor(modelItem => copy.CopyLocationStatus)</p>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                            }
+                        }
+                </div>
+            </div>
+        }
+
+
+
+
+
+
+
+
+
+
+

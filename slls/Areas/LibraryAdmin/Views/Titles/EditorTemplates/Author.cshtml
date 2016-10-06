@@ -1,0 +1,4 @@
+﻿@model slls.Models.Author
+
+@Html.DropDownList("AuthorID", null, new { @class = "form-control" })
+@Html.ValidationMessageFor(model => model.DisplayName, "", new { @class = "text-danger" })

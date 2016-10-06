@@ -1,0 +1,69 @@
+﻿@using System.Configuration
+@using Westwind.Globalization
+@model slls.ViewModels.OrderReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<h3>@Model.AccountYear</h3>
+
+@{
+    var savingTotal = (from c in Model.Copies
+                       select c.Saving).Sum();
+}
+
+<div class="row">
+    <div class="col-md-12">
+        <table id="cancellation" class="table table-condensed table-striped" style="width: 100%;">
+            <thead>
+                <tr>
+                    <th style="width: 45%;">
+                        Title
+                    </th>
+                    <th style="width: 30%;">
+                        Cancelled
+                    </th>
+                    <th style="width: 10%;text-align: right">
+                        Savings
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var copy in Model.Copies.OrderBy(c => c.Title.Title1.Substring(c.Title.NonFilingChars)))
+                {
+                    var saving = copy.Saving;
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => copy.Title.Title1)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => copy.Cancellation)
+                        </td>
+                        <td style="text-align: right">
+                            @string.Format("{0:C}", saving)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td>
+                        &nbsp;
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Total:</strong>
+                    </td>
+                    <td>&nbsp;</td>
+                    <td style="text-align: right">
+                        <strong>@string.Format("{0:C}", @savingTotal)</strong>
+                    </td>
+                </tr>
+
+            </tfoot>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,68 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleLinksAddViewModel
+
+@Html.Partial("_ModalAddHeader")
+
+@using (Html.BeginForm("PostCreate", "TitleLinks", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+<div class="modal-body">
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new {@class = "control-label col-md-3"})
+            <div class="col-md-8">
+                @Html.DropDownList("TitleId", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.TitleId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Url, htmlAttributes: new {@class = "control-label col-md-3"})
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Url, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Url, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DisplayText, htmlAttributes: new {@class = "control-label col-md-3"})
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.DisplayText, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.DisplayText, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HoverTip, htmlAttributes: new {@class = "control-label col-md-3"})
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.HoverTip, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.HoverTip, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Login, htmlAttributes: new {@class = "control-label col-md-3"})
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Login, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Login, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Password, htmlAttributes: new {@class = "control-label col-md-3"})
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.Password, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Password, "", new {@class = "text-danger"})
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    @Html.Partial("_ModalAddFooter")
+}

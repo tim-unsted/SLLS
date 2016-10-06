@@ -1,0 +1,10 @@
+﻿@model slls.Models.CommMethodType
+
+@using (Html.BeginForm("_add", "CommMethodTypes", FormMethod.Post, new { id = "addCommMethodForm" }))
+{
+    <div class="form-group">
+        <br />
+        @Html.EditorFor(model => model.Method, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Method, "", new { @class = "text-danger" })
+    </div>
+}

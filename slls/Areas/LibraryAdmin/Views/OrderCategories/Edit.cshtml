@@ -1,0 +1,48 @@
+﻿@model slls.Models.OrderCategory
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+            @Html.HiddenFor(model => model.OrderCategoryID)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.OrderCategory1, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.OrderCategory1, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.OrderCategory1, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Annual, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.Annual)
+                        @Html.ValidationMessageFor(model => model.Annual, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Sub, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.Sub)
+                        @Html.ValidationMessageFor(model => model.Sub, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    @Html.Partial("_ModalEditFooter")
+}
+

@@ -1,0 +1,78 @@
+﻿@model slls.ViewModels.LocalizationIndexViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#localizations').DataTable({
+            pageLength: 50,
+            "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]]
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div class="alert alert-info">
+    <p>
+        Use this feature to set the @ViewBag.Phrase used throughout the system. Resources include labels and captions shown on the pages. However, this does not extend to menu items which need to be maintained separately.
+    </p>
+    <p>
+        <strong>Tip: </strong>Use the drop-down list below to filter on a single data entity.
+    </p>
+</div>
+
+@using (Html.BeginForm("Index", "Localization",  FormMethod.Get))
+{
+    <div class="form-group" title="@ViewBag.Message">
+        @Html.DropDownList("entityType", (IEnumerable<SelectListItem>)ViewData["Entities"], "Select a data entity", new { @class = "form-control", onchange = "this.form.submit();" })
+    </div>
+}
+
+<table id="localizations" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ResourceId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ResourceSet)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.localizations)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.ResourceId))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Localization", new {id = item.pk},  new { @class = "modal-link" , title = "View and Edit this resourse"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.ResourceId, "Edit", "Localization", new { id = item.pk }, new { @class = "modal-link", title = "View and Edit this resource" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ResourceSet)
+                </td>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Value))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Localization", new { id = item.pk }, new { @class = "modal-link", title = "View and Edit this resourse" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Value, "Edit", "Localization", new { id = item.pk }, new { @class = "modal-link", title = "View and Edit this resource" })
+                    }
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Edit", new {id = item.pk})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

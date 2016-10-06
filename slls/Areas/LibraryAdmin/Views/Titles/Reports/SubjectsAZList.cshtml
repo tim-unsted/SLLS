@@ -1,0 +1,35 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitlesReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+        <h2>@ViewBag.Title</h2>
+        <hr />
+
+        <div class="row">
+            <div class="col-md-12">
+
+                <table id="subjects" class="table table-striped table-no-border">
+                    <thead>
+                        <tr>
+                            <th>
+                                @DbRes.T("Keywords.Keyword", "FieldDisplayName")
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Keywords.OrderBy(k => string.IsNullOrEmpty(k.KeywordTerm) ? "xxx" : k.KeywordTerm))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(m => item.KeywordTerm)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+

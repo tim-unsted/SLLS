@@ -1,0 +1,87 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Language>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#languages').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+            {
+                "width": "80%",
+                "targets": [0]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": true,
+                "orderSequence": ["desc", "asc"],
+                "targets": [1]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [2]
+            }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "Languages")" title="Add new @DbRes.T("Languages.Language", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="languages" class="table">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("Languages.Language", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Titles", "EntityType")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Language1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Languages", new { id = item.LanguageID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Language1, "Edit", "Languages", new { id = item.LanguageID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @if (item.Titles.Count > 0)
+                    {
+                        <a href="@Url.Action("ByLanguage", "Titles", new { id = item.LanguageID })" title="View all items using this @DbRes.T("Languages.Language", "FieldDisplayName")"><span class="badge badge-link">@item.Titles.Count</span></a>
+                    }
+                </td>
+                <td class="just-right">
+                    @if (item.CanDelete && !item.Titles.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.LanguageID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.LanguageID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

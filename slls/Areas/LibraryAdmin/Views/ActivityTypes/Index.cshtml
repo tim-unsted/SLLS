@@ -1,0 +1,59 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.ActivityType>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#activitytypes').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            }
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "ActivityTypes")" title="Add new @DbRes.T("Activities.Activity_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="activitytypes" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("Activities.Activity_Type", "FieldDisplayName")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Activity))
+                    {
+                        @Html.ActionLink(" ", "Edit", "ActivityTypes", new { id = item.ActivityCode }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Activity, "Edit", "ActivityTypes", new { id = item.ActivityCode }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td class="just-right">
+                    @if (item.CanDelete)
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.ActivityCode})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.ActivityCode})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

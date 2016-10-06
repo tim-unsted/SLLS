@@ -1,0 +1,69 @@
+﻿@using slls.Utils.Helpers
+@model IEnumerable<slls.Models.OrderDetail>
+
+<table id="orderdetails" class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderCategoryID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Expected)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReceivedDate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.OrderNo))
+                    {
+                        @Html.ActionLink(" ", "Edit", "OrderDetails", new { id = item.OrderID, callingController = "titles" }, null)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.OrderNo, "Edit", "OrderDetails", new { id = item.OrderID, callingController = "titles" }, null)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderCategory.OrderCategory1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Expected)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceivedDate)
+                </td>
+
+                <td class="just-right">
+                    @if (item.ReceivedDate == null)
+                    {
+                        <a href="@Url.Action("AddReceipt", "OrderDetails", new { id = item.OrderID, callingAction = @Html.CurrentViewName() })" class="btn btn-link modal-link" title="Add Receipt">&nbsp;<span class="glyphicon glyphicon-tag"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", "OrderDetails", new {id = item.OrderID, callingController = "titles"})" class="btn btn-link" title="Edit">&nbsp;<span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", "OrderDetails", new { id = item.OrderID, callingController = "titles" })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

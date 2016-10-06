@@ -1,0 +1,107 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.OrderDetailsListViewModel
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#orderdetails').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [[4, 'desc'], [0, 'asc']],
+            "columnDefs": [{ "width": "5%", "orderable": true, "targets": [0] }, { "width": "25%", "orderable": true, "targets": [1] }, { "width": "20%", "orderable": true, "targets": [2] }, { "width": "15%", "orderable": true, "targets": [3] }, { "width": "10%", "orderable": true, "orderData": [7], "targets": [4] }, { "width": "10%", "orderable": true, "orderData": [8], "targets": [5] }, { "width": "10%", "orderable": true, "orderData": [9], "targets": [6] }, { "visible": false, "targets": [7, 8, 9] }, { "visible": true, "orderable": false, "targets": [10] }]
+        });
+    });
+</script>
+
+<table id="orderdetails" class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderNo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().TitleID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Item)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderCategoryID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Expected)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().ReceivedDate)
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Orders)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.OrderNo))
+                    {
+                        @Html.ActionLink(" ", "Edit", "OrderDetails", new { id = item.OrderID }, null)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.OrderNo, "Edit", "OrderDetails", new { id = item.OrderID }, null)
+                    }
+                </td>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Title.Title1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Titles", new {id = item.TitleID}, null)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Title.Title1, "Edit", "Titles", new {id = item.TitleID}, null)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Item)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderCategory.OrderCategory1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Expected)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceivedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDateSortable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpectedDateSortable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceivedDateSortable)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new { id = item.OrderID })" class="btn btn-link" title="Edit">&nbsp;<span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

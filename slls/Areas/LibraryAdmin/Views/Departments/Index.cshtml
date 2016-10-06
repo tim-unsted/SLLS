@@ -1,0 +1,77 @@
+﻿@using System.Web.UI.HtmlControls
+@using Westwind.Globalization
+@model IEnumerable<slls.Models.Department>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $('#departments').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            }
+        });
+
+
+        $('#txtSearch').keyup(function () {
+            table
+                .column(0)
+                .search($('#txtSearch').val())
+                .draw();
+        });
+    });
+
+</script>
+
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "Departments")" title="Add new @DbRes.T("Departments.Department", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+@*<p>
+    @Html.Label("Search:")
+    @Html.TextBox("txtSearch")
+</p>*@
+    <table id="departments" class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @DbRes.T("Departments.Department", "FieldDisplayName")
+                </th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (String.IsNullOrEmpty(item.Department1))
+                        {
+                            @Html.ActionLink(" ", "Edit", "Departments", new { id = item.DepartmentID }, new { @Class = "modal-link" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink(item.Department1, "Edit", "Departments", new { id = item.DepartmentID }, new { @Class = "modal-link" })
+                        }
+                    </td>
+
+                    <td class="just-right">
+                        @if (item.CanDelete && !item.LibraryUsers.Any()) {
+                            <a href="@Url.Action("Delete", new {id = item.DepartmentID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                        }
+                        <a href="@Url.Action("Edit", new {id = item.DepartmentID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    

@@ -1,0 +1,38 @@
+﻿@using slls.Areas.Config
+@model System.Web.Mvc.HandleErrorInfo
+
+@{
+    ViewBag.Title = "Not Found";
+}
+
+<div class="jumbotron">
+    <div class="container">
+        <h1>Oops!</h1>
+        <h3 class="text-muted">We can't seem to find the page you are looking for.</h3>
+        <br />
+        <h4>Here are a few helpful links that should be working:</h4>
+        <ul class="list-unstyled">
+            <li>
+                <a href="@Url.Action("Index", "Home")">Home page</a>
+            </li>
+            <li>
+                <a href="@Url.Action("SimpleSearch", "Home")">Search</a>
+            </li>
+            @{
+                if (slls.Utils.Helpers.Roles.IsLibraryStaff())
+                {
+                    <li>
+                        <a href="@Url.Action("Index", "Home", new { area = "LibraryAdmin" })">Admin Dashboard</a>
+                    </li>
+                }
+                if (slls.Utils.Helpers.Roles.IsAdmin())
+                {
+                    <li>
+                        <a href="@Url.Action("Index", "Home", new { area = "Config" })">Config Dashboard</a>
+                    </li>
+                }
+}
+            
+        </ul>
+    </div>
+</div>

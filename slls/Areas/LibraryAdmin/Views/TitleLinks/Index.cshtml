@@ -1,0 +1,81 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model IEnumerable<slls.Models.TitleLink>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#titlelinks').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+               {
+                   "orderData": 3,
+                   "targets": [0],
+                   "orderSequence": ["desc", "asc"]
+               },
+               {
+                   "visible": false,
+                   "targets": [3]
+               },
+                {
+                    "sortable": false,
+                    "width": "10%",
+                    "targets": [4]
+                }
+            ]
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    <a href="@Url.Action("Create", "TitleLinks")" title="Add new @DbRes.T("TitleLinks.Link", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("CheckLinks", "TitleLinks")" title="Check @DbRes.T("TitleLinks", "EntityType")" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Check Links</a>
+</p>
+
+<table class="table" id="titlelinks">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title.Title1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.URL)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsValid)
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title.Title1)
+                </td>
+                <td>
+                    <a href="@item.URL" title="@item.HoverTip" target="_blank">@item.DisplayText</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsValid)
+                </td>
+                <td>
+                    @Html.Raw(item.Title.FiledTitle)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash" /></a>
+                    <a href="@Url.Action("Edit", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil" /></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

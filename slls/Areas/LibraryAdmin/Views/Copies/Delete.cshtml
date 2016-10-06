@@ -1,0 +1,78 @@
+﻿@model slls.Models.Copy
+
+<h2>@ViewBag.Title</h2>
+
+<h3>Are you sure you want to delete this Copy?</h3>
+<div>
+    <h4>Copy</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title.Title1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title.Title1)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.CopyNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CopyNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Holdings)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Holdings)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Circulated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Circulated)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Location.Location1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Location.Location1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusType.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StatusType.Status)
+        </dd>
+
+        
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-danger"/>
+            <input type="button" value="Cancel" class="btn btn-default" onclick="window.history.back();" />
+        </div>
+    }
+</div>

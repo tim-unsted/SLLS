@@ -1,0 +1,25 @@
+﻿@model slls.Models.ExternalLoginListViewModel
+@using Microsoft.Owin.Security
+
+<h4>Use another service to log in.</h4>
+<hr />
+@{
+    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+    var authenticationDescriptions = loginProviders as IList<AuthenticationDescription> ?? loginProviders.ToList();
+    if (authenticationDescriptions.Any())
+    {
+        using (Html.BeginForm("ExternalLogin", "Account", new { ReturnUrl = Model.ReturnUrl }))
+        {
+            @Html.AntiForgeryToken()
+            <div id="socialLoginList">
+                
+                    @foreach (var p in authenticationDescriptions)
+                    {
+                        <p>
+                            <button type="submit" class="btn btn-primary" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account" style="min-width: 260px;">Log in using @p.AuthenticationType</button>
+                        </p>
+                    }
+            </div>
+        }
+    }
+}

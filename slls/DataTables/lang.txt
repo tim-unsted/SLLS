@@ -1,0 +1,10 @@
+﻿{
+"lengthMenu": "Show _MENU_ items per page",
+"info": "Displaying _START_ to _END_ of _TOTAL_ items",
+"infoEmpty": "",
+"emptyTable": "No items were found!",
+"paginate": {
+    "previous": "Previous",
+    "next": "Next"
+}
+}

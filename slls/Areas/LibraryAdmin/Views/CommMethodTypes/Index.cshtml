@@ -1,0 +1,59 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.CommMethodType>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#commtypes').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            }
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "CommMethodTypes")" title="Add new @DbRes.T("SupplierCommTypes.Communication_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="commtypes" class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Method)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Method))
+                    {
+                        @Html.ActionLink(" ", "Edit", "CommMethodTypes", new { id = item.MethodID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Method, "Edit", "CommMethodTypes", new { id = item.MethodID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td class="just-right">
+                    @if (item.CanDelete)
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.MethodID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new { id = item.MethodID })" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

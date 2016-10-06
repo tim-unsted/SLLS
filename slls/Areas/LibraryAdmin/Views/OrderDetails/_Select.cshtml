@@ -1,0 +1,10 @@
+﻿@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    
+    <form>
+        <div class="form-group" title="@ViewBag.Message">
+            @Html.DropDownList("selectOrder", null, new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control" })
+        </div>
+    </form>
+}

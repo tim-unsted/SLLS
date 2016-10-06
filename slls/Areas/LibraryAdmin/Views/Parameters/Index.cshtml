@@ -1,0 +1,86 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.ParameterIndexViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#parameters').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": 100,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            }
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div class="alert alert-info">
+    <p>
+        Use this feature to control the various parameters (settings) used throughout the system.
+    </p>
+    <p>
+        <strong>Tip: </strong>Use the drop-down list below to filter on a single system area.
+    </p>
+</div>
+
+@using (Html.BeginForm(null, null, FormMethod.Get))
+{
+    <div class="form-group" title="@ViewBag.Message">
+        @Html.DropDownList("parameterArea", (IEnumerable<SelectListItem>)ViewData["Areas"], "Select an area", new { @class = "form-control", onchange = "this.form.submit();" })
+    </div>
+}
+
+@if (Model.IsBaileyAdmin)
+{
+    <p>
+        <a href="@Url.Action("Create", "Parameters")" title="Add new System Parameter" class=" btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    </p>
+}
+
+<hr />
+
+<table class="table" id="parameters">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Parameters.FirstOrDefault().ParameterID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Parameters.FirstOrDefault().ParameterValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Parameters.FirstOrDefault().ParamUsage)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Parameters)
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.ParameterName, "Edit", "Parameters", new { id = item.RecID }, new { @class = "modal-link" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParameterValue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParamUsage)
+                </td>
+
+                <td class="just-right">
+                    @if (item.CanDelete && Model.IsBaileyAdmin)
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.RecID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.RecID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

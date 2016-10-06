@@ -1,0 +1,5 @@
+﻿{
+"info": "A total of _TOTAL_ items were found:",
+"infoEmpty": "",
+"emptyTable": "No items were found!"
+}

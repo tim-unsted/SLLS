@@ -1,0 +1,108 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model IEnumerable<slls.Models.Circulation>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#tblcirculationlist').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [[1, 'asc'], [0, 'asc']],
+            "columnDefs": [
+            {
+                "searchable": false,
+                "sortable": true,
+                "orderSequence": ["desc", "asc"],
+                "targets": [1]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [2]
+            }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="alert alert-info">
+    <span class="help-block"><strong>Info: </strong>This page show all @DbRes.T("Circulation.Recipients", "FieldDisplayName") for the selected @DbRes.T("Circulation.Circulated_Item", "FieldDisplayName"). Use the drop-down list below to select a @DbRes.T("Circulation.Circulated_Item", "FieldDisplayName")</span>
+
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "circulationlist" }))
+    {
+        @Html.DropDownList("Copy", null, new { @class = "form-control", onchange = "this.form.submit();", style = "margin-bottom: 15px;" })
+    }
+
+    @if ((int)ViewData["CopyID"] > 0)
+    {
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Circulation.Recipients", "FieldDisplayName") <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="@Url.Action("AddRecipient", "Circulation", new { id = ViewData["CopyID"] })" class="modal-link" title="Select more @DbRes.T("Circulation.Recipient", "FieldDisplayName")">Select @DbRes.T("Circulation.Recipients", "FieldDisplayName")</a></li>
+                <li><a href="@Url.Action("ImportCirculationList", "Circulation", new { id = (int)ViewData["CopyID"] })" title="Clone another @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")" class="modal-link" data-toggle="modal" data-target="#lrgModal">Clone another @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")</a></li>
+            </ul>
+        </div>
+    }
+
+    @if (Model.Any())
+    {
+        <a href="@Url.Action("RemoveAllRecipients", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" title="Remove All @DbRes.T("Circulation.Recipients", "FieldDisplayName") from this @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span class="glyphicon glyphicon-minus-sign"></span> Remove <strong>All</strong></a>
+    }
+
+
+</div>
+
+<div id="circulationlist">
+    <table id="tblcirculationlist" class="table table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.Label(DbRes.T("Circulation.Recipients", "FieldDisplayName"))
+                </th>
+                <th>
+                    @Html.Label(DbRes.T("Circulation.SortOrder", "FieldDisplayName"))
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Circulation item in Model)
+            {
+                //var recipient1 = recipient;
+                //var user = (from u in Model.Recipients where u.Id == recipient1.UserID select u).FirstOrDefault();
+                <tr>
+                    <td>
+                        @if (string.IsNullOrEmpty(item.RecipientUser.Fullname.ToString()))
+                        {
+                            @Html.ActionLink("xxx", "Edit", "LibraryUsers", new { id = item.RecipientUser.Id }, null)
+                        }
+                        else
+                        {
+                            @Html.ActionLink(item.RecipientUser.Fullname, "Edit", "LibraryUsers", new { id = item.RecipientUser.Id }, null)
+                        }
+                    </td>
+                    
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SortOrder)
+                    </td>
+                    <td class="just-right">
+                        <a href="@Url.Action("MoveRecipientUpList", new { id = item.CirculationID })" class="btn btn-link" title="Move @DbRes.T("Circulation.Recipient", "FieldDisplayName") up List"><span class="glyphicon glyphicon-arrow-up"></span></a>
+                        <a href="@Url.Action("MoveRecipientDownList", new { id = item.CirculationID })" class="btn btn-link" title="Move @DbRes.T("Circulation.Recipient", "FieldDisplayName") down List"><span class="glyphicon glyphicon-arrow-down"></span></a>
+                        <a href="@Url.Action("Edit", "LibraryUsers", new { id = item.RecipientUser.Id })" class="btn btn-link" title="Edit @DbRes.T("Circulation.Recipient", "FieldDisplayName")" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-user"></span></a>
+                        <a href="@Url.Action("RemoveRecipient", new { id = item.CirculationID })" class="btn btn-link modal-link" title="Remove @DbRes.T("Circulation.Recipient", "FieldDisplayName") from List"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

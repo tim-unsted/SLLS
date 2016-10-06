@@ -1,0 +1,60 @@
+﻿@model System.Collections.Generic.IEnumerable<slls.Models.Volume>
+
+<table id="volumes" class="table table-hover">
+    <thead>
+        <tr>
+            <th style="width: 10%;">
+                @Html.DisplayNameFor(model => model.Barcode)
+            </th>
+            <th style="width: 20%;">
+                @Html.DisplayNameFor(model => model.LabelText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OnLoan)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrintLabel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RefOnly)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Barcode))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Volumes", new { id = item.VolumeID }, new { @class = "btn-link modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Barcode, "Edit", "Volumes", new { id = item.VolumeID }, new { @class = "btn-link modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LabelText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OnLoan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrintLabel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RefOnly)
+                </td>
+
+                <td class="just-right">
+                    <a href="@Url.Action("Delete","Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="Delete this Volume"><span class=" glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="Edit this Volume"><span class="glyphicon glyphicon-pencil"></span></a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

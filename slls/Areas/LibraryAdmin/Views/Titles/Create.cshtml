@@ -1,0 +1,278 @@
+﻿@using System.Web.Mvc.Html
+@using Westwind.Globalization
+@using slls.Utils.Helpers
+@model slls.ViewModels.TitleAddViewModel
+
+@section Scripts
+{
+    <script>
+        jQuery(document).ready(function ($) {
+            $('#btnAddAuthor').on('click', function () {
+                var url = '@Url.Action("AddAuthor", "Titles")';
+                $.get(url, function (html) {
+                    $('#authors-list').append(html);
+                });
+            });
+
+            @*$('#btnAddEditor').on('click', function () {
+            //alert('Hello!');
+                var url = '@Url.Action("AddEditor", "Titles")';
+                $.get(url, function (html) {
+                    $('#editors-list').append(html);
+                });
+            });*@
+        });
+    </script>
+}
+
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="alert alert-info">
+    <p>
+        <strong>Tip: </strong> The simplest way to add a new title is to download the bibliographic data from one of several respected sources using the AutoCat&copy; tool. Simply scan or enter the <a href="https://en.wikipedia.org/wiki/International_Standard_Book_Number" title="ISBN" target="_blank"><strong>ISBN</strong></a> in the box below and select the source to download the data from.
+    </p>
+</div>
+<div >
+    @Html.Action("_autoCat", "Titles", new {isbn = ViewData["Isbn"], notFound = ViewData["NotFound"]})
+</div>
+<div class="alert alert-info">
+    <p>Alternatively, manually enter the details in the boxes below and then click on the 'Save & Continue' button to save the details ...</p>
+</div>
+
+@using (Html.BeginForm("DoNewTitle", "Titles", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.HiddenFor(model => model.Step)
+
+        @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+        {
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <h4>Oops!</h4>
+                @Html.ValidationSummary()
+            </div>
+        }
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title1, new { @class = "control-label col-md-2" })
+            <div class="col-md-8" style="margin-bottom: 5px;">
+                @Html.EditorFor(model => model.Title1, new { htmlAttributes = new { @class = "form-control", aria_required = true } })
+                @Html.ValidationMessageFor(model => model.Title1, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-2">
+                <button type="submit" value="Save" class="btn btn-success" title="Save title details and add a new Copy"><span class="glyphicon glyphicon-ok"></span> Save & Continue ></button>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Partial("_selectMedia")
+        </div>
+
+        <div class="form-group">
+            @Html.Partial("_selectClassmark")
+        </div>
+
+        <div class="form-group">
+            @Html.Partial("_selectPublisher")
+        </div>
+
+        <div class="form-group">
+            @Html.Partial("_selectLanguage")
+        </div>
+
+        <div class="form-group">
+            @Html.Partial("_selectFrequency")
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Authors, new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                <div id="authors-list">
+                    @Html.EditorForMany(x => x.Authors, x => x.Index)
+                </div>
+                <button type="button" id="btnAddAuthor" value="Add Another" title="Add Another Author" class="btn btn-link"><span class="glyphicon glyphicon-plus-sign"></span> Add another ...</button>
+            </div>
+            <div class="col-sm-1 hidden-sm hidden-xs" style="padding-top: 5px; padding-left: 0">
+                <a href="@Url.Content("~/LibraryAdmin/Authors/_add")" class="button" id="addAuthorLink" title="Author not in the list?&#013;Add a new one now."><span class="glyphicon glyphicon-plus-sign"></span></a>
+            </div>
+        </div>
+
+        @*<div class="form-group">
+                @Html.LabelFor(model => model.Editors, new { @class = "control-label col-md-2" })
+                <div class="col-md-5">
+                    <div id="editors-list">
+                        @Html.EditorForMany(x => x.Editors, x => x.Index)
+                    </div>
+                    <button type="button" id="btnAddEditor" value="Add Another" title="Add Another Editor" class="btn btn-link"><span class="glyphicon glyphicon-plus-sign"></span> Add another ...</button>
+                </div>
+                <div class="col-sm-1 hidden-sm hidden-xs" style="padding-top: 5px; padding-left: 0">
+                    <a href="@Url.Content("~/LibraryAdmin/Authors/_add")" class="button" id="addEditorLink" title="Editor not in the list?&#013;Add a new one now."><span class="glyphicon glyphicon-plus-sign"></span></a>
+                </div>
+            </div>*@
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Series, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Series, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Series, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Edition, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Edition, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Edition, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PlaceofPublication, new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.PlaceofPublication, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PlaceofPublication, "", new { @class = "text-danger" })
+            </div>
+
+            @Html.LabelFor(model => model.Year, new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.Year, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Year, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ISBN10, new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.ISBN10, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ISBN10, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ISBN13, new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.ISBN13, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.ISBN13, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Citation, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Citation, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Citation, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Source, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Source, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Source, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" value="Save" class="btn btn-success" title="Save title details and add a new Copy"><span class="glyphicon glyphicon-ok"></span> Save & Continue ></button>
+            &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+        </div>
+    </div>
+}
+
+
+
+<div id="newAuthorDialog" title="Add New Author"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#newAuthorDialog').dialog({
+            open: function () {
+                $(this).closest(".ui-dialog")
+                .find(".ui-dialog-titlebar-close")
+                .removeClass("ui-icon-closethick")
+                .addClass("btn btn-default")
+                .text("X");
+            },
+            autoOpen: false,
+            modal: true,
+            overlay: {
+                backgroundColor: '#000',
+                opacity: 0.5
+            },
+            buttons: [
+                {
+                    text: 'Save',
+                    "class": 'btn btn-success',
+                    click: function () {
+                        var addNewFrm = $('#addAuthorForm');
+                        if (addNewFrm.valid()) {
+                            $.ajax({
+                                url: '@Url.Action("_add", "Authors")',
+                                type: 'Post',
+                                data: addNewFrm.serialize(),
+                                async: false,
+                                success: function (data) {
+                                    if (data.success) {
+                                        var found = $("[id$=_AuthorID]");
+                                        found.append(
+                                                $('<option></option>')
+                                                    .val(data.newData.AuthorID)
+                                                    .html(data.newData.DisplayName)
+                                                    .prop('selected', true)
+                                            );
+                                        $('#newAuthorDialog').dialog('close');
+                                    } else {
+                                        alert(data.errMsg);
+                                    }
+                                },
+                                error: function () {
+                                    alert("Oops, there has been an error.");
+                                }
+                            });
+                        }
+                    }
+                },
+            {
+                text: 'Cancel',
+                "class": 'btn btn-default',
+                click: function () {
+                    $('#AuthorID').val(0);
+                    $(this).dialog('close');
+                }
+            }
+            ]
+        });
+    });
+    $('#addAuthorLink').click(function () {
+        var createFormUrl = $(this).attr('href');
+        $('#newAuthorDialog').html('')
+        .load(createFormUrl, function () {
+            jQuery.validator.unobtrusive.parse('#addAuthorForm');
+            $('#newAuthorDialog').dialog('open');
+        });
+        return false;
+    });
+
+    $('#AuthorID').change(function () {
+        if (this.value === "-1") {
+            var createFormUrl = $('#addAuthorLink').attr('href');
+            $('#newAuthorDialog').html('')
+            .load(createFormUrl, function () {
+                $('#newAuthorDialog').dialog('open');
+            });
+        }
+        return false;
+    });
+
+</script>

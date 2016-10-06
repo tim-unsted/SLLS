@@ -1,0 +1,33 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Classmark>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        @*<span class="panel-title">*@
+            Narrow by @DbRes.T("Classmarks.Classmark", "FieldDisplayName")
+        @*</span>*@
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled">
+            @foreach (var item in Model)
+            {
+                <li>
+                    @*@item.Classmark1*@
+                    @Html.ActionLink(string.IsNullOrEmpty(item.Classmark1) ? "[no name]" : item.Classmark1, "AdminSearch", "Searching", new
+                          {
+                              q = @ViewBag.SearchTerm,
+                              f = @ViewBag.SearchField,
+                              m = @ViewBag.MediaID,
+                              c = item.ClassmarkID,
+                              l = @ViewBag.LanguageID,
+                              p = @ViewBag.PublisherID,
+                              a = @ViewBag.AuthorID,
+                              k = @ViewBag.KeywordID
+                          }, new {@class = ""}) <span class="badge small">@item.TitleCount</span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+

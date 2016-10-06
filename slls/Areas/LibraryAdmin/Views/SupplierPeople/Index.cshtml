@@ -1,0 +1,103 @@
+﻿@using slls.Models
+@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.SupplierPeopleListViewModel
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#contacts').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+                {
+                    "targets": [1],
+                    "data": [1],
+                    "render": function(data, type, row) {
+                        return '<a href="EditSupplier/' + row[4] + '" class="btn-link">' + data + '</a>';
+                    }
+                },
+                {
+                    "visible": false,
+                    "targets": [4]
+                },
+                {
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [5]
+                }
+            ]
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+@*<form>
+    <div class="form-group" title="@ViewBag.Message">
+        @Html.DropDownList("SelectContact", null, new { onchange = "window.location.href = 'Edit/' + this.options[this.selectedIndex].value;", @class = "form-control" })
+    </div>
+</form>*@
+
+<div class="well">
+    @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))
+    <a href="@Url.Action("Create", "SupplierPeople", new {callingAction = "index"})" title="Add new @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#stdModal"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</div>
+
+<table id="contacts" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FullnameRev)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SupplierName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Position)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CommTypeDetails)
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Contacts)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.FullnameRev))
+                    {
+                        @Html.ActionLink(" ", "Edit", "SupplierPeople", new { id = item.ContactID, CallingController = "SupplierPeople" }, new { @Class = "btn-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.FullnameRev, "Edit", "SupplierPeople", new { id = item.ContactID, CallingController = "SupplierPeople" }, new { @Class = "btn-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SupplierName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td>
+                    @Html.Raw(item.CommTypeDetails)
+                </td>
+                <td>
+                    @Html.Raw(item.SupplierID)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new { id = item.ContactID })" class="btn btn-link modal-link" title="Delete this Contact"><span class=" glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.ContactID, CallingController = "SupplierPeople"})" class="btn btn-link" title="Edit this Contact"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

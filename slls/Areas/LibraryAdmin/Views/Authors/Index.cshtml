@@ -1,0 +1,102 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.ViewModels.AuthorIndexViewModel>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#authors').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [0, 'asc'],
+            "columnDefs": [
+            {
+                "width": "40%",
+                "targets": [0]
+            },
+            {
+                "width": "40%",
+                "searchable": false,
+                "targets": [1]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": true,
+                "orderSequence": ["desc", "asc"],
+                "targets": [2]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [3]
+            }
+            ]
+        });
+    });
+
+</script>
+
+@*<h2>@ViewBag.Title</h2>*@
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "Authors")" title="Add new @DbRes.T("Authors.Display_Name", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="authors" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("Authors.Display_Name", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Authors.Author_Type", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Titles", "EntityType")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.DisplayName))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Authors", new { id = item.AuthorID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.DisplayName, "Edit", "Authors", new { id = item.AuthorID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AuthType)
+                </td>
+                <td>
+                    @if (item.TitleAuthors.Count > 0)
+                    {
+                        <a href="@Url.Action("ByAuthor", "Titles", new { id = item.AuthorID })" title="View all items using by this @DbRes.T("Authors.Author", "FieldDisplayName")"><span class="badge badge-link">@item.TitleAuthors.Count</span></a>
+                    }
+                </td>
+                <td class="just-right">
+                    @if (!item.TitleEditors.Any() && !item.TitleAuthors.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.AuthorID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.AuthorID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

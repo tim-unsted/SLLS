@@ -1,0 +1,65 @@
+﻿@using Microsoft.Owin.Security.DataHandler.Encoder
+@using Westwind.Globalization
+@model IEnumerable<slls.Models.CirculationMessage>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#circulationmessages').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+                {
+                    "orderData": [0],
+                    "targets": [0]
+                },
+                {
+                    "visible": true,
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [1]
+                }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "CirculationMessages")" title="Add new @DbRes.T("Circulation.Circulation_Slip_Message", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="circulationmessages" class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CirculationMsg)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CirculationMsg)
+                </td>
+                <td class="just-right">
+                    @if(item.CanDelete)
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.CirculationMsgID})" title="Delete" class="btn btn-link modal-link"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.CirculationMsgID})" title="Edit" class="btn btn-link modal-link"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,14 @@
+﻿@model slls.Models.TitleImage
+
+<div class="modal-body">
+    <button type="button" class="close" id="btn_Close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <img src="@Url.Action("ViewImage", "TitleImages", new {id = Model.ImageId})" style="width: 100%;">
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btn_Close').click(function () {
+            $('#lrgModal').modal('hide');
+        });
+    });
+</script>

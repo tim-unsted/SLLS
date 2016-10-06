@@ -1,0 +1,32 @@
+﻿@model slls.ViewModels.SimpleSearchingViewModel
+
+<div class="panel panel-gadget shadowed">
+    <div class="panel-heading">
+        <span class="panel-title">
+            <span class="glyphicon glyphicon-search"></span>&nbsp;<span is="gadget-Title">@ViewBag.Title</span>
+            <span class="pull-right"><a href="@Url.Action("ShowSearchHelp", "Home")" title="Searching Tips" class="btn btn-link" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-info-sign"></span> Help</a></span>
+        </span>
+    </div>
+    <div class="panel-body">
+    @using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm", role = "search" }))
+    {
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    @Html.LabelFor(model => model.SearchString)
+                    @Html.EditorFor(model => model.SearchString, new { htmlAttributes = new { @class = "form-control", placeholder = "Find ..." } })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-12">
+                    @Html.LabelFor(model => model.SearchField)
+                    @Html.DropDownList("SearchField", null, new { @class = "form-control" })
+                </div>
+            </div>
+            <div style="text-align: right;">
+                <button type="submit" id="btnSubmit" value="Find" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Find</button>
+            </div>
+        </div>
+    }
+    </div>
+</div>

@@ -1,0 +1,10 @@
+﻿@model slls.Models.Keyword
+
+@using (Html.BeginForm("_add", "Keywords", FormMethod.Post, new { id = "addKeywordForm" }))
+{
+    <div class="form-group">
+        <br />
+        @Html.EditorFor(model => model.KeywordTerm, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.KeywordTerm, "", new { @class = "text-danger" })
+    </div>
+}

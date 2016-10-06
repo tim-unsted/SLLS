@@ -1,0 +1,52 @@
+﻿@model slls.ViewModels.TitlesReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@foreach (var location in Model.Locations.OrderBy(l => string.IsNullOrEmpty(l.Location1) ? "xxx" : l.Location1))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="report_h3">@Html.DisplayFor(x => location.ParentLocation.Location1) - @Html.DisplayFor(x => location.Location1)</h3>
+
+            @{
+    var titles = (from c in location.Copies
+                  where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value)
+                  select c.Title).Distinct();
+
+                foreach (var title in titles.OrderBy(x => x.CatalogueByAuthor))
+                {
+                    <h4 class="report_h4">@Html.DisplayFor(x => title.Title1)</h4>
+                            <p>@Html.DisplayFor(x => title.Imprint)</p>
+                    {
+                        var copies = from x in title.Copies
+                                     where x.StatusID != null && Model.StatusTypes.Contains(x.StatusID.Value)
+                                     select x;
+
+                        foreach (var copy in copies.OrderBy(c => c.CopyNumber))
+                        {
+                            <div class="row">
+                                <div class="col-md-12 col-md-push-1">
+                                    <p>@Html.DisplayFor(modelItem => copy.CopyLocationStatus)</p>
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            }
+        </div>
+    </div>
+}
+
+
+
+
+
+
+
+
+
+
+

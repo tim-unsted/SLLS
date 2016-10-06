@@ -1,0 +1,32 @@
+﻿@using Westwind.Globalization
+@model slls.Models.CommMethodType
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+            
+            @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+            @Html.HiddenFor(model => model.MethodID)
+            @Html.HiddenFor(model => model.CanDelete)
+            @Html.HiddenFor(model => model.CanUpdate)
+            @Html.HiddenFor(model => model.ListPos)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Method, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Method, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.Method, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    @Html.Partial("_ModalEditFooter")
+}

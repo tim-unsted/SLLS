@@ -1,0 +1,71 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.PartsReceived>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#partsreceived').DataTable({
+            "dom": 'rt<"inline"i><"inline float-right"p><"clear">',
+            "pageLength": 10,
+            "order": [[3, 'desc'],[0, 'asc']],
+            "columnDefs": [
+                {
+                    "searchable": false,
+                    "sortable": false,
+                    "visible": false,
+                    "targets": [3]
+                },
+                {
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [2,4]
+                },
+                {
+                    "orderData": [3],
+                    "targets": [1]
+                }
+            ]
+        });
+    });
+</script>
+
+<table id="partsreceived" class="table table-condensed table-bordered-outeronly table-hover">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.PartReceived)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateReceived)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PrintList)
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.PartReceived)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateReceived)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrintList)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateReceivedSortable)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Edit", "PartsReceived", new {id = item.PartID})" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", "PartsReceived", new { id = item.PartID })" class="btn btn-link modal-link" title="Delete @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

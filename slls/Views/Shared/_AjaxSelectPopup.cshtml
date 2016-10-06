@@ -1,0 +1,57 @@
+﻿@model slls.ViewModels.SelectPopupViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title">@Html.DisplayFor(model => model.HeaderText)</h4>
+</div>
+
+@using (Ajax.BeginForm(Model.PostSelectAction, Model.PostSelectController, new AjaxOptions { HttpMethod = "post", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }))
+{
+    @Html.ValidationSummary()
+    @Html.HiddenFor(x => x.PostSelectAction)
+    @Html.HiddenFor(x => x.PostSelectController)
+    @Html.HiddenFor(x => x.HeaderText)
+    @Html.HiddenFor(x => x.PostSelectId)
+    
+    <div class="modal-body">
+        @if (!Model.DetailsHeader.IsEmpty())
+        {
+            <h4 class="text-info">
+                @Html.DisplayFor(model => model.DetailsHeader)
+            </h4>
+        }
+        <p class="help-block">
+            @Html.DisplayFor(model => model.DetailsText).
+        </p>
+
+        @*<div class="col-md-12">*@
+            @Html.Label(Model.SelectLabel, htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(x => x.SelectedItem, Model.AvailableItems, Model.SelectText, new { @class = "form-control" })
+        @*</div>*@
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" id="btnSubmit" class="btn btn-primary">@Html.DisplayFor(model => model.OkButtonText)</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </div>
+}
+
+<script type="text/javascript">
+    
+    function OnSuccess(json) {
+        if (json.isRedirect) {
+            //window.location.href = json.redirectUrl;
+            if (json.newWindow) {
+                window.open(json.redirectUrl, json.target);
+            } else {
+                window.location.href = json.redirectUrl;
+            }
+        }
+    }
+
+    function OnFailure(response) {
+        var obj = $.parseJSON(response.responseText);
+        alert(obj.message);
+    }
+
+</script>

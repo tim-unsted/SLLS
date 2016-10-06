@@ -1,0 +1,23 @@
+﻿@model slls.ViewModels.SimpleSearchingViewModel
+@using Westwind.Globalization
+
+<h5>@DbRes.T("Classmarks.Classmark", "FieldDisplayName")</h5>
+<ul class="list-unstyled">
+    @Html.EditorFor(model => model.ClassmarksFilter)
+</ul>
+<div>
+    <a href="@Url.Action("AdminShowAllClassmarksFilter", "Searching", new { area = "LibraryAdmin" })" class="btn btn-show-more" title="Show more" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-plus-sign"></span> Show All @DbRes.T("Classmarks", "EntityType")</a>
+</div>
+<hr class="hr-compact" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(function () {
+            $("input[type='checkbox']").change(function () {
+                $(this).closest("form").submit();
+            });
+        });
+    });
+</script>
+
+

@@ -1,0 +1,92 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.LoanType>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#loantypes').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+                {
+                    "width": "10%",
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [5]
+                }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "LoanTypes")" title="Add new @DbRes.T("LoanTypes.Loan_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table class="table" id="loantypes">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.LoanTypeName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RefOnly)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DailyFine)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LengthDays)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.MaxItems)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.LoanTypeName))
+                    {
+                        @Html.ActionLink(" ", "Edit", "LoanTypes", new { id = item.LoanTypeID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.LoanTypeName, "Edit", "LoanTypes", new { id = item.LoanTypeID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RefOnly)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DailyFine)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LengthDays)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MaxItems)
+                </td>
+                <td class="just-right">
+                    @if (item.CanDelete && !item.Volumes.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.LoanTypeID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.LoanTypeID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

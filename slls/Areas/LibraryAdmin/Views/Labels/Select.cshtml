@@ -1,0 +1,121 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.PrintLabelsViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm(Model.PostSelectAction, "Labels", FormMethod.Post, new { target = "_blank" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @if (Model.LabelsPending == false)
+            {
+                <span class="error"><span class=" glyphicon glyphicon-alert"></span> @Html.DisplayFor(model => model.AlertMsg)</span>
+            }
+            else
+            {
+                if (Model.ShowOrderBy)
+                {
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.OrderBy, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.OrderBy, new SelectList(ViewBag.OrderByOptions, "Key", "Value"), new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.OrderBy, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                }
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LocationID, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.LocationID, Model.Locations, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.LocationID, "", new { @class = "text-danger" })
+                        <span class="help-block">(Optional)</span>
+                    </div>
+                </div>
+
+                @*<hr class="hr-compact"/>*@
+
+                <div class="strike">
+                    <span>Label Dimensions:</span>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.topMargin, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.topMargin, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.topMargin, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.bottomMargin, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.bottomMargin, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.bottomMargin, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.leftMargin, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.leftMargin, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.leftMargin, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.rightMargin, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.rightMargin, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.rightMargin, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.labelsAcross, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.labelsAcross, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.labelsAcross, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.labelsDown, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.labelsDown, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.labelsDown, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="strike">
+                    <span>Partially-used Labels:</span>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StartPositionRow, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.StartPositionRow, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.StartPositionRow, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.StartPositioncolumn, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.StartPositioncolumn, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.StartPositioncolumn, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        @if (Model.LabelsPending == false)
+        {
+            <button type="button" id="btnOk" value="Ok" class="btn btn-success" data-dismiss="modal">Ok</button>
+        }
+        else
+        {
+            <button type="submit" id="btnSave" value="Print" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Print</button>
+            <span>&nbsp; &nbsp; or &nbsp;</span><button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+        }
+    </div>
+
+}

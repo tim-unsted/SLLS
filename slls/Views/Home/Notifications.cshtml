@@ -1,0 +1,44 @@
+﻿@model IEnumerable<slls.Models.Notification>
+
+<h2>@ViewBag.Title</h2>
+@*<hr/>*@
+
+<table class="table">
+    @*<tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Headline)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Scope)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Text)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InputDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ExpireDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InputUser)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastModified)
+        </th>
+        <th></th>
+    </tr>*@
+
+@foreach (var notification in Model)
+{
+    <tr>
+        <td>
+            <p>
+                <strong>@Html.Raw(notification.Headline)</strong>
+            </p>
+            <p>@Html.Raw(notification.Text)</p>
+        </td>
+    </tr>
+}
+
+</table>

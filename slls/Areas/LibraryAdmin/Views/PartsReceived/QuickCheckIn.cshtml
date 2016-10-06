@@ -1,0 +1,84 @@
+﻿@using Westwind.Globalization
+@model slls.Models.Copy
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="well">
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "quickcheckin" }))
+    {
+        @Html.DropDownList("SelectedCopy", null, new { @class = "form-control", onchange = "this.form.submit();" })
+    }
+</div>
+
+<div id="quickcheckin">
+    @if ((int)ViewData["CopyID"] > 0)
+    {
+        @Html.Action("_Summary", "Copies", new { id = Model.CopyID })
+    }
+</div>
+
+@*<hr />*@
+<br />
+<br />
+
+
+<div class="row">
+    <div class="col-md-7">
+        @if ((int)ViewData["CopyID"] > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="panel-title">
+                        <span class="pull-right">
+                            <a href="@Url.Action("Create", "PartsReceived", new {id = Model.CopyID})" class="btn btn-success modal-link" style="margin-bottom: 5px;" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
+                            <a href="@Url.Action("PrintCirculationSlip", "Circulation", new {id = Model.CopyID})" class="btn btn-primary" style="margin-bottom: 5px;" target="_blank" title="Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")"><span class="glyphicon glyphicon-print"></span> Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")</a>
+                        </span>
+                        <h4>@DbRes.T("CheckIn.Parts_Received", "FieldDisplayName")</h4>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    @Html.Action("_PartsReceivedSubForm", "PartsReceived", new { id = Model.CopyID })
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="col-md-1">
+    </div>
+
+    <div class="col-md-4">
+        @if ((int)ViewData["CopyID"] > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="panel-title">
+                        <span class="pull-right">
+                            <a href="@Url.Action("AddRecipient", "Circulation", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" style="margin-bottom: 5px;" title="Add more @DbRes.T("Circulation.Recipients", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span> Add</a>
+                            <a href="@Url.Action("CirculationList", "Circulation", new {copy = ViewData["CopyID"]})" class="btn btn-primary" style="margin-bottom: 5px;" title="Edit @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                        </span>
+                        <h4>@DbRes.T("Circulation.Circulation_List", "FieldDisplayName")</h4>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    @Html.Action("_CirculationListSubForm", "Circulation", new { id = Model.CopyID })
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    $('form').submit(function (e) {
+        e.preventDefault();
+        $.post(this.action, $(this).serialize(), function (response) {
+            if (response.error) {
+                alert(response.error);
+            }
+            else {
+                //Refresh
+                location.reload();
+            }
+        }, 'json');
+    });
+</script>

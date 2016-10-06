@@ -1,0 +1,166 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.CLAAuditReportViewModel
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.js"></script>
+<script src="~/Scripts/DatePickerReady.js"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var optReport = $('#reportTypes').val();
+        var opt = $('#optUseDates input:radio:checked').val();
+        $("#expenditureTypes").prop("disabled", optReport === "1");
+        $("#datePicker :input").attr("disabled", opt === "False");
+        //$('#lstMediaTypes').val("-1");
+
+        $("#optUseDates").change(function () {
+            opt = $('#optUseDates input:radio:checked').val();
+            $("#datePicker :input").attr("disabled", opt === "False");
+        });
+
+        $('#reportTypes').change(function () {
+            optReport = $('#reportTypes').val();
+            if (optReport === "1") {
+                $("#expenditureTypes").val("0");
+                $("#expenditureTypes").prop("disabled", true);
+            } else {
+                $("#expenditureTypes").prop("disabled", false);
+            }
+        });
+        return true;
+    });
+
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("CLAAuditReport", "Titles", FormMethod.Post, new { id = "form1" }))
+{
+    <div class="alert alert-info">
+        <span class="pull-right" style="padding-left: 10px;"><button type="submit" value="View Report" class="btn btn-success"><span class="glyphicon glyphicon-sunglasses"></span> View Report</button>&nbsp;&nbsp;</span>
+        <span><strong>CLA Audit</strong> - Copies Purchased reports only include items with a date in the Received Date field. If the Received Date is empty it is treated as still 'On Order'.</span>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="">
+                                Report Type:
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <div>
+                                @Html.DropDownListFor(m => m.ReportType, Model.ReportTypes, new { @class = "form-control", @id = "reportTypes" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="">
+                                Report On:
+                            </span>
+                        </div>
+                        <div class="panel-body">
+                            <div>
+                                @Html.DropDownListFor(m => m.ExpenditureType, Model.ExpenditureTypes, new { @class = "form-control", @id = "expenditureTypes" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <span class="">
+                                Choose Period:
+                            </span>
+                        </div>
+                        <div class="panel-body">
+
+                            @*<div class="btn-group" data-toggle="buttons" id="optUseDates">
+                                    <label class="radio">
+                                        <input checked="checked" type="radio" name="UseDates" id="allDates" value="1">All Dates
+                                    </label>
+                                    <label class="radio">
+                                        <input type="radio" name="UseDates" id="useDates" value="2"> Date Range
+                                    </label>
+                                </div>*@
+
+                            <div class="btn-group" data-toggle="buttons" id="optUseDates">
+                                @Html.RadioButtonFor(x => x.UseDates, false) All Dates &nbsp;&nbsp;&nbsp;
+                                @Html.RadioButtonFor(x => x.UseDates, true) Date Range
+                            </div>
+
+                            <br /><br />
+
+                            <div class="form-group" id="datePicker">
+                                @Html.Label("From:", new { @class = "control-label col-sm-2 just-right" })
+                                <div class="col-sm-4">
+                                    @Html.EditorFor(x => Model.StartDate, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                                </div>
+                                @Html.Label("To:", new { @class = "control-label col-sm-2 just-right" })
+                                <div class="col-sm-4">
+                                    @Html.EditorFor(x => Model.EndDate, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div id="statusTypeList">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <span class="" id="statusTypeCaption">
+                                    @DbRes.T("StatusTypes", "EntityType") - tick only the ones to include
+                                </span>
+                            </div>
+                            <div class="panel-body">
+                                <div class="col-md-12">
+                                    <ul class="list-unstyled columnized-3" id="statusTypes">
+                                        @foreach (var item in Model.StatusTypes)
+                                        {
+                                            <li>
+                                                <input type="checkbox" name="SelectedStatusTypes" value="@item.Value" checked="@item.Selected" />
+                                                @Html.DisplayFor(model => item.Text, new { @class = "control-label" })
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <span class="">
+                        Included Media Types:
+                    </span>
+                </div>
+                <div class="panel-body">
+                    @Html.ListBoxFor(m => m.SelectedMediaTypes, Model.MediaTypes, new { @class = "form-control", size = 25, @id = "lstMediaTypes", @placeholder = "[All Media]" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-footer">
+        <button type="submit" value="View Report" class="btn btn-success"><span class="glyphicon glyphicon-sunglasses"></span> View Report</button>
+        &nbsp;or&nbsp;<a href="@Url.Action("Index","Home")" class="btn-link" title="Cancel">Cancel</a>
+    </div>
+}

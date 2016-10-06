@@ -1,0 +1,109 @@
+﻿@model slls.ViewModels.CLAAuditReportViewModel
+
+@Html.Partial("_PrintHeader")
+
+<table id="claaudit" class="table">
+    <thead>
+        <tr>
+            <th>
+                <h2>
+                    CLA <span class="h4" style="margin-left: 50px;">@Html.DisplayFor(model => model.LabelBetween)</span>
+                    <span class="pull-right h4">PUBLICATIONS DATA SHEET</span>
+                </h2>
+                <hr class="cla_hr" />
+
+                <h4 class="">
+                    <span class="pull-right">@Html.DisplayFor(model => model.LabelReportType)</span>
+                    THE COPYRIGHT LICENSING AGENCY LTD
+                </h4>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <table id="titles" class="table table-striped table-no-border">
+                    <thead>
+                        <tr>
+                            <th>
+                                Title of Book (inc. free publications)
+                            </th>
+                            <th>
+                                Author
+                            </th>
+                            <th>
+                                ISBN/ISSN
+                            </th>
+                            <th>
+                                Publisher
+                            </th>
+                            <th>
+                                @Html.DisplayFor(model => model.LabelNoCopies) @*Copies Purchased*@
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var title in Model.Titles.OrderBy(t => t.Title1))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => title.Title1)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => title.AuthorString)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => title.Isbn)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => title.Publisher.PublisherName)
+                                </td>
+                                <td>
+                                    @{
+                            int copyCount;
+                            if (Model.HeldOrPurch == "purch")
+                            {
+                                var orderDetails = from o in title.OrderDetails where o.ReceivedDate != null && o.ReturnedDate == null && o.OnApproval == false select o;
+                                if (Model.ExpenditureType == 1)
+                                {
+                                    orderDetails = from o in orderDetails where o.OrderCategory.Sub == false select o;
+                                }
+                                else if (Model.ExpenditureType == 2)
+                                {
+                                    orderDetails = from o in orderDetails where o.OrderCategory.Sub select o;
+                                }
+                                if (Model.UseDates)
+                                {
+                                    orderDetails = from o in orderDetails where o.ReceivedDate >= Model.StartDate && o.ReceivedDate <= Model.EndDate select o;
+                                }
+                                copyCount = orderDetails.Sum(o => o.NumCopies.Value);
+                            }
+                            else
+                            {
+                                copyCount = (from c in title.Copies where c.StatusID != null && Model.ReportStatusTypes.Contains(c.StatusID.Value) select c).Count();
+                            }
+                            @Html.DisplayFor(x => copyCount)
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>
+                <hr class="cla_hr" />
+                <h4>
+                    <span class="pull-right">Account No: ______________________________</span>
+                    <span>Licensee Name: ____________________________________________</span>
+                </h4>
+                <hr class="cla_hr" />
+                <h5>@Html.DisplayFor(x => Model.FriendlyName)</h5>
+            </td>
+        </tr>
+    </tfoot>
+</table>

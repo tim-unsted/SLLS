@@ -1,0 +1,15 @@
+﻿@using Westwind.Globalization
+    <div class="container noprint">
+        <span class="pull-right" style="margin-top: 10px;">
+            <button type="button" class="btn btn-primary" onclick="window.print();"><span class="glyphicon glyphicon-print"></span> Print</button>
+            &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal" onclick="closeMe()">@DbRes.T("Buttons.Close", "Terminology")</button>
+        </span>
+    </div>
+
+<script>
+function closeMe()
+{
+    var win = window.open("","_self"); /* url = "" or "about:blank"; target="_self" */
+    win.close();
+}
+</script>

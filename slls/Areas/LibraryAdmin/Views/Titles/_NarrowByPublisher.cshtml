@@ -1,0 +1,30 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Publisher>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        @*<span class="panel-title">*@
+        Narrow by @DbRes.T("Publishers.Publisher", "FieldDisplayName")
+        @*</span>*@
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled">
+            @foreach (var item in Model)
+            {
+                <li>@Html.ActionLink(string.IsNullOrEmpty(item.PublisherName) ? "[no name]" : item.PublisherName, "AdminSearch", "Searching", new
+               {
+                   q = @ViewBag.SearchTerm,
+                   f = @ViewBag.SearchField,
+                   m = @ViewBag.MediaID,
+                   c = @ViewBag.ClassmarkID,
+                   l = @ViewBag.LanguageID,
+                   p = item.PublisherID,
+                   a = @ViewBag.AuthorID,
+                   k = @ViewBag.KeywordID
+               }, new { @class = "" }) <span class="badge small">@item.TitleCount</span></li>
+            }
+        </ul>
+    </div>
+</div>
+
+

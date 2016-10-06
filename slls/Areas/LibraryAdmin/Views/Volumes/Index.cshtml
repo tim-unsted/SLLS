@@ -1,0 +1,26 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.VolumesIndexViewModel
+
+<h2>@ViewBag.Title</h2>
+
+<div class="well">
+    @if (Model.UsePreprintedBarcodes)
+    {
+        <p class="error">
+            <strong>Note: </strong>You are using pre-printed barcode labels/stickers. Any @DbRes.T("CopyItems.Barcode", "FieldDisplayName") highlighted in <span class="btn-danger">&nbsp;red&nbsp;</span> is still displaying a system-generated value and has not yet been updated to the correct label/sticker value.
+        </p>
+    }
+    @using (Html.BeginForm(null, null, FormMethod.Get))
+    {
+        <div class="form-group" title="@ViewBag.Message">
+            @Html.DropDownList("id", (IEnumerable<SelectListItem>) ViewData["TitleId"], new {@class = "form-control", onchange = "this.form.submit();"})
+        </div>
+    }
+
+    <a href="@Url.Action("Create", "Volumes", new {id = Model.TitleId})" title="Add new @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")</a>
+
+</div>
+
+<div id="VolumesTable">
+    @Html.Partial("_VolumesWithTitles", Model)
+</div>

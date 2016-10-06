@@ -1,0 +1,66 @@
+﻿@model slls.Models.DefaultValue
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>DefaultValue</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.TableName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TableName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FieldName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FieldName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ChildTableName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ChildTableName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DefaultValueId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DefaultValueId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InputDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InputDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastModified)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastModified)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.DefaultId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

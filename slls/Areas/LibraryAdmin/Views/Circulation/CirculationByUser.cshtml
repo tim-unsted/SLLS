@@ -1,0 +1,122 @@
+﻿@using System
+@using System.Linq
+@using Westwind.Globalization
+@model System.Collections.Generic.IEnumerable<slls.Models.Circulation>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#circulateditems').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs":[
+            {
+                "searchable": false,
+                "sortable": true,
+                "orderSequence": [ "desc", "asc" ],
+                "targets": [3]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [4]}
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="alert alert-info">
+    <span class="help-block"><strong>Info: </strong>This page show all @DbRes.T("Circulation.Circulation_Lists", "FieldDisplayName") that the selected @DbRes.T("Users.LibraryUser", "FieldDisplayName") appears on.</span>
+
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "circulatedItemsTable" }))
+    {
+        @Html.DropDownList("SelectedUser", null, new { @class = "form-control", onchange = "this.form.submit();", style = "margin-bottom: 15px;" })
+    }
+
+    @if (!string.IsNullOrEmpty((string)ViewData["UserID"]) && (string)ViewData["UserID"] != "0")
+    {
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="glyphicon glyphicon-plus-sign"></span> Add @ViewData["UserName"] to Circulation Lists <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="@Url.Action("AddItemToRecipientsList", "Circulation", new {id = ViewData["UserID"]})" title="Add @ViewData["UserName"] to more @DbRes.T("Circulation.Circulation_Lists", "FieldDisplayName")" class="btn-link" data-toggle="modal" data-target="#lrgModal">Select @DbRes.T("Circulation.Circulated_Items", "FieldDisplayName")</a></li>
+                <li><a href="@Url.Action("AddSelectedRecipientToAll", "Circulation", new { id = ViewData["UserID"] })" title="Add @ViewData["UserName"] to All @DbRes.T("Circulation.Circulation_Lists", "FieldDisplayName")" class="btn-link" data-toggle="modal" data-target="#stdModal">All @ViewData["UserName"] to ALL lists</a></li>
+                <li><a href="@Url.Action("CloneUsersList", "Circulation", new {id = ViewData["UserID"]})" title="Clone another user's list" class="btn-link" data-toggle="modal" data-target="#stdModal">Clone another @DbRes.T("Circulation.Recipient", "FieldDisplayName")'s list</a></li>
+            </ul>
+        </div>
+
+        if (Model.Any())
+        {
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <span class="glyphicon glyphicon-minus-sign"></span> Remove @ViewData["UserName"] from <strong>All</strong> Lists <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("RemoveRecipientFromAll", new { id = ViewData["UserID"] })" class="modal-link" title="Remove @ViewData["UserName"] from ALL @DbRes.T("Circulation.Circulation_Lists", "FieldDisplayName")">Remove @ViewData["UserName"] from All @DbRes.T("Circulation.Circulation_Lists", "FieldDisplayName")</a></li>
+                    <li><a href="@Url.Action("ReplaceRecipient", "Circulation", new {id = ViewData["UserID"]})" title="Replace @ViewData["UserName"] with another @DbRes.T("Circulation.Recipient", "FieldDisplayName")" class="btn-link" data-toggle="modal" data-target="#stdModal">Replace @ViewData["UserName"] with another @DbRes.T("Circulation.Recipient", "FieldDisplayName")</a></li>
+                </ul>
+            </div>
+        }
+    }
+</div>
+
+<div id="circulatedItemsTable">
+    <table id="circulateditems" class="table table-hover">
+        <thead>
+        <tr>
+            <th>
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label(DbRes.T("Circulation.SortOrder", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label(DbRes.T("Circulation.Recipients", "FieldDisplayName"))
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Copy.Title.Title1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Titles", new {id = item.Copy.TitleID}, null)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Copy.Title.Title1, "Edit", "Titles", new { id = item.Copy.TitleID }, null)
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink(item.Copy.CopyNumber.ToString(), "Edit", "Copies", new { id = item.CopyID }, null)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.SortOrder)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Copy.Circulations.Count)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn btn-link" title="View/Edit Circulation List"><span class="glyphicon glyphicon-user"></span></a> |
+                    <a href="@Url.Action("RemoveItemFromRecipient", new { id = item.CirculationID })" class="btn btn-link modal-link" title="Remove @ViewData["UserName"] from this @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+

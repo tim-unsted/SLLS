@@ -1,0 +1,129 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.CopiesAddViewModel
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/DatePickerReady.js"></script>
+
+@Html.Partial("_HeaderCancel")
+
+@using (Html.BeginForm("PostCreate", "Copies", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.HiddenFor(model => model.CopyNumber)
+        @Html.HiddenFor(model => model.Step)
+
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        <div class="form-group">
+            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.DropDownList("TitleID", null, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.TitleID, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        @*<div class="form-group">
+            @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"), "Copy No.", htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.CopyNumber, new {htmlAttributes = new {@class = "form-control"}})
+                <div id="warning-msg" class="text-danger" style="display: none;">This copy number is already being used!</div>
+                @Html.ValidationMessageFor(model => model.CopyNumber, "", new { @class = "text-danger" })
+            </div>
+        </div>*@
+
+        <div class="form-group">
+            @Html.Label(DbRes.T("Locations.Location", "FieldDisplayName"), "Location", htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.DropDownList("LocationID", null, htmlAttributes: new {@class = "form-control"})
+                <span class="help-inline">This is the location where the item is normally found. (Optional)</span>
+                @Html.ValidationMessageFor(model => model.LocationId, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Partial("_selectStatusType")
+        </div>
+
+        <div class="form-group">
+            @Html.Label("Display on " + DbRes.T("Titles.New_Titles", "FieldDisplayName") + " List?", htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.AcquisitionsList)
+                    <span class="help-inline">Display this item on the @DbRes.T("NewTitlesList", "EntityType")</span>
+                    @Html.ValidationMessageFor(model => model.AcquisitionsList, "", new {@class = "text-danger"})
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(DbRes.T("Copies.Notes", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Notes, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Notes, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" value="Add" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Save & Continue ></button>
+            &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();"/>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#TitleID").change(function () {
+            var copyNo = $("#CopyNumber");
+
+            var selectedTitleId = { TitleID: $("#TitleID").val() };
+
+            $.ajax({
+                url: '@Url.Action("GetNextCopyNumber", "Copies")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedTitleId),
+                success: function (data) {
+                    if (data.success) {
+                        copyNo.val(data.CopyNumber);
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+        });
+
+        @*$("#CopyNumber").change(function () {
+            var copyNo = $("#CopyNumber");
+            var titleId = $("#TitleID");
+            $.ajax({
+                url: '@Url.Action("CopyNumberExists", "Copies")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify({ copyNumber: copyNo.val(), titleId: titleId.val() }),
+                success: function (data) {
+                    if (data.success) {
+                        if (data.Exists === true) {
+                            copyNo.closest('.form-group').removeClass('has-success').addClass('has-error');
+                            $("#warning-msg").show();
+                        } else {
+                            $("#warning-msg").hide();
+                            copyNo.closest('.form-group').removeClass('has-error').addClass('has-success');
+
+                        }
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+        });*@
+    });
+</script>

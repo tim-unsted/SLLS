@@ -1,0 +1,42 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleEditorAddViewModel
+
+@Html.Partial("_ModalAddHeader")
+
+@using (Html.BeginForm("Create", "TitleEditors", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+            @Html.HiddenFor(model => model.TitleId)
+
+            <div class="alert alert-info">
+                <span><strong>Tip: </strong>You may add multiple <span class="text-lowercase">@DbRes.T("Authors.Editor", "FieldDisplayName")</span>s at once by clicking on the required items whilst holding down the CTRL key.</span>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Authors.Editor", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.ListBoxFor(x => x.SelectedEditors, Model.AvailableEditors, new {size = 15, @class = "form-control"})
+                    @Html.ValidationMessageFor(model => model.AuthorId, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" id="add_btn" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Add Selected @DbRes.T("Authors.Editor", "FieldDisplayName")s</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}

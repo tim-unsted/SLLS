@@ -1,0 +1,47 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.SelectPopupViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm(Model.PostSelectAction, Model.PostSelectController, FormMethod.Post, new { @class = "form-horizontal", id = "frmSelect" }))
+{
+    @Html.ValidationSummary()
+    @Html.HiddenFor(x => x.PostSelectAction)
+    @Html.HiddenFor(x => x.PostSelectController)
+    @Html.HiddenFor(x => x.HeaderText)
+    @Html.HiddenFor(x => x.PostSelectId)
+    <div class="modal-body">
+        @if (!Model.DetailsHeader.IsEmpty())
+        {
+            <h4 class="text-info">
+                @Html.DisplayFor(model => model.DetailsHeader)
+            </h4>
+        }
+        <p class="help-block">
+            @Html.DisplayFor(model => model.DetailsText).
+        </p>
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label(Model.SelectLabel, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(x => x.SelectedItem, Model.AvailableItems, Model.SelectText, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" id="btnSubmit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @Html.DisplayFor(model => model.OkButtonText)</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#SelectedItem').on('dblclick', function () {
+            $("#frmSelect").submit();
+        });
+
+        //$('#btnSave').click(function () {
+        //    $('#btnSubmit').modal('hide');
+        //});
+    });
+</script>

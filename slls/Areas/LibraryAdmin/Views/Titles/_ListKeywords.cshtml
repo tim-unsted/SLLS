@@ -1,0 +1,23 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.SubjectIndex>
+
+<table id="subjectslist" class="table table-compact table-hover">
+    <tbody>
+        @foreach (var item in Model.OrderBy(s => s.Keyword.KeywordTerm))
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Keyword.KeywordTerm)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", "SubjectIndexes", new {id = item.SubjectIndexID})" class="btn btn-link modal-link" title="Remove @DbRes.T("Keywords.Keyword", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+

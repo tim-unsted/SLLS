@@ -1,0 +1,57 @@
+﻿@model slls.ViewModels.TitlesListViewModel
+<h2>@ViewBag.Title</h2>
+
+<div class="well">
+    <form class="navbar-form form-search" role="search">
+        <div class="form-group">
+            @using (Html.BeginForm("AdminSearch", "Searching", FormMethod.Get, new { id = "searchForm" }))
+            {
+                @Html.Label("Search for: ")
+                <input id="searchTerm" name="q" type="text" placeholder="Find ..." class="form-control" value="@ViewBag.SearchTerm">
+                @Html.DropDownList("f", null, "Search Where", new { @class = "form-control" })
+                <input id="btnSubmit" type="submit" class="btn btn-primary" value="Find">
+            }
+        </div>
+    </form>
+</div>
+
+
+<div class="row">
+    <div class="col-md-3">
+        @if(Model.Titles != null)
+        {
+            @Html.Partial("_SearchSummary")
+            
+            if (Model.MediaTypes != null)
+            {
+                @Html.Partial("_NarrowByMedia", Model.MediaTypes.OrderByDescending(x => x.TitleCount).Take(5))
+            }
+            if (Model.Classmarks != null)
+            {
+                @Html.Partial("_NarrowByClassmark", Model.Classmarks.OrderByDescending(x => x.TitleCount).Take(5))
+            }
+            if (Model.Publishers != null)
+            {
+                @Html.Partial("_NarrowByPublisher", Model.Publishers.OrderByDescending(x => x.TitleCount).Take(5))
+            }
+            if (Model.Keywords != null)
+            {
+                @Html.Partial("_NarrowByKeyword", Model.Keywords.OrderByDescending(x => x.TitleCount).Take(5))
+            }
+            if (Model.Authors != null)
+            {
+                @Html.Partial("_NarrowByAuthor", Model.Authors.OrderByDescending(x => x.TitleCount).Take(5))
+            }
+            if (Model.Languages != null)
+            {
+                @Html.Partial("_NarrowByLanguage", Model.Languages.OrderByDescending(x => x.TitleCount).Take(5))
+            }
+        }
+    </div>
+    <div class="col-md-9">
+        @if (Model.Titles != null)
+        {
+            @Html.Partial("_Simpleresults")
+        }
+    </div>
+</div>

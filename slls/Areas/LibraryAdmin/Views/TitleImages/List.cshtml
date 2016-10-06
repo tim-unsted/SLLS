@@ -1,0 +1,30 @@
+﻿@model System.Collections.Generic.IEnumerable<slls.ViewModels.TitleImageListViewmodel>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-6 col-md-4">
+                    <div class="thumbnail">
+                        <a href="@Url.Action("Edit", "TitleImages", new {id = item.TitleImageId})" data-toggle="modal" data-target="#stdModal" title="Edit" role="button">
+                            <img src="@Url.Action("ViewImage", "TitleImages", new { id = item.ImageId })" alt="@item.Alt">
+                        </a>
+                        <div class="caption">
+                            <h4>@item.Alt</h4>
+
+                            <span class="pull-right">
+                                <a href="@Url.Action("Edit", "TitleImages", new { id = item.TitleImageId })" class="btn btn-link" data-toggle="modal" data-target="#stdModal" title="Edit" role="button"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="@Url.Action("Delete", "TitleImages", new { id = item.TitleImageId })" class="btn btn-link" data-toggle="modal" data-target="#stdModal" title="Delete" role="button"><span class="glyphicon glyphicon-trash"></span></a>
+                            </span>
+                            <p>Primary Image? @Html.CheckBoxFor(m => item.IsPrimary, new { @disabled = "disabled" })</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

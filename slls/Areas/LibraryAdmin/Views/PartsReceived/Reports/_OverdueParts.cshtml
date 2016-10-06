@@ -1,0 +1,52 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.PartsOverdueViewModel
+
+<table id="circulatedcopies" class="table table-striped">
+    <thead>
+    <tr>
+        <th style="width: 30%;">
+            @Html.Label(@DbRes.T("Titles.Title", "FieldDisplayName"))
+        </th>
+        <th style="width: 10%;">
+            @Html.Label(@DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
+        </th>
+        <th style="width: 20%;">
+            @Html.Label("Last " + DbRes.T("CheckIn.Part", "FieldDisplayName") + " Received")
+        </th>
+        <th style="width: 15%;">
+           @Html.Label("Date Last " + DbRes.T("CheckIn.Part", "FieldDisplayName") + " Received")
+        </th>
+        <th style="width: 15%;">
+            @Html.Label("Next " + DbRes.T("CheckIn.Part", "FieldDisplayName") + " Expected")
+        </th>
+        <th style="width: 10%;">
+            @Html.Label(DbRes.T("Titles.Frequency", "FieldDisplayName"))
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.PartsOverdue)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title.Title1)
+            </td>
+            <td style="width: 10%;">
+                @Html.DisplayFor(modelItem => item.CopyNumber)
+            </td>
+            <td style="width: 20%;">
+                @Html.DisplayFor(modelItem => item.PartsReceived.LastOrDefault().PartReceived)
+            </td>
+            <td style="width: 15%;">
+                @Html.DisplayFor(modelItem => item.PartsReceived.LastOrDefault().DateReceived)
+            </td>
+            <td style="width: 15%;">
+                @Html.DisplayFor(modelItem => item.NextPartExpected)
+            </td>
+            <td style="width: 10%;">
+                @Html.DisplayFor(modelItem => item.Title.Frequency.Frequency1)
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

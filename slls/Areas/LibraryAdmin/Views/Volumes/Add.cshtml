@@ -1,0 +1,94 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.VolumesAddViewModel
+
+<h2>@ViewBag.Title</h2>
+
+@if (Model.Step > 1)
+{
+    <div class="alert alert-success">
+        <p>
+            <strong><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Copies.Copy", "FieldDisplayName") added successfully!</strong>
+            &nbsp;&nbsp;Now add copy items to your new @DbRes.T("Copies.Copy", "FieldDisplayName"):
+        </p>
+    </div>
+}
+
+@using (Html.BeginForm("Add", "Volumes", FormMethod.Post, new { id = "frmNew "}))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.CopyId)
+    @Html.HiddenFor(model => model.TitleId)
+    @Html.HiddenFor(model => model.AddMore)
+    @Html.HiddenFor(model => model.Step)
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CopyNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(model => model.CopyNumber)</p>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Barcode, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control" } })
+                <span class="help-inline">This is the unique barcode or indentifier for the @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName"). This should be the same as any barcode (e.g. label) attached to the item.</span>
+                @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LabelText, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.LabelText, new { htmlAttributes = new { @class = "form-control" } })
+                <span class="help-inline">This is the information printed on the item's label</span>
+                @Html.ValidationMessageFor(model => model.LabelText, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label(DbRes.T("CopyItems.Loan_Type", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
+            <div class="col-md-10">
+                @Html.DropDownList("LoanTypeId", null, htmlAttributes: new {@class = "form-control"})
+                <span class="help-inline">This controls how the item may be loaned or if it is Reference-Only</span>
+                @Html.ValidationMessageFor(model => model.LoanTypeId, "", new {@class = "text-danger"})
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PrintLabel, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.PrintLabel)
+                    <span class="help-inline">Tick if you would like a label for this item to be printed.</span>
+                    @Html.ValidationMessageFor(model => model.PrintLabel, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="form-footer">
+        <button type="submit" id="btnOk" value="Add" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @ViewBag.BtnText</button>
+        <button type="submit" id="btnAddMore" value="Add" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Save & Add More</button>
+        &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+    </div>
+}
+
+<script type="text/javascript">
+    $('#btnAddMore').click(function () {
+        $('#AddMore').val("True");
+        $('#frmNew').submit();
+    });
+ </script>
+

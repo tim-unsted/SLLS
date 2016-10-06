@@ -1,0 +1,72 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.ReleaseNote>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#releasenotes').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [[1, "asc"]],
+            "columnDefs":[
+            {
+                "searchable": false,
+                "sortable": false,
+                "visible": false,
+                "targets": [2]}
+            ]
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div class="alert alert-info">
+
+    <span class="help-block"><strong>Info: </strong>Select the version release you wish to review from the list of releases below.</span>
+
+    @using (Html.BeginForm(null, null, FormMethod.Get))
+    {
+        @Html.AntiForgeryToken()
+
+        <form>
+            <div class="form-group">
+                @Html.DropDownList("releaseId", null, new { @class = "form-control", onchange = "this.form.submit();" })
+            </div>
+        </form>
+    }
+</div>
+
+<table id="releasenotes" class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ReleaseHeader.ReleaseNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Detail)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseHeader.ReleaseNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Detail)
+                </td>
+                <td>
+                    @Html.Raw(item.SequenceNo)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,98 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Classmark>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#classmarks').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs":[
+            {
+                "width": "40%",
+                "targets": [0]
+            },
+            {
+                "width": "40%",
+                "searchable": false,
+                "targets": [1]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": true,
+                "orderSequence": [ "desc", "asc" ], 
+                "targets": [2]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [3]}
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "Classmarks")" title="Add new @DbRes.T("Classmarks.Classmark", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="classmarks" class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th style="width: 60%;">
+                @DbRes.T("Classmarks.Classmark", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Classmarks.Short_Code", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Titles", "EntityType")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Classmark1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Classmarks", new { id = item.ClassmarkID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Classmark1, "Edit", "Classmarks", new { id = item.ClassmarkID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Code)
+                </td>
+                <td>
+                    @if (item.Titles.Any())
+                    {
+                        <a href="@Url.Action("ByClassmark", "Titles", new { id = item.ClassmarkID })" title="View all items using this @DbRes.T("Classmarks.Classmark", "FieldDisplayName")"><span class="badge badge-link">@item.Titles.Count</span></a>
+                    }
+                </td>
+                <td style="text-align: right;">
+                    @if (item.CanDelete && !item.Titles.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.ClassmarkID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.ClassmarkID})" class="btn btn-link modal-link" title="Edit">&nbsp;<span class="glyphicon glyphicon-pencil"></span></a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

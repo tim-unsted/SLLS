@@ -1,0 +1,16 @@
+﻿@model System.Collections.Generic.IEnumerable<slls.Models.Copy>
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Get, new { id = "TitlesTable" }))
+{
+    <div class="well well-default">
+        <div class="form-group">
+            @Html.DropDownList("ListStatus", null, new { @class = "form-control", onchange = "this.form.submit();" })
+        </div>
+    </div>
+}
+
+<div id="TitlesTable">
+    @Html.Partial("_IndexNoStatus", Model)
+</div>

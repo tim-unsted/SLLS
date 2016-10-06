@@ -1,0 +1,225 @@
+﻿@using VortexSoft.Bootstrap
+@using Westwind.Globalization
+@model slls.ViewModels.TitleEditViewModel
+
+@{
+    ViewBag.CopiesBadge = "";
+    ViewBag.SubjectsBadge = "";
+    ViewBag.ImagesBadge = "";
+    ViewBag.LinksBadge = "";
+    ViewBag.LongTextsBadge = "";
+    ViewBag.OrdersBadge = "";
+}
+
+@if (ViewBag.CopiesCount > 0)
+{
+    ViewBag.CopiesBadge = " <span class='badge'>" + ViewBag.CopiesCount + "</span>";
+}
+
+@if (ViewBag.SubjectCount > 0)
+{
+    ViewBag.SubjectsBadge = " <span class='badge'>" + ViewBag.SubjectCount + "</span>";
+}
+
+@if (ViewBag.ImagesCount > 0)
+{
+    ViewBag.ImagesBadge = " <span class='badge'>" + ViewBag.ImagesCount + "</span>";
+}
+
+@if (ViewBag.LinksCount > 0)
+{
+    ViewBag.LinksBadge = " <span class='badge'>" + ViewBag.LinksCount + "</span>";
+}
+
+@if (ViewBag.LongTextsCount > 0)
+{
+    ViewBag.LongTextsBadge = " <span class='badge'>" + ViewBag.LongTextsCount + "</span>";
+}
+
+@if (ViewBag.OrdersCount > 0)
+{
+    ViewBag.OrdersBadge = " <span class='badge'>" + ViewBag.OrdersCount + "</span>";
+}
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="well well-default">
+    <div class="form-group" title="@ViewBag.Message">
+        @Html.Partial("_Select")
+    </div>
+</div>
+
+
+
+@*<br />*@
+
+@using (var tabs = Html.Bootstrap().Begin(new Tabs()))
+{
+    tabs.Tab(DbRes.T("Titles.Title_Details", "FieldDisplayName"), "details");
+    tabs.Tab("Custom Fields", "custom");
+    tabs.Tab(DbRes.T("Titles.Keywords", "FieldDisplayName") + ViewBag.SubjectsBadge, "subjects");
+    tabs.Tab(DbRes.T("Titles.Links", "FieldDisplayName") + ViewBag.LinksBadge, "links");
+    tabs.Tab(DbRes.T("Titles.Long_Texts", "FieldDisplayName") + ViewBag.LongTextsBadge, "texts");
+    tabs.Tab(DbRes.T("Titles.Cover_Images", "FieldDisplayName") + ViewBag.ImagesBadge, "images");
+    tabs.Tab(DbRes.T("Titles.Copies", "FieldDisplayName") + ViewBag.CopiesBadge, "copies");
+    tabs.Tab(DbRes.T("Titles.Order_Details", "FieldDisplayName") + ViewBag.OrdersBadge, "finance");
+
+    using (tabs.BeginPanel())
+    {
+        <div>
+            @Html.Action("_Details", "Titles")
+        </div>
+    }
+    using (tabs.BeginPanel())
+    {
+        <br /><br />
+        <div>
+            @Html.Action("CustomFields", "TitleAdditionalFieldData")
+        </div>
+    }
+    using (tabs.BeginPanel())
+    {
+        <br />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <p>
+                        <a href="@Url.Action("Add", "SubjectIndexes", new {id = Model.TitleID})" class="btn btn-primary modal-link" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Keywords.Keyword", "FieldDisplayName")</a>
+                    </p>
+                    @if (ViewBag.SubjectCount > 0)
+                    {
+                        @Html.Partial("_ListKeywords", Model.SubjectIndexes)
+                    }
+                    else
+                    {
+                        <span class="form-control">There are currently no @DbRes.T("Titles.Keywords", "FieldDisplayName").</span>
+                    }
+                    <br/>
+                </div>
+            </div>
+        </div>
+    }
+    using (tabs.BeginPanel())
+    {
+        <br />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <p><a href="@Url.Action("Add", "TitleLinks", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("TitleLinks.Link", "FieldDisplayName")</a></p>
+                    @if (ViewBag.LinksCount > 0)
+                    {
+                        @Html.Partial("_ListTitleLinks", Model.TitleLinks)
+                    }
+                    else
+                    {
+                        <span class="form-control">There are currently no @DbRes.T("Titles.Links", "FieldDisplayName").</span>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+    using (tabs.BeginPanel())
+    {
+        <br />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <p>
+                        <a href="@Url.Action("AddLongText", "TitleAdditionalFieldData", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("TitleTexts.Text", "FieldDisplayName")</a>
+                    </p>
+                    @if (ViewBag.LongTextsCount > 0)
+                    {
+                        @Html.Partial("_ListLongTexts", Model.TitleAdditionalFieldDatas.Where(x => x.TitleAdditionalFieldDef.IsLongText))
+                    }
+                    else
+                    {
+                        <span class="form-control">There are currently no @DbRes.T("Titles.Long_Texts", "FieldDisplayName").</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+    using (tabs.BeginPanel())
+    {
+        <br />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <p>
+                        <a href="@Url.Action("Add", "TitleImages", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#stdModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Images.Image", "FieldDisplayName")</a>
+                    </p>
+                    @if (ViewBag.ImagesCount > 0)
+                    {
+                        @Html.Action("List", "TitleImages", new { id = Model.TitleID })
+                    }
+                    else
+                    {
+                        <span class="form-control">There are currently no @DbRes.T("Titles.Cover_Images", "FieldDisplayName").</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+    using (tabs.BeginPanel())
+    {
+        <br />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <p>
+                        <a href="@Url.Action("Add", "Copies", new {id = Model.TitleID})" class="btn btn-primary" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
+                    </p>
+                    @if (ViewBag.CopiesCount > 0)
+                    {
+                        @Html.Action("_ThumbnailDetails", "Copies", new { id = Model.TitleID })
+                    }
+                    else
+                    {
+                        <span class="form-control">There are currently no @DbRes.T("Titles.Copies", "FieldDisplayName").</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+    using (tabs.BeginPanel())
+    {
+        <br />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <p>
+                        <a href="@Url.Action("Add", "OrderDetails", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Orders.New_Order", "FieldDisplayName")</a>
+                    </p>
+                    @if (ViewBag.OrdersCount > 0)
+                    {
+                        @Html.Partial("_ListOrders", Model.OrderDetails)
+                    }
+                    else
+                    {
+                        <span class="form-control">There are currenty no @DbRes.T("Orders", "EntityType").</span>
+                    }
+                </div>
+            </div>
+        </div>
+
+    }
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('a[data-toggle="tab"]').on('click', function (e) {
+            //save the latest tab:
+            sessionStorage.setItem('lastTab_EditTitle', $(e.target).attr('href'));
+        });
+
+        //go to the latest tab, if it exists:
+        var lastTab = sessionStorage.getItem('lastTab_EditTitle');
+
+        if (lastTab) {
+            $('a[href="' + lastTab + '"]').click();
+        }
+    });
+</script>

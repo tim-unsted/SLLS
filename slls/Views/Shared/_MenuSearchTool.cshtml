@@ -1,0 +1,11 @@
+﻿@model slls.ViewModels.SimpleSearchingViewModel
+
+@using (Html.BeginForm("SimpleSearchResults", "Home", new { area = "", role = "search" }, FormMethod.Post, new { @class = "navbar-form navbar-right" }))
+{
+    <div class="input-group">
+        @Html.EditorFor(model => model.SearchString, new { htmlAttributes = new { @class = "form-control", placeholder = "Find ..." } })
+        <div class="input-group-btn">
+            <button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+        </div>
+    </div>
+}

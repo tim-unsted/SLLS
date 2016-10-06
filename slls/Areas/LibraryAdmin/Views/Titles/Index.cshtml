@@ -1,0 +1,13 @@
+﻿@using slls.Utils.Helpers
+@model slls.ViewModels.TitlesListViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="well">
+    Use the alpha-filters below to narrow your search ...
+    @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new {selectedLetter = x}))
+</div>
+
+<div>
+    @Html.Partial("_Index", Model)
+</div>

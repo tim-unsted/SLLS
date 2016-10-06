@@ -1,0 +1,114 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.BudgetCode>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#table_id').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+           {
+               "width": "40%",
+               "targets": [0]
+           },
+           {
+               "width": "20%",
+               "targets": [1, 2]
+           },
+           {
+               "width": "10%",
+               "searchable": false,
+               "sortable": true,
+               "orderSequence": ["desc", "asc"],
+               "targets": [3]
+           },
+           {
+               "visible": false,
+               "targets": [4]
+           },
+           {
+               "width": "10%",
+               "searchable": false,
+               "sortable": false,
+               "targets": [5]
+           }
+            ]
+        });
+    });
+
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "BudgetCodes")" title="Add new @DbRes.T("BudgetCode.Budget_Code", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="table_id" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("BudgetCode.Budget_Code", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("BudgetCode.Allocation_Subs", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("BudgetCode.Allocation_OneOffs", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Orders", "EntityType")
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.BudgetCode1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "BudgetCodes", new { id = item.BudgetCodeID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.BudgetCode1, "Edit", "BudgetCodes", new { id = item.BudgetCodeID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AllocationSubs)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AllocationOneOffs)
+                </td>
+                <td>
+                    @if (item.OrderDetails.Any())
+                    {
+                        <a href="@Url.Action("OrdersByBudgetCode", "OrderDetails", new {listBudgetCodes = item.BudgetCodeID})" title="View all orders allocated to this @DbRes.T("Orders.Budget_Code", "FieldDisplayName")"><span class="badge badge-link">@item.OrderDetails.Count</span></a>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ListPos)
+                </td>
+                <td class="just-right">
+                    @if (item.CanDelete && !item.OrderDetails.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.BudgetCodeID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.BudgetCodeID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

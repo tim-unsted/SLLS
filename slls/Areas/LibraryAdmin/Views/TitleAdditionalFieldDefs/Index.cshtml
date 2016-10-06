@@ -1,0 +1,95 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.TitleAdditionalFieldDef>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $('#fielddefs').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            }
+        });
+    });
+
+</script>
+
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="btn-group">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="glyphicon glyphicon-plus-sign"></span> Add New <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="@Url.Action("AddCustomField", "TitleAdditionalFieldDefs")" class="modal-link" title="Add new custom field definition">Custom Field Definition</a></li>
+        <li><a href="@Url.Action("AddLongTextLabel", "TitleAdditionalFieldDefs")" title="Add new long-text label" class="modal-link">Long Text Label</a></li>
+    </ul>
+</div>
+
+<hr/>
+
+<table class="table" id="fielddefs">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FieldName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsNumeric)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsBoolean)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsLongText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShowOnOPAC)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.FieldName))
+                    {
+                        @Html.ActionLink(" ", "EditCustomField", "TitleAdditionalFieldDefs", new { id = item.FieldID }, new { @Class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.FieldName, "EditCustomField", "TitleAdditionalFieldDefs", new { id = item.FieldID }, new { @Class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsNumeric)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsBoolean)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsLongText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShowOnOPAC)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new { id = item.FieldID })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("EditCustomField", new {id = item.FieldID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

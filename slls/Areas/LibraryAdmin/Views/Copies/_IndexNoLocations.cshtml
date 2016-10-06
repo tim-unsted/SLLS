@@ -1,0 +1,113 @@
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model IEnumerable<slls.Models.Copy>
+           
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#copies').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+            {
+                "width": "30%",
+                "orderData": 5,
+                "targets": 0
+            },
+            {
+                "width": "10%",
+                "targets": [1]
+            },
+            {
+                "width": "20%",
+                "targets": [2, 3]
+            },
+            {
+                "visible": false,
+                "targets": [5]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [6]
+            }
+            ]
+        });
+    });
+</script>
+
+<table id="copies" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title.Title1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CopyNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.StatusType.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Holdings)
+            </th>
+            <th>
+                @Html.Label(DbRes.T("CopyItems.Barcodes", "FieldDisplayName"))
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Title.Title1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Titles", new { id = item.TitleID }, null)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Title.Title1, "Edit", "Titles", new { id = item.TitleID }, new { title = "View/Edit this Title" })
+                    }
+                </td>
+                <td>
+                    @Html.ActionLink("Copy " + item.CopyNumber.ToString(), "Edit", "Copies", new { id = item.CopyID }, new { title = "View/Edit this Copy" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusType.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Holdings)
+                </td>
+                <td>
+                    @foreach (var barcode in item.Volumes)
+                    {
+                        <a href="@Url.Action("Edit", "Volumes", new { id = barcode.VolumeID }, null)" class="modal-link" title="View/Edit Volume">@barcode.Barcode</a>
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title.FiledTitle)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Edit", new { id = item.CopyID })" class="btn btn-link" title="Edit"><span class="glyphicon glyphicon-pencil" /></a>
+                    @if (@Html.CurrentViewName() == "BoundItems")
+                    {
+                        <a href="@Url.Action("RemoveFromBinding", new { id = item.CopyID })" class="btn btn-link modal-link" title="Remove"><span class="glyphicon glyphicon-remove" /></a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Delete", new { id = item.CopyID })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash" /></a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

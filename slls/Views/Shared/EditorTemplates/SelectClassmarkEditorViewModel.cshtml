@@ -1,0 +1,13 @@
+﻿@model slls.ViewModels.SelectClassmarkEditorViewModel
+
+
+<li>
+    @Html.CheckBoxFor(model => model.Selected)
+    @Html.DisplayFor(model => model.Name)
+    @if (@Model.TitleCount > 0)
+    {
+        <span class="badge small">@Model.TitleCount</span>
+    }
+    @Html.HiddenFor(model => model.Id)
+</li>
+

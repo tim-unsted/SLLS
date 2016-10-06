@@ -1,0 +1,48 @@
+﻿@model IEnumerable<slls.Models.Menu>
+
+@{
+    Layout = null;
+}
+
+@{
+    //THIS IS THE MAIN MENU IN THE CONFIG AREA
+}
+
+<ul class="nav navbar-nav">
+    @{
+        //Get the top level menu items ...
+        var itemsL1 = from m in Model.Where(m => m.ParentID == (int)ViewData["ParentMenuID"]).ToList()
+                      select m;
+
+        foreach (var l1 in itemsL1)
+        {
+            <li class="dropdown">
+                @*//Get the sub menu headings ... we don't actually show them in this menu though! *@
+                @{var itemsL2 = from p in Model.Where(m => m.ParentID == l1.ID) select p;
+                if (itemsL2.Any())
+                {
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@l1.Title<span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                        @foreach (var l2 in itemsL2)
+                        {
+                            var itemsL3 = from l in Model.Where(m => m.ParentID == l2.ID) select l;
+                            if (itemsL3 != null || itemsL3.Any())
+                            {
+                                foreach (var l3 in itemsL3)
+                                {
+                                    //Create the actual sub menu item links ...
+                                    <li style="padding: 3px 10px;"><a href="@Url.Action(l3.Action, l3.Controller)" data-toggle="@l3.DataToggle" data-target="@l3.DataTarget" target="@l3.Target" title="@l3.HoverTip">@l3.Title</a></li>
+                                }
+                            }
+                        }
+                    </ul>
+                }
+                else
+                {
+                    @Html.ActionLink(l1.Title, l1.Action, l1.Controller, new { Area = l1.LinkArea }, null)
+                }
+                }
+            </li>
+        }
+    }
+</ul>

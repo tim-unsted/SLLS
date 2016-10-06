@@ -1,0 +1,11 @@
+﻿@model slls.Models.Frequency
+
+@using (Html.BeginForm("_add", "Frequencies", FormMethod.Post, new { id = "addFrequencyForm" }))
+{
+    <div class="form-group">
+        <br />
+        @Html.EditorFor(model => model.Frequency1, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Frequency1, "", new { @class = "text-danger" })
+    </div>
+    @*@Html.HiddenFor(model => model.Days)*@
+}

@@ -1,0 +1,65 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Frequency>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#frequencies').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            }
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "Frequencies")" title="Add new @DbRes.T("Frequency.Frequency", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="frequencies" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("Frequency.Frequency", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Frequency.DaysBetween", "FieldDisplayName")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Frequency1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Frequencies", new { id = item.FrequencyID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Frequency1, "Edit", "Frequencies", new { id = item.FrequencyID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Days)
+                </td>
+                <td class="just-right">
+                    @if (item.CanDelete && !item.Titles.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.FrequencyID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.FrequencyID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

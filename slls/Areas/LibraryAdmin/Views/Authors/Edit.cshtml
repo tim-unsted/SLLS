@@ -1,0 +1,106 @@
+﻿@using Westwind.Globalization
+@model slls.Models.Author
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+            
+            @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+            {
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <h4>Oops!</h4>
+                    @Html.ValidationSummary()
+                </div>
+            }
+            @Html.HiddenFor(model => model.AuthorID)
+            @Html.Hidden("titleid")
+            
+            <div class="form-group">
+                @Html.LabelFor(model => model.DisplayName, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.DisplayName, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.DisplayName, "", new {@class = "text-danger"})
+                </div>
+            </div>
+            
+            <div id="personalFields" style="display: @(Model.AuthType.ToLower() == "p" ? "block" : "none")">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Firstnames, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.Firstnames, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Firstnames, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Lastnames, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.Lastnames, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Lastnames, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                @Html.LabelFor(model => model.AuthType, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-3">
+                    @Html.DropDownListFor(model => model.AuthType, new SelectList(ViewBag.AuthTypes, "Key", "Value"), new {@class = "form-control" ,@onchange = "onDropdownChange();"})
+                    @Html.ValidationMessageFor(model => model.AuthType, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Notes, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Notes, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.Notes, "", new {@class = "text-danger"})
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    @Html.Partial("_ModalEditFooter")
+}
+
+<script type="text/javascript">
+    function onDropdownChange() {
+        $('#personalFields').toggle();
+        return false;
+    }
+</script>
+
+<script>
+    $(".validation-summary-errors").removeClass("validation-summary-errors");
+    $(".input-validation-error").removeClass("input-validation-error").parent().addClass("has-error");
+
+    $('#body-content').on('change keyup keydown', 'input, textarea, select', function (e) {
+        $(this).addClass('changed-input');
+    });
+
+    $(window).on('beforeunload', function () {
+        if ($('.changed-input').length) {
+            return 'You haven\'t saved your changes.';
+            }
+        });
+
+</script>
+
+
+

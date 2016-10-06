@@ -1,0 +1,64 @@
+﻿@using iTextSharp.xmp.impl
+@model slls.ViewModels.ParametersAddEditViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.RecID)
+            @Html.HiddenFor(model => model.ParameterID)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ParameterID, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.ParameterName)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ParameterArea, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.ParameterArea)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ParameterValue, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.ParameterValue, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ParameterValue, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ParamUsage, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @{
+                        if (slls.Utils.Helpers.Roles.IsBaileyAdmin())
+                        {
+                            @Html.EditorFor(model => model.ParamUsage, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.ParamUsage, "", new { @class = "text-danger" })
+                        }
+                        else
+                        {
+                            <p class="form-control-static">@Html.DisplayFor(model => model.ParamUsage)</p>
+                        }
+                    }
+                </div>
+            </div>
+
+
+
+        </div>
+    </div>
+
+    @Html.Partial("_ModalEditFooter")
+}
+

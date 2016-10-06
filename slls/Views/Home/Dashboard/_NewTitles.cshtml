@@ -1,0 +1,33 @@
+﻿@model slls.ViewModels.OPACHomePageViewModel
+
+<div class="panel panel-gadget shadowed">
+    <div class="panel-heading">
+        <span class="panel-title">
+            <span class="glyphicon glyphicon-book"></span>&nbsp;<span id="gadget-Title">@ViewBag.Title</span>
+            <span class="pull-right">
+                @if (Model.LibraryStaff)
+                {
+                    <a href="@Url.Action("NewTitles", "Titles", new {area = "LibraryAdmin"})" title="Maintain New Titles List"><span class="glyphicon glyphicon-pencil"></span></a> 
+                }
+                <a href="@Url.Action("NewTitles", "Home")" title="View full list"><span class="glyphicon glyphicon-eye-open"></span></a>
+            </span>
+        </span>
+    </div>
+    <div class="panel-body">
+        <table class="table table-compact">
+            <tbody>
+                @foreach (var newTitle in Model.NewTitles)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("BookDetails", "Home", new { id = newTitle.TitleID })">@newTitle.Title1</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        Showing 1-@ViewBag.Showing of <a href="@Url.Action("NewTitles", "Home")" title="View full list">@ViewBag.Count </a>new titles.
+    </div>
+</div>

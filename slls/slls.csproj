@@ -1,0 +1,1455 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{EFE33710-5653-40A5-B52A-27E820B90E37}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>slls</RootNamespace>
+    <AssemblyName>slls</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <MvcBuildViews>false</MvcBuildViews>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort>44300</IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ExcludeGeneratedDebugSymbol>true</ExcludeGeneratedDebugSymbol>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+    <PublishDatabases>false</PublishDatabases>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="CommonMark">
+      <HintPath>..\packages\CommonMark.NET.0.9.0\lib\net45\CommonMark.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.1.0.0, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp">
+      <HintPath>..\packages\iTextSharp.5.5.9\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.0\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.0\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.3.0.1\lib\net45\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.3.0.1\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.1\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Facebook, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.1\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.1\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.1\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.1\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.1\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="MohammadYounes.Owin.Security.MixedAuth">
+      <HintPath>..\packages\OWIN-MixedAuth.1.1.0\lib\net45\MohammadYounes.Owin.Security.MixedAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcSiteMapProvider">
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.Core.4.6.22\lib\net45\MvcSiteMapProvider.dll</HintPath>
+    </Reference>
+    <Reference Include="MvcSiteMapProvider.WebActivator">
+      <HintPath>..\packages\MvcSiteMapProvider.MVC5.4.6.22\lib\net45\MvcSiteMapProvider.WebActivator.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.DirectoryServices.AccountManagement" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.2\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.2\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.2\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc.Expressions">
+      <HintPath>..\packages\System.Web.Mvc.Expressions.1.0.1\lib\System.Web.Mvc.Expressions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="VortexSoft.Bootstrap">
+      <HintPath>..\packages\VortexSoft.Bootstrap.1.0.0\lib\VortexSoft.Bootstrap.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivatorEx">
+      <HintPath>..\packages\WebActivatorEx.2.0.1\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.6.5135.21930, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Westwind.Globalization">
+      <HintPath>..\packages\Westwind.Globalization.2.1.0\lib\net45\Westwind.Globalization.dll</HintPath>
+    </Reference>
+    <Reference Include="Westwind.Globalization.Web">
+      <HintPath>..\packages\Westwind.Globalization.Web.2.1.0\lib\net45\Westwind.Globalization.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Westwind.Utilities">
+      <HintPath>..\packages\Westwind.Utilities.2.64\lib\net45\Westwind.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Westwind.Web">
+      <HintPath>..\packages\Westwind.Web.2.64\lib\net45\Westwind.Web.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Settings\GlobalVariables.cs" />
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\Config\ConfigAreaRegistration.cs" />
+    <Compile Include="Areas\Config\Controllers\BsAdminBaseController.cs" />
+    <Compile Include="Areas\Config\Controllers\CacheController.cs" />
+    <Compile Include="Areas\Config\Controllers\ConfigBaseController.cs" />
+    <Compile Include="Areas\Config\Controllers\ConnectionController.cs" />
+    <Compile Include="Areas\Config\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Config\Controllers\LocalizationController.cs" />
+    <Compile Include="Areas\Config\Controllers\MenuBuilderController.cs" />
+    <Compile Include="Areas\Config\Controllers\ParametersController.cs" />
+    <Compile Include="Areas\Config\Controllers\PartialMenuController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\CirculationController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\CirculationMessagesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\CommMethodTypesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\DefaultValuesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\ExportDataController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\InvoicesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\LabelsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\LanguagesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\LoanTypesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\NotificationsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\OrderCategoriesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\OrderDetailsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\ParametersController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\PartsReceivedController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\PublishersController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\SearchingController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\SubjectIndexesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\SupplierAddressesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\SupplierPeopleCommsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\SupplierPeopleController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\TitleAdditionalFieldDataController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\TitleAdditionalFieldDefsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\TitleAuthorsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\TitleEditorsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\TitleImagesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\TitleLinksController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\UsefulLinksController.cs" />
+    <Compile Include="ConnectionMapping.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\LibraryUserBookmarksController.cs" />
+    <Compile Include="Controllers\LibraryUserLoansController.cs" />
+    <Compile Include="Controllers\LibraryUserSavedSearchesController.cs" />
+    <Compile Include="App_Settings\CssManager.cs" />
+    <Compile Include="DAO\DataCaches.cs" />
+    <Compile Include="DAO\DataExport.cs" />
+    <Compile Include="Hubs\ProgressHub.cs" />
+    <Compile Include="App_Start\Startup.SignalR.cs" />
+    <Compile Include="Messaging\EmailService.cs" />
+    <Compile Include="Migrations\201607071603580_circulation.cs" />
+    <Compile Include="Migrations\201607071603580_circulation.Designer.cs">
+      <DependentUpon>201607071603580_circulation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\CopacLibrary.cs" />
+    <Compile Include="Models\CopacLanguage.cs" />
+    <Compile Include="Models\DashboardGadget.cs" />
+    <Compile Include="Models\DefaultValue.cs" />
+    <Compile Include="Models\LibraryUserSavedSearch.cs" />
+    <Compile Include="Models\LibraryUserBookmark.cs" />
+    <Compile Include="Models\LoanType.cs" />
+    <Compile Include="Models\OrderCategory.cs" />
+    <Compile Include="Models\Publisher.cs" />
+    <Compile Include="Models\ReleaseHeader.cs" />
+    <Compile Include="Models\ReleaseNote.cs" />
+    <Compile Include="Models\SearchField.cs" />
+    <Compile Include="Models\SuppliersList.cs" />
+    <Compile Include="Models\Image.cs" />
+    <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\UsefulLink.cs" />
+    <Compile Include="Models\vwAccountQry.cs" />
+    <Compile Include="Models\vwVolumesWithLoans.cs" />
+    <Compile Include="Partials\OrderDetails.cs" />
+    <Compile Include="Utils\Helpers\HelpTextHelper.cs" />
+    <Compile Include="Utils\Helpers\HtmlHelpers.cs" />
+    <Compile Include="Utils\Helpers\MenuHelper.cs" />
+    <Compile Include="Utils\Helpers\MvcHelpers.cs" />
+    <Compile Include="Utils\Helpers\SelectListHelper.cs" />
+    <Compile Include="Utils\Helpers\SignedRequestHelper.cs" />
+    <Compile Include="Utils\Helpers\StringHelper.cs" />
+    <Compile Include="Utils\PublicFunctions.cs" />
+    <Compile Include="App_Settings\Settings.cs" />
+    <Compile Include="ViewModels\AccountYearSelectorViewModels.cs" />
+    <Compile Include="ViewModels\AccountYearsViewModels.cs" />
+    <Compile Include="ViewModels\ActivityTypesViewModels.cs" />
+    <Compile Include="ViewModels\AlphabeticalPagingViewModel.cs" />
+    <Compile Include="ViewModels\AuthoritySelectorViewModels.cs" />
+    <Compile Include="ViewModels\BorrowingViewModels.cs" />
+    <Compile Include="ViewModels\BudgetCodeViewModels.cs" />
+    <Compile Include="ViewModels\CacheViewModels.cs" />
+    <Compile Include="ViewModels\CirculationViewModels.cs" />
+    <Compile Include="ViewModels\ClassmarksViewModels.cs" />
+    <Compile Include="ViewModels\ConnectionViewModels.cs" />
+    <Compile Include="ViewModels\CopiesViewModels.cs" />
+    <Compile Include="ViewModels\ConfirmationViewModels.cs" />
+    <Compile Include="ViewModels\DashboardViewModels.cs" />
+    <Compile Include="ViewModels\DataExportViewModels.cs" />
+    <Compile Include="ViewModels\DefaultValueViewModels.cs" />
+    <Compile Include="ViewModels\LoanTypesViewModels.cs" />
+    <Compile Include="ViewModels\MenuViewModels.cs" />
+    <Compile Include="ViewModels\NotificationViewModels.cs" />
+    <Compile Include="ViewModels\OPACHomePageViewModel.cs" />
+    <Compile Include="ViewModels\OrderDetailsViewModels.cs" />
+    <Compile Include="ViewModels\OrderReportsViewModels.cs" />
+    <Compile Include="ViewModels\PagedListViewModel.cs" />
+    <Compile Include="ViewModels\ParametersViewModel.cs" />
+    <Compile Include="ViewModels\PartsReceivedViewModels.cs" />
+    <Compile Include="ViewModels\PrintLabelsViewModels.cs" />
+    <Compile Include="ViewModels\ReleaseNotesViewModels.cs" />
+    <Compile Include="ViewModels\ReportsGeneratorViewModels.cs" />
+    <Compile Include="ViewModels\SearchingViewModels.cs" />
+    <Compile Include="ViewModels\SettingsViewModels.cs" />
+    <Compile Include="ViewModels\StatisticsViewModels.cs" />
+    <Compile Include="ViewModels\SupplierAddressesViewModels.cs" />
+    <Compile Include="ViewModels\SupplierPeopleViewModels.cs" />
+    <Compile Include="ViewModels\TitleCustomDataViewModels.cs" />
+    <Compile Include="ViewModels\DepartmentsViewModels.cs" />
+    <Compile Include="ViewModels\FrequenciesViewModels.cs" />
+    <Compile Include="ViewModels\KeywordsViewModel.cs" />
+    <Compile Include="ViewModels\LanguagesViewModels.cs" />
+    <Compile Include="ViewModels\LibraryUsersViewModels.cs" />
+    <Compile Include="ViewModels\ListBoxViewModel.cs" />
+    <Compile Include="ViewModels\LocalizationViewModels.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\HomeController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\PartialMenuController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\LibraryAdmin\LibraryAdminAreaRegistration.cs" />
+    <Compile Include="Controllers\AccountController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\LibraryAdmin\Controllers\AccountYearsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\ActivityTypesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\AdminBaseController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\AuthorsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\KeywordsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\LoansController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\BudgetCodesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\ClassmarksController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\SuppliersController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\CopiesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\DepartmentsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\FrequenciesController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\LibraryUsersController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\LocationsController.cs" />
+    <Compile Include="Controllers\ManageController.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Areas\LibraryAdmin\Controllers\MediaTypesController.cs" />
+    <Compile Include="Controllers\RolesAdminController.cs" />
+    <Compile Include="Controllers\sllsBaseController.cs" />
+    <Compile Include="Controllers\PartialMenuController.cs" />
+    <Compile Include="DAO\GenericRepository.cs" />
+    <Compile Include="DAO\IRepository.cs" />
+    <Compile Include="ICache.cs" />
+    <Compile Include="LocalCache.cs" />
+    <Compile Include="Models\AdminViewModel.cs" />
+    <Compile Include="Models\IdentityModels.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Models\Localization.cs" />
+    <Compile Include="Models\Menu.cs" />
+    <Compile Include="Localization\LocalDisplayNameAttribute.cs" />
+    <Compile Include="NullCache.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\StatusTypesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\TitlesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\VolumesController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AccountYear.cs" />
+    <Compile Include="Models\ActivityType.cs" />
+    <Compile Include="Models\Author.cs" />
+    <Compile Include="ViewModels\AuthorViewModels.cs" />
+    <Compile Include="Models\Borrowing.cs" />
+    <Compile Include="Models\BudgetCode.cs" />
+    <Compile Include="Models\CatalogueSearch.cs" />
+    <Compile Include="Models\Circulation.cs" />
+    <Compile Include="Models\CirculationMessage.cs" />
+    <Compile Include="Models\Classmark.cs" />
+    <Compile Include="Models\CommMethodType.cs" />
+    <Compile Include="Models\Supplier.cs" />
+    <Compile Include="Models\SupplierAddress.cs" />
+    <Compile Include="Models\SupplierPeople.cs" />
+    <Compile Include="Models\SupplierPeopleComm.cs" />
+    <Compile Include="Models\Copy.cs" />
+    <Compile Include="Models\DbEntities.cs" />
+    <Compile Include="Models\Department.cs" />
+    <Compile Include="Models\EmailLog.cs" />
+    <Compile Include="Models\EmailLogAttachment.cs" />
+    <Compile Include="Models\ErrorLog.cs" />
+    <Compile Include="Models\Frequency.cs" />
+    <Compile Include="Models\HelpText.cs" />
+    <Compile Include="Models\Keyword.cs" />
+    <Compile Include="Models\Language.cs" />
+    <Compile Include="Models\LibraryUserEmailAddress.cs" />
+    <Compile Include="Models\LoanReturn.cs" />
+    <Compile Include="Models\Location.cs" />
+    <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MediaType.cs" />
+    <Compile Include="Models\Metadata.cs" />
+    <Compile Include="Models\OrderDetail.cs" />
+    <Compile Include="Models\Parameter.cs" />
+    <Compile Include="Models\PartialClasses.cs" />
+    <Compile Include="Models\PartsReceived.cs" />
+    <Compile Include="Models\ReleaseVersion.cs" />
+    <Compile Include="Models\ReportType.cs" />
+    <Compile Include="Models\SearchOperatorType.cs" />
+    <Compile Include="Models\SimpleSearch.cs" />
+    <Compile Include="Models\StatusType.cs" />
+    <Compile Include="Models\SubjectIndex.cs" />
+    <Compile Include="Models\TempExportQuery.cs" />
+    <Compile Include="Models\Title.cs" />
+    <Compile Include="Models\TitleAdditionalFieldData.cs" />
+    <Compile Include="Models\TitleAdditionalFieldDef.cs" />
+    <Compile Include="Models\TitleAuthor.cs" />
+    <Compile Include="Models\TitleEditor.cs" />
+    <Compile Include="Models\TitleImage.cs" />
+    <Compile Include="Models\TitleLink.cs" />
+    <Compile Include="Models\UsersADMaintenanceLog.cs" />
+    <Compile Include="Models\Volume.cs" />
+    <Compile Include="Models\vwBinding.cs" />
+    <Compile Include="Models\vwBorrowing.cs" />
+    <Compile Include="Models\vwItemsOnLoan.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+    <Compile Include="Utils\Utils_Reflection.cs" />
+    <Compile Include="Utils\Utils_Strings.cs" />
+    <Compile Include="Utils\Helpers\AuthorizeRolesAttribute.cs" />
+    <Compile Include="Utils\Helpers\Roles.cs" />
+    <Compile Include="ViewModels\LocationsViewModels.cs" />
+    <Compile Include="ViewModels\MediaTypesViewModels.cs" />
+    <Compile Include="ViewModels\PublishersViewModels.cs" />
+    <Compile Include="ViewModels\StatusTypesViewModels.cs" />
+    <Compile Include="ViewModels\SubjectIndexViewModels.cs" />
+    <Compile Include="ViewModels\SuppliersViewModels.cs" />
+    <Compile Include="ViewModels\TitleAdditionalFieldDefViewModels.cs" />
+    <Compile Include="ViewModels\TitleAuthorViewModels.cs" />
+    <Compile Include="ViewModels\TitleEditorViewModels.cs" />
+    <Compile Include="ViewModels\TitleImageViewModels.cs" />
+    <Compile Include="ViewModels\TitleLinksViewModels.cs" />
+    <Compile Include="ViewModels\TitleReportsViewModels.cs" />
+    <Compile Include="ViewModels\TitlesViewModels.cs" />
+    <Compile Include="ViewModels\UsefulLinksViewModels.cs" />
+    <Compile Include="ViewModels\VolumesViewModels.cs" />
+    <Compile Include="App_Start\AppBuilderExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersBySupplier.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="CodeTemplates\AssemblyVersions.xml" />
+    <Content Include="CodeTemplates\PackageVersions5.0.0.xml" />
+    <Content Include="CodeTemplates\PackageVersions5.0.2.xml" />
+    <Content Include="CodeTemplates\PackageVersions5.1.0.xml" />
+    <Content Include="CodeTemplates\PackageVersions5.1.1.xml" />
+    <Content Include="CodeTemplates\PackageVersions5.1.2.xml" />
+    <Content Include="CodeTemplates\PackageVersions5.1.3.xml" />
+    <Content Include="CodeTemplates\PackageVersions5.2.0.xml" />
+    <Content Include="CodeTemplates\PackageVersions5.2.2.xml" />
+    <Content Include="Content\bootstrap-datepicker.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\jquery-ui.structure.css" />
+    <Content Include="Content\jquery-ui.structure.min.css" />
+    <Content Include="Content\jquery-ui.theme.css" />
+    <Content Include="Content\jquery-ui.theme.min.css" />
+    <Content Include="Content\menu.css" />
+    <Content Include="Content\PagedList.css" />
+    <Content Include="Content\printLs.css" />
+    <Content Include="Content\print.css" />
+    <Content Include="Content\site.min.css" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Customer\Images\beach_huts.gif" />
+    <Content Include="Customer\Images\slls-logo.png" />
+    <Content Include="Customer\Styles\styling.css" />
+    <Content Include="DataTables\autocat.txt" />
+    <Content Include="DataTables\lang.txt" />
+    <Content Include="DataTables\plugins.js" />
+    <Content Include="favicon.ico" />
+    <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Global.asax" />
+    <Content Include="Content\site.css" />
+    <Content Include="Images\bailey-footer-logo.png" />
+    <Content Include="Images\beach_huts.gif" />
+    <Content Include="Images\beach_huts_mono.gif" />
+    <Content Include="Images\cake-one-icon.png" />
+    <Content Include="Images\cake-three-icon.png" />
+    <Content Include="Images\cake-two-icon.png" />
+    <Content Include="Images\calendar.gif" />
+    <Content Include="Images\conniouseur-cake-large.png" />
+    <Content Include="Images\home9.jpg" />
+    <Content Include="Images\in-house-cake-large.png" />
+    <Content Include="Images\simple logo MAIN landscape colour rgb.png" />
+    <Content Include="Images\simple logo MAIN landscape pink white.png" />
+    <Content Include="Images\simple logo MAIN portrait black rgb.png" />
+    <Content Include="Images\simple logo MAIN portrait colour rgb.png" />
+    <Content Include="Images\simple logo MAIN square black rgb.png" />
+    <Content Include="Images\sky.gif" />
+    <Content Include="Images\ui-icons_888888_256x240.png" />
+    <Content Include="App_Code\Helpers.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\web.config" />
+    <Content Include="Areas\LibraryAdmin\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\MainMenu.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Config\Views\web.config" />
+    <Content Include="Areas\Config\Views\Shared\MainMenu.cshtml" />
+    <Content Include="Areas\Config\Views\Home\Index.cshtml" />
+    <Content Include="Areas\Config\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\Config\Views\Localization\Index.cshtml" />
+    <Content Include="Areas\Config\Views\Localization\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\_ItemsOnLoan.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\NotFound.cshtml" />
+    <Content Include="Areas\Config\Views\Shared\NotFound.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Locations\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\LibraryUsers\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_ListKeywords.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SubjectIndexes\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SubjectIndexes\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_ListCopies.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAuthors\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAuthors\List.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleEditors\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleEditors\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAuthors\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAuthors\_AuthorList.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_ListAuthors.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleEditors\_EditorList.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleEditors\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleEditors\List.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_ListEditors.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAuthors\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SubjectIndexes\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Publishers\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Publishers\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Publishers\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Languages\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Languages\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Languages\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\BrowseByLanguage.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\ByLanguage.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\Bind.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\TitlesNoCopies.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\NewTitles.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_ListTitleLinks.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_SearchTitles.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldDefs\AddLongTextLabel.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldDefs\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldDefs\EditLongTextLabel.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_ListLongTexts.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldData\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldData\AddLongText.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldData\AddCustomData.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldData\CustomFields.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldData\EditorTemplates\TitleCustomDataIndexViewModel.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleImages\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleImages\List.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleImages\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleImages\Show.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleImages\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldDefs\LongTextLabels.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldDefs\CustomFields.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldDefs\AddCustomField.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleAdditionalFieldDefs\EditCustomField.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_ListOrders.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AllReceived.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersByTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AllInvoices.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_Invoices.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_OrdersNoSupplier.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AllOutstanding.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AllOverdue.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_Outstanding.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_OnApproval.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AllOnApproval.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_Received.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersByBudgetCode.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AddReceipt.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AllUnassigned.cshtml" />
+    <Content Include="DataTables\options.js" />
+    <Content Include="Scripts\bootstrap-datepicker.js" />
+    <Content Include="Scripts\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\Dom.txt" />
+    <Content Include="Scripts\go-to-tab.js" />
+    <Content Include="Areas\LibraryAdmin\sllsClient.js" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleImages\DownloadImagesAutoCat.cshtml" />
+    <Content Include="packages.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\LibraryAdmin\Views\Titles\TitlesNoImage.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\TitlesNoIsbn.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_IndexNoIsbn.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_IndexNoImage.cshtml" />
+    <Content Include="CodeTemplates\ApiControllerEmpty\Controller.cs.t4" />
+    <Content Include="CodeTemplates\ApiControllerEmpty\Controller.vb.t4" />
+    <Content Include="CodeTemplates\ApiControllerWithActions\Controller.cs.t4" />
+    <Content Include="CodeTemplates\ApiControllerWithActions\Controller.vb.t4" />
+    <Content Include="CodeTemplates\ApiControllerWithContext\Controller.cs.t4" />
+    <Content Include="CodeTemplates\ApiControllerWithContext\Controller.vb.t4" />
+    <Content Include="CodeTemplates\ApiDependencyCodeGenerator\Global.asax.cs.t4" />
+    <Content Include="CodeTemplates\ApiDependencyCodeGenerator\Global.asax.vb.t4" />
+    <Content Include="CodeTemplates\ApiDependencyCodeGenerator\Global.cs.t4" />
+    <Content Include="CodeTemplates\ApiDependencyCodeGenerator\Global.vb.t4" />
+    <Content Include="CodeTemplates\ApiDependencyCodeGenerator\WebApiConfig.cs.t4" />
+    <Content Include="CodeTemplates\ApiDependencyCodeGenerator\WebApiConfig.vb.t4" />
+    <Content Include="CodeTemplates\MvcArea\Area.cs.t4" />
+    <Content Include="CodeTemplates\MvcArea\Area.vb.t4" />
+    <Content Include="CodeTemplates\MvcArea\web.cs.t4" />
+    <Content Include="CodeTemplates\MvcArea\web.vb.t4" />
+    <Content Include="CodeTemplates\MvcControllerEmpty\Controller.cs.t4" />
+    <Content Include="CodeTemplates\MvcControllerEmpty\Controller.vb.t4" />
+    <Content Include="CodeTemplates\MvcControllerWithActions\Controller.cs.t4" />
+    <Content Include="CodeTemplates\MvcControllerWithActions\Controller.vb.t4" />
+    <Content Include="CodeTemplates\MvcControllerWithContext\Controller.cs.t4" />
+    <Content Include="CodeTemplates\MvcControllerWithContext\Controller.vb.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\BundleConfig.cs.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\BundleConfig.vb.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\FilterConfig.cs.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\FilterConfig.vb.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\Global.asax.cs.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\Global.asax.vb.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\Global.cs.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\Global.vb.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\RouteConfig.cs.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\RouteConfig.vb.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\Site.cs.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\Site.vb.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\web.cs.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\web.vb.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\_Layout.cs.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\_Layout.vb.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\_ViewStart.cs.t4" />
+    <Content Include="CodeTemplates\MvcFullDependencyCodeGenerator\_ViewStart.vb.t4" />
+    <Content Include="CodeTemplates\MvcMinimalDependencyCodeGenerator\Global.asax.cs.t4" />
+    <Content Include="CodeTemplates\MvcMinimalDependencyCodeGenerator\Global.asax.vb.t4" />
+    <Content Include="CodeTemplates\MvcMinimalDependencyCodeGenerator\Global.cs.t4" />
+    <Content Include="CodeTemplates\MvcMinimalDependencyCodeGenerator\Global.vb.t4" />
+    <Content Include="CodeTemplates\MvcMinimalDependencyCodeGenerator\RouteConfig.cs.t4" />
+    <Content Include="CodeTemplates\MvcMinimalDependencyCodeGenerator\RouteConfig.vb.t4" />
+    <Content Include="CodeTemplates\MvcMinimalDependencyCodeGenerator\web.cs.t4" />
+    <Content Include="CodeTemplates\MvcMinimalDependencyCodeGenerator\web.vb.t4" />
+    <Content Include="CodeTemplates\MvcViewWithoutModel\Empty.cs.t4" />
+    <Content Include="CodeTemplates\MvcViewWithoutModel\Empty.vb.t4" />
+    <Content Include="CodeTemplates\MvcViewWithoutModel\Imports.include.t4" />
+    <Content Include="CodeTemplates\MvcView\Create.cs.t4" />
+    <Content Include="CodeTemplates\MvcView\Delete.cs.t4" />
+    <Content Include="CodeTemplates\MvcView\Details.cs.t4" />
+    <Content Include="CodeTemplates\MvcView\Edit.cs.t4" />
+    <Content Include="CodeTemplates\MvcView\Empty.cs.t4" />
+    <Content Include="CodeTemplates\MvcView\Imports.include.t4" />
+    <Content Include="CodeTemplates\MvcView\List.cs.t4" />
+    <Content Include="CodeTemplates\MvcView\ModelMetadataFunctions.cs.include.t4" />
+    <Content Include="CodeTemplates\ODataControllerWithActions\Controller.cs.t4" />
+    <Content Include="CodeTemplates\ODataControllerWithActions\Controller.vb.t4" />
+    <Content Include="CodeTemplates\ODataControllerWithContext\Controller.cs.t4" />
+    <Content Include="CodeTemplates\ODataControllerWithContext\Controller.vb.t4" />
+    <Content Include="CodeTemplates\MvcView\CreateModal.cs.t4" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\AddWithAutoCat.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_autoCat.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_copacSearch.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_IsbnLookup.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_CopacResults.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\EditorTemplates\CopacRecordViewModel.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_CopacRecords.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectMedia.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\MediaTypes\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Classmarks\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectClassmark.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Languages\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectLanguage.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Publishers\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectPublisher.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Frequencies\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectFrequency.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_selectClassmarkViewEdit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_selectFrequencyViewEdit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_selectLanguageViewEdit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_selectMediaViewEdit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_selectPublisherViewEdit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\ActivityTypes\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\BudgetCodes\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Departments\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\CommMethodTypes\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Keywords\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\StatusTypes\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_selectStatusType.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_selectStatusTypeViewEdit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\ItemsOnOrder.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\OverdueItemsOnOrder.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\ItemsOnOrderByBudgetCode.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\ChasedOrders.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\ItemsOnApproval.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\ReportGenerator.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\AccountSummary.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\AccountByBudgetCode.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\AccountByMedia.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\AccountBySupplier.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\AccountOneOffsSummary.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\AccountSubscriptionsSummary.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\AccountDetailByBudgetCode.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\AccountDetailByMedia.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\AccountDetailBySupplier.cshtml" />
+    <Content Include="fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\bootstrap-theme.min.css.map" />
+    <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\Cancellations.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_noData.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\StandingOrders.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\OrdersByRequestor.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\OrdersByAuthoriser.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\UsefulLinks\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\UsefulLinks\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\UsefulLinks\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\UsefulLinks\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_NewTitles.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_OverdueOrders.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_IssuesExpected.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_PartsOverdue.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_Alerts.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Notifications\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Notifications\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Notifications\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Notifications\Create.cshtml" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ar.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.az.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bg.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.bs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ca.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.cy.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.da.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.de.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.el.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-AU.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.en-GB.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.eo.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.es.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.et.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.eu.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fa.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fi.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fo.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr-CH.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.fr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.gl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.he.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hu.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.hy.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.id.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.is.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it-CH.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.it.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ja.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ka.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kh.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ko.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.kr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lt.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.lv.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.me.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.mk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.mn.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ms.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nb.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl-BE.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.nl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.no.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt-BR.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.pt.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ro.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs-latin.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.rs.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.ru.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sl.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sq.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sr-latin.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sv.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.sw.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.th.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.tr.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.uk.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.vi.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-CN.min.js" />
+    <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Views\Home\Dashboard\_Notifications.cshtml" />
+    <Content Include="Customer\ExternalLogins.config" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersByAccountYear.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersByRequester.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersByAuthoriser.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_AutoCat.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_RecentlyCatalogued.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_QuickCat.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectClassmarkInLine.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectFrequencyInLine.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectLanguageInLine.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectMediaInLine.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectPublisherInLine.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_IndexNoVolumes.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Searching\IsbnEnquiry.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\OverdueLoans.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\DefaultValues\Details.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\DefaultValues\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\DefaultValues\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\LoanTypes\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\LoanTypes\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\LoanTypes\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Parameters\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Parameters\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Parameters\Index.cshtml" />
+    <Content Include="Areas\Config\Views\Parameters\Create.cshtml" />
+    <Content Include="Areas\Config\Views\Parameters\Edit.cshtml" />
+    <Content Include="Areas\Config\Views\Parameters\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\Settings.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_ListAuthorsNewTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\EditorTemplates\Author.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\AddAuthor.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Authors\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleLinks\BrokenLinks.cshtml" />
+    <Content Include="Areas\Config\Views\Parameters\Styling.cshtml" />
+    <Content Include="Mvc.sitemap">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\LibraryAdmin\Views\Home\_Notifications.cshtml" />
+    <Content Include="Views\Shared\AdminSearch.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_BarcodeSearch.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Home\_SearchGadget.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\DefaultBarcodes.cshtml" />
+    <Content Include="Content\bootstrap-datepicker3.standalone.min.css.map" />
+    <Content Include="Content\bootstrap-datepicker3.standalone.css.map" />
+    <Content Include="Content\bootstrap-datepicker3.min.css.map" />
+    <Content Include="Content\bootstrap-datepicker3.css.map" />
+    <Content Include="Content\bootstrap-datepicker.standalone.min.css.map" />
+    <Content Include="Content\bootstrap-datepicker.standalone.css.map" />
+    <Content Include="Content\bootstrap-datepicker.min.css.map" />
+    <Content Include="Content\bootstrap-datepicker.css.map" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\PrintOrder.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderCategories\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderCategories\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderCategories\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersByCategory.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Labels\Select.cshtml" />
+    <Content Include="Views\Shared\FinanceSearch.cshtml" />
+    <Content Include="Views\Shared\_Financeresults.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowByAuthor.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowByClassmark.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowByKeyword.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowByLanguage.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowByMedia.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowByPublisher.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllAuthorsFilter.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllClassmarksFilter.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllKeywordsFilter.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllLanguagesFilter.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllMediaFilter.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllPublishersFilter.cshtml" />
+    <Content Include="Areas\Config\Views\Connection\Details.cshtml" />
+    <Content Include="Areas\Config\Views\Connection\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\ExportData\ExportData.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_Holdings.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_ItemsOnLoan.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\LibraryUsers\EncryptPasswords.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\LibraryUsers\ResetUserPassword.cshtml" />
+    <Content Include="Views\Shared\ConfirmRenewReturn.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\RenewLoan.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\ReturnLoan.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Searching\SaveSearch.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_AdminLayout.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Areas\LibraryAdmin\Views\Titles\AddEditor.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\SimpleSearch.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\Select.cshtml" />
+    <None Include="MvcSiteMapSchema.xsd">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Scripts\jquery-2.2.3.intellisense.js" />
+    <Content Include="Scripts\jquery-2.2.3.js" />
+    <Content Include="Scripts\jquery-2.2.3.min.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\report-no-data.js" />
+    <Content Include="Scripts\signal-r.js" />
+    <Content Include="Views\Shared\DisplayTemplates\DateTime.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shared\EditorTemplates\DateTime.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shared\_PaginateDetails.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_Index.cshtml" />
+    <Content Include="Customer\Settings\Connect.config" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\_VolumesWithLoans.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\List.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Searching\BarcodeEnquiry.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\BySubject.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\ByStatus.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\ByLocation.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_IndexNoLocations.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_IndexNoStatus.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierAddresses\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierAddresses\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierAddresses\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Suppliers\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierAddresses\List.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\ListByAddress.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeopleComms\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeopleComms\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeopleComms\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\CommMethodTypes\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\CommMethodTypes\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\CommMethodTypes\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierAddresses\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\ListBySupplier.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeopleComms\List.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeopleComms\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Suppliers\_Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\_Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Suppliers\Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\ByTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_IndexNoTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\_VolumesWithTitles.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\_Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\List.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\CopiesNoVolumes.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\CirculationList.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\CirculationByUser.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\CloneList.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\CloneRecipient.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\PartsOverdue.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\QuickCheckIn.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_Summary.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\_PartsReceivedSubForm.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\_CirculationListSubForm.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\EditHoldings.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\EditNotes.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\_CirculationSlipRecipients.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\CirculationSlip.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\CirculatedItemsAZ.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\CirculatedItemsAZWithHoldings.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\Reports\OverdueParts.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\Reports\_OverdueParts.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\Reports\BindingList.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\Reports\_BindingListItems.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\CirculationListByTitle.cshtml" />
+    <Content Include="Views\Shared\_PrintHeaderCloseTab.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\CirculationListByPublisher.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\_CirculatedTitlesByPublisher.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\CirculatedItemsByLocation.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\_CirculatedItemsByLocation.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\CirculatedItemsBySubject.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\_CirculatedItems.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\_CirculatedItemsBySubject - Copy.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\CirculatedItemsByClassmark.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\CirculatedItemsOneNoRecipients.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\CirculationReviewMemos.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Circulation\Reports\_CirculatedItemsByUser.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_IndexNoCopies.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\RecentlyAdded.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_IndexDateAdded.cshtml" />
+    <Content Include="Views\Shared\_ModalEditFooter.cshtml" />
+    <Content Include="Views\Shared\_ModalAddFooter.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\_IndexNoSupplier.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\BySupplier.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\NextPartsExpected.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\PartsReceived\_IndexPartsExpected.cshtml" />
+    <Content Include="Views\Shared\_ModalEditHeader.cshtml" />
+    <Content Include="Views\Shared\_ModalAddHeader.cshtml" />
+    <Content Include="Views\Shared\_ModalDeleteHeader.cshtml" />
+    <Content Include="Views\Shared\_ModalDeleteFooter.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_ThumbnailDetails.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\_ThumbnailDetails.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\BriefRecordList.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\CirculationMessages\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\CirculationMessages\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\CirculationMessages\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\CirculationMessages\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_QuickFind.cshtml" />
+    <Content Include="Views\Shared\_AdminResults.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_NarrowByMedia.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_NarrowByClassmark.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_NarrowByPublisher.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_NarrowByLanguage.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_NarrowByKeyword.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_NarrowByAuthor.cshtml" />
+    <Content Include="Areas\Config\Views\MenuBuilder\Index.cshtml" />
+    <Content Include="Areas\Config\Views\MenuBuilder\Create_Old.cshtml" />
+    <Content Include="Areas\Config\Views\MenuBuilder\Edit.cshtml" />
+    <Content Include="Areas\Config\Views\MenuBuilder\_Details.cshtml" />
+    <Content Include="Areas\Config\Views\MenuBuilder\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Find.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\ReportGenerator.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\NewAcquisitionsReport.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\NewAcquisitionsFullReport.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\AuthorTitleList.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueByTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ISBNCatalogue.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\TitleCatSubject.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ISBNCatalogueByMedia.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectCatalogueByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectCatalogueByTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ClassmarkCatalogueByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ClassmarkCatalogueByTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueChosenOfficeByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueChosenLocationByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueChosenPublisherByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueSelectedMediaByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueSelectedLocationsByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\TopMenuX.cshtml" />
+    <Content Include="Areas\Config\Views\Shared\TopMenuX.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectCatalogueChosenSubjectByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectCatalogueChosenSubjectByTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ClassmarkCatalogueChosenClassmarkByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ClassmarkCatalogueChosenClassmarkByTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ClassmarkCatalogueSelectedMediaByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ClassmarkCatalogueSelectedMediaByTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ClassmarkCatalogueChosenPublisherByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ClassmarkCatalogueChosenOfficeByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\ClassmarkCatalogueChosenLocationByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectCatalogueChosenLocationByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectCatalogueChosenOfficeByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectCatalogueChosenPublisherByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectCatalogueSelectedMediaByAuthorTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueStocktake.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueStatistics.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectsAssignedToTitles.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectStatistics.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectsAZList.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CopiesCataloguedBetweenDates.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\CLAAuditReport.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CLAAuditReport.cshtml" />
+    <Content Include="Customer\Settings\AppSettings.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <None Include="Properties\PublishProfiles\local.pubxml" />
+    <Content Include="Scripts\confirmDelete.js" />
+    <Content Include="Scripts\DatePickerReady.js" />
+    <Content Include="Scripts\jquery-2.2.3.min.map" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.js" />
+    <Content Include="Scripts\jquery.unobtrusive-ajax.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js" />
+    <Content Include="Scripts\respond.js" />
+    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\modal.js" />
+    <Content Include="Scripts\_references.js" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\About.cshtml" />
+    <Content Include="Views\Home\Contact.cshtml" />
+    <Content Include="Views\Home\Index.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\MediaTypes\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\MediaTypes\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\MediaTypes\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Authors\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Authors\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Authors\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Authors\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\LibraryUsers\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\LibraryUsers\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\AccountYears\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\AccountYears\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\AccountYears\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\ActivityTypes\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\ActivityTypes\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\ActivityTypes\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\BudgetCodes\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\BudgetCodes\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\BudgetCodes\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Classmarks\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Classmarks\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Classmarks\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Departments\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Departments\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Departments\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Suppliers\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Frequencies\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Frequencies\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Frequencies\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\StatusTypes\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\StatusTypes\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\StatusTypes\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Details.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_Details.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\ByClassmark.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\ByMedia.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\ByPublisher.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\BrowseByClassmark.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\BrowseByMedia.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\BrowseByPublisher.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Suppliers\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\BrowseBySubject.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\BrowseByAuthor.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\Details.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_CopyDetails.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\ByAuthor.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\BoundItems.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_Cancellations.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\Details.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Volumes\_Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_VolumesLabels.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\NewLoan.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\ItemsOnLoan.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Keywords\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Keywords\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Keywords\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Keywords\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Locations\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Locations\Edit.cshtml" />
+    <Content Include="Views\Shared\TopMenu.cshtml" />
+    <Content Include="Views\RolesAdmin\Create.cshtml" />
+    <Content Include="Views\RolesAdmin\Delete.cshtml" />
+    <Content Include="Views\RolesAdmin\Details.cshtml" />
+    <Content Include="Views\RolesAdmin\Edit.cshtml" />
+    <Content Include="Views\Shared\_DeleteConfirmation.cshtml" />
+    <Content Include="Views\Shared\NotFound.cshtml" />
+    <Content Include="Views\Error\Error.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Shared\_MultiSelectListBox.cshtml" />
+    <Content Include="Views\Shared\_GenericConfirmation.cshtml" />
+    <Content Include="Views\Shared\_GenericAlert.cshtml" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.bootstrap.min.js.map" />
+    <Content Include="Views\Shared\_HeaderSeeAlso.cshtml" />
+    <Content Include="Views\Shared\_HeaderCancel.cshtml" />
+    <Content Include="Views\Shared\_Select2Popup.cshtml" />
+    <Content Include="Views\Shared\_SelectPopup.cshtml" />
+    <Content Include="Views\Shared\_SelectPopupWithOption.cshtml" />
+    <Content Include="Views\Shared\_AjaxSelectPopup.cshtml" />
+    <Content Include="Views\Shared\_Alert.cshtml" />
+    <Content Include="Views\Shared\_NarrowByClassmark.cshtml" />
+    <Content Include="Views\Shared\_NarrowByKeyword.cshtml" />
+    <Content Include="Views\Shared\_NarrowByLanguage.cshtml" />
+    <Content Include="Views\Shared\_NarrowByMedia.cshtml" />
+    <Content Include="Views\Shared\_NarrowByPublisher.cshtml" />
+    <Content Include="Views\Home\SimpleSearch.cshtml" />
+    <Content Include="Views\Home\_SearchSummary.cshtml" />
+    <Content Include="Views\Shared\_NarrowByAuthor.cshtml" />
+    <Content Include="Views\Home\BookDetails.cshtml" />
+    <Content Include="Views\Shared\MainMenu.cshtml" />
+    <Content Include="Views\Shared\_PrintHeader.cshtml" />
+    <Content Include="Views\Shared\_AuthoritySelector.cshtml" />
+    <Content Include="Views\Shared\_ReportNoData.cshtml" />
+    <Content Include="Views\Home\Dashboard\_SearchGadget.cshtml" />
+    <Content Include="Views\Home\Dashboard\_UsefulLinks.cshtml" />
+    <Content Include="Views\Home\Dashboard\_UserSavedSearches.cshtml" />
+    <Content Include="Views\Home\Dashboard\_UserBookmarks.cshtml" />
+    <Content Include="Views\Home\_Simpleresults.cshtml" />
+    <Content Include="Views\LibraryUserBookmarks\Index.cshtml" />
+    <Content Include="Views\LibraryUserBookmarks\Add.cshtml" />
+    <Content Include="Views\LibraryUserSavedSearches\Index.cshtml" />
+    <Content Include="Views\Home\Dashboard\_NewTitles.cshtml" />
+    <Content Include="Views\Shared\_Footer.cshtml" />
+    <Content Include="Views\Home\Notifications.cshtml" />
+    <Content Include="Views\Home\NewTitles.cshtml" />
+    <Content Include="Views\Home\BrowseByAuthor.cshtml" />
+    <Content Include="Views\Home\BrowseByClassmark.cshtml" />
+    <Content Include="Views\Home\BrowseByLanguage.cshtml" />
+    <Content Include="Views\Home\BrowseByMedia.cshtml" />
+    <Content Include="Views\Home\BrowseByPublisher.cshtml" />
+    <Content Include="Views\Home\BrowseBySubject.cshtml" />
+    <Content Include="Views\Home\_BarcodeEnquiry.cshtml" />
+    <Content Include="Views\Home\Dashboard\_BarcodeSearch.cshtml" />
+    <Content Include="Views\LibraryUserBookmarks\Edit.cshtml" />
+    <Content Include="Views\LibraryUserSavedSearches\Edit.cshtml" />
+    <Content Include="Views\Home\BrowseByLocation.cshtml" />
+    <Content Include="Views\Shared\_MultiSelectTickBox.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectClassmarkEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectAuthorEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectLanguageEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectMediaEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectPublisherEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectKeywordEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\ShowAllClassmarksFilter.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Title.cshtml" />
+    <Content Include="Views\Shared\ShowAllMediaFilter.cshtml" />
+    <Content Include="Views\Shared\ShowAllPublishersFilter.cshtml" />
+    <Content Include="Views\Shared\ShowAllLanguagesFilter.cshtml" />
+    <Content Include="Views\Shared\ShowAllKeywordsFilter.cshtml" />
+    <Content Include="Views\Shared\ShowAllAuthorsFilter.cshtml" />
+    <Content Include="Views\Shared\_MenuSearchTool.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapTitleHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapPathHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModelList.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapNodeModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SiteMapHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MetaRobotsHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\MenuHelperModel.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\CanonicalHelperModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectOrderCategoryEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectBudgetCodeEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectAccountYearEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllAccountYearsFilter.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllBudgetCodesFilter.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllOrderCategoriesFilter.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowByAccountYear.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowByBudgetCode.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowByOrderCategory.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectSupplierEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\SelectRequesterEditorViewModel.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowByRequester.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllRequestersFilter.cshtml" />
+    <Content Include="Views\Shared\_ModalHeaderRepeatFooter.cshtml" />
+    <Content Include="Views\Shared\_AdminNarrowBySupplier.cshtml" />
+    <Content Include="Views\Shared\AdminShowAllSuppliersFilter.cshtml" />
+    <Content Include="Views\Home\ReleaseNotes.cshtml" />
+    <Content Include="Views\Home\SaveSearch.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shared\_GenericHelp.cshtml">
+      <SubType>Code</SubType>
+    </Content>
+    <Content Include="Views\Shared\_ModalDefaultHeader.cshtml" />
+    <Content Include="Views\Shared\_PostSuccess.cshtml" />
+    <Content Include="Views\Shared\_PostFailure.cshtml" />
+    <Content Include="Views\Shared\_NoData.cshtml" />
+    <Content Include="Scripts\modal.min.js" />
+    <Content Include="Views\LIbraryUserLoans\Index.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+    <Folder Include="Areas\Config\Models\" />
+    <Folder Include="Areas\Config\Views\Cache\" />
+    <Folder Include="Areas\LibraryAdmin\Models\" />
+    <Folder Include="Services\" />
+    <Folder Include="Utils\Mvc\Extensions\" />
+    <Folder Include="Utils\Settings\" />
+    <Folder Include="Views\Home\EditorTemplates\" />
+    <Folder Include="Views\sllsBase\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201607071603580_circulation.resx">
+      <DependentUpon>201607071603580_circulation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\LocalizationForm.de.resx" />
+    <EmbeddedResource Include="Properties\LocalizationForm.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AutoCat\AutoCat.csproj">
+      <Project>{2a6370ea-8cd4-4d2b-acb7-bf8ac003912b}</Project>
+      <Name>AutoCat</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+  </Target>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

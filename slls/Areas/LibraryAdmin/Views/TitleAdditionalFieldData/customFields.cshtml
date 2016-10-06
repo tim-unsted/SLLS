@@ -1,0 +1,17 @@
+﻿@model System.Collections.Generic.IEnumerable<slls.ViewModels.TitleCustomDataIndexViewModel>
+
+@using (Html.BeginForm("UpdateCustomFields", "TitleAdditionalFieldData", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <div>
+            @Html.EditorForModel()
+        </div>
+        <div class="form-footer">
+            <button type="submit" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Save Custom Fields</button>
+            &nbsp;&nbsp;or&nbsp;<button type="button" value="Cancel" class="btn-link" onclick="window.history.back();">Cancel</button>
+        </div>
+    </div>
+}

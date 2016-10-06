@@ -1,0 +1,137 @@
+﻿@model slls.ViewModels.SimpleSearchingViewModel
+<h2>@ViewBag.Title</h2>
+
+@Html.HiddenFor(x => Model.ClassmarksFilter)
+
+@using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm" }))
+{
+    <div class="well">
+        <div class="row">
+            <div class=" col-md-12">
+                <div class="form-group form-inline" style="margin-bottom: 0;">
+                    <span class="pull-right"><a href="#" onclick="$('.alert').toggle()">Help <span class="glyphicon glyphicon-info-sign"></span></a></span>
+                    @Html.LabelFor(model => model.SearchString)<span>:&nbsp;</span>
+                    @Html.EditorFor(model => model.SearchString, new { htmlAttributes = new { @class = "form-control", placeholder = "Find ...", style = "width: 50%", id = "MainSearchString" } })
+                    <span>&nbsp;&nbsp;</span>@Html.Label("In")<span>:&nbsp;</span>
+                    @Html.DropDownList("SearchField", null, new { @class = "form-control", style = "width: 20%" })
+                    <button type="submit" id="btnSubmit" value="Find" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Find</button>
+                </div>
+                @Html.ValidationMessageFor(model => model.SearchString, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+        
+        if (TempData["NoData"] != null)
+        {
+            @Html.Partial("_NoData", TempData["NoData"])
+        }
+        <div class="alert alert-info" style="display: none;">
+            <a class="close" onclick="$('.alert').hide()">×</a>
+            <h4><span class="glyphicon glyphicon-info-sign"></span> Searching Tips</h4>
+            <h5>
+                This search works in a similar way to Google. Search for specific words or "phrases", optionally excluding others.
+                Here are some searching examples:
+            </h5>
+            <table class="table table-compact table-no-border">
+                <tr>
+                    <td>
+                        "some words"
+                    </td>
+                    <td>
+                        finds records that contain "some words of wisdom", but not "some strange words".
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        apple banana
+                    </td>
+                    <td>
+                        finds records that contain both these words, in any order.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        apple OR juice
+                    </td>
+                    <td>
+                        finds records that contain either of these words.
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        apple -macintosh
+                    </td>
+                    <td>
+                        finds records with "apple" but not "macintosh".
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        apple* (default)
+                    </td>
+                    <td>
+                        finds "apple", "apples", "applesauce", and "applet".
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        *apple
+                    </td>
+                    <td>
+                        finds "apple", "pineapple", and "grapple".
+                    </td>
+                </tr>
+            </table>
+
+        
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            @if (Model.Results != null)
+            {
+                <div class="panel">
+                    <div class="panel-heading" style="padding: 0 10px;">
+                        <span style="font-size: 18px;" >Refine By</span>
+                        <span class="pull-right"><a href="@Url.Action("ClearAllFilters", "Home")" class="btn btn-link" title="Clear All Filters" ><span class="glyphicon glyphicon-minus-sign"></span> Clear All</a></span>
+                    </div>
+                    <div class="panel-body">
+                        @if (Model.MediaFilter != null)
+                        {
+                            @Html.Partial("_NarrowByMedia")
+                        }
+                        @if (Model.ClassmarksFilter != null)
+                        {
+                            @Html.Partial("_NarrowByClassmark")
+                        }
+                        @if (Model.PublisherFilter != null)
+                        {
+                            @Html.Partial("_NarrowByPublisher")
+                        }
+                        @if (Model.AuthorFilter.Count > 0)
+                        {
+                            @Html.Partial("_NarrowByAuthor")
+                        }
+                        @if (Model.LanguageFilter != null)
+                        {
+                            @Html.Partial("_NarrowByLanguage")
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-9" style="border-left: 1px solid #eee;">
+            @if (Model.Results != null)
+            {
+                @Html.Partial("_Simpleresults")
+            }
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#MainSearchString').focus();
+    });
+</Script>
+

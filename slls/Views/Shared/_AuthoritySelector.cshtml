@@ -1,0 +1,59 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.AuthoritySelectorViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title" id="deleteLabel">@Html.DisplayFor(model => model.HeaderText)</h3>
+</div>
+
+@using (Html.BeginForm(Model.PostAction, Model.PostController, FormMethod.Post, new { @class = "form-horizontal" }))
+{
+    @Html.ValidationSummary()
+    @Html.HiddenFor(x => x.PostAction)
+    @Html.HiddenFor(x => x.PostController)
+    @Html.HiddenFor(x => x.HeaderText)
+    
+    <div class="modal-body">
+        <div class="control-group">
+            @if (!Model.DetailsText.IsEmpty())
+            {
+                <p>@Html.DisplayFor(model => model.DetailsText)</p>
+            }
+            @ViewBag.Message
+            <div class="form-group">
+                @Html.LabelFor(m => m.LabelText, new { @class = "control-label col-sm-4" })
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(m => m.SelectedValue, Model.AuthorityList, new { @class = "form-control", @id = "lstAuthority" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button id="btnOk" class="btn btn-primary" type="submit">@Html.DisplayFor(model => model.ButtonText)</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnOk').click(function () {
+            $('#stdModal').modal('hide');
+        });
+
+        //$('form').submit(function (e) {
+        //    e.preventDefault();
+        //    $.post(this.action, $(this).serialize(), function (response) {
+        //        if (response.error) {
+        //            alert(response.error);
+        //        }
+        //        else {
+        //            $('#stdModal').modal('hide');
+        //            //Refresh
+        //            location.reload();
+        //            //window.location = window.location.href;
+        //        }
+        //    }, 'json');
+        //});
+    });
+</script>

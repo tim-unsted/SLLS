@@ -1,0 +1,98 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.OrderReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<h3>@Model.AccountYear</h3>
+
+@{
+    var allocationTotal = (from b in Model.BudgetCodes
+                           select b.AllocationSubs).Sum();
+    var spentTotal = (from o in Model.Orders
+                      select o.Price).Sum();
+    var percentTotal = spentTotal / allocationTotal;
+    var varianceTotal = allocationTotal - spentTotal;
+}
+
+<table id="tblbudgetCode" class="table table-condensed table-striped" style="width: 100%;">
+    <thead>
+        <tr>
+            <th style="width: 40%;">
+                Budget Code
+            </th>
+            <th style="width: 15%;">
+                Allocation
+            </th>
+            <th style="width: 15%;">
+                Spent
+            </th>
+            <th style="width: 15%;">
+                Percentage
+            </th>
+            <th style="width: 15%;">
+                Variance
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var budgetCode in Model.BudgetCodes)
+        {
+            if (budgetCode != null)
+            {
+                var budgetCodeName = string.IsNullOrEmpty(budgetCode.BudgetCode1) ? "<No name>" : budgetCode.BudgetCode1;
+
+                var allocation = budgetCode.AllocationSubs;
+
+                var spent = (from o in Model.Orders
+                             where o.BudgetCode == budgetCode
+                             select o.Price).Sum();
+
+                var percent = spent / allocation;
+
+                var variance = allocation - spent;
+
+                <tr>
+                    <td>
+                        @budgetCodeName
+                    </td>
+                    <td>
+                        @string.Format("{0:C}", allocation)
+                    </td>
+                    <td>
+                        @string.Format("{0:C}", spent)
+                    </td>
+                    <td>
+                        @string.Format("{0:P}", percent)
+                    </td>
+                    <td>
+                        @string.Format("{0:C}", variance)
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td>
+                <strong>Totals:</strong>
+            </td>
+            <td>
+                <strong>@string.Format("{0:C}", allocationTotal)</strong>
+            </td>
+            <td>
+                <strong>@string.Format("{0:C}", spentTotal)</strong>
+            </td>
+            <td>
+                <strong>@string.Format("{0:P}", percentTotal)</strong>
+            </td>
+            <td>
+                <strong>@string.Format("{0:C}", varianceTotal)</strong>
+            </td>
+        </tr>
+    </tfoot>
+</table>

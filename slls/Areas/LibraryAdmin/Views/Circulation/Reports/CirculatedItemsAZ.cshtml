@@ -1,0 +1,39 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.CirculationReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<table id="circulateditems" class="table table-striped">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Copy Number
+            </th>
+            @*<th>
+                    @Html.Label(DbRes.T("Circulation.Recipients", "FieldDisplayName"))
+                </th>*@
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Copies)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title.Title1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CopyNumber)
+                </td>
+                @*<td>
+                        @Html.DisplayFor(modelItem => item.Circulations.Count)
+                    </td>*@
+            </tr>
+        }
+    </tbody>
+</table>

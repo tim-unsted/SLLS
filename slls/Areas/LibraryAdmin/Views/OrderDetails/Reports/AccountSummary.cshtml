@@ -1,0 +1,111 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.OrderReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<h3>@Model.AccountYear</h3>
+
+@foreach (var orderCategory in Model.OrderCategories.OrderBy(x => x.OrderCategory1))
+{
+    var sub = orderCategory.Sub;
+    var orderCategoryId = orderCategory.OrderCategoryID;
+    var orderCategoryName = string.IsNullOrEmpty(orderCategory.OrderCategory1) ? "" : orderCategory.OrderCategory1;
+
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="report_h4">@orderCategoryName</h4>
+            <hr class="hr-compact" />
+            @{
+    var db = new DbEntities();
+    var allOrders = from o in db.OrderDetails
+                    where o.OrderCategoryID == orderCategoryId && o.ReceivedDate != null
+                    select o;
+
+    if (Model.AccountYearId > 0)
+    {
+        allOrders = from o in allOrders
+                    where o.AccountYearID == Model.AccountYearId
+                    select o;
+    }
+    else if (Model.StartDate != null)
+    {
+        allOrders = from o in allOrders
+                    where o.ReceivedDate >= Model.StartDate && o.ReceivedDate <= Model.EndDate
+                    select o;
+    }
+
+    var allBudgetCodes = (from o in allOrders
+                          select o.BudgetCode).Distinct();
+
+    if (Model.BudgetCodeId != null)
+    {
+        if (Model.BudgetCodeId != "0")
+        {
+            allBudgetCodes = from b in allBudgetCodes
+                             where Model.BudgetCodeId.Contains(b.BudgetCodeID.ToString())
+                             select b;
+        }
+    }
+
+    <table id="tblbudgetCode" class="table table-condensed table-striped" style="width: 100%;">
+        <thead>
+            <tr>
+                <th style="width: 40%;">
+                    Budget Code
+                </th>
+                <th style="width: 15%;">
+                    Allocation
+                </th>
+                <th style="width: 15%;">
+                    Spent
+                </th>
+                <th style="width: 15%;">
+                    Percentage
+                </th>
+                <th style="width: 15%;">
+                    Variance
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var budgetCode in allBudgetCodes)
+            {
+                if (budgetCode != null)
+                {
+                    var budgetCodeName = string.IsNullOrEmpty(budgetCode.BudgetCode1) ? "<No name>" : budgetCode.BudgetCode1;
+                    var allocation = sub ? budgetCode.AllocationSubs : budgetCode.AllocationOneOffs;
+                    var spent = (from o in budgetCode.OrderDetails
+                                 where o.OrderCategoryID == orderCategoryId && o.ReceivedDate != null && o.AccountYearID == Model.AccountYearId
+                                 select o.Price).Sum();
+                    var percent = spent / allocation;
+                    var variance = allocation - spent;
+                    <tr>
+                        <td>
+                            @budgetCodeName
+                        </td>
+                        <td>
+                            @string.Format("{0:C}", allocation)
+                        </td>
+                        <td>
+                            @string.Format("{0:C}", spent)
+                        </td>
+                        <td>
+                            @string.Format("{0:P}", percent)
+                        </td>
+                        <td>
+                            @string.Format("{0:C}", variance)
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+            }
+        </div>
+    </div>
+}

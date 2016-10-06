@@ -1,0 +1,11 @@
+﻿@model slls.Models.Language
+
+@using (Html.BeginForm("_add", "Languages", FormMethod.Post, new { id = "addLanguageForm" }))
+{
+    <div class="form-group">
+        <br />
+        @Html.EditorFor(model => model.Language1, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Language1, "", new { @class = "text-danger" })
+    </div>
+    
+}

@@ -1,0 +1,125 @@
+﻿@using slls.App_Settings
+@using Westwind.Globalization
+@model IEnumerable<slls.Models.Borrowing>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#mycurrentloans').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [[1, 'asc'], [5, 'asc']],
+            "columnDefs": [{
+                "visible": false,
+                "targets": [4, 5, 6]
+            },
+            {
+                "orderData": [4],
+                "targets": [1]
+            },
+            {
+                "orderData": [5],
+                "targets": [2]
+            },
+            {
+                "orderData": [6],
+                "targets": [3]
+            },
+            {
+                "sortable": false,
+                "searchable": false,
+                "targets": [7]
+            }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderCancel")
+
+@if (ViewBag.OverDueLoans == 1)
+{
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+        <span class="sr-only">Message:</span>
+        You have overdue loans. Please return or renew all overdue items as soon as possible.
+    </div>
+}
+
+<table class="table" id="mycurrentloans">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume.Barcode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume.Copy.Title.Title1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Borrowed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReturnDue)
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(x => item.Volume.Barcode)
+                </td>
+                <td>
+                    @(string.IsNullOrEmpty(item.Volume.Copy.Title.Title1) ? Html.ActionLink(" ", "BookDetails", "Home", new { id = item.Volume.Copy.TitleID }, new { @class = "btn-link" }) : Html.ActionLink(item.Volume.Copy.Title.Title1, "BookDetails", "Home", new { id = item.Volume.Copy.TitleID }, new { @class = "btn-link" }))
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.Borrowed)
+                </td>
+                <td>
+                    @{
+            if (item.ReturnDue < DateTime.Today)
+            {
+                <span class="error">@Html.DisplayFor(x => item.ReturnDue) <span class="glyphicon glyphicon-exclamation-sign"></span></span>
+            }
+            else
+            {
+                @Html.DisplayFor(x => item.ReturnDue)
+            }
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.Volume.Copy.Title.FiledTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.BorrowedDateSortable)
+                </td>
+                <td>
+                    @Html.DisplayFor(x => item.ReturnDueDateSortable)
+                </td>
+                <td class="just-right">
+                    @{
+                        if (Settings.GetParameterValue("Borrowing.SelfReturnsEnabled", "false", "Sets whether OPAC users can do self-returns") == "true")
+                        {
+                            <a href="@Url.Action("ConfirmReturnLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span class="glyphicon glyphicon-share-alt"></span></a>
+                        }
+                        if (Settings.GetParameterValue("Borrowing.SelfLoansEnabled", "false", "Set whether OPAC users can do self-borrowing") == "true")
+                        {
+                            <a href="@Url.Action("ConfirmRenewLoan", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Renew loan"><span class="glyphicon glyphicon-repeat"></span></a>
+                        }
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

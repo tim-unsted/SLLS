@@ -1,0 +1,68 @@
+﻿@model slls.ViewModels.OrderReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+@*<div class="container body-content">*@
+    
+    <h2>@ViewBag.Title</h2>
+    <hr/>
+
+    <h3>@Model.AccountYear</h3>
+    
+    @foreach (var requestor in Model.Requestors.OrderBy(x => x.Lastname).ThenBy(x => x.Firstname))
+    {
+        var requestorName = string.IsNullOrEmpty(requestor.FullnameRev) ? "[no name]" : requestor.FullnameRev;
+        <div class="row">
+            <div class="col-md-12">
+                <h4 class="report_h4">@requestorName</h4>
+                <hr class="hr-compact"/>
+                @{
+                    var requestorOrders = from o in Model.Orders
+                        where o.RequesterUser.Id == requestor.Id
+                        orderby o.OrderID
+                        select o;
+
+                    <table id="requestor_orders" class="table table-condensed table-striped" style="width: 100%;">
+                        <thead>
+                        <tr>
+                            <th style="width: 15%;">
+                                Order No.
+                            </th>
+                            <th style="width: 15%;">
+                                Order Date
+                            </th>
+                            <th style="width: 45%;">
+                                Title
+                            </th>
+                            <th style="width: 10%;">
+                                Price
+                            </th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        @foreach (var order in requestorOrders.OrderBy(o => o.Title.Title1.Substring(o.Title.NonFilingChars)))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => order.OrderNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => order.OrderDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => order.Title.Title1)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => order.Price)
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                }
+            </div>
+        </div>
+    }
+@*</div>*@

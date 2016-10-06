@@ -1,0 +1,11 @@
+﻿@model slls.ViewModels.TitlesListViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="well">
+    <span class="help-block">This page lists all Catalogue Titles that do not have an ISSN, an ISBN-10 or an ISBN-13.</span>
+</div>
+
+<div>
+    @Html.Partial("_IndexNoIsbn", Model)
+</div>

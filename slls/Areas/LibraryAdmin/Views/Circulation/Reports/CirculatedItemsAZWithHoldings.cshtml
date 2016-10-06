@@ -1,0 +1,45 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.CirculationReportsViewModel
+
+    @Html.Partial("_PrintHeader")
+
+    <h2>@ViewBag.Title</h2>
+    <hr />
+
+    @foreach (var title in Model.Titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+    {
+        <div class="form-horizontal">
+            <div class="form-group ">
+                <div class="col-md-12">
+                    <h3>@Html.DisplayFor(modelItem => title.Title1)</h3>
+                </div>
+            </div>
+        </div>
+        <table id="circulatedcopies" class="table table-striped">
+
+            <tbody>
+                @foreach (var copy in title.Copies.OrderBy(c => (int)c.CopyNumber))
+                {
+                    <tr>
+                        <td style="width: 10%;">
+                            @Html.DisplayFor(modelItem => copy.CopyNumber)
+                        </td>
+                        <td style="width: 40%;">
+                            @Html.DisplayFor(modelItem => copy.Location.Location1)
+                        </td>
+                        <td style="width: 50%;">
+                            <p>@Html.DisplayFor(modelItem => copy.Holdings)</p>
+                            <p>@Html.DisplayFor(modelItem => copy.Notes)</p>
+                        </td>
+                    </tr>
+                    @*<tr>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                            <td>
+                                @Html.DisplayFor(modelItem => copy.Notes)
+                            </td>
+                        </tr>*@
+                }
+            </tbody>
+        </table>
+    }

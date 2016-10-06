@@ -1,0 +1,36 @@
+﻿@model slls.ViewModels.LongTextLabelAdd
+
+@Html.Partial("_ModalAddHeader")
+
+@using (Html.BeginForm(Html.BeginForm("AddLongTextLabel", "TitleAdditionalFieldDefs", FormMethod.Post)))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TextLabel, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.TextLabel, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter a new Long Text Label" } })
+                    @Html.ValidationMessageFor(model => model.TextLabel, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.ShowOnOpac, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.ShowOnOpac)
+                        @Html.ValidationMessageFor(model => model.ShowOnOpac, "", new { @class = "text-danger" })
+                        <span class="help-inline">Display texts with this label on the OPAC</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.Partial("_ModalAddFooter")
+
+}

@@ -1,0 +1,163 @@
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.TitlesListViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#titles').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [1, 'asc'],
+            "columnDefs": [
+                {
+                    "orderData": 1,
+                    "orderSequence": ["desc", "asc"],
+                    "targets": [0]
+                },
+                {
+                    "visible": false,
+                    "sortable": false,
+                    "targets": [1]
+                }
+            ]
+        });
+    });
+</script>
+
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="well well-default">
+    Use the alpha-filters below to narrow your search ...
+    @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("BriefRecordList", new {selectedLetter = x}))
+</div>
+
+
+<table id="titles" class="table table-condensed table-no-border">
+    <thead>
+        <tr>
+            <th>
+                Click here to re-sort by @Html.DisplayName(DbRes.T("Titles.Title", "FieldDisplayName"))
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var item in Model.Titles)
+        {
+            <tr>
+                <td>
+                    <div class="thumbnail">
+                        <div class="caption" style="border-bottom: 1px solid #ddd; margin-bottom: 15px;">
+                            <span class="pull-right">
+                                <a href="@Url.Action("Delete", "Titles", new {id = item.TitleID, view=@Html.CurrentViewName()})" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>
+                                <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
+                            </span>
+                            @{var title = string.IsNullOrEmpty(item.Title1) ? Html.Raw("[No Title]") : Html.DisplayFor(modelItem => item.Title1); }
+                            <h4 style="margin-top: 0;"><a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")">@title</a></h4>
+                        </div>
+                        <div class="row" style="margin-left: 2px;">
+                            @if (item.TitleImages.Any())
+                            {
+                                <div class="col-md-2">
+                                    <div class="coverthumbnail">
+                                        <img src="@Url.Action("ViewImage", "TitleImages", new {id = item.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@item.TitleImages.FirstOrDefault(i => i.IsPrimary).Alt" width="100%">
+                                    </div>
+                                </div>
+                            }
+                            <div class="col-md-5">
+                                <dl class="dl-horizontal">
+                                    @if (item.Edition != null)
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Edition", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.Edition)</dd>
+                                    }
+                                    @if (item.Isbn != null)
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.Isbn)</dd>
+                                    }
+                                    @if (item.Publisher.PublisherName != null)
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Publisher", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.Publisher.PublisherName)</dd>
+                                    }
+                                    @if (item.Year != null)
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Published_Year", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.Year)</dd>
+                                    }
+                                    @if (item.TitleAuthors.Any())
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Authors", "FieldDisplayName")):</dt>
+                                        foreach (var author in item.TitleAuthors)
+                                        {
+                                            <dd>
+                                                <a href="@Url.Action("Edit", "Authors", new {id = author.AuthorId}, null)" class="modal-link" title="View/Edit Author">@author.Author.DisplayName</a><br />
+                                            </dd>
+                                        }
+                                    }@if (item.Classmark.Classmark1 != null)
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Classmarks.Classmark", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.Classmark.Classmark1)</dd>
+                                    }
+                                    @if (item.MediaType.Media != null)
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.MediaType.Media)</dd>
+                                    }@if (item.Citation != null)
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Citation", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.Citation)</dd>
+                                    }
+                                </dl>
+                            </div>
+                            <div class="col-md-5">
+                                @Html.Label(DbRes.T("Titles.Copies", "FieldDisplayName")): @if (item.Copies.Any())
+                                {
+                                    <a href="@Url.Action("Edit", "Copies", new {id = item.Copies.FirstOrDefault().CopyID}, null)" class="btn-link" title="View/Edit Copies"><span class="badge badge-link">@item.Copies.Count</span></a>
+                                }
+                                else
+                                {
+                                    @Html.Raw("None")
+                                }
+
+                                <table class="table table-condensed table-compact table-no-border">
+                                    @foreach (var copy in item.Copies.OrderBy(c => c.CopyNumber))
+                                    {
+                                        <tr>
+                                            @*<td>@Html.ActionLink(copy.CopyNumber.ToString(), "Edit", "Copies", new { id = copy.CopyID }, null)</td>*@
+                                            <td>
+                                                @{
+                                                    var location = copy.Location.Location1;
+                                                    if (copy.Location.ParentLocation != null)
+                                                    {
+                                                        if (copy.Location.ParentLocation.Location1.Any())
+                                                        {
+                                                            location = copy.Location.ParentLocation.Location1 + ": " + location;
+                                                        }
+                                                    }
+                                                    
+                                                    <a href="@Url.Action("Edit", "Copies", new { id = copy.CopyID })" class="btn btn-link" title="Edit @DbRes.T("Copies.Copy", "FieldDisplayName")">@Html.Raw(copy.CopyNumber): @Html.Raw(location)</a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td>@Html.Raw(item.FiledTitle)</td> @*This field is hidded; it's used for sorting*@
+            </tr>
+        }
+    </tbody>
+
+</table>

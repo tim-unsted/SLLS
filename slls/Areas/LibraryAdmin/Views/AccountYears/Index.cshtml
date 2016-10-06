@@ -1,0 +1,148 @@
+﻿@using System
+@using Westwind.Globalization
+@model System.Collections.Generic.IEnumerable<slls.Models.AccountYear>
+
+<style media="screen" type="text/css">
+    
+tfoot {
+    display: table-header-group;
+    border: none;
+}
+
+table.dataTable tfoot th {
+    border: none;
+}
+
+thead input {
+    width: 100%;
+    padding: 3px;
+    box-sizing: border-box;
+}
+
+</style>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+    
+        // Setup - add a text input to each header cell
+        $('#accountyears tfoot th').each(function () {
+            var title = $('#accountyears thead th').eq($(this).index()).text();
+            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
+        });
+
+
+        // DataTable
+        var table = $('#accountyears').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [[3, 'asc'],[0, 'desc']],
+            "columnDefs": [{
+                "visible": false,
+                "targets": [3]
+            }]
+        });
+        
+
+        // Apply the search
+        table.columns().eq(0).each(function (colIdx) {
+            $('input', table.column(colIdx).footer()).on('keyup change', function () {
+                table
+                    .column(colIdx)
+                    .search(this.value)
+                    .draw();
+            });
+
+            $('input', table.column(colIdx).footer()).on('click', function (e) {
+                e.stopPropagation();
+            });
+        });
+    });
+</script>
+
+<div class="container">
+
+    @Html.Partial("_HeaderSeeAlso", Model)
+
+    <style>
+        .delete-section {
+            display: inline;
+        }
+</style>
+
+    <p>
+        <a href="@Url.Action("Create", "AccountYears")" title="Add new @DbRes.T("AccountYears.Account_Year", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    </p>
+
+    <hr/>
+
+    <table id="accountyears" class="table table-hover">
+        <thead>
+        <tr>
+            <th>
+                @DbRes.T("AccountYears.Account_Year", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("AccountYears.Year_Start_Date", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("AccountYears.Year_End_Date", "FieldDisplayName")
+            </th>
+            <th></th>
+            <th></th>
+        </tr>
+        </thead>
+
+        @*<tfoot>
+            <tr>
+                <th>
+                    @DbRes.T("AccountYears.Account_Year", "FieldDisplayName")
+                </th>
+            </tr>
+        </tfoot>*@
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @if (String.IsNullOrEmpty(item.AccountYear1))
+                        {
+                            @Html.ActionLink(" ", "Edit", "AccountYears", new { id = item.AccountYearID }, new { @class = "modal-link" })
+                        }
+                        else
+                        {
+                            @Html.ActionLink(item.AccountYear1, "Edit", "AccountYears", new { id = item.AccountYearID }, new { @class = "modal-link" })
+                        }
+                    </td>
+                    <td>
+                        @if (item.YearStartDate.HasValue)
+                        {
+                            @Html.DisplayFor(modelItem => item.YearStartDate)
+                        }
+                    </td>
+                    <td>
+                        @if (item.YearEndDate.HasValue)
+                        {
+                            @Html.DisplayFor(modelItem => item.YearEndDate)
+                        }
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ListPos)
+                    </td>
+                    <td class="just-right">
+                        @if(item.CanDelete && !item.OrderDetails.Any())
+                        { 
+                            <a href="@Url.Action("Delete", new {id = item.AccountYearID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                        }
+                        <a href="@Url.Action("Edit", new {id = item.AccountYearID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

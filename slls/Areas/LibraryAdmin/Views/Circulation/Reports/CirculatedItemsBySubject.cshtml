@@ -1,0 +1,48 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.CirculationReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@{
+    //Find the last item in the list ...
+    //var last = Model.Last();
+}
+
+@foreach (var keyword in Model.Keywords.OrderBy(k => k.KeywordTerm))
+{
+    if (keyword != null)
+    {
+        var keywordName = string.IsNullOrEmpty(keyword.KeywordTerm) ? "[No Name]" : keyword.KeywordTerm;
+        <table style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>
+                        <h3>@keywordName</h3>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @Html.Action("_CirculatedItemsBySubject", new { id = keyword.KeywordID })
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        @*//If this location is the last in the list, just end here ...
+            if (location.Equals(@last))
+            {
+                <div></div>
+            }
+            else
+            {
+                // ... otherwise insert a page break
+                <div class="page-break"></div>
+            }*@
+    }
+}

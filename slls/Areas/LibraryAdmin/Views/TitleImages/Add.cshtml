@@ -1,0 +1,114 @@
+﻿@using AutoCat.Hammicks
+@using Westwind.Globalization
+@model slls.ViewModels.TitleImageAddViewModel
+
+@Html.Partial("_ModalAddHeader")
+
+<div class="modal-body">
+    <div class="alert alert-info" role="alert">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Title):
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Isbn):
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Isbn)
+            </dd>
+        </dl>
+    </div>
+</div>
+
+@if (Model.HasAutocat)
+{
+    if (!string.IsNullOrEmpty(Model.Isbn))
+    {
+        @*<span style="float: left;"><input type="submit" id="btnAutocat" name="submit" value="Use AutoCat" class="btn btn-primary" /></span>*@
+        using (Ajax.BeginForm("DownloadImageFromAutoCat", "TitleImages", null, new AjaxOptions { HttpMethod = "post", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "autoCat" }))
+        {
+            @Html.AntiForgeryToken()
+            <div class="modal-body">
+                @Html.HiddenFor(model => model.TitleId)
+                @Html.HiddenFor(model => model.Isbn)
+                @Html.HiddenFor(model => model.Title)
+
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.Label("Use AutoCat:", htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-8">
+                            <div class="btn-group">
+                                <button class="btn btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                                    Download from
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    @foreach (var source in Model.Sources)
+                                    {
+                                        <li><input type="submit" name="source" value=@source class="btn btn-link" /></li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <hr />
+                </div>
+            </div>
+        }
+    }
+}
+
+@using (Html.BeginForm("Add", "TitleImages", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.ValidationMessageFor(model => model.ErrorMessage)
+    @Html.HiddenFor(model => model.TitleId)
+    @Html.HiddenFor(model => model.Isbn)
+    @Html.HiddenFor(model => model.Title)
+
+    <div class="modal-body">
+        <div class="form-horizontal">
+            <div class="form-group">
+                @Html.Label("Local Image:", new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.TextBoxFor(model => model.Files, new { type = "file", multiple = "multiple", accept = ".jpg, .jpeg, .png, .gif, .bmp", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.Label("--- Or ---", new { @class = "control-label col-md-3" })
+            </div>
+            <div class="form-group">
+                @Html.Label("Hosted Image:", new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.TextBoxFor(x => Model.Url, new { @class = "form-control", @placeholder = "Enter a URL to the image ..." })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" id="btnUpload" name="submit" value="Upload" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Add Image</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<script type="text/javascript">
+
+    function OnSuccess(json) {
+        if (json.isRedirect) {
+            window.location.href = json.redirectUrl;
+        }
+    }
+
+    function OnFailure(response) {
+        var obj = $.parseJSON(response.responseText);
+        alert(obj.message);
+    }
+
+</script>

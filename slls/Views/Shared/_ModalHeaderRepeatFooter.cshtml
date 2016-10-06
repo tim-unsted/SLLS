@@ -1,0 +1,15 @@
+﻿@using Westwind.Globalization
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/bootstrap-datepicker.js"></script>
+<script src="~/Scripts/DatePickerReady.js"></script>
+<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet"/>
+
+<div class="modal-header">
+    <span class="pull-right">
+        <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Ok", "Terminology")</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>  
+    </span>
+    <h3 class="modal-title" id="titleLabel">@ViewBag.Title</h3>
+</div>

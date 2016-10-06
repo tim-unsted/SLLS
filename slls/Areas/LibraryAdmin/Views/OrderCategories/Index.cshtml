@@ -1,0 +1,80 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.OrderCategory>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#orderCategories').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            }
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "OrderCategories")" title="Add new @DbRes.T("OrderCategories.Order_Category", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="orderCategories" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderCategory1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Annual)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Sub)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.OrderDetails)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.OrderCategory1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "OrderCategories", new { id = item.OrderCategoryID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.OrderCategory1, "Edit", "OrderCategories", new { id = item.OrderCategoryID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Annual)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Sub)
+                </td>
+                <td>
+                    @if (item.OrderDetails.Count > 0)
+                    {
+                        <a href="@Url.Action("OrdersByCategory", "OrderDetails", new { listCategories = item.OrderCategoryID })" title="View all orders of this @DbRes.T("OrderCategories.Order_Category", "FieldDisplayName")"><span class="badge badge-link">@item.OrderDetails.Count</span></a>
+                    }
+                </td>
+                <td class="just-right">
+                    @if (item.CanDelete && !item.OrderDetails.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.OrderCategoryID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.OrderCategoryID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

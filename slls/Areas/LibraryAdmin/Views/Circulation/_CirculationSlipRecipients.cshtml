@@ -1,0 +1,34 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.CirculationSlipRecipientListViewModel
+
+<table id="recipients" class="table">
+    <thead>
+    <tr>
+        <th style="width: 60%">
+            @Html.Label(DbRes.T("Circulation.Circulate_To", "FieldDisplayName"))
+        </th>
+        <th style="width: 20%">
+            @Html.Label(DbRes.T("Circulation.Signed", "FieldDisplayName"))
+        </th>
+        <th style="width: 20%">
+            @Html.Label(DbRes.T("Circulation.Date_Passed", "FieldDisplayName"))
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CirculationList)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RecipientUser.Fullname)
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

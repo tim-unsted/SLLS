@@ -1,0 +1,106 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Copy>
+
+<script type="text/javascript">
+    
+    $(document).ready(function () {
+        $('#circulateditems').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            
+            "order": [[3, 'asc'], [1, 'asc']],
+            "columnDefs": [
+                {
+                    "data": [0],
+                    "orderData": [3],
+                    "render": function (data, type, row) {
+                        return '<a href="Circulation/CirculationList?copy=' + row[5] + '" class="btn-link">' + data + '</a>';},
+                    "targets": [0]
+                },
+                {
+                    "searchable": false,
+                    "sortable": true,
+                    "orderSequence": [ "desc", "asc" ],
+                    "targets": [2]
+                },
+                {
+                    "visible": false,
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [3, 4, 5]
+                },
+                {
+                    "width": "10%",
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [6]
+                }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="alert alert-info">
+    <span class="help-block"><strong>Info: </strong>This page list all items (@DbRes.T("Copies","EntityType") that have been marked as being circulated. Circulated items are distributed or 'routed' around a list of @DbRes.T("Circulation.Recipients", "FieldDisplayName") (Circulation List).</span>
+    <span class="help-block"><strong>Tip: </strong>To quickly remove an item from circulation, simply click on the <span class="glyphicon glyphicon-minus-sign"></span> to the right of the listed item.</span>
+    <a href="@Url.Action("AddCopyToCirculation", "Circulation")" title="Add item to @DbRes.T("Circulation", "EntityType")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add item to @DbRes.T("Circulation", "EntityType")</a>
+</div>
+
+<table id="circulateditems" class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title.Title1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CopyNumber)
+            </th>
+            <th>
+                @Html.Label(DbRes.T("Circulation.Recipients","FieldDisplayName"))
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title.Title1)
+                </td>
+                <td>
+                    @Html.ActionLink(item.CopyNumber.ToString(), "Edit", "Copies", new { id = item.CopyID }, null)
+                </td>
+                <td>
+                    @if(item.Circulations.Any())
+                    {
+                        <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn-link" title="View/Edit Circulation List"><span class="badge badge-link">@item.Circulations.Count</span></a>
+                    }
+                </td>
+                <td>
+                    @Html.Raw(item.Title.FiledTitle)
+                </td>
+                <td>
+                    @Html.Raw(item.Title.TitleID)
+                </td>
+                <td>
+                    @Html.Raw(item.CopyID)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("CirculationList", new { copy = item.CopyID })" class="btn btn-link" title="View/Edit Circulation List"><span class="glyphicon glyphicon-user"></span></a> |
+                    <a href="@Url.Action("RemoveFromCirculation", new { id = item.CopyID })" class="btn btn-link modal-link" title="Remove from Circulation"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,54 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.OrderReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@{
+    var yearSum = (from o in Model.Orders
+                   select o.Price).Sum();
+}
+
+<h3>@Model.AccountYear<span class="pull-right">Annual Total: @string.Format("{0:C}", @yearSum)</span></h3>
+
+@foreach (var mediaType in Model.MediaTypes.OrderBy(m => m.Media))
+{
+    var mediaPriceSum = (from o in Model.Orders
+                         join t in Model.Titles on o.TitleID equals t.TitleID
+                         where t.MediaID == mediaType.MediaID
+                         select o.Price).Sum();
+    var mediaTypeName = string.IsNullOrEmpty(mediaType.Media) ? "<no name>" : mediaType.Media;
+
+    @*<span><strong>@mediaTypeName</strong></span><span class="pull-right"><strong>@string.Format("{0:C}", mediaPriceSum)</strong></span>*@
+
+    <table id="tblTitles" class="table table-condensed table-striped table-no-border" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>@mediaTypeName</th>
+                <th style="text-align: right;">@string.Format("{0:C}", mediaPriceSum)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var title in Model.Titles.Where(t => t.MediaID == mediaType.MediaID))
+            {
+                var itemPriceSum = (from o in Model.Orders
+                                    where o.Title == title
+                                    select o.Price).Sum();
+
+                <tr>
+                    <td>
+                        <div class="col-md-10 col-md-push-1">
+                            @title.Title1
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        @string.Format("{0:C}", itemPriceSum)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

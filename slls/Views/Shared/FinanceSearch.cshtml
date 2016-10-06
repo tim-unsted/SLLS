@@ -1,0 +1,67 @@
+﻿@model slls.ViewModels.FinanceSearchingViewModel
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("FinanceSearchResults", "Searching", FormMethod.Post, new { id = "searchForm" }))
+{
+    <div class="well">
+        <div class="row">
+            <div class=" col-md-12">
+                <div class="form-group form-inline" style="margin-bottom: 0;">
+                    @Html.LabelFor(model => model.SearchString)
+                    @Html.EditorFor(model => model.SearchString, new { htmlAttributes = new { @class = "form-control", placeholder = "Find ...", style = "width: 50%", id = "MainSearchString" } })
+                    @Html.DropDownList("SearchField", null, new { @class = "form-control", style = "width: 20%" })
+                    <button type="submit" id="btnSubmit" value="Find" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Find</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3">
+            @if (Model.Results != null)
+            {
+                <div class="panel">
+                    <div class="panel-heading" style="padding: 0 10px;">
+                        <span style="font-size: 18px;" >Refine By</span>
+                        <span class="pull-right"><a href="@Url.Action("ClearAllFinanceFilters", "Searching")" class="btn btn-link" title="Clear All Filters" ><span class="glyphicon glyphicon-minus-sign"></span> Clear All</a></span>
+                    </div>
+                    <div class="panel-body">
+                        @if (Model.AccountYearsFilter != null)
+                        {
+                            @Html.Partial("_AdminNarrowByAccountYear")
+                        }
+                        @if (Model.BudgetCodesFilter != null)
+                        {
+                            @Html.Partial("_AdminNarrowByBudgetCode")
+                        }
+                        @if (Model.OrderCategoriesFilter != null)
+                        {
+                            @Html.Partial("_AdminNarrowByOrderCategory")
+                        }
+                        @if (Model.SuppliersFilter != null)
+                        {
+                            @Html.Partial("_AdminNarrowBySupplier")
+                        }
+                        @if (Model.RequestersFilter != null)
+                        {
+                            @Html.Partial("_AdminNarrowByRequester")
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+        <div class="col-md-9" style="border-left: 1px solid #eee;">
+            @if (Model.Results != null)
+            {
+                @Html.Partial("_Financeresults")
+            }
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#MainSearchString').focus();
+    });
+</Script>
+

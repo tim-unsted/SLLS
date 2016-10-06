@@ -1,0 +1,111 @@
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.SuppliersListViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#companies').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+            {
+                "width": "30%",
+                "targets": [0]
+            },
+            {
+                "width": "30%",
+                "searchable": true,
+                "sortable": false,
+                "targets": [1]
+            },
+            {
+                "width": "20%",
+                "searchable": true,
+                "sortable": false,
+                "targets": [2]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": true,
+                "orderSequence": ["desc", "asc"],
+                "targets": [3]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [4]
+            }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="well">
+    @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))
+    <a href="@Url.Action("Create", "Suppliers")" title="Add new @DbRes.T("Suppliers.Supplier", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</div>
+
+<table id="companies" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayName(DbRes.T("Suppliers.Supplier_Name", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.DisplayName(DbRes.T("SupplierAddress.Address", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.DisplayName(DbRes.T("SupplierAddress.Main_Tel", "FieldDisplayName"))
+            </th>
+            <th>
+                @DbRes.T("Orders", "EntityType")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Suppliers)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.SupplierName))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Suppliers", new {id = item.SupplierID}, new {@class = "btn-link"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.SupplierName, "Edit", "Suppliers", new {id = item.SupplierID}, new {@class = "btn-link"})
+                    }
+                </td>
+                <td>
+                    @Html.Raw(item.AddressDetails)
+                </td>
+                <td>
+                    @Html.Raw(item.TelephoneNumbers)
+                </td>
+                <td>
+                    @if (item.OrderDetails.Any())
+                    {
+                        <a href="@Url.Action("OrdersBySupplier", "OrderDetails", new { listSupplier = item.SupplierID })" title="View all orders from this @DbRes.T("Orders.Supplier", "FieldDisplayName")"><span class="badge badge-link">@item.OrderDetails.Count</span></a>
+                    }
+                </td>
+                <td style="text-align: right;">
+                    @if (item.CanDelete && !item.OrderDetails.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.SupplierID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.SupplierID})" class="btn btn-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

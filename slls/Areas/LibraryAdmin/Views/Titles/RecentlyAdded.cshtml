@@ -1,0 +1,22 @@
+﻿@model slls.ViewModels.TitlesListViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="well">
+    <p>Select how recently items were added:</p>
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "selectDays" }))
+    {
+        <div class="row">
+            <div class="col-md-3">
+                @Html.DropDownList("days", new SelectList(ViewBag.SelectDays, "Key", "Value", "21"), new { name = "days", @class = "form-control", onchange = "this.form.submit();" })
+            </div>
+        </div>
+    }
+</div>
+
+@*<br />*@
+
+<div>
+    @Html.Partial("_IndexDateAdded", Model)
+</div>
+

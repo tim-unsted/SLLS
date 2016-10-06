@@ -1,0 +1,115 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Location>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#locations').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+            {
+                "width": "40%",
+                "targets": [0]
+            },
+            {
+                "width": "40%",
+                "searchable": false,
+                "targets": [1]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": true,
+                "orderSequence": ["desc", "asc"],
+                "targets": [2]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [3]
+            }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="alert alert-info">
+    <p>
+        <span class="glyphicon glyphicon-info-sign"></span> Use this feature to control the various locations used throughout the system. Locations can be hierarchical, so any location can be a top-level, or parent, location (e.g. Main Site) , or a sub-location (e.g. Library at the Main Site).
+        If you only have one site then you may want to keep things simple and just list of your site's locations as top-level locations. If you have multiple sites then making the data hierachical might work better.
+    </p>
+    <p>
+        <strong>Tip: </strong>Use the drop-down list below to view all sub-locations belonging to a parent location.
+    </p>
+</div>
+
+@using (Html.BeginForm("Index", "Locations", FormMethod.Get))
+{
+    <div class="form-group" title="@ViewBag.Message">
+        @Html.DropDownList("parentId", (IEnumerable<SelectListItem>)ViewData["Parents"], "Filter by parent location", new { @class = "form-control", onchange = "this.form.submit();" })
+    </div>
+}
+
+<p>
+    <a href="@Url.Action("Create", "Locations")" title="Add new @DbRes.T("Locations.Location", "FieldDisplayName")" class=" btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<table id="locations" class="table table-hover">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Location1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ParentLocationID)
+            </th>
+            <th>
+                @DbRes.T("Copies", "EntityType")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+
+                <td>
+                    @if (String.IsNullOrEmpty(item.Location1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Locations", new { id = item.LocationID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Location1, "Edit", "Locations", new { id = item.LocationID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ParentLocation.Location1)
+                </td>
+                <td>
+                    @if (item.Copies.Any())
+                    {
+                        <a href="@Url.Action("ByLocation", "Copies", new { listLocations = item.LocationID })" title="View all items at this @DbRes.T("Locations.Location", "FieldDisplayName" )"><span class="badge badge-link">@item.Copies.Count</span></a>
+                    }
+                </td>
+                <td class="just-right">
+                    @if (item.CanDelete && !item.SubLocations.Any() && !item.Copies.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.LocationID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.LocationID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

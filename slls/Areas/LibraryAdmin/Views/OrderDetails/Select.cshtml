@@ -1,0 +1,22 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.SelectOrderViewmodel
+
+<h2>@ViewBag.Title</h2>
+
+<div class="well">
+    @using (Html.BeginForm("PostSelect", "OrderDetails", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        
+        @Html.HiddenFor(model => model.ReturnAction)
+
+            <div class="form-group" title="@Model.Message">
+                @Html.DropDownListFor(model => model.OrderID, Model.Orders, new {@class = "form-control"})
+                @Html.ValidationMessageFor(model => model.OrderID, "", new { @class = "text-danger" })
+            </div>
+        <button title="Submit" type="submit" class="btn btn-primary">@Model.BtnText</button>
+        <span>&nbsp;&nbsp;or&nbsp;</span>
+        <button type="button" class="btn-link" onclick="window.history.back();">Cancel</button>
+    }
+
+</div>

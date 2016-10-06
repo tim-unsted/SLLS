@@ -1,0 +1,43 @@
+﻿@model IEnumerable<slls.Models.SupplierPeople>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FullnameRev)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Position)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @if (String.IsNullOrEmpty(item.FullnameRev))
+            {
+                @Html.ActionLink(" ", "Edit", "SupplierPeople", new { id = item.ContactID, callingController = "SupplierAddresses" }, new { @class = "btn-link" })
+            }
+            else
+            {
+                @Html.ActionLink(item.FullnameRev, "Edit", "SupplierPeople", new { id = item.ContactID, callingController = "SupplierAddresses" }, new { @class = "btn-link" })
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Position)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Email)
+        </td>
+        <td class="just-right">
+            <a href="@Url.Action("Delete", new { id = item.ContactID })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+            <a href="@Url.Action("Edit", new {id = item.ContactID, callingController = "SupplierAddresses"})" class="btn btn-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+
+        </td>
+    </tr>
+}
+
+</table>

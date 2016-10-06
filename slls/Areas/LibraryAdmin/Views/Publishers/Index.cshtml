@@ -1,0 +1,87 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Publisher>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#publishers').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+            {
+                "width": "80%",
+                "targets": [0]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": true,
+                "orderSequence": ["desc", "asc"],
+                "targets": [1]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [2]
+            }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "Publishers")" title="Add new @DbRes.T("Publishers.Publisher", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="publishers" class="table">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("Publishers.Publisher_Name", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Titles", "EntityType")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.PublisherName))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Publishers", new {id = item.PublisherID}, new {@class = "modal-link"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.PublisherName, "Edit", "Publishers", new {id = item.PublisherID}, new {@class = "modal-link"})
+                    }
+                </td>
+                <td>
+                    @if (item.Titles.Count > 0)
+                    {
+                        <a href="@Url.Action("ByPublisher", "Titles", new { id = item.PublisherID })" title="View all items from this @DbRes.T("Publishers.Publisher", "FieldDisplayName")"><span class="badge badge-link">@item.Titles.Count</span></a>
+                    }
+                </td>
+                <td class="just-right">
+                    @if (item.CanDelete && !item.Titles.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.PublisherID})" class="btn btn-link modal-link" title="Delete this @DbRes.T("Publishers.Publisher", "FieldDisplayName")"><span class=" glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.PublisherID})" class="btn btn-link modal-link" title="Edit this @DbRes.T("Publishers.Publisher", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

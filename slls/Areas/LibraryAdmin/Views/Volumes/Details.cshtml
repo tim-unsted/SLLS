@@ -1,0 +1,66 @@
+﻿@model slls.Models.Volume
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Volume</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Barcode)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Barcode)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.Copy.AcquisitionsNo)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Copy.AcquisitionsNo)
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.LabelText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LabelText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OnLoan)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OnLoan)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RefOnly)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RefOnly)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PrintLabel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.PrintLabel)
+        </dd>
+        
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.VolumeID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

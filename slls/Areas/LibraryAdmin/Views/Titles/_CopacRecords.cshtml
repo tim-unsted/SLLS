@@ -1,0 +1,106 @@
+﻿@model AutoCat.ViewModels.CopacSearchResults
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#copacResults').DataTable({
+            "dom": '<"inline"i><"inline float-right"l><"clear">rt<"inline float-right"p><"clear">',
+            "pagingType": sPagingType,
+            "pageLength": 10,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [1, 'asc'],
+            "columnDefs": [
+                {
+                    "sortable": true,
+                    "orderSequence": ["desc", "asc"],
+                    "targets": [1]
+                },
+                {
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [0]
+                }
+            ]
+        });
+    });
+</script>
+
+@using (Html.BeginForm("_CopacResults", "Titles", "Post"))
+{
+
+    <hr />
+    <div>
+        <span>@Html.Label("COPAC search results:")</span>
+        <span>Tick the titles you wish to add then press the 'Add to Catalogue' button.</span>
+    </div>
+
+    <table id="copacResults" class="table table-condensed table-striped">
+        <thead>
+            <tr>
+                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CopacRecords.FirstOrDefault().Title)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CopacRecords.FirstOrDefault().Author)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CopacRecords.FirstOrDefault().Isbn)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CopacRecords.FirstOrDefault().Publisher)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CopacRecords.FirstOrDefault().Place)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CopacRecords.FirstOrDefault().PubYear)
+                </th>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.CopacRecords.FirstOrDefault().SubTitle)
+                    </th>*@
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CopacRecords.Distinct())
+            {
+                <tr>
+                    <td>
+                        @Html.CheckBoxFor(modelItem => item.AddTitle)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Author)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Isbn)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Publisher)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Place)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PubYear)
+                    </td>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.SubTitle)
+                        </td>*@
+
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+    <div class="button-group">
+        <input type="submit" value="Add to Catalogue" class="btn btn-success" />
+    </div>
+}
+

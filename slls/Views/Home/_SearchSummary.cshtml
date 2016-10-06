@@ -1,0 +1,47 @@
+﻿@model slls.ViewModels.SimpleSearchingViewModel
+
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Summary
+            @if (User.Identity.IsAuthenticated)
+            {
+                <span class="pull-right"><a href="@Url.Action("Add", "LibraryUserSavedSearches", new { url = Request.Url.PathAndQuery, description = ViewBag.SearchTerm ?? "New Saved Search" })" class="modal-link" title="Save Search">Save <span class="glyphicon glyphicon-save "></span></a></span>
+            }
+        </div>
+        <div class="panel-body">
+            <p><strong>You searched for:</strong> @ViewBag.SearchTerm</p>
+            <p>@Html.Label("In:") @ViewBag.SearchField</p>
+
+
+            @if (Model.Filters.Count > 0)
+            {
+                @Html.Label("Where:")
+
+                <ul class="list-unstyled">
+                    @*@foreach (KeyValuePair<string, string> item in ViewBag.Filters)
+                    {
+                        <li>
+                            @item.Value;
+                            <a href="@Url.Action("SimpleSearch", "Home", new
+                          {
+                              q = @ViewBag.SearchTerm,
+                              f = @ViewBag.SearchField,
+                              m = item.Key.ToString() == "m" ? 0 : @ViewBag.MediaID,
+                              c = item.Key.ToString() == "c" ? 0 : @ViewBag.ClassmarkID,
+                              l = item.Key.ToString() == "l" ? 0 : @ViewBag.LanguageID,
+                              p = item.Key.ToString() == "p" ? 0 : @ViewBag.PublisherID,
+                              a = item.Key.ToString() == "a" ? 0 : @ViewBag.AuthorID,
+                              k = item.Key.ToString() == "k" ? 0 : @ViewBag.KeywordID
+                          })" title="Remove this filter"><span class="glyphicon glyphicon-remove"></span></a>
+                        </li>
+                    }*@
+                    @foreach (var filter in Model.Filters)
+                    {
+                        <li>
+                            @Html.DisplayFor(x => filter)
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>

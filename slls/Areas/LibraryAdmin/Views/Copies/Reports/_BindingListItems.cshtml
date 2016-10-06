@@ -1,0 +1,28 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Title>
+
+@foreach (var title in Model)
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h4>@Html.DisplayFor(modelItem => title.Title1)</h4>
+        </div>
+    </div>
+    
+    foreach (var copy in title.Copies.OrderBy(c => c.CopyNumber))
+    { 
+        <div class="row">
+            <div class="col-md-1">
+                Copy: @Html.DisplayFor(modelItem => copy.CopyNumber)
+            </div>
+            <div class="col-md-11">
+                @Html.DisplayFor(modelItem => copy.Holdings)
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-11 col-md-push-1">
+                @Html.DisplayFor(modelItem => copy.Notes)
+            </div>
+        </div>
+    }
+}

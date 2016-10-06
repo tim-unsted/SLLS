@@ -1,0 +1,45 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.IsbnLookupViewModel
+
+@Html.Partial("_ModalDefaultHeader")
+
+@using (Html.BeginForm("PostIsbnEnquiry", "Searching", new AjaxOptions { HttpMethod = "post", OnFailure = "OnFailure" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            <div class="alert alert-info">
+                <strong>Info:</strong> Enter or scan the @DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName") to search for the item.
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Enter an " + DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName"), new { @class = "control-label col-md-4" })
+                <div class="col-md-7">
+                    @Html.EditorFor(model => model.Isbn, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.Isbn, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button id="btnOkay" class="btn btn-primary" type="submit">Lookup Details</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Isbn').focus();
+    });
+
+    function OnFailure(response) {
+        var obj = $.parseJSON(response.responseText);
+        alert(obj.message);
+    }
+
+</script>

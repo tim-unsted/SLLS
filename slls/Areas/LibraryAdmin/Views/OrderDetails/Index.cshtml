@@ -1,0 +1,25 @@
+﻿@using System.Collections
+@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.OrderDetailsListViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+
+<div class="well">
+
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "OrdersTable" }))
+    {
+        <form>
+            <div class="form-group" title="@ViewBag.Message">
+                @Html.DropDownList("ListSupplier", null, "Filter by Supplier", new { @class = "form-control", onchange = "this.form.submit();" })
+            </div>
+        </form>
+    }
+    <a href="@Url.Action("Create", "OrderDetails")" title="Add new @DbRes.T("Orders.Order", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+
+</div>
+
+<div>
+    @Html.Partial("_Index", Model)
+</div>

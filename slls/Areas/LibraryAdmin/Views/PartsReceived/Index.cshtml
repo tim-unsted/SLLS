@@ -1,0 +1,15 @@
+﻿@using Westwind.Globalization
+
+@Html.Partial("_HeaderSeeAlso")
+
+<div class="well">
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "partslist" }))
+    {
+        <div class="form-group">
+            @Html.DropDownList("SelectedCopy", null, new { @class = "form-control", onchange = "this.form.submit();" })
+        </div>
+    }
+    <a href="@Url.Action("Create", "PartsReceived", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
+</div>
+
+@Html.Partial("_IndexNoSupplier")

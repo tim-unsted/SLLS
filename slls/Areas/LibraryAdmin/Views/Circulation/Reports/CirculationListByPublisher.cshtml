@@ -1,0 +1,15 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.CirculationReportsViewModel
+
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr/>
+
+@foreach (var publisher in Model.Publishers)
+{
+    <h3>@Html.DisplayFor(modelItem => publisher.PublisherName) </h3>
+
+    @Html.Action("_CirculatedTitlesByPublisher", new { id = publisher.PublisherID })
+}

@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
+
+  <mvcSiteMapNode title="Home" controller="Home" action="Index">
+    <mvcSiteMapNode title="About" controller="Home" action="About"/>
+    <mvcSiteMapNode title="Search" controller="Home" clickable="false">
+      <mvcSiteMapNode title="Simple Search" controller="Home" action="SimpleSearch"/>
+      <mvcSiteMapNode title="Advanced Search" controller="Home" action="AdvancedSearch"/>
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="Contact" controller="Home" action="Contact"/>
+    <mvcSiteMapNode title="NotFound" controller="Home" action="NotFound"/>
+    <mvcSiteMapNode title="Browse" controller="Home" clickable="false">
+      <mvcSiteMapNode title="Browse By Author" controller="Home" action="BrowseByAuthor"/>
+      <mvcSiteMapNode title="Browse By Classmark" controller="Home" action="BrowseByClassmark"/>
+      <mvcSiteMapNode title="Browse By Language" controller="Home" action="BrowseByLanguage"/>
+      <mvcSiteMapNode title="Browse By Media Type" controller="Home" action="BrowseByMedia"/>
+      <mvcSiteMapNode title="Browse By Publisher" controller="Home" action="BrowseByPublisher"/>
+      <mvcSiteMapNode title="Browse By Location" controller="Home" action="BrowseByLocation"/>
+    </mvcSiteMapNode>
+    <mvcSiteMapNode title="New Titles" controller="Home" action="NewTitles"/>
+    <mvcSiteMapNode title="Notifications" controller="Home" action="Notifications"/>
+  </mvcSiteMapNode>
+
+</mvcSiteMap>

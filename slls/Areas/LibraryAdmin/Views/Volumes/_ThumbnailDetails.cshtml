@@ -1,0 +1,45 @@
+﻿@model slls.ViewModels.VolumesWithLoansIndexViewModel
+
+<div>&nbsp;</div>
+<div class="row">
+    @foreach (var item in Model.VolumesWithLoans)
+    {
+        <div class="col-md-12">
+            <div class="thumbnail">
+                <div class="caption" style="border-bottom: 1px solid #ddd; margin-bottom: 15px;">
+                    <span class="pull-right">
+                        <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID}, null)" class="btn btn-link modal-link" title="Edit" role="button"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="@Url.Action("Delete", "Volumes", new {id = item.VolumeID}, null)" class="btn btn-link modal-link" title="Delete" role="button"><span class="glyphicon glyphicon-trash"></span></a>
+                    </span>
+                    <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID}, null)" class="btn btn-link modal-link" title="Edit" role="button"><span class="glyphicon glyphicon-barcode"></span> <strong>@Html.DisplayNameFor(model => item.Barcode):&nbsp;@Html.Raw(item.Barcode)</strong></a>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <dl class="dl-horizontal">
+                            <dt>@Html.DisplayNameFor(model => item.LabelText):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.LabelText)</dd>
+                            <dt>@Html.DisplayNameFor(model => item.PrintLabel):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.PrintLabel)</dd>
+                            @*<dt>@Html.DisplayNameFor(model => model.RefOnly):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.RefOnly)</dd>*@
+                            <dt>@Html.DisplayNameFor(model => item.LoanType):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.LoanType)</dd>
+                        </dl>
+                    </div>
+                    <div class="col-sm-6">
+                        <dl class="dl-horizontal">
+                            <dt>@Html.DisplayNameFor(model => item.OnLoan):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.OnLoan)</dd>
+                            <dt>@Html.DisplayNameFor(model => item.Borrowed):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.Borrowed)</dd>
+                            <dt>@Html.DisplayNameFor(model => item.ReturnDue):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.ReturnDue)</dd>
+                            <dt>@Html.DisplayNameFor(model => item.Fullname):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.Fullname)</dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

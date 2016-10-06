@@ -1,0 +1,20 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Copy>
+
+<h2>@ViewBag.Title</h2>
+
+<div class="well">
+    @using (Html.BeginForm("Index", "Copies", FormMethod.Get))
+    {
+        <div class="form-group" title="@ViewBag.Message">
+            @Html.DropDownList("id", (IEnumerable<SelectListItem>)ViewData["TitleId"], new { @class = "form-control", onchange = "this.form.submit();" })
+        </div>
+    }
+
+    <a href="@Url.Action("Create", "Copies")" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
+    
+</div>
+
+<div id="TitlesTable">
+    @Html.Partial("_Index", Model)
+</div>

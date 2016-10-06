@@ -1,0 +1,44 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleEditorEditViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm("Edit", "TitleEditors", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+            @Html.HiddenFor(model => model.TitleEditorId)
+            @Html.HiddenFor(model => model.TitleId)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Authors.Editor", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.DropDownList("AuthorID", null, htmlAttributes: new {@class = "form-control"})
+                    @Html.ValidationMessageFor(model => model.AuthorId, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("TitleEditors.Order_Sequence", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.OrderSeq, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.OrderSeq, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+        </div>
+    </div>
+    @Html.Partial("_ModalEditFooter")
+}

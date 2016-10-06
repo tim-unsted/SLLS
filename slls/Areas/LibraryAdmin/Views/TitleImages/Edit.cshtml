@@ -1,0 +1,61 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleImageEditViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.TitleImageId)
+            @Html.HiddenFor(model => model.ImageId)
+            @Html.HiddenFor(model => model.TitleId)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-3">&nbsp;</div>
+                <div class="col-md-8">
+                    <img src="@Url.Action("ViewImage", "TitleImages", new { id = Model.TitleImageId })" alt="@Model.Alt" style="max-width: 100%;">
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Images.Alt", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Alt, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Alt, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Images.HoverText", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.HoverText, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.HoverText, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Images.IsPrimary", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsPrimary)
+                        @Html.ValidationMessageFor(model => model.IsPrimary, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.Partial("_ModalEditFooter")
+}

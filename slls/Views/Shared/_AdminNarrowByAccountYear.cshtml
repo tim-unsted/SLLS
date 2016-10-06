@@ -1,0 +1,23 @@
+﻿@model slls.ViewModels.FinanceSearchingViewModel
+@using Westwind.Globalization
+
+<h5>@DbRes.T("AccountYears.Account_Year", "FieldDisplayName")</h5>
+<ul class="list-unstyled">
+    @Html.EditorFor(model => model.AccountYearsFilter)
+</ul>
+<div>
+    <a href="@Url.Action("AdminShowAllAccountYearsFilter", "Searching")" class="btn btn-show-more" title="Show more" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-plus-sign"></span> Show All @DbRes.T("AccountYears", "EntityType")</a>
+</div>
+<hr class="hr-compact" />
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(function () {
+            $("input[type='checkbox']").change(function () {
+                $(this).closest("form").submit();
+            });
+        });
+    });
+</script>
+
+

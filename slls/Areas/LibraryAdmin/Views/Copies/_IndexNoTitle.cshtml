@@ -1,0 +1,102 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Copy>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#copies').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+            {
+                "width": "10%",
+                "targets": 0
+            },
+            {
+                "width": "20%",
+                "targets": [1, 2]
+            },
+            {
+                "width": "30%",
+                "targets": [3]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [5]
+            }
+            ]
+        });
+    });
+</script>
+
+<table id="copies" class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CopyNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Location.Location1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.StatusType.Status)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Holdings)
+        </th>
+        <th>
+            @Html.Label(DbRes.T("CopyItems.Barcodes", "FieldDisplayName"))
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.OrderBy(c => c.CopyNumber))
+    {
+        <tr>
+            <td>
+                @if (String.IsNullOrEmpty(item.CopyNumber.ToString()))
+                {
+                    @Html.ActionLink(" ", "Edit", "Copies", new { id = item.CopyNumber }, null)
+                }
+                else
+                {
+                    @Html.ActionLink(item.CopyNumber.ToString(), "Edit", "Copies", new { id = item.CopyID }, null)
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location.LocationString)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.StatusType.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Holdings)
+            </td>
+            @*<td>
+                @foreach (var barcode in item.Volumes)
+                {
+                    <a href="@Url.Action("Edit", "Volumes", new { id = barcode.VolumeID }, null)" class="modal-link" title="View/Edit Volume">@barcode.Barcode</a>
+                }
+            </td>*@
+            <td>
+                @if (item.Volumes.Any())
+                {
+                    <a href="@Url.Action("Index", "Volumes", new {copyId = item.CopyID})" title="View all @DbRes.T("Copies.Copy_Items", "FieldDisplayName")"><span class="badge badge-link">@item.Volumes.Count</span></a>
+                }
+            </td>
+
+            <td class="just-right">
+                <a href="@Url.Action("Edit", "Copies", new { id = item.CopyID }, null)" class="btn btn-link" title="Edit"><span class="glyphicon glyphicon-pencil" /></a>
+                <a href="@Url.Action("Delete", "Copies", new { id = item.CopyID }, null)" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash" /></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,17 @@
+﻿@model slls.ViewModels.TitlesReportsViewModel
+
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@foreach (var title in Model.Titles.OrderBy(t => t.CatalogueByAuthor))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <p>@Html.DisplayFor(modelItem => title.CatalogueByAuthor)</p>
+        </div>
+    </div>
+}
+

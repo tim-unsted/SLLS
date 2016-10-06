@@ -1,0 +1,176 @@
+﻿@model slls.ViewModels.OrderDetailsListViewModel
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#invoices').DataTable({
+            "aaSorting": [[2, "desc"]],
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+                { "width": "5%", "data": 0, "render": function (data, type, row) { return '<a href="Edit/' + row[12] + '#receipts" class="btn-link">' + data + '</a>'; }, "targets": [0] },
+                { "width": "25%", "data": 1, "render": function (data, type, row) { return '<a href="EditTitle/' + row[13] + '" class="btn-link">' + data + '</a>'; }, "targets": [1] },
+                { "width": "9%", "orderData": [9], "targets": [2] },
+                { "width": "9%", "targets": [3] },
+                { "width": "9%", "targets": [4] },
+                { "width": "9%", "orderData": [10], "targets": [5] },
+                { "width": "9%", "orderData": [11], "targets": [6] },
+                { "width": "9%", "targets": [7] },
+                { "width": "9%", "targets": [8] },
+                { "visible": false, "targets": [9, 10, 11, 12, 13] },
+                { "width": "7%", "targets": [14] }
+            ]
+            ,
+            initComplete: function () {
+                this.api().columns('.select-filter').every(function () {
+                    var column = this;
+                    var select = $('<select class="form-control" style="width:100%;"><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>');
+                    });
+                });
+            }
+        });
+    });
+</script>
+
+<table id="invoices" class="table table-condensed table-hover">
+    <thead>
+        <tr>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderNo)
+            </th>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Title.Title1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().ReceivedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().PriceGross)
+            </th>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().InvoiceRef)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().InvoiceDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Passed)
+            </th>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().AccountYearID)
+            </th>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderCategoryID)
+            </th>
+            <th>
+                @*[9]ReceivedDateSortable*@
+            </th>
+            <th>
+                @*[10]InvoiceDateSortable*@
+            </th>
+            <th>
+                @*[11]PassedDateSortable*@
+            </th>
+            <th>
+                @*[12]OrderID*@
+            </th>
+            <th>
+                @*[13]TitleID*@
+            </th>
+            <th>
+                @*[14]edit/delete*@
+            </th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tfoot>
+    <tbody>
+        @foreach (var item in Model.Orders)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderNo) @*[0]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title.Title1) @*[1]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceivedDate) @*[2]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriceGross) @*[30]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InvoiceRef) @*[4]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InvoiceDate) @*[5]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Passed) @*[6]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AccountYear.AccountYear1) @*[7]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderCategory.OrderCategory1) @*[8]*@
+                </td>
+                <th>
+                    @Html.DisplayFor(modelItem => item.ReceivedDateSortable) @*[9]*@
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.InvoiceDateSortable) @*[10]*@
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.PassedDateSortable) @*[11]*@
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.OrderID) @*[12]*@
+                </th>
+                <th>
+                    @Html.DisplayFor(modelItem => item.TitleID) @*[13]*@
+                </th>
+
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new { id = item.OrderID })#receipts" class="btn btn-link" title="Edit">&nbsp;<span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

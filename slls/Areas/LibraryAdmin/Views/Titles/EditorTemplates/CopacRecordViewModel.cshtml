@@ -1,0 +1,35 @@
+﻿@model AutoCat.ViewModels.CopacRecordViewModel
+
+<tr>
+    <td>
+        @Html.CheckBoxFor(model => model.AddTitle)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Isbn)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Title)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.Author)
+    </td>
+    <td>
+        @Html.DisplayFor(model => model.PubYear)
+    </td>
+    <td>
+        @Html.HiddenFor(model => model.Title)
+        @Html.HiddenFor(model => model.Author)
+        @Html.HiddenFor(model => model.Edition)
+        @Html.HiddenFor(model => model.Isbn)
+        @Html.HiddenFor(model => model.Isbn10)
+        @Html.HiddenFor(model => model.Isbn13)
+        @Html.HiddenFor(model => model.Language)
+        @Html.HiddenFor(model => model.Place)
+        @Html.HiddenFor(model => model.PubYear)
+        @Html.HiddenFor(model => model.Publisher)
+    </td>
+</tr>
+
+
+
+

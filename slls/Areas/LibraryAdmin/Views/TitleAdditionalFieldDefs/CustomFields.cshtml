@@ -1,0 +1,84 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.TitleAdditionalFieldDef>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table = $('#fielddefs').DataTable({
+            "dom": '<"inline"i><"inline float-right"f><"clear"><"inline"l><"inline float-right"p>rt<"inline"i><"inline float-right"p><"clear"><"inline"l><"clear">',
+            "oLanguage": {
+                "sLengthMenu": "Items per page _MENU_ ",
+                "sInfo": "Showing _START_ to _END_ of _TOTAL_ items",
+                "sInfoEmpty": "",
+                "sEmptyTable": "No items were found"
+            },
+            "pageLength": 25,
+            "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]]
+        });
+    });
+
+</script>
+
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("AddCustomField", "TitleAdditionalFieldDefs")" title="Add new field definition" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table class="table" id="fielddefs">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FieldName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsNumeric)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsBoolean)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShowOnOPAC)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.FieldName))
+                    {
+                        @Html.ActionLink(" ", "EditCustomField", "TitleAdditionalFieldDefs", new { id = item.FieldID }, new { @Class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.FieldName, "EditCustomField", "TitleAdditionalFieldDefs", new { id = item.FieldID }, new { @Class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsNumeric)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsBoolean)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ShowOnOPAC)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("EditCustomField", new { id = item.FieldID })" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new { id = item.FieldID })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

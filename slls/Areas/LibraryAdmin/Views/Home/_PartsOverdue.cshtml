@@ -1,0 +1,35 @@
+﻿@model slls.ViewModels.DashboardViewModel
+
+<div class="panel panel-gadget shadowed">
+    <div class="panel-heading">
+        <span class="panel-title">
+            <span is="gadget-Title">@ViewBag.Title</span><span class="pull-right"><a href="@Url.Action("PartsOverdue", "PartsReceived")" title="View All Overdue Issues"><span class="glyphicon glyphicon-eye-open"></span> View All</a></span>
+        </span>
+    </div>
+    <div class="panel-body">
+        <table class="table table-compact">
+            <thead>
+            <tr>
+                <th>Item</th>
+                <th>Expected</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.IssuesExpected.OrderBy(i => i.NextPartExpected).Take(10))
+            {
+                <tr>
+                    <td>
+                        <a href="@Url.Action("QuickCheckIn", "PartsReceived", new {selectedCopy = item.CopyID})" class="btn-link" title="View in Quick Check-In">@item.Title.Title1</a>
+                    </td>
+                    <td style="white-space:nowrap;">
+                        @Html.DisplayFor(model => item.NextPartExpected)
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+    <div class="panel-footer">
+        Showing 1-@ViewBag.Showing of <a href="@Url.Action("PartsOverdue", "PartsReceived")" title="View All Overdue Issues">@ViewBag.Count</a> overdue parts/issues.
+</div>
+</div>

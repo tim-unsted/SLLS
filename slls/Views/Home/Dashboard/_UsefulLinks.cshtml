@@ -1,0 +1,22 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.OPACHomePageViewModel
+
+<div class="panel panel-gadget shadowed">
+    <div class="panel-heading">
+        <span class="panel-title">
+            <span class="glyphicon glyphicon-link"></span>&nbsp;<span is="gadget-Title">@ViewBag.Title</span>
+            @if (Model.LibraryStaff)
+            {
+                <span class="pull-right"><a href="@Url.Action("Index", "UsefulLinks", new {area = "LibraryAdmin"})" title="Maintain @DbRes.T("Useful_Links", "EntityType")"><span class="glyphicon glyphicon-pencil"></span></a></span>
+            }
+            </span>
+        </div>
+                <div class="panel-body">
+                    <ul class="list-unstyled">
+                        @foreach (var usefulLink in Model.UsefulLinks)
+                {
+                            <li><a href="@usefulLink.LinkAddress" title="@usefulLink.ToolTip" target="@usefulLink.Target">@usefulLink.DisplayText</a></li>
+                }
+                    </ul>
+                </div>
+            </div>

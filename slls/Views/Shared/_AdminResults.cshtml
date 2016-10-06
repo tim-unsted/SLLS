@@ -1,0 +1,176 @@
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.SimpleSearchingViewModel
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#titles').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [0, 'asc'],
+            "autoWidth": false,
+            "columnDefs": [
+                {
+                    "width": "25%",
+                    "orderData": 6,
+                    "orderSequence": ["desc", "asc"],
+                    "targets": [0],
+                    "render": function(data, type, row) {
+                        return '<a href="EditTitle/' + row[5] + '" class="btn-link">' + data + '</a>';
+                    }
+                },
+                {
+                    "width": "10%",
+                    "targets": [1, 2]
+                },
+                {
+                    "width": "15%",
+                    "targets": [3, 4]
+                },
+                //{
+                //    "width": "10%",
+                //    "targets": [5]
+                //},
+                {
+                    "visible": false,
+                    "targets": [5, 6]
+                },
+                {
+                    "sortable": false,
+                    "width": "10%",
+                    "targets": [7]
+                }
+            ],
+            initComplete: function() {
+                var api = this.api();
+                this.api().columns('.select-filter').every(function() {
+                    var column = this;
+                    var select = $('<select class="form-control" style="width:100%;"><option value=""></option></select>')
+                        .appendTo($(column.footer()))
+                        .on('change', function() {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function(d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>');
+                    });
+                });
+            }
+        });
+    });
+</script>
+@*<span><a href="@Url.Action("ExportCatalogueResults", "Searching")" class="btn btn-link" title="Export"><span class="glyphicon glyphicon-export"></span> Export</a></span>*@
+
+<div class="btn-group">
+    <button type="button" class="btn btn-cancel dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="glyphicon glyphicon-plus-sign"></span> Export Results <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+        <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titles"})" class="btn-link" title="Export Title data">Titles only</a></li>
+        <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopies"})" title="Export Titles & Copy details" class="btn-link">Titles & Copy details</a></li>
+        <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopiesvolumes"})" title="Export Titles, Copies & Copy Item (Volume) details" class="btn-link">Titles, Copies & Copy Item details</a></li>
+    </ul>
+</div>
+<a href="@Url.Action("SaveSearch", "Searching")" title="Save Search" class="btn btn-cancel modal-link"><span class="glyphicon glyphicon-floppy-disk"></span> Save Search</a>
+
+<table id="titles" class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th class="select-filter">
+            @Html.DisplayName(DbRes.T("Titles.Title", "FieldDisplayName"))
+        </th>
+        <th class="select-filter">
+            @Html.DisplayName(DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName"))
+        </th>
+        <th class="select-filter">
+            @Html.DisplayName(DbRes.T("Titles.Published_Year", "FieldDisplayName"))
+        </th>
+        <th class="select-filter">
+            @Html.DisplayName(DbRes.T("Titles.Edition", "FieldDisplayName"))
+        </th>
+        <th class="select-filter">
+            @Html.DisplayName(DbRes.T("Titles.Authors", "FieldDisplayName"))
+        </th>
+        @*<th>
+            @Html.DisplayName(DbRes.T("Titles.Copies", "FieldDisplayName"))
+        </th>*@
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td class="filter"></td>
+            <td class="filter"></td>
+            <td class="filter"></td>
+            <td class="filter"></td>
+            <td class="filter"></td>
+            <td class="filter"></td>
+            <td class="filter"></td>
+            @*<td class="filter"></td>*@
+            <td></td>
+        </tr>
+    </tfoot>
+
+    <tbody>
+    @if (Model.Results.Any())
+    { 
+    foreach (var item in Model.Results)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title1)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Isbn)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Edition)
+            </td>
+            <td>
+                @foreach (var author in item.TitleAuthors)
+                {
+                    <a href="@Url.Action("Edit", "Authors", new {id = author.AuthorId}, null)" class="modal-link" title="View/Edit Author">@author.Author.DisplayName</a><br/>
+                }
+            </td>
+            @*<td>
+                @if (item.Copies.Any())
+                {
+                    <a href="@Url.Action("Edit", "Copies", new {id = item.Copies.FirstOrDefault().CopyID}, null)" class="btn-link" title="View/Edit Copies"><span class="badge badge-link">@item.Copies.Count</span></a><br/>
+                }
+            </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.TitleID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FiledTitle)
+            </td>
+            <td class="just-right">
+                <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("Delete", "Titles", new { id = item.TitleID, view = @Html.CurrentViewName() })" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>
+                @if (@Html.CurrentViewName() == "TitlesNoCopies")
+                {
+                    <a href="@Url.Action("Add", "Copies", new {id = item.TitleID})" class="btn btn-link" title="Add @DbRes.T("Copies.Copy", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span></a>
+                }
+            </td>
+        </tr>
+    }
+    }
+    </tbody>
+
+</table>

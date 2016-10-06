@@ -1,0 +1,55 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleAddViewModel
+
+@*<link href="~/Content/jquery-ui.css" rel="stylesheet" type="text/css" />
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>*@
+
+@using (Html.BeginForm("DoNewTitle", "Titles", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="panel panel-gadget shadowed">
+        <div class="panel-heading">
+            <span class="panel-title">
+                <span is="gadget-Title">@ViewBag.Title</span><span class="pull-right"><span class="glyphicon glyphicon-cloud-download"></span></span>
+            </span>
+        </div>
+        <div class="panel-body">
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Year)
+                @Html.HiddenFor(model => model.Step)
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.Title1)
+                        @Html.EditorFor(model => model.Title1, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Title1, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+                @*<div class="form-group">
+                    <div class="col-md-12">
+                        @Html.Partial("_selectMediaInLine")
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.Partial("_selectClassmarkInLine")
+                    </div>
+                </div>*@
+                @*<div class="form-group">
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.NumberOfCopies)
+                        @Html.EditorFor(model => model.NumberOfCopies, new { htmlAttributes = new { @class = "form-control col-md-2" } })
+                        @Html.ValidationMessageFor(model => model.NumberOfCopies, "", new { @class = "text-danger" })
+                    </div>
+                </div>*@
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <button type="submit" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Add New Title</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

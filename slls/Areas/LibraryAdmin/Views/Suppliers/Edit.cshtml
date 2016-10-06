@@ -1,0 +1,78 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.SuppliersEditViewModel
+
+<h2>@ViewBag.Title</h2>
+
+<div class="well">
+    @Html.Partial("_Select")
+    <a href="@Url.Action("Create", "Suppliers")" title="Add new @DbRes.T("Suppliers.Supplier", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Suppliers.Supplier", "FieldDisplayName")</a>
+
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.SupplierID)
+
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.LabelFor(model => model.SupplierName)
+                @Html.EditorFor(model => model.SupplierName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SupplierName, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        <br/>
+        <div class="form-group">
+            <div class="col-md-12">
+                <span class="pull-right">
+                    <a href="@Url.Action("Add", "SupplierAddresses", new {id = Model.SupplierID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("SupplierAddress.Address", "FieldDisplayName")</a>
+                </span><h3>@DbRes.T("SupplierAddress.Address", "FieldDisplayName")</h3>
+                @if (ViewBag.AddressCount > 0)
+                {
+                    @Html.Action("List", "SupplierAddresses", new {id = Model.SupplierID})
+                }
+                else
+                {
+                    <span class="form-control">This supplier does not have an @DbRes.T("SupplierAddress.Address", "FieldDisplayName").</span>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <span class="pull-right">
+                    <a href="@Url.Action("Create", "SupplierPeople", new {supplierId = Model.SupplierID})" class="btn btn-primary" data-toggle="modal" data-target="#stdModal" title="Add new">Add New @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")&nbsp;<span class="glyphicon glyphicon-plus-sign"></span></a>
+                </span><h3>@DbRes.T("Suppliers.Contacts", "FieldDisplayName")</h3>
+                @if (ViewBag.ContactsCount > 0)
+                {
+                    @Html.Action("ListBySupplier", "SupplierPeople", new { id = Model.SupplierID })
+                }
+                else
+                {
+                    <span class="form-control">This supplier does not have any @DbRes.T("Suppliers.Contacts", "FieldDisplayName").</span>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <h3>@DbRes.T("Suppliers.Notes", "FieldDisplayName")</h3>
+                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
+            <a href="@Url.Action("Delete", new {id = Model.SupplierID})" class="btn btn-danger modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+            &nbsp;&nbsp;or&nbsp;<button type="button" value="Cancel" class="btn-link" onclick="window.history.back();">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>

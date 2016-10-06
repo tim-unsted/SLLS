@@ -1,0 +1,59 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.DeleteConfirmationViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title" id="deleteLabel">@Html.DisplayFor(model => model.FunctionText)&nbsp;@Html.DisplayFor(model => model.HeaderText)</h3>
+</div>
+
+@using (Html.BeginForm(Model.PostDeleteAction, Model.PostDeleteController, FormMethod.Post, new { @class = "modal-form form-horizontal" }))
+{
+    @Html.ValidationSummary()
+            <!-- Added hidden field so that these values persist when calling POST Action. Otherwise POST action will have all these properties as null -->
+    @Html.HiddenFor(x => x.DeleteEntityId)
+    @Html.HiddenFor(x => x.DeleteEntityIdString)
+    @Html.HiddenFor(x => x.PostDeleteAction)
+    @Html.HiddenFor(x => x.PostDeleteController)
+    @Html.HiddenFor(x => x.HeaderText)
+            <!-- Though not required in post action but may be in case of error useful-->
+    <div class="modal-body">
+        <div class="control-group">
+            <p>@Html.DisplayFor(model => model.ConfirmationText) @Html.DisplayFor(model => model.HeaderText)?</p>
+            @if (!Model.DetailsText.IsEmpty())
+            {
+                <p><mark><strong>@Html.Raw(Model.DetailsText)</strong></mark>
+                </p>
+            }
+            @ViewBag.Message
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button id="btnDelete" class="btn @Model.ButtonClass" type="submit"><span class="glyphicon @Model.ButtonGlyphicon"></span> @Html.DisplayFor(model => model.ButtonText)</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+    @*@Html.Partial("_ModalDeleteFooter")*@
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnDelete').click(function () {
+            $('#stdModal').modal('hide');
+        });
+
+        $('form').submit(function (e) {
+            e.preventDefault();
+            $.post(this.action, $(this).serialize(), function (response) {
+                if (response.error) {
+                    alert(response.error);
+                }
+                else {
+                    $('#stdModal').modal('hide');
+                    //Refresh
+                    location.reload();
+                    //window.location = window.location.href;
+                }
+            }, 'json');
+        });
+    });
+</script>

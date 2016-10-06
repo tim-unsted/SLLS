@@ -1,0 +1,20 @@
+﻿@model slls.ViewModels.OPACHomePageViewModel
+
+<div class="panel panel-gadget shadowed">
+    <div class="panel-heading">
+        <span class="panel-title">
+            <span class="glyphicon glyphicon-bookmark"></span>&nbsp;<span is="gadget-Title">@ViewBag.Title</span><span class="pull-right"><a href="@Url.Action("Index", "LibraryUserBookmarks")" title="View full list"><span class="glyphicon glyphicon-eye-open"></span></a></span>
+        </span>
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled">
+            @foreach (var userBookmark in Model.UserBookmarks)
+            {
+                <li><a href="@Url.Action("BookDetails", "Home", new {id = userBookmark.TitleID})">@userBookmark.Description</a></li>
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        Showing 1-@ViewBag.Showing of <a href="@Url.Action("Index", "LibraryUserBookmarks")" title="View full list">@ViewBag.Count</a> bookmarks.
+    </div>
+</div>

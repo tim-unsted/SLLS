@@ -1,0 +1,57 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.TitlesReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+        <h2>@ViewBag.Title</h2>
+        <hr />
+
+        @foreach (var keyword in Model.Keywords.OrderBy(k => string.IsNullOrEmpty(k.KeywordTerm) ? "xxx" : k.KeywordTerm))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="report_h3">@Html.DisplayFor(x => keyword.KeywordDisplay)</h3>
+                    @{
+                        var db = new DbEntities();
+                        var titles = (from x in keyword.SubjectIndexes
+                                      join c in db.Copies on x.TitleID equals c.TitleID
+                                      where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value)
+                                      select x.Title).Distinct();
+
+                        foreach (var title in titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+                        {
+                            <h4 class="report_h4">@Html.DisplayFor(x => title.CatalogueByTitle)</h4>
+                            <p>@Html.DisplayFor(x => title.DescriptionAndImprint)</p>
+                                    <p>@DbRes.T("Classmarks.Classmark", "FieldDisplayName"):&nbsp;@Html.DisplayFor(x => title.Classmark.ClassmarkDisplay)</p>
+
+                            {
+                                var copies = from c in title.Copies
+                                             where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value)
+                                             select c;
+
+                                foreach (var copy in copies.OrderBy(c => c.CopyNumber))
+                                {
+                                    <div class="row">
+                                        <div class="col-md-12 col-md-push-1">
+                                            <p>@Html.DisplayFor(modelItem => copy.CopyLocationStatus)</p>
+                                        </div>
+                                    </div>
+                                }
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        }
+
+
+
+
+
+
+
+
+
+
+

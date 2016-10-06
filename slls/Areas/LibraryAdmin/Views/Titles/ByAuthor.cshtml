@@ -1,0 +1,10 @@
+﻿@model slls.ViewModels.TitlesListViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="#" class="btn-link" onclick="window.history.back();">Back to list</a>
+</p>
+<div id="TitlesTable">
+    @Html.Partial("_Index", Model)
+</div>

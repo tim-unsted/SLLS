@@ -1,0 +1,10 @@
+﻿@model slls.Models.Department
+
+@using (Html.BeginForm("_add", "Departments", FormMethod.Post, new { id = "addDepartmentForm" }))
+{
+    <div class="form-group">
+        <br />
+        @Html.EditorFor(model => model.Department1, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Department1, "", new { @class = "text-danger" })
+    </div>
+}

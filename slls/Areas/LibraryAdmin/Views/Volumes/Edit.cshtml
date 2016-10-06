@@ -1,0 +1,141 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.VolumesEditViewModel
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#TitleID").change(function () {
+            var select = $("#CopyID");
+            select.empty();
+
+            var selectedTitleId = { TitleID: $("#TitleID").val() };
+
+            $.ajax({
+                url: '@Url.Action("GetTitleCopies", "Titles")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedTitleId),
+                success: function (data) {
+                    if (data.success) {
+                        $.each(data.TitleCopyData, function (index, itemData) {
+                            select.append($('<option/>', {
+                                value: itemData.Value,
+                                text: itemData.Text
+                            }));
+                        }
+                        );
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+        });
+    });
+
+</script>
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm("Edit", "Volumes", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.VolumeId)
+
+            @if (Model.BarcodeNeedsEditing)
+            {
+                <div class="alert alert-danger">
+                    <strong>Warning! </strong>You are using pre-printed barcode labels/stickers. You need to update the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") to match the one displayed on the item's barcode label/sticker.
+                </div>
+            }
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.DropDownList("TitleId", null, "Select a " + DbRes.T("Titles.Title", "FieldDisplayName"), new { @class = "form-control", @id = "TitleID" })
+                    @Html.ValidationMessageFor(model => model.TitleId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Copies.Copy", "FieldDisplayName"), new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.DropDownListFor(model => model.CopyId, null, "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName"), new { @class = "form-control", @id = "CopyID" })
+                    @Html.ValidationMessageFor(model => model.CopyId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group has-feedback">
+                @Html.LabelFor(model => model.Barcode, new { @class = "control-label col-md-3" })
+                @if (Model.BarcodeNeedsEditing)
+                {
+                    <div class="col-md-8 has-error">
+                        @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control error" } })
+                        <span class="help-inline">This is the unique barcode or indentifier for the volume. This should be the same as any barcode attached to the item.</span>
+                        @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
+                        <i class="glyphicon glyphicon-barcode form-control-feedback"></i>
+                    </div>
+                }
+                else
+                {
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control" } })
+                        <span class="help-inline">This is the unique barcode or indentifier for the volume. This should be the same as any barcode attached to the item.</span>
+                        @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
+                        <i class="glyphicon glyphicon-barcode form-control-feedback"></i>
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.LabelText, new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.LabelText, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="help-inline">This is the information printed on a label</span>
+                    @Html.ValidationMessageFor(model => model.LabelText, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Borrowing.Loan_Type", "FieldDisplayName"), "Loan Type", htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.DropDownList("LoanTypeId", null, htmlAttributes: new { @class = "form-control" })
+                    <span class="help-inline">This controls how the item may be loaned or if it is Reference-Only</span>
+                    @Html.ValidationMessageFor(model => model.LoanTypeId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @*<div class="form-group">
+                    @Html.LabelFor(model => model.RefOnly, new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.RefOnly)
+                            <span class="help-inline">Tick if this item is reference-only.</span>
+                            @Html.ValidationMessageFor(model => model.RefOnly, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>*@
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PrintLabel, new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.PrintLabel)
+                        <span class="help-inline">Tick if you would like a label for this item to be printed.</span>
+                        @Html.ValidationMessageFor(model => model.PrintLabel, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.Partial("_ModalEditFooter")
+}

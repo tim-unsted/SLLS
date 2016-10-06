@@ -1,0 +1,64 @@
+﻿@model IEnumerable<slls.Models.Location>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Simple Little Library System</title>
+    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" type="text/css" media="print" href="~/Content/print.css" />
+</head>
+<body>
+
+    @Html.Partial("_PrintHeader")
+
+    <div class="container body-content">
+
+        <h2>@ViewBag.Title</h2>
+        <hr />
+
+        @{
+            //Find the last item in the list ...
+            var last = Model.Last();
+        }
+
+        @foreach (var location in Model)
+        {
+            if (location != null)
+            {
+                var locationName = string.IsNullOrEmpty(location.Location1) ? "[No Name]" : location.Location1;
+                <table style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th>
+                                <h3>@locationName</h3>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @Html.Action("BindingListItems", new { id = location.LocationID })
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                //If this location is the last in the list, just end here ...
+                if (location.Equals(@last))
+                {
+                    <div></div>
+                }
+                else
+                {
+                    // ... otherwise insert a page break
+                    <div class="page-break"></div>
+                }
+            }
+        }
+
+    </div>
+
+</body>
+</html>

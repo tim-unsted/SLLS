@@ -1,0 +1,94 @@
+﻿@model slls.ViewModels.PartsReceivedEditViewModel
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/DatePickerReady.js"></script>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title" id="titleLabel"><span class="glyphicon glyphicon-pencil"></span> @ViewBag.Title</h3>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+            
+            @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+            @Html.HiddenFor(model => model.PartID)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Title, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CopyNumber, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.CopyNumber)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PartReceived, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.PartReceived, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.PartReceived, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DateReceived, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.DateReceived, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.DateReceived, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.PrintList, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.CheckBoxFor(model => model.PrintList, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DateReceived, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="modal-footer">
+        <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Add", "Terminology")</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    </div>*@
+    @Html.Partial("_ModalEditFooter")
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSave').click(function () {
+            $('#stdModal').modal('hide');
+        });
+
+        $('form').submit(function (e) {
+            e.preventDefault();
+            $.post(this.action, $(this).serialize(), function (response) {
+                if (response.error) {
+                    alert(response.error);
+                }
+                else {
+                    $('#stdModal').modal('hide');
+                    $('#lrgModal').modal('hide');
+                    //Refresh
+                    location.reload();
+                }
+            }, 'json');
+        });
+    });
+
+    $(".validation-summary-errors").removeClass("validation-summary-errors");
+    $(".input-validation-error").removeClass("input-validation-error").parent().addClass("has-error");
+</script>

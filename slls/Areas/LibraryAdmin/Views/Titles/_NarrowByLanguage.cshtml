@@ -1,0 +1,29 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Language>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        Narrow By @DbRes.T("Languages.Language", "FieldDisplayName")
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled">
+            @foreach (var item in Model)
+            {
+                <li>
+                     @Html.ActionLink(string.IsNullOrEmpty(item.Language1) ? "[no name]" : item.Language1, "SimpleSearch", "Titles", new
+                          {
+                              q = @ViewBag.SearchTerm,
+                              f = @ViewBag.SearchField,
+                              m = @ViewBag.MediaID,
+                              c = @ViewBag.ClassmarkID,
+                              l = item.LanguageID,
+                              p = @ViewBag.PublisherID,
+                              a = @ViewBag.AuthorID,
+                              k = @ViewBag.KeywordID
+                          }, new {@class = ""}) <span class="badge small">@item.TitleCount</span>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+

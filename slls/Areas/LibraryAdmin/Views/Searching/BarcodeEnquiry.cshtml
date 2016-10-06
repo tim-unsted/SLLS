@@ -1,0 +1,45 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.BarcodeEnquiryViewModel
+
+@Html.Partial("_ModalDefaultHeader")
+
+@using (Html.BeginForm("BarcodeLookup", "Searching", new AjaxOptions { HttpMethod = "post", OnFailure = "OnFailure" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            <div class="alert alert-info">
+                <strong>Info:</strong> Enter or scan the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") to lookup the full details of the item.
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Enter a " + DbRes.T("CopyItems.Barcode", "FieldDisplayName"), new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Barcode, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.Barcode, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button id="btnOkay" class="btn btn-primary" type="submit">Lookup Details</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#Barcode').focus();
+    });
+
+    function OnFailure(response) {
+        var obj = $.parseJSON(response.responseText);
+        alert(obj.message);
+    }
+
+</script>

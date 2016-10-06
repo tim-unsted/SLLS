@@ -1,0 +1,13 @@
+﻿@using Westwind.Globalization
+@*<link href="~/Content/jquery-ui.css" rel="stylesheet" type="text/css" />*@
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "selectTitle" }))
+{
+    @Html.AntiForgeryToken()
+
+        <div class="row" style="margin-right: 0">
+            <div class="col-md-10">@Html.DropDownList("TitleId", null, new {onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control"})</div>
+            <div class="col-md-pull"><div class="pull-right"> <a href="@Url.Action("Create", "Titles")" title="Add new @DbRes.T("Titles.Title", "FieldDisplayName")" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Titles.Title", "FieldDisplayName")</a>  <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span class="glyphicon glyphicon-trash"></span></a></div></div>
+        </div>
+}

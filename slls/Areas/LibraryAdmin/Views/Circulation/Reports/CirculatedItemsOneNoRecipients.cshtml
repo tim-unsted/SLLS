@@ -1,0 +1,72 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.CirculationReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@foreach (var title in Model.Titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+{
+    <div class="form-horizontal">
+        <div class="form-group ">
+            <div class="col-md-12">
+                <h3>@Html.DisplayFor(modelItem => title.Title1). @Html.DisplayFor(modelItem => title.Imprint) </h3>
+                <h4>@DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName"): @Html.DisplayFor(modelItem => title.Isbn) </h4>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-11 col-md-push-1">
+            <table id="circulatedcopies" class="table table-no-border">
+                <tbody>
+                    @foreach (var copy in title.Copies.Where(c => c.Circulations.Any() == false || c.Circulations.Count == 1).OrderBy(c => (int)c.CopyNumber))
+                    {
+                        if (copy != null)
+                        {
+                            <tr>
+                                <td style="width: 20%;">
+                                    <h5>@DbRes.T("Copies.Copy_Number", "FieldDisplayName"): @Html.DisplayFor(modelItem => copy.CopyID)</h5>
+                                </td>
+                                <td style="width: 80%;">
+                                    @DbRes.T("Copies.Status", "FieldDisplayName"): @Html.DisplayFor(modelItem => copy.StatusType.Status)
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2">
+                                    <div class="row">
+                                        <div class="col-md-11 col-md-push-1">
+                                            <table id="recipients" class="table table-striped table-condensed table-no-border">
+                                                <tbody>
+                                                    @if (copy.Circulations.Any())
+                                                    {
+                                                        foreach (var circulation in copy.Circulations.OrderBy(c => c.SortOrder))
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    @Html.DisplayFor(modelItem => circulation.RecipientUser.Fullname)
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <td>
+                                                                [No @DbRes.T("Circulation.Recipients", "FieldDisplayName")]
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

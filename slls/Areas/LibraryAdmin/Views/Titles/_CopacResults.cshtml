@@ -1,0 +1,67 @@
+﻿@model AutoCat.ViewModels.CopacSearchResults
+
+@*Some javascript to dispay the results nicely using DataTables.net*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#copacResults').DataTable({
+            "dom": '<"inline"i>',
+            "pageLength": 100,
+            "language": {
+                "url": "/DataTables/autocat.txt"
+            },
+            "order": [2, 'asc'],
+            "columnDefs": [
+                {
+                    "sortable": true,
+                    "orderSequence": ["desc", "asc"],
+                    "targets": [1]
+                },
+                {
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [0, 5]
+                }
+            ]
+        });
+    });
+</script>
+
+
+@using (Html.BeginForm("_CopacResults", "Titles", "Post"))
+{
+    <hr />
+    <div>
+        <span>@Html.Label("COPAC search results:")</span>
+        <span>Tick the titles you wish to add then press the 'Add to Catalogue' button.</span>
+    </div>
+    @Html.ValidationMessage("NotSelected", new { @class = "text-danger" })
+
+    <table id="copacResults" class="table table-condensed">
+        <thead>
+        <tr>
+            <th>Add?</th>
+            <th>ISBN/ISSN</th>
+            <th>Title</th>
+            <th>Author(s)</th>
+            <th>Year</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @Html.EditorFor(m => m.CopacRecords)
+        </tbody>
+    </table>
+    
+    <div class="button-group">
+        <input type="submit" id="submit" value="Add to Catalogue" class="btn btn-success" title="Add selected to Catalogue"/>
+        @Html.ValidationMessage("NotSelected", new { @class = "text-danger" })
+    </div>
+}
+
+<script type="text/javascript">
+    
+    $('#submit').on("click", function () {
+        $(document.body).css({ 'cursor': 'wait' });
+    });
+
+</script>

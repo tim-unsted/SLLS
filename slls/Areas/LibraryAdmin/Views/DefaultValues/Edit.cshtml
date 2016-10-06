@@ -1,0 +1,48 @@
+﻿@model slls.ViewModels.DefaultValueEditViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        
+        @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+        @Html.HiddenFor(model => model.DefaultId)
+        @Html.HiddenFor(model => model.TableName)
+        @Html.HiddenFor(model => model.FieldName)
+        @Html.HiddenFor(model => model.ChildTableName)
+
+        <div class="modal-body">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TableName, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.TableName)</p>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                @Html.LabelFor(model => model.FieldName, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.FieldName)</p>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                @Html.LabelFor(model => model.DefaultValueId, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.DropDownListFor(model => model.DefaultValueId, new SelectList(ViewBag.AuthorityList, "Key", "Value"), new { @class = "form-control" })
+                    <span class="help-inline">Select the appropriate authority list item to use as the default when adding new records</span>
+                    @Html.ValidationMessageFor(model => model.DefaultValueId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+
+        @Html.Partial("_ModalEditFooter")
+
+    </div>
+}
+

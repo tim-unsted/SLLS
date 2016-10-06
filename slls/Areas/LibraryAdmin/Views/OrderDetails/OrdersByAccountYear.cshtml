@@ -1,0 +1,21 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.OrderDetailsListViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="well">
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "OrdersTable" }))
+    {
+        @Html.DropDownList("ListAccountYears", null, "Select an " + DbRes.T("AccountYears.Account_Year", "FieldDisplayName"), new { @class = "form-control", onchange = "this.form.submit();" })
+    }
+
+</div>
+
+<div id="OrdersTable">
+    @Html.Partial("_Index", Model)
+</div>
+
+
+
+

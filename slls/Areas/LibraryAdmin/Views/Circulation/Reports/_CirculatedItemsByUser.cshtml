@@ -1,0 +1,14 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Title>
+
+@if (Model.Any())
+{
+    foreach (var title in Model.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+    {
+        <div class="row">
+            <div class="col-md-12">
+                @Html.Label(title.Title1)
+            </div>
+        </div>
+    }
+}

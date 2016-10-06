@@ -1,0 +1,30 @@
+﻿@using Westwind.Globalization
+@model slls.Models.Volume
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="well">
+
+    <span class="help-block">Select the item you wish to view from the dropdown list of available @DbRes.T("Titles", "EntityType") below.</span>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <form>
+            <div class="form-group" title="@ViewBag.Message">
+                @Html.DropDownList("TitleId", null, new {onchange = "window.location.href = 'Index/' + this.options[this.selectedIndex].value;", @class = "form-control"})
+            </div>
+        </form>
+    }
+
+    <p>
+        <a href="@Url.Action("Create", "Volumes")" title="Add new @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")</a>
+    </p>
+</div>
+
+@*<script type="text/javascript">
+    $(function () {
+        sessionStorage.removeItem('lastTab');
+    });
+</script>*@

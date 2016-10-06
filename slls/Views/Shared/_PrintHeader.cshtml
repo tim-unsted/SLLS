@@ -1,0 +1,18 @@
+﻿@using Westwind.Globalization
+@*<script src="~/Scripts/jquery-2.2.3.min.js"></script>*@
+<script src="@Url.Content("~/Scripts/report-no-data.js")" type="text/javascript"></script>
+
+@Html.Hidden("HasData", (string)Model.HasData.ToString())
+
+@*The 'Print' and 'Close' part ...*@
+<div class="noprint" style="float: right;">
+    <div style="margin-top: 22px;">
+        <button type="button" class="btn btn-primary" onclick="window.print();"><span class="glyphicon glyphicon-print"></span> Print</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" onclick="window.history.back();">@DbRes.T("Buttons.Close", "Terminology")</button>
+    </div>
+</div>
+
+@*The 'No Data' pop-up ...*@
+<div id="noDataDialog" title="@Model.NoDataTitle" style="display: none;">
+    @Model.NoDataMsg
+</div>

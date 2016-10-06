@@ -1,0 +1,251 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitlesReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="report_h3">Titles</h3>
+        <h4>Total Number of Titles: @Html.DisplayFor(x => Model.TitlesCount)</h4>
+        <div class="col-md-11 col-md-push-1">
+            <h4 class="report_h4">By Media:</h4>
+            <div class="col-md-9 col-md-push-1">
+                <table id="mediatypes" class="table table-striped table-no-border">
+                    <thead>
+                        <tr>
+                            <th>
+                                @DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")
+                            </th>
+                            <th class="just-right">
+                                Number of Titles
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.MediaTypes.OrderBy(m => string.IsNullOrEmpty(m.Media) ? "xxx" : m.Media))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(m => item.MediaDisplay)
+                                </td>
+                                <td class="just-right">
+                                    @Html.DisplayFor(m => item.Titles.Count)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <h4 class="report_h4">Total number of titles without an assigned Media type: @Html.DisplayFor(x => Model.TitlesNoMediaCount)</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="report_h3">Copies</h3>
+        <h4 class="report_h4">Total Number of Copies: @Html.DisplayFor(x => Model.CopiesCount)</h4>
+        <div class="col-md-11 col-md-push-1">
+            <h4>By Status:</h4>
+            <div class="col-md-9 col-md-push-1">
+                <table id="statustypes" class="table table-striped table-no-border">
+                    <thead>
+                        <tr>
+                            <th>
+                                @DbRes.T("StatusTypes.Status_Type", "FieldDisplayName")
+                            </th>
+                            <th class="just-right">
+                                Number of Copies
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.StatusTypesList.OrderBy(s => string.IsNullOrEmpty(s.Status) ? "xxx" : s.Status))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(m => item.Status)
+                                </td>
+                                <td class="just-right">
+                                    @Html.DisplayFor(m => item.Copies.Count)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <h4 class="report_h4">Total number of copies without an assigned Status type: @Html.DisplayFor(x => Model.CopiesNoStatusCount)</h4>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="col-md-11 col-md-push-1">
+            <h4>By Office:</h4>
+            <div class="col-md-9 col-md-push-1">
+                <table id="offices" class="table table-striped table-no-border">
+                    <thead>
+                        <tr>
+                            <th>
+                                @DbRes.T("Locations.Office", "FieldDisplayName")
+                            </th>
+                            <th class="just-right">
+                                Number of Copies
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Offices.OrderBy(o => string.IsNullOrEmpty(o.Location1) ? "xxx" : o.Location1))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(m => item.LocationName)
+                                </td>
+                                <td class="just-right">
+                                    @{
+                            var copyCount = item.SubLocations.Aggregate(0, (current, l) => current + l.Copies.Count());
+                                    }
+                                    @Html.DisplayFor(m => copyCount)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <h4 class="report_h4">Total number of copies without an assigned Office: @Html.DisplayFor(x => Model.CopiesNoOfficeCount)</h4>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="col-md-11 col-md-push-1">
+            <h4>By Location:</h4>
+            <div class="col-md-9 col-md-push-1">
+                <table id="locations" class="table table-striped table-no-border">
+                    <thead>
+                        <tr>
+                            <th>
+                                @DbRes.T("Locations.Location", "FieldDisplayName")
+                            </th>
+                            <th class="just-right">
+                                Number of Copies
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Locations.OrderBy(l => string.IsNullOrEmpty(l.Location1) ? "xxx" : l.Location1))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(m => item.LocationName) (@Html.DisplayFor(m => item.ParentLocation.LocationName))
+                                </td>
+                                <td class="just-right">
+                                    @Html.DisplayFor(m => item.Copies.Count)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <h4 class="report_h4">Total number of copies without an assigned Location: @Html.DisplayFor(x => Model.CopiesNoLocationCount)</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-break"></div>
+
+<div class="row">
+    <div class="col-md-12">
+        <h3 class="report_h3">Volumes</h3>
+        <h4 class="report_h4">Total Number of Volumes: @Html.DisplayFor(x => Model.VolumesCount)</h4>
+        <h4 class="report_h4">Number of Volumes On-Loan: @Html.DisplayFor(x => Model.VolumesOnLoanCount)</h4>
+        <h4 class="report_h4">Number of Volumes Available to Loan: @Html.DisplayFor(x => Model.VolumesAvailableCount)</h4>
+        <h4 class="report_h4">Total Number of Ref-Only Volumes: @Html.DisplayFor(x => Model.RefOnlyCount)</h4>
+
+        <div class="col-md-11 col-md-push-1">
+            <h4>By Office:</h4>
+            <div class="col-md-9 col-md-push-1">
+                <table id="offices" class="table table-striped table-no-border">
+                    <thead>
+                        <tr>
+                            <th>
+                                @DbRes.T("Locations.Office", "FieldDisplayName")
+                            </th>
+                            <th class="just-right">
+                                Number of Volumes
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Offices.OrderBy(o => string.IsNullOrEmpty(o.Location1) ? "xxx" : o.Location1))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(m => item.LocationName)
+                                </td>
+                                <td class="just-right">
+                                    @{
+                            var volumeCount = 0;
+                            foreach (var location in item.SubLocations)
+                            {
+                                foreach (var copy in location.Copies)
+                                {
+                                    volumeCount = volumeCount + copy.Volumes.Count(v => v.Deleted == false);
+                                }
+                            }
+                                    }
+                                    @Html.DisplayFor(m => volumeCount)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <br />
+
+        <div class="col-md-11 col-md-push-1">
+            <h4>By Location:</h4>
+            <div class="col-md-9 col-md-push-1">
+                <table id="locations" class="table table-striped table-no-border">
+                    <thead>
+                        <tr>
+                            <th>
+                                @DbRes.T("Locations.Location", "FieldDisplayName")
+                            </th>
+                            <th class="just-right">
+                                Number of Volumes
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.Locations.OrderBy(l => string.IsNullOrEmpty(l.Location1) ? "xxx" : l.Location1))
+                        {
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(m => item.LocationName) (@Html.DisplayFor(m => item.ParentLocation.LocationName))
+                                </td>
+                                <td class="just-right">
+                                    @{
+                            var volumeCount = 0;
+                            foreach (var copy in item.Copies)
+                            {
+                                volumeCount = volumeCount + copy.Volumes.Count(v => v.Deleted == false);
+                            }
+                                    }
+                                    @Html.DisplayFor(m => item.Copies.Count)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+

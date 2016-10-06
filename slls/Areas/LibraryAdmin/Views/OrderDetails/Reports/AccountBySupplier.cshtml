@@ -1,0 +1,58 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.OrderReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@{
+    var yearSum = (from o in Model.Orders
+                   select o.Price).Sum();
+}
+
+<h3>@Model.AccountYear<span class="pull-right">Annual Total: @string.Format("{0:C}", @yearSum)</span></h3>
+
+@foreach (var supplier in Model.Suppliers.OrderBy(x => x.SupplierName))
+{
+    var supplierOrders = from o in Model.Orders
+                         where o.Supplier == supplier
+                         select o;
+
+    var supplierTitles = from o in supplierOrders
+                         select o.Title;
+
+    var supplierPriceSum = (from o in supplierOrders
+                            select o.Price).Sum();
+
+    var supplierName = string.IsNullOrEmpty(supplier.SupplierName) ? "[s.n]" : supplier.SupplierName;
+
+    <table id="tblTitles" class="table table-condensed table-striped table-no-border" style="width: 100%;">
+        <thead>
+            <tr>
+                <th>@supplierName</th>
+                <th style="text-align: right;">@string.Format("{0:C}", supplierPriceSum)</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var title in supplierTitles)
+            {
+                var itemPriceSum = (from o in supplierOrders
+                                    where o.Title == title
+                                    select o.Price).Sum();
+
+                <tr>
+                    <td>
+                        <div class="col-md-10 col-md-push-1">
+                            @title.Title1
+                        </div>
+                    </td>
+                    <td style="text-align: right;">
+                        @string.Format("{0:C}", itemPriceSum)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

@@ -1,0 +1,336 @@
+﻿@using slls.Models
+@using VortexSoft.Bootstrap
+@using Westwind.Globalization
+@model slls.ViewModels.OrderDetailsEditViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+@*@if (ViewBag.RecordCount > 1)
+    {
+        <span class="pull-right">@Html.Partial("_PaginateDetails", Model)</span>
+    }*@
+
+<div class="well">
+    @Html.Partial("_Select")
+    <a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a>
+    <a href="@Url.Action("DuplicateOrder", "OrderDetails", new {id = Model.OrderID})" class="btn btn-success" title="Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")"><span class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")</a>
+</div>
+
+@using (var tabs = Html.Bootstrap().Begin(new Tabs()))
+{
+    tabs.Tab("Order Details", "orderdetails");
+    tabs.Tab("Receipts", "receipts");
+
+    using (tabs.BeginPanel()) //Order details
+    {
+        using (Html.BeginForm("Update", "OrderDetails", FormMethod.Post))
+        {
+            <br /><br />
+
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.OrderID)
+                @Html.HiddenFor(model => model.ReceivedDate)
+                @Html.HiddenFor(model => model.NumCopies)
+                @Html.HiddenFor(model => model.MonthSubDue)
+                @Html.HiddenFor(model => model.InvoiceDate)
+                @Html.HiddenFor(model => model.InvoiceRef)
+                @Html.HiddenFor(model => model.Passed)
+                @Html.HiddenFor(model => model.Link)
+                @Html.HiddenFor(model => model.Accepted)
+                @Html.HiddenFor(model => model.ReturnedDate)
+                @Html.HiddenFor(model => model.Cancelled)
+                @Html.HiddenFor(model => model.Chased)
+                @Html.HiddenFor(model => model.Report)
+                @Html.HiddenFor(model => model.CallingController)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrderNo, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.OrderNo, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.OrderNo, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrderDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.OrderDate)
+                        @Html.ValidationMessageFor(model => model.OrderDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Expected, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Expected, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Expected, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TitleID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.TitleID, Model.Titles, "Select a " + DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TitleID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SupplierID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(model => model.SupplierID, Model.Suppliers, "Select a " + DbRes.T("Suppliers.Supplier", "FieldDisplayName"), htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SupplierID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Item, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Item, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Item, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.VAT, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.VAT, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.VAT, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OnApproval, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.OnApproval)
+                            @Html.ValidationMessageFor(model => model.OnApproval, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RequestedBy, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @*@Html.DropDownList("RequestedBy", (IEnumerable<SelectListItem>)ViewData["RequestedBy"], "Select a Requestor", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownListFor(model => model.RequestedBy, Model.RequestUsers, "Select a Requestor", htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.RequestedBy, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Authority, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @*@Html.DropDownList("Authority", (IEnumerable<SelectListItem>)ViewData["Authority"], "Select an Authority", htmlAttributes: new { @class = "form-control" })*@
+                        @Html.DropDownListFor(model => model.Authority, Model.AuthorityUsers, "Select an Authority", htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Authority, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AccountYearID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.DropDownList("AccountYearID", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.AccountYearID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.OrderCategoryID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("OrderCategoryID", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.OrderCategoryID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.BudgetCodeID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownList("BudgetCodeID", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.BudgetCodeID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
+                    <a href="@Url.Action("Delete", new {id = Model.OrderID})" class="btn btn-default modal-link" title="Delete Order"><span class="glyphicon glyphicon-trash"></span> Delete Order</a>
+                    &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+                </div>
+            </div>
+        }
+    }
+
+    using (tabs.BeginPanel()) //Receipts
+    {
+        using (Html.BeginForm())
+        {
+            <br /><br />
+
+            @Html.AntiForgeryToken()
+
+            <div class="form-horizontal">
+
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.OrderID)
+
+                @Html.HiddenFor(model => model.OrderNo)
+                @Html.HiddenFor(model => model.OrderDate)
+                @Html.HiddenFor(model => model.Expected)
+                @Html.HiddenFor(model => model.TitleID)
+                @Html.HiddenFor(model => model.SupplierID)
+                @Html.HiddenFor(model => model.Item)
+                @Html.HiddenFor(model => model.Price)
+                @Html.HiddenFor(model => model.VAT)
+                @Html.HiddenFor(model => model.OnApproval)
+                @Html.HiddenFor(model => model.RequestedBy)
+                @Html.HiddenFor(model => model.Authority)
+                @Html.HiddenFor(model => model.AccountYearID)
+                @Html.HiddenFor(model => model.OrderCategoryID)
+                @Html.HiddenFor(model => model.BudgetCodeID)
+                @Html.HiddenFor(model => model.Notes)
+                @Html.HiddenFor(model => model.CallingController)
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReceivedDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.ReceivedDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ReceivedDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.InvoiceDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.InvoiceDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.InvoiceDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.InvoiceRef, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.InvoiceRef, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.InvoiceRef, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Passed, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Passed, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Passed, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Link, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Link, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Link, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Accepted, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.Accepted)
+                            @Html.ValidationMessageFor(model => model.Accepted, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.NumCopies, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-1">
+                        @Html.EditorFor(model => model.NumCopies, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.NumCopies, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReturnedDate, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.ReturnedDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ReturnedDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Cancelled, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Cancelled, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Cancelled, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Chased, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.Chased, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Chased, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MonthSubDue, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-1">
+                        @Html.EditorFor(model => model.MonthSubDue, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.MonthSubDue, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Report, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Report, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Report, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
+                    <a href="@Url.Action("Delete", new {id = Model.OrderID})" class="btn btn-default modal-link" title="Delete Order"><span class="glyphicon glyphicon-trash"></span> Delete Order</a>
+                    &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+                </div>
+            </div>
+        }
+    }
+}
+
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        var x = location.hash;
+        if (x !== "") {
+            var activeTab = $('[href=' + x + ']');
+            activeTab && activeTab.tab('show');
+        }
+    });
+</script>

@@ -1,0 +1,29 @@
+﻿@model IEnumerable<slls.Models.Keyword>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+        @*<span class="panel-title">*@
+        Narrow by Keyword
+        @*</span>*@
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled">
+            @foreach (var item in Model)
+            {
+                <li>@Html.ActionLink(string.IsNullOrEmpty(item.KeywordTerm) ? "[no name]" : item.KeywordTerm, "AdminSearch", "Searching", new
+               {
+                   q = @ViewBag.SearchTerm,
+                   f = @ViewBag.SearchField,
+                   m = @ViewBag.MediaID,
+                   c = @ViewBag.ClassmarkID,
+                   l = @ViewBag.LanguageID,
+                   p = @ViewBag.PublisherID,
+                   a = @ViewBag.AuthorID,
+                   k = item.KeywordID
+               }, new { @class = "" }) <span class="badge small">@item.TitleCount</span></li>
+            }
+        </ul>
+    </div>
+</div>
+
+

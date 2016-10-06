@@ -1,0 +1,10 @@
+﻿@model slls.Models.BudgetCode
+
+@using (Html.BeginForm("_add", "BudgetCodes", FormMethod.Post, new { id = "addBudgetCodeForm" }))
+{
+    <div class="form-group">
+        <br />
+        @Html.EditorFor(model => model.BudgetCode1, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.BudgetCode1, "", new { @class = "text-danger" })
+    </div>
+}

@@ -1,0 +1,190 @@
+﻿@using System.Threading.Tasks
+@using slls.Utils.Helpers
+@model slls.ViewModels.DownloadImagesViewmodel
+
+<div>
+    <span class="btn-group pull-right">
+        <button type="button" class="btn-link" onclick="window.history.back();">Cancel</button>
+    </span>
+    <h2>@ViewBag.Title</h2>
+</div>
+
+<div class="alert alert-info">
+    <p>
+        Use this tool to add any available cover images to catalogue items without images.
+        To find a cover image, the catalogue item must have a valid <a href="https://en.wikipedia.org/wiki/International_Standard_Book_Number" title="ISBN" target="_blank"><strong>ISBN</strong></a>.
+        You can specify which AutoCat&copy; sources to use from the options below.
+    </p>
+    <p><strong>Note: </strong>Not all images may be found. Despite having a valid ISBN, the selected sources may not hold a cover image to download. </p>
+</div>
+
+@using (Ajax.BeginForm("PostDownloadImagesAutoCat", "TitleImages", "Post",
+ new AjaxOptions { UpdateTargetId = "progress" }))
+{
+    <script src="@Html.ResolveUrl("~/signalr/hubs")"></script>
+
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(x => Model.Who)
+
+    <div class="form-group">
+        <div class="col-md-12">
+            <div class="summary">
+                <div id="viewTitlesIsbnNoImage">
+                    <span class="glyphicon glyphicon-eye-open"></span> @Html.ActionLink("View Titles with an ISBN but no Image", "TitlesNoImage", "Titles", new { Isbn = "true" }, null)
+                </div>
+                <div id="viewTitlesNoImage">
+                    <span class="glyphicon glyphicon-eye-open"></span> @Html.ActionLink("View Titles without an Image", "TitlesNoImage", "Titles")
+                </div>
+                <div id="viewTitlesNoIsbn">
+                    <span class="glyphicon glyphicon-eye-open"></span> @Html.ActionLink("View Titles without an ISBN", "TitlesNoIsbn", "Titles")
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            <div class="col-md-12">
+                <div class="progress" style="display: none; margin-top: 20px;">
+                    <div class="progress-bar progress-bar-info progress-bar-striped active" id="progress-bar" role="progressbar"
+                         aria-valuenow="0"
+                         aria-valuemin="0"
+                         aria-valuemax="100">
+                        <span style="line-height: 50px;" id="progress"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                Available Sources:
+                <ul class="list-unstyled" id="sources">
+                    @foreach (var item in Model.Sources)
+                    {
+                        <li>
+                            <input type="checkbox" name="SelectedSources" value="@item.Value" checked="@item.Selected" />
+                            @Html.DisplayFor(model => item.Text, new { @class = "control-label" })
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <div id="messages"></div>
+            </div>
+        </div>
+
+        <button type="submit" id="btnDownload" class="btn btn-success" disabled="disabled">Start Download <span class="glyphicon glyphicon-cloud-download"></span></button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" id="btnCancel" class="btn-link" onclick="window.history.back();">Cancel</button>
+
+    </div>
+
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#progress-bar')
+            .css('width', '0%')
+            .attr('aria-valuenow', "0");
+        StartMessaging();
+    });
+
+    $.fn.disable = function() {
+        return this.each(function() {
+            if (typeof this.disabled != "undefined") this.disabled = true;
+        });
+    }
+
+    $.fn.enable = function() {
+        return this.each(function() {
+            if (typeof this.disabled != "undefined") this.disabled = false;
+        });
+    }
+
+    function StartMessaging() {
+        var progressNotifier = $.connection.progressHub;
+
+        $.connection.hub.start().done(function () {
+            $("#btnDownload").removeAttr("disabled");
+            DisplayMessage("Ready. Click on 'Start Download' below to find cover images for " + @Model.CountAvailable + " eligible titles ...");
+            if(@Model.CountAvailable > 0)
+            {
+
+            }
+        });
+
+        // client-side message functions that will be called from the server-side
+
+        progressNotifier.client.initProgress = function (message) {
+            InitProgress(message, 2);
+        };
+
+        progressNotifier.client.sendMessage = function (message) {
+            DisplayMessage(message);
+        };
+
+        progressNotifier.client.updateProgress = function (message, count) {
+            UpdateProgress(message, count);
+        };
+
+        progressNotifier.client.clearProgress = function (message) {
+            FinaliseProgress();
+            DisplayMessage(message);
+        };
+
+    };
+
+    function InitProgress(message, count) {
+
+        //unhide the progress div...
+        $('.progress').show();
+
+        $("#btnDownload").disable(); //.attr("disabled", "true");
+        $("#btnCancel").disable(); //.attr("disabled", "true");
+        $(".summary *").disable(); //.attr("disabled", "true");
+
+        // get the progress bar ...
+        var progress = $('#progress-bar');
+        progress.css('width', count + '%');
+        progress.html('');
+
+        $("#messages").html(message);
+    }
+
+    function UpdateProgress(message, count) {
+
+        // get the progress bar ...
+        var progress = $('#progress-bar');
+        progress.css('width', count + '%');
+        progress.attr('aria-valuenow', count);
+        progress.html(message);
+    }
+
+    function FinaliseProgress() {
+
+        // Clear the progress bar ...
+        $('#progress-bar').html('');
+
+        $("#btnDownload").enable(); //.removeAttr("disabled");
+        $("#btnCancel").enable(); //.removeAttr("disabled");
+        $(".summary *").enable(); //.removeAttr("disabled");
+
+        // hide the progress div...
+        $('.progress').hide();
+    }
+
+    function DisplayMessage(message) {
+
+        // display the passed message ...
+        $("#messages").html(message);
+    }
+
+
+</script>
+

@@ -1,0 +1,34 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitlesReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+        <h2>@ViewBag.Title</h2>
+        <hr />
+
+        @foreach (var title in Model.Titles.OrderBy(t => t.CatalogueByAuthor))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <h4 class="report_h4">@Html.DisplayFor(x => title.CatalogueByAuthor)</h4>
+                    <p>@Html.DisplayFor(x => title.DescriptionAndImprint)</p>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>@DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName"): @Html.DisplayFor(x => title.Isbn)</p>
+                        </div>
+                        <div class="col-md-6">
+                            @{
+                                var copyCount = (from c in title.Copies
+                                    where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value)
+                                    select c).Count();
+
+                                <p>No. of @DbRes.T("Copies", "EntityType"): @Html.DisplayFor(x => copyCount)</p>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+
+

@@ -1,0 +1,80 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.TitlesReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<div class="row">
+    <div class="col-md-12">
+        <h2>@Html.DisplayFor(x => Model.Office.Location1)</h2>
+
+        @foreach (var classmark in Model.Classmarks.OrderBy(c => string.IsNullOrEmpty(c.Classmark1) ? "xxx" : c.Classmark1))
+        {
+            <h3 class="report_h3">@DbRes.T("Classmarks.Classmark", "FieldDisplayName") : @Html.DisplayFor(item => classmark.ClassmarkDisplay)</h3>
+
+            {
+                var db = new DbEntities();
+                var classmark1 = classmark;
+                var titles = (from t in db.Titles
+                              join c in db.Copies on t.TitleID equals c.TitleID
+                              where t.ClassmarkID == classmark1.ClassmarkID && Model.StatusTypes.Contains(c.StatusID.Value) && c.Location.ParentLocation.LocationID == Model.Office.LocationID
+                              select t).Distinct();
+
+                foreach (var title in titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+                {
+                    <h4 class="report_h4">@Html.DisplayFor(x => title.CatalogueByTitle)</h4>
+
+                    {
+                        var copies = from c in title.Copies
+                                     where Model.StatusTypes.Contains(c.StatusID.Value) && c.Location.ParentLocation.LocationID == Model.Office.LocationID
+                                     select c;
+
+                        foreach (var copy in copies)
+                        {
+                            <div class="row">
+                                <div class="col-md-12 col-md-push-1">
+                                    <p>@Html.DisplayFor(modelItem => copy.CopyLocationStatus)</p>
+                                    @foreach (var volume in copy.Volumes)
+                                    {
+                                        <div class="row">
+                                            <div class="col-md-12 col-md-push-1">
+                                                <p>
+                                                    @Html.DisplayFor(modelItem => volume.VolumeDetailsByLabelText)&nbsp;&nbsp;
+                                                    @if (volume.Borrowings.Any(b => b.Returned == null))
+                                                    {
+                                                        var borrowing = volume.Borrowings.Where(b => b.Returned == null).OrderByDescending(b => b.BorrowID).FirstOrDefault();
+                                                        var borrowedBy = borrowing.BorrowerUser.Fullname;
+                                                        var borrowed = borrowing.Borrowed.ToString();
+                                                        <span>Borrowed by: </span>
+                                                        @Html.DisplayFor(x => borrowedBy)
+                                                        <span> on </span>
+                                                        @Html.DisplayFor(x => borrowed)
+                                                    }
+                                                </p>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                }
+            }
+        }
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,37 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitlesReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@foreach (var title in Model.Titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="report_h4">@Html.DisplayFor(x => title.Title1) @Html.DisplayFor(x => title.AuthorString), @Html.DisplayFor(x => title.Imprint)</h4>
+            @{
+    var classmark = "";
+    if (title.ClassmarkID != null)
+    {
+        classmark = string.IsNullOrEmpty(title.Classmark.Classmark1) ? "<no name>" : title.Classmark.Classmark1;
+        classmark = DbRes.T("Classmarks.Classmark", "FieldDisplayName") + ": " + classmark;
+    }
+            }
+            <p>@Html.DisplayFor(x => classmark)</p>
+            @foreach (var si in title.SubjectIndexes.OrderBy(x => x.Keyword.KeywordTerm))
+            {
+                <div class="row">
+                    <div class="col-md-12 col-md-push-1">
+                        <p>@Html.DisplayFor(x => si.Keyword.KeywordTerm)</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}
+
+
+
+

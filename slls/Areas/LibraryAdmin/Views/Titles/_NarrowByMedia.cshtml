@@ -1,0 +1,27 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.MediaType>
+
+<div class="panel panel-primary">
+    <div class="panel-heading">
+            Narrow by @DbRes.T("MediaTypes.Media_Type","FieldDisplayName")
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled">
+            @foreach (var item in Model)
+            {
+                <li>@Html.ActionLink(string.IsNullOrEmpty(item.Media) ? "[no name]" : item.Media, "AdminSearch", "Searching", new
+                    {
+                        q = @ViewBag.SearchTerm, 
+                        f = @ViewBag.SearchField, 
+                        m = item.MediaID, 
+                        c = @ViewBag.ClassmarkID, 
+                        l = @ViewBag.LanguageID, 
+                        p = @ViewBag.PublisherID, 
+                        a = @ViewBag.AuthorID, 
+                        k = @ViewBag.KeywordID
+                    }, new { @class = "" }) <span class="badge small">@item.TitleCount</span></li>
+            }
+        </ul>
+    </div>
+</div>
+

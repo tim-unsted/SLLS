@@ -1,0 +1,169 @@
+﻿@using System.Web.Http
+@using Westwind.Globalization
+@model slls.ViewModels.ExportDataViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title" id="headerLabel">@Html.DisplayFor(model => model.HeaderText)</h3>
+</div>
+
+@using (Html.BeginForm())
+{
+    <div class="modal-body">
+
+        <div class="alert alert-info">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Info: </strong>@Html.DisplayFor(model => model.DetailsText)
+        </div>
+
+        <div class="form-horizontal" style="padding-right: 10px;">
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ExportType, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DropDownListFor(model => model.ExportType, new SelectList(ViewBag.ExportTypes, "Key", "Value"), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ExportType, "", new { @class = "text-danger" })
+                </div>
+
+                @Html.LabelFor(model => model.ExportFormat, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.DropDownListFor(model => model.ExportFormat, new SelectList(ViewBag.ExportFormats, "Key", "Value"), new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.ExportFormat, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="strike">
+                <span>Filters (Optional):</span>
+            </div>
+
+            @if (Model.ExportWhat == "finance")
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AccountYearId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.AccountYearId, new SelectList(Model.AccountYears, "AccountYearID", "AccountYear1"), "Filter by " + DbRes.T("AccountYears.Account_Year", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.AccountYearId, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.BudgetCodeId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.BudgetCodeId, new SelectList(Model.BudgetCodes, "BudgetCodeID", "BudgetCode1"), "Filter by " + DbRes.T("BudgetCode.Budget_Code", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.BudgetCodeId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SupplierId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.SupplierId, new SelectList(Model.Suppliers, "SupplierID", "SupplierName"), "Filter by " + DbRes.T("Suppliers.Supplier", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.SupplierId, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.OrderCategoryId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.OrderCategoryId, new SelectList(Model.OrderCategories, "OrderCategoryID", "OrderCategory1"), "Filter by " + DbRes.T("OrderCategories.Order_Category", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.OrderCategoryId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RequesterId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.RequesterId, new SelectList(Model.Requesters, "Id", "FullnameRev"), "Filter by " + DbRes.T("Orders.Requested_By", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.RequesterId, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.AuthoriserId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.AuthoriserId, new SelectList(Model.Authorisers, "Id", "FullnameRev"), "Filter by " + DbRes.T("Orders.Authorised_By", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.AuthoriserId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.MediaId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.MediaId, new SelectList(Model.MediaTypes, "MediaID", "Media"), "Filter by " + DbRes.T("MediaTypes.Media_Type", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.MediaId, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.ClassmarkId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.ClassmarkId, new SelectList(Model.Classmarks, "ClassmarkID", "Classmark1"), "Filter by " + DbRes.T("Classmarks.Classmark", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.ClassmarkId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.PublisherId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.PublisherId, new SelectList(Model.Publishers, "PublisherID", "PublisherName"), "Filter by " + DbRes.T("Publishers.Publisher", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.PublisherId, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.LanguageId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.LanguageId, new SelectList(Model.Languages, "LanguageID", "Language1"), "Filter by " + DbRes.T("Languages.Language", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.LanguageId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LocationId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.LocationId, new SelectList(Model.Locations, "LocationID", "Location1"), "Filter by " + DbRes.T("Locations.Location", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.LocationId, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.StatusId, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-4">
+                        @Html.DropDownListFor(model => model.StatusId, new SelectList(Model.StatusTypes, "StatusID", "Status"), "Filter by " + DbRes.T("StatusTypes.Status_Type", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.StatusId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.Label("Include " + DbRes.T("Titles.Keywords", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-1">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.IncludeSubjects)
+                            @Html.ValidationMessageFor(model => model.IncludeSubjects, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @Html.Label("Include " + DbRes.T("Titles.Links", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-1">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.IncludeLinks)
+                            @Html.ValidationMessageFor(model => model.IncludeLinks, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @Html.Label("Include " + DbRes.T("Titles.Long_Texts", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-1">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.IncludeTitleTexts)
+                            @Html.ValidationMessageFor(model => model.IncludeTitleTexts, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-success" aria-hidden="true" type="submit"><span class="glyphicon glyphicon-ok"></span> @Html.DisplayFor(model => model.ConfirmButtonText)</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('form').submit(function (e) {
+            $('#stdModal').modal('hide');
+            $('#lrgModal').modal('hide');
+        });
+    });
+</script>

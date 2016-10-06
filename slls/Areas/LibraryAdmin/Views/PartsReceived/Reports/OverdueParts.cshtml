@@ -1,0 +1,30 @@
+﻿@model slls.ViewModels.CirculationReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@foreach (var supplier in Model.Suppliers)
+{
+    if (supplier != null)
+    {
+        var supplierName = string.IsNullOrEmpty(supplier.SupplierName) ? "[s.n.]" : supplier.SupplierName;
+        <table style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>
+                        <h3>@supplierName</h3>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @Html.Action("OverduePartsBySupplier", new { id = supplier.SupplierID })
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    }
+}

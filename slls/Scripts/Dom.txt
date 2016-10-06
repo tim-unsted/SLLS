@@ -1,0 +1,7 @@
+﻿"dom": '<"inline"i><"inline float-right"f><"clear"><"inline"l><"inline float-right"p>rt<"inline"i><"inline float-right"p><"clear"><"inline"l><"clear">',
+            "oLanguage": {
+                "sLengthMenu": "Items per page _MENU_ ",
+                "sInfo": "Showing _START_ to _END_ of _TOTAL_ items",
+                "sInfoEmpty": "",
+                "sEmptyTable": "No items were found"
+            },

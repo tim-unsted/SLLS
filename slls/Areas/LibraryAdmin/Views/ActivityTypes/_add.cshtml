@@ -1,0 +1,10 @@
+﻿@model slls.Models.ActivityType
+
+@using (Html.BeginForm("_add", "ActivityTypes", FormMethod.Post, new { id = "addActivityTypeForm" }))
+{
+    <div class="form-group">
+        <br />
+        @Html.EditorFor(model => model.Activity, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Activity, "", new { @class = "text-danger" })
+    </div>
+}

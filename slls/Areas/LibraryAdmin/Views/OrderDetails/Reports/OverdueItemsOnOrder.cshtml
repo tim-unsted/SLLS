@@ -1,0 +1,62 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.OrderReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@foreach (var supplier in Model.Suppliers.OrderBy(s => s.SupplierName))
+{
+    var supplierName = string.IsNullOrEmpty(supplier.SupplierName) ? "[s.n.]" : supplier.SupplierName;
+    <div class="row">
+        <div class="col-md-12">
+            <h4 class="report_h4">@supplierName</h4>
+            <hr class="hr-compact" />
+            @{
+    var allOrders = from o in supplier.OrderDetails
+                    where o.ReceivedDate == null && o.Cancelled == null && o.Expected < DateTime.Today
+                    select o;
+
+                    <table id="supplier_orders" class="table table-condensed table-striped" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th style="width: 45%;">
+                                    Title
+                                </th>
+                                <th style="width: 30%;">
+                                    Item
+                                </th>
+                                <th style="width: 10%;">
+                                    Price
+                                </th>
+                                <th style="width: 15%;">
+                                    Expected
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var order in allOrders.OrderBy(o => o.Title.Title1.Substring(o.Title.NonFilingChars)))
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => order.Title.Title1)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => order.Item)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => order.Price)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => order.Expected)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+            }
+        </div>
+    </div>
+}

@@ -1,0 +1,68 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.CirculationReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<div class="noprint" style="margin-bottom: 20px;">
+    <h2>@ViewBag.Title</h2>
+    @if (Model.Recipients.Count() > 1)
+    {
+        <span class="glyphicon glyphicon-info-sign"></span><span> When you print this report, each recipient will start on a new page.</span>
+    }
+</div>
+
+@{
+    //Find the last item in the list ...
+    var last = Model.Recipients.Last();
+}
+
+@foreach (var recipient in Model.Recipients)
+{
+    if (recipient != null)
+    {
+        <table style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>
+                        <div style="border-top: 5px solid #424242; border-bottom: 5px solid #424242; margin-bottom: 10px;">
+                            <span class="pull-right"><h3>@DateTime.Now.Date.ToString("dd MMM yyyy")</h3></span>
+                            <h2>Memo</h2>
+                            <h3>Re: Circulation Lists</h3>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <p>Dear @recipient.Firstname</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <p>@ViewBag.MemoText</p>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        @Html.Action("_CirculatedItemsByUser", new { id = recipient.Id })
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div>&nbsp;</div>
+
+        //If this user is the last in the list, just end here ...
+        if (recipient.Equals(@last))
+        {
+            <div></div>
+        }
+        else
+        {
+            // ... otherwise insert a page break
+            <div class="page-break"></div>
+        }
+
+    }
+}
+

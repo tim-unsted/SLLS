@@ -1,0 +1,119 @@
+﻿@using System.Data.Entity
+@using Westwind.Globalization
+@model slls.ViewModels.PartsReceivedIndexViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#partsoverdue').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [[9, 'asc'], [7, 'asc'], [1, 'asc']],
+            "columnDefs": [
+                {
+                    "data": [0],
+                    "orderData": [7],
+                    "targets": [0]
+                },
+                {
+                    "searchable": false,
+                    "sortable": false,
+                    "visible": false,
+                    "targets": [7, 8, 9]
+                },
+                {
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [10]
+                },
+                {
+                    "orderData": [8],
+                    "targets": [4]
+                },
+                {
+                    "orderData": [9],
+                    "orderSequence": ["desc", "asc"],
+                    "targets": [6]
+                }
+            ]
+        });
+    });
+</script>
+
+<table id="partsoverdue" class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label(DbRes.T("Orders.Supplier", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label("Last " + DbRes.T("CheckIn.Part", "FieldDisplayName") + " Received")
+            </th>
+            <th>
+                @Html.Label("Date Last " + DbRes.T("CheckIn.Part", "FieldDisplayName") + " Received")
+            </th>
+            <th>
+                @Html.Label(DbRes.T("Titles.Frequency", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label("Next " + DbRes.T("CheckIn.Part", "FieldDisplayName") + " Expected")
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.PartsExpectedList)
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("QuickCheckIn", "PartsReceived", new {selectedCopy = item.CopyID})" class="btn-link" title="View in Quick Check-In">@item.Title.Title1</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.CopyNumber) @*[1]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(model => item.Title.OrderDetails.LastOrDefault().Supplier.SupplierName) @*[2]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PartsReceived.LastOrDefault().PartReceived) @*[3]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PartsReceived.LastOrDefault().DateReceived) @*[4]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title.Frequency.Frequency1) @*[5]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NextPartExpected) @*[6]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title.FiledTitle) @*[7]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PartsReceived.LastOrDefault().DateReceivedSortable) @*[8]*@
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NextPartExpectedSortable) @*[9]*@
+                </td>
+                <td class="just-right">
+                    @*[10]*@
+                    <a href="@Url.Action("Create", "PartsReceived", new { id = item.CopyID })" class="btn btn-link modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

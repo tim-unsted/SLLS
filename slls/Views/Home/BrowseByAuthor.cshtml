@@ -1,0 +1,16 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.SimpleSearchingViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+@using (Html.BeginForm(null, null, FormMethod.Get, new { id = "TitlesTable" }))
+{
+    <div class="form-group">
+        @Html.DropDownList("ListAuthors", null, "Select an " + @DbRes.T("Authors.Author", "FieldDisplayName"), new { @class = "form-control", onchange = "this.form.submit();" })
+    </div>
+}
+
+<br />
+<div id="TitlesTable">
+    @Html.Partial("_Simpleresults", Model)
+</div>

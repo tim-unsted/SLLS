@@ -1,0 +1,50 @@
+﻿@using slls.Models
+@model slls.ViewModels.TitlesReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+        <h2>@ViewBag.Title</h2>
+        <hr />
+
+        @foreach (var classmark in Model.Classmarks.OrderBy(c => string.IsNullOrEmpty(c.Classmark1) ? "xxx" : c.Classmark1))
+        {
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="report_h3">@classmark.ClassmarkDisplay</h3>
+
+                    @{
+                        DbEntities db = new DbEntities();
+                        var titles = (from t in classmark.Titles
+                            join c in db.Copies on t.TitleID equals c.TitleID
+                            where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value) && c.AcquisitionsList
+                            select t).Distinct();
+                    
+                        foreach (var title in titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+                        {
+                            <div class="row">
+                                <div class="col-md-12 col-md-push-1">
+                                    <h4 class="report_h4">@title.Title1</h4>
+                                    <p>@Html.DisplayFor(modelItem => title.AuthorString)</p>
+                                    <p>@Html.DisplayFor(modelItem => title.DescriptionAndImprint)</p>
+
+                                    @{
+                                        var copies = from x in title.Copies
+                                            where x.StatusID != null && Model.StatusTypes.Contains(x.StatusID.Value) && x.AcquisitionsList
+                                            select x;
+
+                                        foreach (var copy in copies.OrderBy(c => c.CopyNumber))
+                                        {
+                                            <div class="row">
+                                                <div class="col-md-12 col-md-push-1">
+                                                    <p>@Html.DisplayFor(modelItem => copy.CopyLocationStatus)</p>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        }

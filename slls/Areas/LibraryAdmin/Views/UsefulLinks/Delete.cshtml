@@ -1,0 +1,88 @@
+﻿@model slls.Models.UsefulLink
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>UsefulLink</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LinkAddress)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LinkAddress)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DisplayText)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DisplayText)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ToolTip)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ToolTip)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Target)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Target)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InputDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InputDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastModified)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastModified)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Deleted)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Deleted)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Enabled)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Enabled)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

@@ -1,0 +1,81 @@
+﻿@model slls.ViewModels.OrderDetailsDeleteViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="deleteLabel">@ViewBag.Title</h4>
+</div>
+
+<div>
+    <div class="modal-body">
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.OrderNo)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OrderNo)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Title)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Supplier)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Supplier)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.OrderDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.OrderDate)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Expected)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Expected)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.ReceivedDate)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.ReceivedDate)
+            </dd>
+
+        </dl>
+    </div>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(model => model.OrderID)
+        @Html.HiddenFor(model => model.CallingController)
+
+        <div class="modal-footer">
+            <input type="submit" value="Delete" class="btn btn-primary" id="btn_Delete" />
+            <button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('#btn_Delete').click(function () {
+            $('#stdModal').modal('hide');
+        });
+    });
+</script>

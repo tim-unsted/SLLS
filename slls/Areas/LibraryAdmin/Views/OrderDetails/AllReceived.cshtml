@@ -1,0 +1,20 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.OrderDetailsListViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="well">
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "OrdersTable" }))
+    {
+        @Html.DropDownList("ListSupplier", null, "Filter by Supplier", new { @class = "form-control", onchange = "this.form.submit();" })
+    }
+</div>
+
+<div id="OrdersTable">
+    @Html.Partial("_Received", Model)
+</div>
+
+
+
+

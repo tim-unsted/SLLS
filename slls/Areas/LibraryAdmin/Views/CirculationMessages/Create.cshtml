@@ -1,0 +1,27 @@
+﻿@model slls.Models.CirculationMessage
+
+@Html.Partial("_ModalAddHeader")
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new {@class = "text-danger"})
+            <div class="form-group">
+                @Html.LabelFor(model => model.CirculationMsg, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.CirculationMsg, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.CirculationMsg, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    @Html.Partial("_ModalAddFooter")
+}
+

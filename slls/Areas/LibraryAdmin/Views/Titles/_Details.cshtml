@@ -1,0 +1,165 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleEditViewModel
+
+@using (Html.BeginForm("Update", "Titles"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <br /><br />
+        @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+        {
+            <div class="alert alert-danger">
+                <a href="#" class="close" data-dismiss="alert">&times;</a>
+                <h4>Oops!</h4>
+                @Html.ValidationSummary()
+            </div>
+        }
+        @Html.HiddenFor(model => model.TitleID)
+
+        <div class="form-group">
+            <div class="col-md-10">
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+                @Html.EditorFor(model => model.Title1, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title1, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-2">
+                @Html.Label(DbRes.T("Titles.Non_Filing_Characters", "FieldDisplayName"))
+                @Html.EditorFor(model => model.NonFilingChars, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.NonFilingChars, "", new {@class = "text-danger"})
+            </div>
+            @*<button type="submit" value="Save Details" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Save Details</button>*@
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.Label(DbRes.T("Titles.ISBN_10", "FieldDisplayName"))
+                @Html.EditorFor(model => model.ISBN10, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.ISBN10, "", new {@class = "text-danger"})
+            </div>
+            <div class="col-md-3">
+                @Html.Label(DbRes.T("Titles.ISBN_13", "FieldDisplayName"))
+                @Html.EditorFor(model => model.ISBN13, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.ISBN13, "", new {@class = "text-danger"})
+            </div>
+            <div class="col-md-6">
+                @Html.Partial("_selectClassmarkViewEdit")
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.Label(DbRes.T("Authors.Author", "FieldDisplayName"))<span class="pull-right"><a href="@Url.Action("Add", "TitleAuthors", new {id = Model.TitleID})" class="modal-link" style="margin-bottom: 5px;" title="Add @DbRes.T("Authors.Author", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Authors.Author", "FieldDisplayName")</a></span>
+            
+                @if (Model.TitleAuthors.Count > 0)
+                {
+                    @Html.Partial("_ListAuthors", Model.TitleAuthors)
+                }
+                else
+                {
+                    <span class="form-control"><a href="@Url.Action("Add", "TitleAuthors", new {id = Model.TitleID})" class="btn btn-link btn-long modal-link" title="Add @DbRes.T("Authors.Author", "FieldDisplayName")">&nbsp;</a></span>
+                }
+            </div>
+            <div class="col-md-6">
+                @Html.Label(DbRes.T("Authors.Editor", "FieldDisplayName"))<span class="pull-right"><a href="@Url.Action("Add", "TitleEditors", new {id = Model.TitleID})" class="modal-link" style="margin-bottom: 5px;" title="Add @DbRes.T("Authors.Editor", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Authors.Editor", "FieldDisplayName")</a></span>
+                @if (Model.TitleEditors.Count > 0)
+                {
+                    @Html.Partial("_ListEditors", Model.TitleEditors)
+                }
+                else
+                {
+                    <span class="form-control"><a href="@Url.Action("Add", "TitleEditors", new {id = Model.TitleID})" class="btn btn-link btn-long modal-link" title="Add @DbRes.T("Authors.Editor", "FieldDisplayName")"></a></span>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.Label(DbRes.T("Titles.Edition", "FieldDisplayName"))
+                @Html.EditorFor(model => model.Edition, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Edition, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-6">
+                @Html.Label(DbRes.T("Titles.Series", "FieldDisplayName"))
+                @Html.EditorFor(model => model.Series, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Series, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <div class="col-md-2">
+                @Html.Label(DbRes.T("Titles.Published_Year", "FieldDisplayName"))
+                @Html.EditorFor(model => model.Year, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.Year, "", new {@class = "text-danger"})
+            </div>
+            <div class="col-md-4">
+                @Html.Label(DbRes.T("Titles.Place_of_Publication", "FieldDisplayName"))
+                @Html.EditorFor(model => model.PlaceofPublication, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PlaceofPublication, "", new { @class = "text-danger" })
+            </div>
+            <div class="col-md-6">
+                @Html.Partial("_selectPublisherViewEdit")
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.Partial("_selectMediaViewEdit")
+            </div>
+            <div class="col-md-6">
+                @Html.Label(DbRes.T("Titles.Description", "FieldDisplayName"))
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.Partial("_selectLanguageViewEdit")
+            </div>
+            <div class="col-md-6">
+                @Html.Partial("_selectFrequencyViewEdit")
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label(DbRes.T("Titles.Source", "FieldDisplayName"))
+                @Html.EditorFor(model => model.Source, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Source, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label(DbRes.T("Titles.Citation", "FieldDisplayName"))
+                @Html.EditorFor(model => model.Citation, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Citation, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label(DbRes.T("Titles.Notes", "FieldDisplayName"))
+                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-footer">
+            <button type="submit" value="Save Details" class="btn btn-success" ><span class="glyphicon glyphicon-ok"></span> Save Details</button>
+            <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span class="glyphicon glyphicon-trash"></span> Delete Title</a>
+            &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+        </div>
+    </div>
+}
+
+<script>
+    $(".validation-summary-errors").removeClass("validation-summary-errors");
+    $(".input-validation-error").removeClass("input-validation-error").parent().addClass("has-error");
+
+    var isChanged = false;
+    $('input,select,textarea').change(function () {
+        isChanged = true;
+    });
+</script>

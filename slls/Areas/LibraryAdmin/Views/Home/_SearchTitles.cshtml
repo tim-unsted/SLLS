@@ -1,0 +1,44 @@
+﻿<link href="~/Content/jquery-ui.css" rel="stylesheet" type="text/css" />
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.Label("Select a title", null, new { @class = "control-label col-md-2" })
+            <div class="col-md-9">
+                @Html.TextBox("title", "", new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $("#title").autocomplete({
+        source: function (request, response) {
+            var title = new Array();
+            $.ajax({
+                async: false,
+                cache: false,
+                type: "POST",
+                url: "@(Url.Action("Autocomplete", "Titles"))",
+                data: { "term": request.term },
+                success: function (data) {
+                    for (var i = 0; i < data.length ; i++) {
+                        title[i] = { label: data[i].Value, Id: data[i].Key };
+                    }
+                }
+            });
+            response(title);
+        },
+        select: function (event, ui) {
+            if (ui.item) {
+                var url = '@Url.Action("Edit", "Titles", new { id = "REPLACEME" })';
+                window.location.href = url.replace('REPLACEME', ui.item.Id);
+            }
+        }
+    });
+</script>

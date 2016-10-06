@@ -1,0 +1,52 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.CirculationReportsViewModel
+
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@{
+    //Find the last item in the list ...
+    //var last = Model.Last();
+}
+
+@foreach (var location in Model.Locations)
+{
+    if (location != null)
+    {
+        var locationName = string.IsNullOrEmpty(location.Location1) ? "[No Name]" : location.Location1;
+        <table style="width: 100%;">
+            <thead>
+                <tr>
+                    <th>
+                        <h3>@locationName</h3>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        @foreach (var subLocation in location.SubLocations)
+                        {
+                            @Html.Action("_CirculatedItemsByLocation", new { id = subLocation.LocationID })
+                        }
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        @*//If this location is the last in the list, just end here ...
+            if (location.Equals(@last))
+            {
+                <div></div>
+            }
+            else
+            {
+                // ... otherwise insert a page break
+                <div class="page-break"></div>
+            }*@
+    }
+}

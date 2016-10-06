@@ -1,0 +1,51 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.ConnectionEditViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+<br/>
+
+<div>
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DataSource)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DataSource)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.InitialCatalog)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.InitialCatalog)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.UserId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.UserId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Pwd)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Pwd)
+        </dd>
+
+    </dl>
+</div>
+
+<div class="modal-footer">
+    @*<button type="submit" id="btnSave" value="Save" class="btn btn-primary modal-link" data-dismiss="modal"><span class="glyphicon glyphicon-pencil"></span> Edit</button>*@
+    <a href="@Url.Action("Edit")" title="Edit connection" class="btn btn-primary modal-link" data-dismiss="modal"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+    &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+</div>
+

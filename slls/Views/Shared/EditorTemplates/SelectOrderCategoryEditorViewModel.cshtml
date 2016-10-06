@@ -1,0 +1,13 @@
+﻿@model slls.ViewModels.SelectOrderCategoryEditorViewModel
+
+
+<li>
+    @Html.CheckBoxFor(model => model.Selected)
+    @Html.DisplayFor(model => model.Name)
+    @if (@Model.OrderCount > 0)
+    {
+        <span class="badge small">@Model.OrderCount</span>
+    }
+    @Html.HiddenFor(model => model.Id)
+</li>
+

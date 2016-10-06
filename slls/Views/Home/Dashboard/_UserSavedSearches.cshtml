@@ -1,0 +1,20 @@
+﻿@model slls.ViewModels.OPACHomePageViewModel
+
+<div class="panel panel-gadget shadowed">
+    <div class="panel-heading">
+        <span class="panel-title">
+            <span class="glyphicon glyphicon-floppy-saved"></span>&nbsp;<span is="gadget-Title">@ViewBag.Title</span><span class="pull-right"><a href="@Url.Action("Index", "LibraryUserSavedSearches")" title="View full list"><span class="glyphicon glyphicon-eye-open"></span></a></span>
+        </span>
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled">
+            @foreach (var savedSearch in Model.SavedSearches)
+            {
+                <li>@Html.ActionLink(savedSearch.Description, "Run", "LibraryUserSavedSearches", new { id = savedSearch.SavedSearchID }, new { @class = "btn-link" })</li>
+            }
+        </ul>
+    </div>
+    <div class="panel-footer">
+        Showing 1-@ViewBag.Showing of <a href="@Url.Action("Index", "LibraryUserSavedSearches")" title="View full list">@ViewBag.Count</a> saved searches.
+    </div>
+</div>

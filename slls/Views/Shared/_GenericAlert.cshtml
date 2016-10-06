@@ -1,0 +1,19 @@
+﻿@model slls.ViewModels.GenericConfirmationViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title" id="headerLabel">@Html.DisplayFor(model => model.HeaderText)</h3>
+</div>
+
+@using (Html.BeginForm())
+{
+    <div class="modal-body">
+        <div class="control-group">
+            @Html.DisplayFor(model => model.DetailsText)
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button class="btn btn-default" data-dismiss="modal" aria-hidden="true" type="button">@Html.DisplayFor(model => model.ConfirmButtonText)</button>
+    </div>
+}

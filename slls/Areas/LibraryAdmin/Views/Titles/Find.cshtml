@@ -1,0 +1,28 @@
+﻿@section scripts{
+    <script src="~/Areas/LibraryAdmin/sllsClient.js"></script>
+}
+
+<div ng-app="sllsApp" class="container">
+    <br />
+    <br />
+    <input type="text" placeholder="Search Title" ng-model="getTitles" />
+    <br />
+
+    <div ng-controller="sllsController">
+        <table class="table">
+
+            <tr ng-repeat="r in titles | filter : getTitles">
+
+                <td>{{r.TitleID}}</td>
+
+                <td>{{r.Title}}</td>
+
+                <td>{{r.Classmark}}</td>
+
+            </tr>
+
+        </table>
+
+    </div>
+</div>
+

@@ -1,0 +1,69 @@
+﻿@using System.Linq
+@using Westwind.Globalization
+@model System.Collections.Generic.IEnumerable<slls.Models.Copy>
+
+<div class="row">
+    @foreach (var item in Model.OrderBy(c => c.CopyNumber))
+    {
+        <div class="col-md-12">
+            <div class="thumbnail">
+                <div class="caption" style="border-bottom: 1px solid #ddd; margin-bottom: 15px;">
+                    <span class="pull-right">
+                        <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="Edit" role="button"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="@Url.Action("Delete", "Copies", new {id = item.CopyID}, null)" class="btn btn-link modal-link" title="Delete" role="button"><span class="glyphicon glyphicon-trash"></span></a>
+                    </span>
+                    <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="Edit" role="button"><strong>@Html.DisplayNameFor(model => model.CopyNumber):&nbsp;@Html.Raw(item.CopyNumber)</strong></a>
+                </div>
+                <div class="row">
+                    <div class="col-sm-5">
+                        <dl class="dl-horizontal">
+                            <dt>@Html.DisplayNameFor(model => model.Location.Location1):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.Location.ParentLocation.Location1) @Html.DisplayFor(modelItem => item.Location.Location1) </dd>
+                            <dt>@Html.DisplayNameFor(model => model.StatusType.Status):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.StatusType.Status)</dd>
+                            <dt>@Html.DisplayNameFor(model => model.Holdings):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.Holdings)</dd>
+                            <dt>@Html.DisplayNameFor(model => model.Notes):</dt>
+                            <dd>@Html.DisplayFor(modelItem => item.Notes)</dd>
+                        </dl>
+                    </div>
+
+                    <div class="col-sm-7">
+                        <dl>
+                            <dt>@DbRes.T("CopyItems", "EntityType"):</dt>
+                            @*@foreach (var barcode in item.Volumes)
+                            {
+                                <dd>
+                                    <a href="@Url.Action("Edit", "Volumes", new {id = barcode.VolumeID}, null)" class="modal-link" title="View/Edit Volume">@barcode.Barcode</a>&nbsp;&nbsp;@barcode.LabelText
+                                </dd>
+                            }*@
+                            <dd>
+                                <table class="table table-compact table-no-border">
+                                    <thead>
+                                        <tr>
+                                            <th>@Html.DisplayName(DbRes.T("CopyItems.Barcode", "FieldDisplayName"))</th>
+                                            <th>@Html.DisplayName(DbRes.T("CopyItems.Label_Text", "FieldDisplayName"))</th>
+                                            <th>@Html.DisplayName(DbRes.T("CopyItems.Is_Ref_Only", "FieldDisplayName"))</th>
+                                            <th>@Html.DisplayName(DbRes.T("CopyItems.Is_On_Loan", "FieldDisplayName"))</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var volume in item.Volumes)
+                                        {
+                                            <tr>
+                                                <td><a href="@Url.Action("Edit", "Volumes", new { id = volume.VolumeID }, null)" class="modal-link" title="View/Edit Volume">@Html.DisplayFor(x => volume.Barcode)</a></td>
+                                                <td>@Html.DisplayFor(x => volume.LabelText)</td>
+                                                <td>@Html.DisplayFor(x => volume.LoanType.RefOnly)</td>
+                                                <td>@Html.DisplayFor(x => volume.OnLoan)</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </dd>
+                        </dl>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

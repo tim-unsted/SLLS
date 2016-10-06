@@ -1,0 +1,100 @@
+﻿@model slls.ViewModels.AdminAlertsViewModel
+
+<div class="panel panel-danger shadowed">
+    <div class="panel-heading">
+        <span class="panel-title">
+            <span is="gadget-Title">@ViewBag.Title</span><span class="pull-right"><span class="glyphicon glyphicon-alert"></span></span>
+        </span>
+    </div>
+    <div class="panel-body">
+        @{
+            if (Model.HasTitles)
+            {
+                <h5>Titles:</h5>
+                <ul class="list-unstyled">
+                    <li><strong>@Model.TitlesNoCopies</strong> <a href="@Url.Action("TitlesNoCopies", "Titles")">Titles Without Copies</a></li>
+                    @if (Model.CopiesNoVolumes > 0)
+                    {
+                        <li><strong>@Model.CopiesNoVolumes</strong> <a href="@Url.Action("CopiesNoVolumes", "Copies")">Copies Without Volumes/Barcodes</a></li>
+                    }
+                </ul>
+            }
+
+            if (Model.HasOrders)
+            {
+                <h5>Orders:</h5>
+                <ul class="list-unstyled">
+                    <li><strong>@Model.OutstandingOrders</strong> <a href="@Url.Action("AllOutstanding", "OrderDetails")">Outstanding Orders</a></li>
+                    <li><strong>@Model.OverdueOrders</strong> <a href="@Url.Action("AllOverdue", "OrderDetails")">Overdue Orders</a></li>
+                    <li><strong>@Model.OrdersOnApproval</strong> <a href="@Url.Action("AllOnApproval", "OrderDetails")">Orders On Approval</a></li>
+                </ul>
+                <h5>Serials:</h5>
+                <ul class="list-unstyled">
+                    <li><strong>@Model.IssuesExpected</strong> <a href="@Url.Action("NextPartsExpected", "PartsReceived", new {DaysAhead = 0})">Parts/Issues Expected Today</a></li>
+                    <li><strong>@Model.OverdueIssues</strong> <a href="@Url.Action("PartsOverdue", "PartsReceived")">Overdue Parts/Issues</a></li>
+                </ul>
+            }
+
+            if (Model.HasLoans)
+            {
+                <h5>Loans:</h5>
+                <ul class="list-unstyled">
+                    <li><strong>@Model.ReservationRequests</strong> <a href="@Url.Action("NotFound", "Home")">Reservation Requests</a></li>
+                    <li><strong>@Model.OverdueLoans</strong> <a href="@Url.Action("OverdueLoans", "Loans")">Overdue Loans</a></li>
+                </ul>
+            }
+
+            <h5>Authority Lists:</h5>
+            <ul class="list-unstyled">
+                @{
+                    if (Model.HasAccountYears == false)
+                    {
+                        <li><strong>There are 0 Account Years</strong> <a href="@Url.Action("Create", "AccountYears")" title="Add Account Years">Add</a></li>
+                    }
+                    if (Model.HasBudgetCodes == false)
+                    {
+                        <li><strong>There are 0 Budget Codes</strong> <a href="@Url.Action("Create", "BudgetCodes")" title="Add Budget Codes">Add</a></li>
+                    }
+                    if (Model.HasClassmarks == false)
+                    {
+                        <li><strong>There are 0 Classmarks</strong> <a href="@Url.Action("Create", "Classmarks")" title="Add Classmark">Add</a></li>
+                    }
+                    if (Model.HasMediaTypes == false)
+                    {
+                        <li><strong>There are 0 Media Types</strong> <a href="@Url.Action("Create", "MediaTypes")" title="Add Media Types">Add</a></li>
+                    }
+                    if (Model.HasLanguages == false)
+                    {
+                        <li><strong>There are 0 Languages</strong> <a href="@Url.Action("Create", "Languages")" title="Add Languages">Add</a></li>
+                    }
+                    if (Model.HasLocations == false)
+                    {
+                        <li><strong>There are 0 Locations</strong> <a href="@Url.Action("Create", "Locations")" title="Add Locations">Add</a></li>
+                    }
+                    if (Model.HasKeywords == false)
+                    {
+                        <li><strong>There are 0 Keywords</strong> <a href="@Url.Action("Create", "Keywords")" title="Add Keywords">Add</a></li>
+                    }
+                    if (Model.HasPublishers == false)
+                    {
+                        <li><strong>There are 0 Publishers</strong> <a href="@Url.Action("Create", "Publishers")" title="Add Publishers">Add</a></li>
+                    }
+                    if (Model.HasSuppliers == false)
+                    {
+                        <li><strong>There are 0 Suppliers</strong> <a href="@Url.Action("Create", "Suppliers")" title="Add Suppliers">Add</a></li>
+                    }
+                    if (Model.HasAuthors == false)
+                    {
+                        <li><strong>There are 0 Authors</strong> <a href="@Url.Action("Create", "Authors")" title="Add Authors">Add</a></li>
+                    }
+                    if (Model.HasActivityTypes == false)
+                    {
+                        <li><strong>There are 0 Activity Types</strong> <a href="@Url.Action("Create", "ActivityTypes")" title="Add Activity Types">Add</a></li>
+                    }
+                }
+
+            </ul>
+        }
+
+    </div>
+</div>

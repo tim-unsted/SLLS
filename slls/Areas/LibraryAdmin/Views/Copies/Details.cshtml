@@ -1,0 +1,75 @@
+﻿@model slls.Models.Copy
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Copy</h4>
+    <hr />
+    <dl class="dl-horizontal">
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title.Title1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title.Title1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CopyNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CopyNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Holdings)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Holdings)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Circulated)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Circulated)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Location.Location1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Location.Location1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StatusType.Status)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StatusType.Status)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.CopyID }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

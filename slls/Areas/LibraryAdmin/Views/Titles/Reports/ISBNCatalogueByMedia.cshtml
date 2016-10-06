@@ -1,0 +1,52 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.TitlesReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@foreach (var media in Model.MediaTypes.OrderBy(m => string.IsNullOrEmpty(m.Media) ? "xxx" : m.Media))
+{
+    <div class="row">
+        <div class="col-md-12">
+            <h3 class="report_h3">@Html.DisplayFor(x => media.MediaDisplay)</h3>
+            @{
+    DbEntities db = new DbEntities();
+    var titles = (from t in media.Titles
+                  join c in db.Copies on t.TitleID equals c.TitleID
+                  where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value)
+                  select t).Distinct();
+
+    foreach (var title in titles.OrderBy(t => t.CatalogueByAuthor))
+    {
+        <div class="row">
+            <div class="col-md-12 col-md-push-1">
+                <h4 class="report_h4">@Html.DisplayFor(x => title.CatalogueByAuthor)</h4>
+                <p>@Html.DisplayFor(x => title.DescriptionAndImprint)</p>
+                <div class="row">
+                    <div class="col-md-6">
+                        <p>@DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName"): @Html.DisplayFor(x => title.Isbn)</p>
+                    </div>
+                    <div class="col-md-6">
+                        @{
+        var copyCount = (from c in title.Copies
+                         where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value)
+                         select c).Count();
+
+                        <p>No. of @DbRes.T("Copies", "EntityType"): @Html.DisplayFor(x => copyCount)</p>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+            }
+        </div>
+    </div>
+}
+
+
+
+

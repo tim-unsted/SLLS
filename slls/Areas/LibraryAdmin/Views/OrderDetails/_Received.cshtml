@@ -1,0 +1,178 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.OrderDetailsListViewModel
+
+@*<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>*@
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#orderdetails').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [[2, 'desc'], [0, 'asc']],
+            "columnDefs": [{
+                "width": "5%",
+                "targets": [0],
+                "data": 0,
+                "render": function (data, type, row) {
+                    return '<a href="Edit/' + row[11] + '#receipts"" class="btn-link">' + data + '</a>';
+                }
+            },
+            {
+                "width": "25%",
+                "targets": [1],
+                "data": 1,
+                "render": function (data, type, row) {
+                    return '<a href="EditTitle/' + row[10] + '" class="btn-link">' + data + '</a>';
+                }
+            },
+            {
+                "width": "10%",
+                "orderData": [7],
+                "targets": [2]
+            },
+            {
+                "width": "20%",
+                "targets": [3]
+            },
+            {
+                "width": "10%",
+                "targets": [4]
+            },
+            {
+                "width": "10%",
+                "orderData": [9],
+                "targets": [6]
+            },
+            {
+                "visible": false,
+                "targets": [5, 7, 8, 9, 10, 11]
+            },
+            {
+                "orderable": false,
+                "targets": [12]
+            }],
+            initComplete: function () {
+                this.api().columns('.select-filter').every(function () {
+                    var column = this;
+                    var select = $('<select class="form-control" style="width:100%;"><option value=""></option></select>')
+                        .appendTo($(column.footer()).empty())
+                        .on('change', function () {
+                            var val = $.fn.dataTable.util.escapeRegex(
+                                $(this).val()
+                            );
+
+                            column
+                                .search(val ? '^' + val + '$' : '', true, false)
+                                .draw();
+                        });
+
+                    column.data().unique().sort().each(function (d, j) {
+                        select.append('<option value="' + d + '">' + d + '</option>');
+                    });
+                });
+            }
+        });
+    });
+</script>
+
+
+<table id="orderdetails" class="table table-condensed table-hover table-responsive" style="width: 100%;">
+    <thead>
+        <tr id="label_row">
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderNo)
+            </th>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().TitleID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderDate)
+            </th>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().SupplierID)
+            </th>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderCategoryID)
+            </th>
+            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().ReceivedDate)
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </tfoot>
+
+    <tbody>
+        @foreach (var item in Model.Orders)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderNo)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title.Title1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderCategory.OrderCategory1)
+                </td>
+                <td></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceivedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDateSortable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpectedDateSortable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceivedDateSortable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TitleID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderID)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new { id = item.OrderID })#receipts" class=" btn btn-link" title="Edit">&nbsp;<span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

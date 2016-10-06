@@ -1,0 +1,28 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.OpacBarcodeEnquiryViewModel
+<div class="panel panel-gadget shadowed">
+    <div class="panel-heading">
+        <span class="panel-title">
+            <span class="glyphicon glyphicon-sunglasses"></span>&nbsp;<span is="gadget-Title">@ViewBag.Title</span><span class="pull-right"></span>
+            <span class="pull-right"><a href="@Url.Action("ShowBarcodeLookupHelp", "Home", new {area = ""})" title="Help" class="btn btn-link modal-link" ><span class="glyphicon glyphicon-info-sign"></span> Help</a></span>
+        </span>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("BarcodeLookup", "Home", new AjaxOptions { HttpMethod = "post", OnFailure = "OnFailure" }))
+        {
+            <div class="form-horizontal">
+                @*<div class="alert alert-info">
+                    <strong>Info:</strong> Enter or scan the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") to lookup the full details of the item.
+                </div>*@
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.Label("Enter a " + DbRes.T("CopyItems.Barcode", "FieldDisplayName"))
+                        @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div style="text-align: right;"><button class="btn btn-primary" type="submit"><i class="glyphicon glyphicon-sunglasses"></i> Look-Up</button></div>
+            </div>
+        }
+    </div>
+</div>

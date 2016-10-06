@@ -1,0 +1,129 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.PartsReceived>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#partsreceived').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [[9, 'asc'], [1, 'asc'], [10, 'desc']],
+            "columnDefs": [
+                {
+                    "data": [0],
+                    "orderData": [9],
+                    "targets": [0]
+                },
+                {
+                    "searchable": false,
+                    "sortable": false,
+                    "visible": false,
+                    "targets": [6, 7, 8, 9, 10]
+                },
+                {
+                    "width": "10%",
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [11]
+                },
+                {
+                    "orderData": [10],
+                    "targets": [3]
+                }
+            ]
+        });
+    });
+</script>
+
+<div class="page-header">
+    <h2>@ViewBag.Title</h2>
+</div>
+
+<div class="well">
+    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "partslist" }))
+    {
+        @Html.DropDownList("ListSupplier", null, new { @class = "form-control", onchange = "this.form.submit();" })
+    }
+    <a href="@Url.Action("Create", "PartsReceived", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
+</div>
+
+<div id="partslist">
+    <table id="partsreceived" class="table table-condensed table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Copy.Title.Title1)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Copy.CopyNumber)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PartReceived)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateReceived)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Returned)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.PrintList)
+                </th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.ActionLink(item.Copy.Title.Title1, "Edit", "Titles", new { id = item.Copy.TitleID }, null)
+                    </td>
+                    <td>
+                        @Html.ActionLink(item.Copy.CopyNumber.ToString(), "Edit", "Copies", new { id = item.CopyID }, null)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PartReceived)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateReceived)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Returned)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.PrintList)
+                    </td>
+                    <td>
+                        @Html.Raw(item.PartID)
+                    </td>
+                    <td>
+                        @Html.Raw(item.CopyID)
+                    </td>
+                    <td>
+                        @Html.Raw(item.Copy.TitleID)
+                    </td>
+                    <td>
+                        @Html.Raw(item.Copy.Title.FiledTitle)
+                    </td>
+                    <td>
+                        @Html.Raw(item.DateReceivedSortable)
+                    </td>
+                    <td class="just-right">
+                        <a href="@Url.Action("Edit", "PartsReceived", new { id = item.PartID })" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="@Url.Action("Create", "PartsReceived", new { id = item.CopyID })" class="btn btn-link modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span></a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

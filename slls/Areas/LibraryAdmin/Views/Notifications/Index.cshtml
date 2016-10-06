@@ -1,0 +1,83 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Notification>
+
+<script type="text/javascript">
+    $(document)
+        .ready(function () {
+            $('#notifications')
+                .DataTable({
+                    "dom": sDom,
+                    "pagingType": sPagingType,
+                    "pageLength": sPageLength,
+                    "lengthMenu": sLengthMenu,
+                    "language": {
+                        "url": "/DataTables/lang.txt"
+                    },
+                    "columnDefs": [
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [3]
+                    }
+                    ]
+                });
+        });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "Notifications")" title="Add new @DbRes.T("Notifications.Notification", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr/>
+
+<table id="notifications" class="table table-hover table-condensed">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Headline)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Scope)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.Text)
+        </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.ExpireDate)
+        </th>
+        @*<th>
+            @Html.DisplayNameFor(model => model.InputUser)
+        </th>*@
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Headline)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Scope)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.Text)
+                </td>*@
+                <td>
+                    @Html.DisplayFor(modelItem => item.ExpireDate)
+                </td>
+                @*<td>
+                    @Html.DisplayFor(modelItem => item.InputUser)
+                </td>*@
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new {id = item.NotificationID})" class="btn btn-link modal-link" title="Delete this Useful Link"><span class=" glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.NotificationID})" c class="btn btn-link" title="Edit this Useful Link" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

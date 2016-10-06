@@ -1,0 +1,41 @@
+﻿@model slls.ViewModels.ActivityTypesEditViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        <div class="modal-body">
+
+            @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+            {
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    @Html.ValidationSummary()
+                </div>
+            }
+            @Html.HiddenFor(model => model.ActivityCode)
+            @Html.HiddenFor(model => model.CanUpdate)
+            @Html.HiddenFor(model => model.CanDelete)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Activity, htmlAttributes: new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Activity, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.Activity, "", new {@class = "text-danger"})
+                </div>
+            </div>
+        </div>
+
+        @Html.Partial("_ModalEditFooter")
+
+    </div>
+}
+
+<script>
+    $(".validation-summary-errors").removeClass("validation-summary-errors");
+    $(".input-validation-error").removeClass("input-validation-error").parent().addClass("has-error");
+</script>

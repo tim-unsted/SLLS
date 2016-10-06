@@ -1,0 +1,101 @@
+﻿@using AutoCat.ViewModels
+@model slls.ViewModels.CopacSearchCriteria
+
+<div class="alert alert-info">
+    <p>
+        Use this tool to import data from <a href="http://copac.jisc.ac.uk/faq/" title="Copac" target="_blank">Copac</a>.
+        Enter the text on your search field(s) of interest, then press the 'Search Copac' button to start searching.
+        All retrieved records will be displayed below. Tick the titles you wish to add then press the 'Add to Catalogue' button.
+    </p>
+    <span style="white-space: pre-line">@Html.ValidationMessage("SearchError", new {@class = "text-danger"})</span>
+</div>
+
+@using (Html.BeginForm("_copacSearch", "Titles", "Post"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div>
+            @Html.Label("Enter search term(s):")
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Title, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.CopacIsbn, new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.CopacIsbn, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.CopacIsbn, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.Author, new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Author, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Author, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PubYear, new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.PubYear, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PubYear, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.Publisher, new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.EditorFor(model => model.Publisher, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Publisher, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Language, new { @class = "control-label col-md-2" })
+            <div class="col-md-3">
+                @Html.DropDownList("Language", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Language, "", new { @class = "text-danger" })
+            </div>
+            @Html.LabelFor(model => model.Library, new { @class = "control-label col-md-2" })
+            <div class="col-md-5">
+                @Html.DropDownList("Library", null, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Library, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="button-group">
+            <input type="submit" id="submit" value="Search Copac" class="btn btn-primary" />
+        </div>
+
+    </div>
+}
+
+@{
+    if (TempData["SearchResults"] != null)
+    {
+        var results = (CopacSearchResults)TempData["SearchResults"];
+        if (results.CopacRecords.Count > 0)
+        {
+            using (Html.BeginForm("_CopacResults", "Titles", "Post"))
+            {
+                @Html.Action("_CopacResults", "Titles", new { notSelected = ViewData["NotSelected"] })
+            }
+        }
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#Title').focus();
+    });
+
+    $('#submit').on("click", function () {
+        $(document.body).css({ 'cursor': 'wait' });
+    });
+</script>

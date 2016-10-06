@@ -1,0 +1,29 @@
+﻿@using slls.Models
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/DatePickerReady.js"></script>
+
+<div class="page-header">
+    <span class="btn-group pull-right hidden-xs">
+        <button type="button" class="btn btn-default">See also ...</button>
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <span class="caret"></span>
+            <span class="sr-only">Toggle Dropdown</span>
+        </button>
+        <ul class="dropdown-menu">
+            @foreach (var item in (List<Menu>) ViewData["SeeAlso"])
+            {
+                <li><a href="@Url.Action(item.Action, item.Controller)" data-toggle=@item.DataToggle data-target=@item.DataTarget title=@item.ToolTip>@item.Title</a></li>
+            }
+        </ul>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" onclick="window.history.back();">Cancel</button>
+    </span>
+
+    <h2>@ViewBag.Title</h2>
+
+    @if (TempData["NoData"] != null)
+    {
+        @Html.Partial("_NoData", TempData["NoData"])
+    }
+</div>

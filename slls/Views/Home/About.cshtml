@@ -1,0 +1,40 @@
+﻿@using Roles = slls.Utils.Helpers.Roles
+@{
+    ViewBag.Title = "About Simple Little Library System";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>@ViewBag.Title</h2>
+            <h3>@ViewBag.Message</h3>
+            <div class="col-md-3">
+                <img title="Cake!" alt="" src="../../Images/cake-three-icon.png" />
+            </div>
+            <div class="col-md-9">
+                <p>
+                    <span style="font-weight: bold; color: deeppink; font-size: large;">
+                        "As simple as a piece of cake!"
+                    </span>
+                </p>
+                <p>
+                    Launched in 2016, Simple Little Library System is a re-write of PenLib using modern browser based technology. So all the library software packages are fully responsive for mobiles, tablets, laptops and computers.
+                </p>
+                <p>
+                    Simple Little Library System is backed by over 20 years of technical expertise. It retains all the loved features of PenLib and adds new functionality combined with a fresh new intuitive user interface.
+                </p>
+                <br/>
+                <br/>
+                <p>
+                    You are currently using version 1.0.3 (BETA) - 5th October 2016. 
+                    @{
+                        if (Roles.IsLibraryStaff())
+                        {
+                            <a href="@Url.Action("ReleaseNotes","Home")" title="View Release Notes" class="btn btn-link"> Release Notes</a>
+                        } 
+                    }
+                </p>
+            </div>
+        </div>
+    </div>
+</div>

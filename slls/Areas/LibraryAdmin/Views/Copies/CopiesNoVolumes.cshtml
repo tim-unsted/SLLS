@@ -1,0 +1,22 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.Copy>
+
+<h2>@ViewBag.Title</h2>
+
+@{
+    if (Model.Any())
+    {
+        <div class="alert alert-danger fade in">
+            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+            <strong>Warning!</strong> <p>This page lists all @DbRes.T("Titles.Title", "FieldDisplayName").ToLower() @DbRes.T("Copies", "EntityType").ToLower() that have no @DbRes.T("Copies.Copy_Items","FieldDisplayName").ToLower() assigned to them.  @DbRes.T("Copies", "EntityType") without a @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName").ToLower() will not be found via a search or be viewable on the OPAC so it is important to make sure that all of the @DbRes.T("Copies", "EntityType").ToLower() listed below have at least one @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName").ToLower() assigned to them.</p>
+        </div>
+    }
+    if (TempData["NoData"] != null)
+    {
+        @Html.Partial("_NoData", TempData["NoData"])
+    }
+}
+
+<div>
+    @Html.Partial("_IndexNoVolumes", Model)
+</div>

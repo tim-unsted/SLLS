@@ -1,0 +1,17 @@
+﻿<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/DatePickerReady.js"></script>
+
+<div>
+    <span class="btn-group pull-right">
+        <button type="button" class="btn-link" onclick="window.history.back();">Cancel</button>
+    </span>
+    <h2>@ViewBag.Title</h2>
+
+    @if (TempData["NoData"] != null)
+    {
+        @Html.Partial("_NoData", TempData["NoData"])
+    }
+</div>
+<hr/>
+

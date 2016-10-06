@@ -1,0 +1,23 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleAddViewModel
+
+<div class="panel listpanel">
+
+    @if (Model.Authors.Count > 0)
+    {
+        <table class="listtable">
+            @foreach (var item in Model.Authors)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(x => item.DisplayName)
+                    <td class="just-right">
+                       @* <a href="@Url.Action("Delete", "TitleAuthors", new {id = item.TitleAuthorId})" class="btn btn-link modal-link" title="Remove this @DbRes.T("Authors.Author", "FieldDisplayName")"><span class=" glyphicon glyphicon-trash"></span></a>*@
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+
+
+</div>

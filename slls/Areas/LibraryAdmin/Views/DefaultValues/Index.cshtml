@@ -1,0 +1,68 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.DefaultValueIndexViewModel
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#defaultValues').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+               {
+                   "width": "10%",
+                   "searchable": false,
+                   "sortable": false,
+                   "targets": [3]
+               }
+            ]
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div class="alert alert-info">
+    <p>
+        Use this feaure to set the default values that are applied when adding new records.
+    </p>
+</div>
+
+<table id="defaultValues" class="table table-hover">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DefaultValues.FirstOrDefault().TableName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DefaultValues.FirstOrDefault().FieldName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DefaultValues.FirstOrDefault().DefaultValueId)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.DefaultValues)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TableName)
+                </td>
+                <td>
+                    @Html.ActionLink(item.FieldName, "Edit", "DefaultValues", new { id = item.DefaultId }, new { @class = "modal-link", title = "Edit Default Value" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DefaultValue)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Edit", new {id = item.DefaultId})" class="btn btn-link modal-link" title="Edit Default Value"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,90 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.UsefulLink>
+
+<script type="text/javascript">
+    $(document)
+        .ready(function () {
+            $('#usefulLinks')
+                .DataTable({
+                    "dom": sDom,
+                    "pagingType": sPagingType,
+                    "pageLength": sPageLength,
+                    "lengthMenu": sLengthMenu,
+                    "language": {
+                        "url": "/DataTables/lang.txt"
+                    },
+                    "columnDefs": [
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [5]
+                    }
+                    ]
+                });
+        });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "UsefulLinks")" title="Add new @DbRes.T("Useful_Links.Useful_Link", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<hr />
+
+<table id="usefulLinks" class="table table-hover table-condensed">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DisplayText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LinkAddress)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ToolTip)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Target)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enabled)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.DisplayText))
+                    {
+                        @Html.ActionLink(" ", "Edit", "UsefulLinks", new { id = item.LinkID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.DisplayText, "Edit", "UsefulLinks", new { id = item.LinkID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LinkAddress)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ToolTip)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Target)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Enabled)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new {id = item.LinkID})" class="btn btn-link modal-link" title="Delete this Useful Link"><span class=" glyphicon glyphicon-trash" /></a>
+                    <a href="@Url.Action("Edit", new {id = item.LinkID})" c class="btn btn-link modal-link" title="Edit this Useful Link"><span class="glyphicon glyphicon-pencil" /></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

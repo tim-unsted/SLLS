@@ -1,0 +1,116 @@
+﻿@model slls.ViewModels.OrderReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<h3>@Model.AccountYear</h3>
+
+<table id="tblbudgetCode" class="table table-condensed" style="width: 100%;">
+    <thead>
+        <tr>
+            <th style="width: 40%;">
+                Budget Code
+            </th>
+            <th style="width: 15%;">
+                Allocation
+            </th>
+            <th style="width: 15%;">
+                Spent
+            </th>
+            <th style="width: 15%;">
+                Percentage
+            </th>
+            <th style="width: 15%; text-align: right;">
+                Variance
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach (var budgetCode in Model.BudgetCodes.OrderBy(x => x.BudgetCode1))
+        {
+            if (budgetCode != null)
+            {
+                var budgetCodeId = budgetCode.BudgetCodeID;
+
+                var budgetCodeName = string.IsNullOrEmpty(budgetCode.BudgetCode1) ? "<no name>" : budgetCode.BudgetCode1;
+
+                var allocation = budgetCode.AllocationSubs + budgetCode.AllocationOneOffs;
+
+                var orders = from o in budgetCode.OrderDetails
+                             where o.ReceivedDate != null && o.AccountYearID == Model.AccountYearId
+                             select o;
+
+                var titles = (from o in orders
+                              select o.Title).Distinct();
+
+                var mediaTypes = (from t in titles
+                                  select t.MediaType).Distinct();
+
+                var spent = (from o in orders
+                             select o.Price).Sum();
+
+                var percent = spent / allocation;
+                var variance = allocation - spent;
+                <tr>
+                    <td>
+                        <strong>@budgetCodeName</strong>
+                    </td>
+                    <td>
+                        @string.Format("{0:C}", allocation)
+                    </td>
+                    <td>
+                        @string.Format("{0:C}", spent)
+                    </td>
+                    <td>
+                        @string.Format("{0:P}", percent)
+                    </td>
+                    <td style="text-align: right">
+                        @string.Format("{0:C}", variance)
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="5">
+                        <div class="col-md-10 col-md-push-1">
+                            @foreach (var mediaType in mediaTypes.OrderBy(m => m.Media))
+                            {
+                                var mediaPriceSum = (from o in orders
+                                                     join t in titles on o.TitleID equals t.TitleID
+                                                     where t.MediaID == mediaType.MediaID
+                                                     select o.Price).Sum();
+
+                                <table id="tblTitles" class="table table-condensed table-striped table-no-border" style="width: 100%;">
+                                    <thead>
+                                        <tr>
+                                            <th>Media Type: @mediaType.Media</th>
+                                            <th style="text-align: right;">@string.Format("{0:C}", mediaPriceSum)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var title in titles.Where(t => t.MediaID == mediaType.MediaID))
+                                        {
+                                            var itemPriceSum = (from o in orders
+                                                                where o.Title == title
+                                                                select o.Price).Sum();
+                                            <tr>
+                                                <td>
+                                                    @title.Title1
+                                                </td>
+                                                <td style="text-align: right;">
+                                                    @string.Format("{0:C}", itemPriceSum)
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                        </div>
+
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

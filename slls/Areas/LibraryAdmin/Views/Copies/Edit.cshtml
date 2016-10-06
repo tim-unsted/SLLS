@@ -1,0 +1,83 @@
+﻿@using VortexSoft.Bootstrap
+@using Westwind.Globalization
+@model slls.Models.Copy
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/DatePickerReady.js"></script>
+
+<link href="~/Content/jquery-ui.css" rel="stylesheet" type="text/css" />
+
+@{
+    ViewBag.VolumesBadge = "";
+    ViewBag.LoansBadge = "";
+}
+
+@if (ViewBag.VolumesCount > 0)
+{
+    ViewBag.VolumesBadge = " <span class='badge'>" + ViewBag.VolumesCount + "</span>";
+}
+
+@if (ViewBag.LoansCount > 0)
+{
+    ViewBag.LoansBadge = " <span class='badge'>" + ViewBag.LoansCount + "</span>";
+}
+
+<div>
+    @if (ViewBag.RecordCount > 1)
+    {
+        <span class="pull-right">@Html.Partial("_PaginateDetails", Model)</span>
+    }
+
+    <h2>@ViewBag.Title</h2>
+    <div class="well">
+
+        @using (Html.BeginForm("Edit", "Copies", FormMethod.Get))
+        {
+            <div class="form-group" title="@ViewBag.Message">
+                @Html.DropDownList("id", (IEnumerable<SelectListItem>)ViewData["CopyId"], new { @class = "form-control", onchange = "this.form.submit();" })
+            </div>
+        }
+
+        <a href="@Url.Action("Add", "Copies", new {id = @Model.TitleID}, null)" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
+
+    </div>
+</div>
+
+@using (var tabs = Html.Bootstrap().Begin(new Tabs()))
+{
+    tabs.Tab(DbRes.T("Copies.Copy","FieldDisplayName") + " Details", "tab1");
+    tabs.Tab(DbRes.T("CopyItems", "EntityType") + ViewBag.VolumesBadge, "tab2");
+    tabs.Tab("Cancellations (Serials)", "tab3");
+
+    using (tabs.BeginPanel())
+    {
+        <div id="CopyDetails">
+            @Html.Partial("_CopyDetails", Model)
+        </div>
+    }
+    using (tabs.BeginPanel())
+    {
+        <div id="Volumes">
+            @Html.Action("_ThumbnailDetails", "Volumes", new { id = Model.CopyID })
+        </div>
+        <div class="form-footer">
+            @if (ViewBag.RecordCount > 1)
+            {
+                <span class="pull-left">@Html.Partial("_PaginateDetails", Model)</span>
+            }
+
+            <a href="@Url.Action("Add", "Volumes", new {id = Model.CopyID})" class="btn btn-primary" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")</a>
+            <a href="@Url.Action("Delete", new {id = Model.CopyID})" class="btn btn-danger modal-link" title="Delete Copy"><span class="glyphicon glyphicon-trash"></span> Delete Copy</a>
+            &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+        </div>
+    }
+
+    using (tabs.BeginPanel())
+    {
+        <div id="Cancellations">
+            @Html.Partial("_Cancellations", Model)
+        </div>
+    }
+    
+}

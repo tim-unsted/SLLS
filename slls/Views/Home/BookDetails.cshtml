@@ -1,0 +1,249 @@
+﻿@using slls.App_Settings
+@using Westwind.Globalization
+@model slls.Models.Title
+
+@{
+    var colClass = "col-md-12";
+    var showBorrower = Settings.GetParameterValue("Borrowing.DisplayBorrowerEmail", "false", "Sets whether OPAC will display borrower's Email address") == "true";
+    
+}
+
+<div class="page-header">
+    <span class="pull-right"><button type="button" class="btn-link" onclick="window.history.back();">Back to results</button></span>
+    <h2>@ViewBag.Title</h2>
+</div>
+
+<div class="thumbnail">
+    <div class="caption" style="border-bottom: 1px solid #ddd; margin-bottom: 15px;">
+        <span class="pull-right">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="@Url.Action("Add", "LibraryUserBookmarks", new {id = Model.TitleID})" class="btn btn-link modal-link" title="Bookmark @DbRes.T("Titles.Title", "FieldDisplayName")">Bookmark <span class="glyphicon glyphicon-bookmark"></span></a>
+            }
+        </span>
+        @{var title = string.IsNullOrEmpty(Model.Title1) ? Html.Raw("[No Title]") : Html.DisplayFor(modelItem => Model.Title1); }
+        <h3 style="margin-top: 8px;">@Model.Title1</h3>
+    </div>
+    <div class="row" style="margin-left: 2px;">
+        @if (Model.TitleImages.Any())
+        {
+            colClass = "col-md-10";
+            <div class="col-md-2">
+                <div class="thumbnail">
+                    <img src="@Url.Action("ViewImage", "TitleImages", new {id = Model.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@Model.TitleImages.FirstOrDefault().Alt">
+                </div>
+            </div>
+        }
+        <div class=@colClass>
+            <dl class="dl-horizontal">
+                @if (!string.IsNullOrEmpty(Model.Edition))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Edition", "FieldDisplayName")):</dt>
+                    <dd>@Html.DisplayFor(modelItem => Model.Edition)</dd>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Isbn))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName")):</dt>
+                    <dd>@Html.DisplayFor(modelItem => Model.Isbn)</dd>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Publisher.PublisherName))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Publisher", "FieldDisplayName")):</dt>
+                    <dd>
+                        <a href="@Url.Action("BrowseByPublisher", "Home", new {listPublishers = Model.Publisher.PublisherID}, null)" title="Browse by Publisher">@Model.Publisher.PublisherName</a><br />
+                    </dd>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Year))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Published_Year", "FieldDisplayName")):</dt>
+                    <dd>@Html.DisplayFor(modelItem => Model.Year)</dd>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.PlaceofPublication))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Place_of_Publication", "FieldDisplayName")):</dt>
+                    <dd>@Html.DisplayFor(modelItem => Model.PlaceofPublication)</dd>
+                }
+
+                @if (Model.TitleAuthors.Any())
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Authors", "FieldDisplayName")):</dt>
+                    foreach (var author in Model.TitleAuthors)
+                    {
+                        <dd>
+                            <a href="@Url.Action("BrowseByAuthor", "Home", new {listAuthors = author.AuthorId}, null)" title="Browse by Author">@author.Author.DisplayName</a><br />
+                        </dd>
+                    }
+                }
+                @if (!string.IsNullOrEmpty(Model.Classmark.Classmark1))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Classmarks.Classmark", "FieldDisplayName")):</dt>
+                    <dd>
+                        <a href="@Url.Action("BrowseByClassmark", "Home", new {listClassmarks = Model.Classmark.ClassmarkID}, null)" title="Browse by Classmark">@Model.Classmark.Classmark1</a><br />
+                    </dd>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.MediaType.Media))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")):</dt>
+                    <dd>
+                        <a href="@Url.Action("BrowseByMedia", "Home", new {listMedia = Model.MediaType.MediaID}, null)" title="Browse by Media Type">@Model.MediaType.Media</a><br />
+                    </dd>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Citation))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Citation", "FieldDisplayName")):</dt>
+                    <dd>@Html.DisplayFor(modelItem => Model.Citation)</dd>
+                }
+
+                @if (Model.SubjectIndexes.Any())
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Keywords", "FieldDisplayName")):</dt>
+                    @*foreach (var x in Model.SubjectIndexes)
+                        {
+                            <dd>
+                                <a href="@Url.Action("BrowseBySubject", "Home", new { listSubjects = x.KeywordID }, null)" title="View other items with this Keyword">@x.Keyword.KeywordTerm</a><br />
+                            </dd>
+                        }*@
+                    <dd>
+                        @foreach (var index in Model.SubjectIndexes)
+                        {
+                            <a href="@Url.Action("BrowseBySubject", "Home", new {listSubjects = index.KeywordID}, null)" title="Browse other items catalogued against this subject" style="text-decoration: underline;">@index.Keyword.KeywordTerm</a>
+                        }
+                    </dd>
+                }
+
+                @if (Model.TitleLinks.Any())
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Links", "FieldDisplayName")):</dt>
+                    foreach (var link in Model.TitleLinks)
+                    {
+                        <dd>
+                            <a href="@link.URL" title="@link.Title" target="_blank">@link.DisplayText</a><br />
+                        </dd>
+                    }
+                }
+
+                @if (Model.Copies.Any(x => x.StatusType.Opac))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Copies", "FieldDisplayName")):</dt>
+                    <dd>
+                        <span class="badge">@Model.Copies.Count(x => x.StatusType.Opac)</span>
+                    </dd>
+                }
+
+                @if (Model.TitleAdditionalFieldDatas.Any())
+                {
+                    foreach (var data in Model.TitleAdditionalFieldDatas)
+                    {
+                        <dt>@Html.Label(data.TitleAdditionalFieldDef.FieldName):</dt>
+                        <dd>@Html.DisplayFor(x => data.FieldData)</dd>
+                    }
+                }
+
+            </dl>
+        </div>
+    </div>
+    <hr class="hr-compact" />
+    <div class="row" style="margin-left: 2px;">
+        <div class="col-md-10">
+            @if (Model.Copies.Any())
+            {
+                foreach (var copy in Model.Copies.Where(c => c.StatusType.Opac).OrderBy(c => (int)c.CopyNumber))
+                {
+                    var itemsOnLoan = copy.Volumes.Any(v => v.OnLoan);
+                    <dl class="dl-horizontal">
+                        <dt>
+                            @Html.DisplayName(DbRes.T("Copies.Copy", "FieldDisplayName")):
+                        </dt>
+                        <dd>
+                            @Html.DisplayFor(x => copy.CopyNumber)
+                        </dd>
+
+                        @if (copy.Location != null)
+                        {
+                            <dt>
+                                @Html.DisplayName(DbRes.T("Copies.Location", "FieldDisplayName")):
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(x => copy.Location.LocationString)
+                            </dd>
+                        }
+
+                        @if (copy.Holdings != null)
+                        {
+                            <dt>
+                                @Html.DisplayName(DbRes.T("Copies.Holdings", "FieldDisplayName")):
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(x => copy.Holdings)
+                            </dd>
+                        }
+
+                        @if (copy.StatusType != null)
+                        {
+                            <dt>
+                                @Html.DisplayName(DbRes.T("Copies.Status", "FieldDisplayName")):
+                            </dt>
+                            <dd>
+                                @Html.DisplayFor(x => copy.StatusType.Status)
+                            </dd>
+                        }
+
+                        <dt>
+
+                        </dt>
+                        <dd>
+                            <table class="table table-compact">
+                                <thead>
+                                    <tr>
+                                        <th>@Html.DisplayName(DbRes.T("CopyItems.Barcode", "FieldDisplayName"))</th>
+                                        <th>@Html.DisplayName(DbRes.T("CopyItems.Label_Text", "FieldDisplayName"))</th>
+                                        <th>@Html.DisplayName(DbRes.T("CopyItems.Is_Ref_Only", "FieldDisplayName"))</th>
+                                        <th>@Html.DisplayName(DbRes.T("CopyItems.Is_On_Loan", "FieldDisplayName"))</th>
+                                        @if (itemsOnLoan)
+                                        { 
+                                            if (showBorrower)
+                                            {
+                                                <th>@Html.DisplayName(DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName"))</th>
+                                            }
+                                            <th>@Html.DisplayName(DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName"))</th>
+                                        }
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach (var volume in copy.Volumes)
+                                {
+                                    <tr>
+                                        <td>@Html.DisplayFor(x => volume.Barcode)</td>
+                                        <td>@Html.DisplayFor(x => volume.LabelText)</td>
+                                        <td>@Html.DisplayFor(x => volume.LoanType.RefOnly)</td>
+                                        <td>@Html.DisplayFor(x => volume.OnLoan)</td>
+                                        @if (showBorrower && volume.OnLoan)
+                                        {
+                                            var borrowedBy = volume.Borrowings.LastOrDefault(b => b.Returned == null).BorrowerUser;
+                                            <td><a href="mailto:@borrowedBy.Email">@borrowedBy.Fullname</a></td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                        <td>@Html.DisplayFor(x => volume.Borrowings.LastOrDefault(b => b.Returned == null).ReturnDue)</td>
+                                    </tr>
+                                }
+                                </tbody>
+                            </table>
+                        </dd>
+                    </dl>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+
+

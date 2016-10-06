@@ -1,0 +1,93 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.LibraryUserBookmark>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#bookmarks').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            }
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderCancel")
+
+<table class="table" id="bookmarks">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title.Title1)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderBy(t => t.Title.Title1.Substring(t.Title.NonFilingChars)))
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Title.Title1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "LibraryUserBookmarks", new { id = item.BookmarkID }, new { @class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Title.Title1, "Edit", "LibraryUserBookmarks", new { id = item.BookmarkID }, new { @class = "modal-link" })
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new {id = item.BookmarkID})" class="btn btn-link modal-link" title="Delete this Bookmark"><span class=" glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.BookmarkID})" c class="btn btn-link modal-link" title="Edit this Bookmark"><span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@*<div id="alertDialog" title="@ViewBag.Title"><p id="contentholder"></p></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if (@Model.Count() === 0) {
+            $('#alertDialog').dialog({
+                open: function () {
+                    var text = "@ViewBag.AlertMsg";
+                    $(this).closest(".ui-dialog")
+                    .find(".ui-dialog-titlebar-close")
+                    .removeClass("ui-icon-closethick")
+                    .addClass("btn btn-default")
+                    .text("X"),
+                    $("#contentholder").html(text);
+
+                },
+                autoOpen: true,
+                modal: true,
+                overlay: {
+                    backgroundColor: '#000',
+                    opacity: 0.5
+                },
+                buttons: [
+                {
+                    text: " @DbRes.T("Buttons.Ok","Terminology") ",
+                    "class": 'btn btn-primary',
+                    click: function () {
+                        $(this).dialog('close');
+                    }
+                }
+                ]
+            });
+        }
+    });
+
+</script>*@

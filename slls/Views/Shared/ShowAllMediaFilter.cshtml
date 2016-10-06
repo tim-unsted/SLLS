@@ -1,0 +1,66 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.SimpleSearchingViewModel
+
+@(Model.MediaFilter.Count > 60 ? Html.Partial("_ModalHeaderRepeatFooter") : Html.Partial("_ModalDefaultHeader"))
+
+@using (Html.BeginForm("PostShowAllEntityFilter", "Home", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    
+    @Html.HiddenFor(x => x.Filters)
+    @Html.HiddenFor(x => x.LibraryStaff)
+    @Html.HiddenFor(x => x.OpacTitles)
+    @Html.HiddenFor(x => x.SearchString)
+    @Html.HiddenFor(x => x.SearchField)
+    @Html.HiddenFor(x => x.TitleIDs)
+
+    //Hidden enumerable ...
+    @Html.EditorFor(model => model.Results)
+    @*@Html.EditorFor(model => model.OpacTitles)*@
+
+    <div style="display: none;">
+        @Html.EditorFor(model => model.PublisherFilter)
+    </div>
+
+    <div style="display: none;">
+        @Html.EditorFor(model => model.ClassmarksFilter)
+    </div>
+
+    <div style="display: none;">
+        @Html.EditorFor(model => model.KeywordFilter)
+    </div>
+
+    <div style="display: none;">
+        @Html.EditorFor(model => model.LanguageFilter)
+    </div>
+
+    <div style="display: none;">
+        @Html.EditorFor(model => model.AuthorFilter)
+    </div>
+
+    <div class="form-horizontal">
+        <div class="modal-body">
+            <div class="form-group">
+                <div class=" col-md-12">
+                    <ul class="three-column-list">
+                        @Html.EditorFor(model => model.MediaFilter)
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Ok", "Terminology")</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSave').click(function () {
+            $('#stdModal').modal('hide');
+            $('#lrgModal').modal('hide');
+        });
+    });
+</script>
