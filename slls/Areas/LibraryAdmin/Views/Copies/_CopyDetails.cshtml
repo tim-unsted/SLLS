@@ -1,6 +1,6 @@
 ﻿@using System.Linq
 @using Westwind.Globalization
-@model slls.Models.Copy
+@model slls.ViewModels.CopyDetailsEditViewModel
 
 @using (Html.BeginForm("PostEdit", "Copies", FormMethod.Post))
 {
@@ -9,24 +9,21 @@
     <div class="form-horizontal">
         <br />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.CopyID)
-        @Html.HiddenFor(model => model.TitleID)
-        @*@Html.HiddenFor(model => model.Holdings)
-            @Html.HiddenFor(model => model.CirculationMsgID)*@
+        @Html.HiddenFor(model => model.CopyId)
+        @Html.HiddenFor(model => model.TitleId)
         @Html.HiddenFor(model => model.Commenced)
         @Html.HiddenFor(model => model.Commenced)
         @Html.HiddenFor(model => model.CancelledByUser)
         @Html.HiddenFor(model => model.Cancellation)
-        @Html.HiddenFor(model => model.AccountYear)
+        @Html.HiddenFor(model => model.AccountYearId)
         @Html.HiddenFor(model => model.Saving)
-        @Html.HiddenFor(model => model.OnLoan)
 
         <div class="form-group">
             <div class="col-md-12">
-                @Html.LabelFor(model => model.Title.Title1)              
+                @Html.LabelFor(model => model.Title)              
             </div>
             <div class="col-md-12">
-                <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleID}, null)" title="View/Edit Title">@Model.Title.Title1</a></span>
+                <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
             </div>
         </div>
 
@@ -52,12 +49,9 @@
             <div class="col-md-6">
                 @Html.Label(DbRes.T("Locations.Location", "FieldDisplayName"))
                 @Html.DropDownList("LocationID", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.LocationID, "", new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.LocationId, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-6">
-                @*@Html.LabelFor(model => model.StatusID)
-                @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })*@
                 @Html.Partial("_selectStatusTypeViewEdit")
             </div>
         </div>
@@ -118,7 +112,7 @@
             <div class="form-group">
                 @Html.Label(DbRes.T("Circulation.Circulation_List","FieldDisplayName"), htmlAttributes: new { @class = "control-label-left col-md-2" })
                 <div class="col-md-10">
-                    @Html.ActionLink(Model.Circulations.Any() ? "No recipients" : Model.Circulations.Count().ToString() + " recipient(s)", "CirculationList", "Circulation", new { copy = Model.CopyID }, new { @class = "form-control btn-link" })
+                    @Html.ActionLink(Model.Circulations.Any() ? "No recipients" : Model.Circulations.Count().ToString() + " recipient(s)", "CirculationList", "Circulation", new { copy = Model.CopyId }, new { @class = "form-control btn-link" })
                 </div>
             </div>
 
@@ -126,7 +120,7 @@
                 <div class="col-md-12">
                     @Html.LabelFor(model => model.CirculationMessage.CirculationMsg)
                     @Html.DropDownList("CirculationMsgID", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.CirculationMsgID, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.CirculationMsgId, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>
@@ -145,7 +139,7 @@
                 <span class="pull-left">@Html.Partial("_PaginateDetails", Model)</span>
             }
             <button type="submit" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Save Copy Details</button>
-            <a href="@Url.Action("Delete", new {id = Model.CopyID})" class="btn btn-danger modal-link" title="Delete Copy"><span class="glyphicon glyphicon-trash"></span> Delete Copy</a>
+            <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span class="glyphicon glyphicon-trash"></span> Delete Copy</a>
             <input type="button" value="Cancel" class="btn btn-default" onclick="window.history.back();" />
         </div>
     </div>

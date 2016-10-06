@@ -1795,6 +1795,7 @@ namespace slls.Areas.LibraryAdmin
                         {
                             ModelState.AddModelError("", e.Message);
                         }
+                        CacheProvider.RemoveCache("newtitles");
                     }
                 }
             }
@@ -1845,6 +1846,7 @@ namespace slls.Areas.LibraryAdmin
             item.AddedToAcquisitions = null;
             item.LastModified = DateTime.Now;
             _repository.Update(item);
+            CacheProvider.RemoveCache("newtitles");
             return Json(new { success = true });
         }
 

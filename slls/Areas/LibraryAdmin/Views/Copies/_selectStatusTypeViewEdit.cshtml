@@ -1,9 +1,9 @@
 ﻿@using Westwind.Globalization
-@model slls.Models.Copy
+@model slls.ViewModels.CopyDetailsEditViewModel
 
 @Html.Label(DbRes.T("StatusTypes.Status_Type", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/StatusTypes/_add")" class="button" id="addStatusTypeLink" title="@DbRes.T("StatusTypes.Status_Type", "FieldDisplayName") not in the list?&#013;add a new one now."><span class="glyphicon glyphicon-plus-sign"></span></a>
 @Html.DropDownList("StatusID", null, new { @class = "form-control" })
-@Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })
+@Html.ValidationMessageFor(model => model.StatusId, "", new { @class = "text-danger" })
 
 <div id="newStatusTypeDialog" title="Quick Add: New @DbRes.T("StatusTypes.Status_Type", "FieldDisplayName")"></div>
 

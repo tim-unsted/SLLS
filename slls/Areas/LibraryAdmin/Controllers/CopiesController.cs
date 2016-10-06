@@ -6,6 +6,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
+using slls.DAO;
 using slls.Models;
 using slls.Utils.Helpers;
 using slls.ViewModels;
@@ -334,13 +335,36 @@ namespace slls.Areas.LibraryAdmin
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             var copy = _db.Copies
-                .Include(c => c.AccountYear)
-               // .Include(c => c.LibraryUser)
                 .FirstOrDefault(c => c.CopyID == id);
             if (copy == null)
             {
                 return HttpNotFound();
             }
+
+            var viewModel = new CopyDetailsEditViewModel()
+            {
+                CopyId = copy.CopyID,
+                AccountYearId = copy.AccountYearID,
+                AcquisitionsList = copy.AcquisitionsList,
+                AcquisitionsNo = copy.AcquisitionsNo,
+                Bind = copy.Bind,
+                Cancellation = copy.Cancellation,
+                Circulated = copy.Circulated,
+                CirculationMsgId = copy.CirculationMsgID,
+                Commenced = copy.Commenced,
+                CopyNumber = copy.CopyNumber,
+                Holdings = copy.Holdings,
+                LocationId = copy.LocationID,
+                Notes = copy.Notes,
+                PrintLabel = copy.PrintLabel,
+                Saving = copy.Saving,
+                StatusId = copy.StatusID,
+                TitleId = copy.TitleID,
+                Title = copy.Title.Title1,
+                CancelledByUser = copy.CancelledByUser,
+                Circulations = copy.Circulations,
+                CirculationMessage = copy.CirculationMessage
+            };
 
             //Get all copies for this title ...
             var query = from c in _db.Copies
@@ -382,33 +406,62 @@ namespace slls.Areas.LibraryAdmin
             ViewData["CirculationMsgID"] = SelectListHelper.CirculationMessageList(copy.CirculationMsgID ?? 0, null, false);
             ViewData["LocationID"] = SelectListHelper.OfficeLocationList(copy.LocationID ?? 0, null, false);  //new SelectList(_db.Locations, "LocationID", "Location1", copy.LocationID);
             ViewData["StatusID"] = SelectListHelper.StatusList(copy.StatusID ?? 0, null, false, true); 
-           
             ViewData["CancelledYear"] = new SelectList(_db.AccountYears.OrderBy(y => y.AccountYear1), "AccountYearID", "AccountYear1", copy.AccountYearID);
             ViewData["CancelledBy"] = new SelectList(_db.Users, "Id", "FullnameRev"); //, copy.CancelledByUser.Id);
             ViewData["CopyId"] = SelectListHelper.AllCopiesList(id.Value);
             ViewBag.VolumesCount = copy.Volumes.Count();
             ViewBag.Title = "Copy Details";
-            return View(copy);
+            return View(viewModel);
         }
 
         // POST: Copies/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PostEdit(
-            [Bind(
-                Include =
-                    "CopyID,TitleID,CopyNumber,AcquisitionsNo,LocationID,StatusID,AcquisitionsList,PrintLabel,Holdings,Bind,Commenced,CancelledByUser_Id,Cancellation,AccountYear,Saving,Notes,OnLoan,Circulated,StandingOrder,CirculationMsgID,AddedToAcquisitions"
-                )] Copy copy)
+        public ActionResult PostEdit(CopyDetailsEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                var copy = _db.Copies.Find(viewModel.CopyId);
+                if (copy == null)
+                {
+                    return HttpNotFound();
+                }
+
+                //Catch the current (i.e. before updated) status f the 'New Title' boolean;
+                var newTitleList = copy.AcquisitionsList;
+
+                copy.CopyID = viewModel.CopyId;
+                copy.AccountYearID = viewModel.AccountYearId;
+                copy.AcquisitionsList = viewModel.AcquisitionsList;
+                copy.AcquisitionsNo = viewModel.AcquisitionsNo;
+                copy.Bind = viewModel.Bind;
+                copy.Cancellation = viewModel.Cancellation;
+                copy.Circulated = viewModel.Circulated;
+                copy.CirculationMsgID = viewModel.CirculationMsgId;
+                copy.Commenced = viewModel.Commenced;
+                copy.CopyNumber = viewModel.CopyNumber;
+                copy.Holdings = viewModel.Holdings;
+                copy.LocationID = viewModel.LocationId;
+                copy.Notes = viewModel.Notes;
+                copy.PrintLabel = viewModel.PrintLabel;
+                copy.Saving = viewModel.Saving;
+                copy.StatusID = viewModel.StatusId;
+                copy.TitleID = viewModel.TitleId;
+                copy.CancelledByUser = viewModel.CancelledByUser;
                 copy.LastModified = DateTime.Now;
                 _db.Entry(copy).State = EntityState.Modified;
                 _db.SaveChanges();
+
+                //refresh cached 'New titles' if neccessary
+                if (viewModel.AcquisitionsList != newTitleList)
+                {
+                    CacheProvider.RemoveCache("newtitles");
+                }
+
                 return RedirectToAction("Edit", "Copies", new { id = copy.CopyID });
             }
 
-            return RedirectToAction("Edit", "Copies", new { id = copy.CopyID });
+            return RedirectToAction("Edit", "Copies", new { id = viewModel.CopyId });
         }
         
         [HttpGet]

@@ -114,19 +114,19 @@ namespace slls.ViewModels
         [LocalDisplayName("Copies.Bind", "FieldDisplayName")]
         public bool Bind { get; set; }
 
-        [Column(TypeName = "smalldatetime")]
+        //[Column(TypeName = "smalldatetime")]
         [LocalDisplayName("Copies.Date_Commenced", "FieldDisplayName")]
         public DateTime? Commenced { get; set; }
 
         [LocalDisplayName("Copies.Cancelled_By", "FieldDisplayName")]
-        public int? UserId { get; set; }
+        public virtual ApplicationUser CancelledByUser { get; set; }
 
-        [Column(TypeName = "smalldatetime")]
+        //[Column(TypeName = "smalldatetime")]
         [LocalDisplayName("Copies.Date_Cancelled", "FieldDisplayName")]
         public DateTime? Cancellation { get; set; }
 
         [LocalDisplayName("Copies.Cancelled_Account_Year", "FieldDisplayName")]
-        public int? AccountYear { get; set; }
+        public int? AccountYearId { get; set; }
 
         [Column(TypeName = "money")]
         [LocalDisplayName("Copies.Amount_Saved", "FieldDisplayName")]
@@ -136,17 +136,18 @@ namespace slls.ViewModels
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
 
-        [LocalDisplayName("Copies.Is_On_Loan", "FieldDisplayName")]
-        public bool OnLoan { get; set; }
-
         [LocalDisplayName("Copies.Is_Circulated", "FieldDisplayName")]
         public bool Circulated { get; set; }
 
-        [LocalDisplayName("Copies.Is_StandingOrder", "FieldDisplayName")]
-        public bool StandingOrder { get; set; }
+        [LocalDisplayName("Copies.Date_Added_To_New_Titles_List", "FieldDisplayName")]
+        public DateTime? AddedToAcquisitions { get; set; }
 
         [LocalDisplayName("Circulation.Circulation_Slip_Message", "FieldDisplayName")]
         public int? CirculationMsgId { get; set; }
+
+        public virtual ICollection<Circulation> Circulations { get; set; }
+
+        public virtual CirculationMessage CirculationMessage { get; set; }
         
     }
 
