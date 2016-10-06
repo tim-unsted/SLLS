@@ -595,8 +595,9 @@ namespace slls.Controllers
                 return RedirectToAction("BookDetails", "Home", new { id = titleId });
                 //return Json(new { success = true });
             }
-            ViewBag.Title = DbRes.T("CopyItems.Barcode", "FieldDisplayName") + " Search";
-            return PartialView("_BarcodeEnquiry", viewModel);
+            //ViewBag.Title = DbRes.T("CopyItems.Barcode", "FieldDisplayName") + " Search";
+            //return PartialView("_BarcodeEnquiry", viewModel);
+            return Json(new { success = false });
         }
 
         [HttpGet]
