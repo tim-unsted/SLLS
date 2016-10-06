@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using slls.Localization;
 
 namespace slls.Models
 {
@@ -27,8 +28,14 @@ namespace slls.Models
         public string Description { get; set; }
 
         [Column(TypeName = "smalldatetime")]
+        [LocalDisplayName("Saved_Searches.Date_Saved", "FieldDisplayName")]
         public DateTime? InputDate { get; set; }
 
+        [NotMapped]
+        public string InputDateSortable
+        {
+            get { return string.Format("{0:yyyy-MM-dd}", InputDate); }
+        }
         //public virtual LibraryUser LibraryUser { get; set; }
     }
 }

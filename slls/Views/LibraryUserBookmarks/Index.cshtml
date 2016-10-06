@@ -10,7 +10,26 @@
             "lengthMenu": sLengthMenu,
             "language": {
                 "url": "/DataTables/lang.txt"
-            }
+            },
+            "columnDefs": [
+                {
+                    "visible": false,
+                    "targets": [3,4]
+                },
+                {
+                    "sortable": false,
+                    "searchable": false,
+                    "targets": [5]
+                },
+                {
+                    "orderData": [3],
+                    "targets": [2]
+                },
+                {
+                    "orderData": [4],
+                    "targets": [3]
+                }
+            ]
         });
     });
 </script>
@@ -26,6 +45,11 @@
         <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InputDate)
+        </th>
+        <th></th>
+        <th></th>
         <th></th>
     </tr>
     </thead>
@@ -45,6 +69,15 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InputDate)
+                </td>
+                <td>
+                    @Html.Raw(item.InputDateSortable)
+                </td>
+                <td>
+                    @Html.Raw(item.Title.FiledTitle)
                 </td>
                 <td class="just-right">
                     <a href="@Url.Action("Delete", new {id = item.BookmarkID})" class="btn btn-link modal-link" title="Delete this Bookmark"><span class=" glyphicon glyphicon-trash"></span></a>

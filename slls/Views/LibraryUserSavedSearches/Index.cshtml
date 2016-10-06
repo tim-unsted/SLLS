@@ -10,7 +10,22 @@
             "lengthMenu": sLengthMenu,
             "language": {
                 "url": "/DataTables/lang.txt"
-            }
+            },
+            "columnDefs": [
+                {
+                    "visible": false,
+                    "targets": [2]
+                },
+                {
+                    "sortable": false,
+                    "searchable": false,
+                    "targets": [3]
+                },
+                {
+                    "orderData": [2],
+                    "targets": [1]
+                }
+            ]
         });
     });
 </script>
@@ -23,6 +38,10 @@
         <th>
             @Html.DisplayNameFor(model => model.Description)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.InputDate)
+        </th>
+        <th></th>
         <th></th>
     </tr>
     </thead>
@@ -33,12 +52,18 @@
             <td>
                 @if (String.IsNullOrEmpty(savedSearch.Description))
                 {
-                    @Html.ActionLink(" ", "Run", "LibraryUserSavedSearches", new { id = savedSearch.SavedSearchID }, new { @class = "btn-link" })
+                    @Html.ActionLink(" ", "Run", "LibraryUserSavedSearches", new {id = savedSearch.SavedSearchID}, new {@class = "btn-link"})
                 }
                 else
                 {
-                    @Html.ActionLink(savedSearch.Description, "Run", "LibraryUserSavedSearches", new { id = savedSearch.SavedSearchID }, new { @class = "btn-link" })
+                    @Html.ActionLink(savedSearch.Description, "Run", "LibraryUserSavedSearches", new {id = savedSearch.SavedSearchID}, new {@class = "btn-link"})
                 }
+            </td>
+            <td>
+                @Html.DisplayFor(x => savedSearch.InputDate)
+            </td>
+            <td>
+                @Html.Raw(savedSearch.InputDateSortable)
             </td>
             <td class="just-right">
                 <a href="@Url.Action("Delete", new {id = savedSearch.SavedSearchID})" class="btn btn-link modal-link" title="Delete this Bookmark"><span class=" glyphicon glyphicon-trash"></span></a>

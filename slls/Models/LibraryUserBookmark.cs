@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using slls.Localization;
 
 namespace slls.Models
 {
@@ -16,9 +17,16 @@ namespace slls.Models
         public string Type { get; set; }
 
         [Column(TypeName = "smalldatetime")]
+        [LocalDisplayName("Bookmarks.Date_Bookmarked", "FieldDisplayName")]
         public DateTime? InputDate { get; set; }
 
         //public virtual LibraryUser LibraryUser { get; set; }
         public virtual Title Title { get; set; }
+
+        [NotMapped]
+        public string InputDateSortable
+        {
+            get { return string.Format("{0:yyyy-MM-dd}", InputDate); }
+        }
     }
 }
