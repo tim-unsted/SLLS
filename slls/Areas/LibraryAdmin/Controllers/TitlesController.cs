@@ -934,11 +934,11 @@ namespace slls.Areas.LibraryAdmin
 
             var titleId = 0;
 
-            var languageId = newTitle.Language == null ? Utils.PublicFunctions.GetDefaultValue("Titles", "LanguageID") : LanguagesController.GetLanguageId(newTitle.Language);
-            var publisherId = newTitle.Publisher == null ? Utils.PublicFunctions.GetDefaultValue("Titles", "PublisherID") : PublishersController.GetPublisherId(newTitle.Publisher);
-            var frequencyId = newTitle.Frequency == null ? Utils.PublicFunctions.GetDefaultValue("Titles", "FrequencyID") : FrequenciesController.GetFrequencyId(newTitle.Frequency);
-            var mediaId = newTitle.Media == null ? Utils.PublicFunctions.GetDefaultValue("Titles", "MediaID") : MediaTypesController.GetMediaId(newTitle.Media);
-            var classmarkId = newTitle.Classmark == null ? Utils.PublicFunctions.GetDefaultValue("Titles", "ClassmarkID") : ClassmarksController.GetClassmarkId(newTitle.Classmark);
+            var languageId = string.IsNullOrEmpty(newTitle.Language) ? Utils.PublicFunctions.GetDefaultValue("Titles", "LanguageID") : LanguagesController.GetLanguageId(newTitle.Language);
+            var publisherId = string.IsNullOrEmpty(newTitle.Publisher) ? Utils.PublicFunctions.GetDefaultValue("Titles", "PublisherID") : PublishersController.GetPublisherId(newTitle.Publisher);
+            var frequencyId = string.IsNullOrEmpty(newTitle.Frequency) ? Utils.PublicFunctions.GetDefaultValue("Titles", "FrequencyID") : FrequenciesController.GetFrequencyId(newTitle.Frequency);
+            var mediaId = string.IsNullOrEmpty(newTitle.Media) ? Utils.PublicFunctions.GetDefaultValue("Titles", "MediaID") : MediaTypesController.GetMediaId(newTitle.Media);
+            var classmarkId = string.IsNullOrEmpty(newTitle.Classmark) ? Utils.PublicFunctions.GetDefaultValue("Titles", "ClassmarkID") : ClassmarksController.GetClassmarkId(newTitle.Classmark);
 
             //Check for a long 'Description'
             var longDescription = newTitle.Description;
