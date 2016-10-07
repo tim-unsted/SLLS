@@ -17,8 +17,11 @@ namespace slls.Models
             //SubLocations = new HashSet<Location>();
         }
 
+        [Key]
+        [Column("LocationID")]
         public int LocationID { get; set; }
 
+        [Column("ParentLocationID")]
         [LocalDisplayName("Locations.Parent_Location", "FieldDisplayName")]
         public int? ParentLocationID { get; set; }
 
@@ -74,6 +77,7 @@ namespace slls.Models
 
         [LocalDisplayName("Locations.Users", "FieldDisplayName")]
         public virtual ICollection<ApplicationUser> LibraryUsers { get; set; }
+
         public virtual ICollection<Location> SubLocations { get; set; }
         public virtual Location ParentLocation { get; set; }
     }

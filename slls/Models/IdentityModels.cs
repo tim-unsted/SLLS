@@ -42,7 +42,10 @@ namespace slls.Models
         public bool IgnoreAd { get; set; }
         public string Position { get; set; }
         public int? DepartmentId { get; set; }
-        public int? LocationId { get; set; }
+
+        [Column("LocationId")]
+        public int? LocationID { get; set; }
+
         public bool SelfLoansAllowed { get; set; }
         [Column(TypeName = "smalldatetime")]
         public DateTime? InputDate { get; set; }

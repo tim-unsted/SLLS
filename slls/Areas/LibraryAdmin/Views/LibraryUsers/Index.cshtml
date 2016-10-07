@@ -1,10 +1,11 @@
-﻿@using slls.Utils.Helpers
+﻿@using slls.Models
+@using slls.Utils.Helpers
 @using Westwind.Globalization
 @model slls.ViewModels.LibraryUsersIndexViewModel
 
 <script type="text/javascript">
     //var baseUrl = window.location.href;
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('#users').DataTable({
             "dom": sDom,
             "pagingType": sPagingType,
@@ -15,15 +16,16 @@
             },
             "order": [[0, 'asc'], [1, 'asc']],
             "columnDefs": [
-            {
-                "width": "10%",
-                "searchable": false,
-                "sortable": false,
-                "targets": [7]
-            }]
+                {
+                    "width": "10%",
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [7]
+                }
+            ]
         });
-        $(function () {
-            $('#ShowAll').change(function () {
+        $(function() {
+            $('#ShowAll').change(function() {
                 // the value of the checkbox changed => refresh the page:
                 var currentLocation = window.location.href;
                 var baseUrl = currentLocation.replace(/&?showAll=([^&]$|[^&]*)/i, "");
@@ -39,6 +41,10 @@
     });
 </script>
 
+@{
+    var db = new DbEntities();
+}
+
 
 <h2>@ViewBag.Title</h2>
 @Html.CheckBoxFor(model => model.ShowAll, new { @title = "Show ALL users, including those no longer 'Live'" }) Show All
@@ -51,59 +57,64 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FullnameRev)
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().FullnameRev)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserName)
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().UserName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.UserBarcode)
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().UserBarcode)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Department.Department1)
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().Department.Department1)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Location.Location1)
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().Location.Location1)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Position)
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().Position)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Live)
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().IsLive)
             </th>
 
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.LibraryUsers)
+        @foreach (var user in Model.LibraryUsers)
         {
+            string location = "";
+            if (user.LocationID != null)
+            {
+                location = db.Locations.Find(user.LocationID).LocationString;
+            }
             <tr>
                 <td>
-                    @(String.IsNullOrEmpty(item.FullnameRev) ? Html.ActionLink(" ", "Edit", "LibraryUsers", new { id = item.Id }, new { @class = "btn-link" }) : Html.ActionLink(item.FullnameRev, "Edit", "LibraryUsers", new { id = item.Id }, new { @class = "btn-link", data_toggle = "modal", data_target = "#lrgModal" }))
+                    @(String.IsNullOrEmpty(user.FullnameRev) ? Html.ActionLink(" ", "Edit", "LibraryUsers", new { id = user.Id }, new { @class = "btn-link" }) : Html.ActionLink(user.FullnameRev, "Edit", "LibraryUsers", new { id = user.Id }, new { @class = "btn-link", data_toggle = "modal", data_target = "#lrgModal" }))
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
+                    @Html.DisplayFor(modelItem => user.UserName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserBarcode)
+                    @Html.DisplayFor(modelItem => user.UserBarcode)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Department.Department1)
+                    @Html.DisplayFor(modelItem => user.Department.Department1)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Location.LocationString)
+                    @Html.Raw(location)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Position)
+                    @Html.DisplayFor(modelItem => user.Position)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IsLive)
+                    @Html.DisplayFor(modelItem => user.IsLive)
                 </td>
 
                 <td class="just-right">
-                    <a href="@Url.Action("Delete", new { id = item.Id })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", new {id = item.Id})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new { id = user.Id })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new { id = user.Id })" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

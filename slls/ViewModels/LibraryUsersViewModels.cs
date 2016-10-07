@@ -166,59 +166,14 @@ namespace slls.ViewModels
     
     public class LibraryUsersIndexViewModel
     {
+        // A list of users ...
         public IEnumerable<ApplicationUser> LibraryUsers { get; set; } 
         
-        public int UserID { get; set; }
-
-        [LocalDisplayName("Users.Firstnames", "FieldDisplayName")]
-        public string Firstname { get; set; }
-
-        [LocalDisplayName("Users.Lastnames", "FieldDisplayName")]
-        public string Lastname { get; set; }
-
-        [LocalDisplayName("Users.Barcode", "FieldDisplayName")]
-        public string UserBarcode { get; set; }
-
-        [LocalDisplayName("Users.Username", "FieldDisplayName")]
-        public string UserName { get; set; }
-
-        [LocalDisplayName("Users.Is_Live", "FieldDisplayName")]
-        public bool Live { get; set; }
-
-        [LocalDisplayName("Locations.Location", "FieldDisplayName")]
-        public int? LocationId { get; set; }
-
-        [LocalDisplayName("Departments.Department", "FieldDisplayName")]
-        public int? DepartmentId { get; set; }
-
-        [LocalDisplayName("Users.Position", "FieldDisplayName")]
-        public string Position { get; set; }
-
         //Stuff to handle the alphabetical paging links on the index view ...
         public List<string> FirstLetters { get; set; }
         public string SelectedLetter { get; set; }
-
-        public virtual Department Department { get; set; }
-        public virtual Location Location { get; set; }
-
-        [LocalDisplayName("Users.Fullname", "FieldDisplayName")]
-        public string Fullname
-        {
-            get
-            {
-                return string.Format("{0} {1}", Firstname, Lastname);
-            }
-        }
-
-        [LocalDisplayName("Users.Fullname", "FieldDisplayName")]
-        public string FullnameRev
-        {
-            get
-            {
-                return string.Format("{0}, {1}", Lastname, Firstname);
-            }
-        }
-
+        
+        //Show Live-only or All users?
         public bool ShowAll { get; set; }
     }
 

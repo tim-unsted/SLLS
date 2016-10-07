@@ -51,7 +51,11 @@ namespace slls.Areas.LibraryAdmin
         // GET: LibraryUsers
         public ActionResult Index(string selectedLetter = "A", bool showAll = false)
         {
-            var users = UserManager.Users.Where(u => u.CanDelete && u.Lastname != null).ToList();
+            var users = UserManager.Users
+                //.Include(u => u.Location)
+                .Where(u => u.CanDelete && u.Lastname != null)
+                .ToList();
+
             IEnumerable<ApplicationUser> libraryUsers;
 
             if (selectedLetter == null)
@@ -169,7 +173,7 @@ namespace slls.Areas.LibraryAdmin
                     Lastname = viewModel.Lastname,
                     UserBarcode = viewModel.UserBarcode,
                     DepartmentId = viewModel.DepartmentId,
-                    LocationId = viewModel.LocationId,
+                    LocationID = viewModel.LocationId,
                     SelfLoansAllowed = viewModel.SelfLoansAllowed,
                     IgnoreAd = viewModel.IgnoreAd,
                     IsLive = viewModel.IsLive,
@@ -286,7 +290,7 @@ namespace slls.Areas.LibraryAdmin
                 UserName = libraryUser.UserName,
                 Firstname = libraryUser.Firstname,
                 Lastname = libraryUser.Lastname,
-                LocationId = libraryUser.LocationId,
+                LocationId = libraryUser.LocationID,
                 DepartmentId = libraryUser.DepartmentId,
                 IsLive = libraryUser.IsLive,
                 IgnoreAd = libraryUser.IgnoreAd,
@@ -304,7 +308,7 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.Title = "Edit " + _entityName;
             ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1",
                 libraryUser.DepartmentId);
-            ViewBag.LocationID = new SelectList(_db.Locations, "LocationID", "Location1", libraryUser.LocationId);
+            ViewBag.LocationID = SelectListHelper.OfficeLocationList(id:libraryUser.LocationID ?? 0,addDefault:false);//new SelectList(_db.Locations, "LocationID", "Location1", libraryUser.LocationID);
             return PartialView(viewModel);
         }
 
@@ -330,7 +334,7 @@ namespace slls.Areas.LibraryAdmin
                 libraryUser.Firstname = viewModel.Firstname;
                 libraryUser.Lastname = viewModel.Lastname;
                 libraryUser.IsLive = viewModel.IsLive;
-                libraryUser.LocationId = viewModel.LocationId;
+                libraryUser.LocationID = viewModel.LocationId;
                 libraryUser.Notes = viewModel.Notes;
                 libraryUser.LastModified = DateTime.Now;
                 
