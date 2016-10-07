@@ -2,7 +2,7 @@
 @using Westwind.Globalization
 @model slls.ViewModels.TitleImageAddViewModel
 
-@Html.Partial("_ModalAddHeader")
+@Html.Partial("_ModalDefaultHeader")
 
 <div class="modal-body">
     <div class="alert alert-info" role="alert">
@@ -61,7 +61,7 @@
     }
 }
 
-@using (Html.BeginForm("Add", "TitleImages", FormMethod.Post, new { enctype = "multipart/form-data" }))
+@using (Html.BeginForm("Add", "TitleImages", FormMethod.Post, new { enctype = "multipart/form-data", id="frmUpload" }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -99,6 +99,45 @@
 }
 
 <script type="text/javascript">
+    //$(function () {
+    //    $('frmUpload').submit(function (e) {
+    //        e.preventDefault();
+    //        $.post(this.action, $(this).serialize(), function (response) {
+    //            if (response.error) {
+    //                alert(response.error);
+    //            }
+    //            else {
+                    
+    //                $('#stdModal').modal('hide');
+    //                $('#lrgModal').modal('hide');
+    //                location.reload();
+    //            }
+    //        }, 'json');
+    //    });
+    //});
+    $("#frmUpload").submit(function(e) {
+        e.preventDefault();
+        var formData = new FormData($(this)[0]);
+
+        $.ajax({
+            type: "POST",
+            url: this.action,
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.success) {
+                    $('#stdModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert('Oops! ' + data.success);
+                }
+            }
+        });
+        return false;
+    });
 
     function OnSuccess(json) {
         if (json.isRedirect) {

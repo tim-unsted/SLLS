@@ -54,7 +54,7 @@ namespace slls.Areas.LibraryAdmin
                 return PartialView("Add", viewModel);
             }
 
-            if (submit == "Upload" && !string.IsNullOrEmpty(viewModel.Url))
+            if (!string.IsNullOrEmpty(viewModel.Url))
             {
                 using (var client = new WebClient())
                 {
@@ -93,7 +93,7 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            if (submit == "Upload" && viewModel.Files != null)
+            if (viewModel.Files != null)
             {
                 try
                 {
