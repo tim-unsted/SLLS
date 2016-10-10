@@ -11,6 +11,34 @@ namespace slls.Utils.Helpers
 {
     public class SelectListHelper
     {
+        public static IEnumerable<SelectListItem> CatalogueReportsList(int id = 0, string msg = "Select a Report ", bool addDefault = true)
+        {
+            DbEntities db = new DbEntities();
+            var catalogueReportsList = new List<SelectListItem>();
+
+            //Add a default value if required ...
+            if (addDefault)
+            {
+                catalogueReportsList.Add(new SelectListItem
+                {
+                    Text = msg,
+                    Value = "0"
+                });
+            };                      
+
+            //Add the actual report types ...
+            foreach (var report in db.ReportTypes.Where(r => r.ReportArea == "Catalogue").OrderBy(r => r.FriendlyName))
+            {
+                catalogueReportsList.Add(new SelectListItem
+                {
+                    Text = report.FriendlyName,
+                    Value = report.ReportID.ToString()
+                });
+            }
+
+            return catalogueReportsList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
+        }
+
         public static IEnumerable<SelectListItem> FinanceReportsList(int id = 0, string msg = "Select a Report ", bool addDefault = true)
         {
             DbEntities db = new DbEntities();
@@ -24,7 +52,7 @@ namespace slls.Utils.Helpers
                     Text = msg,
                     Value = "0"
                 });
-            };                      
+            };
 
             //Add the actual report types ...
             foreach (var report in db.ReportTypes.Where(r => r.ReportArea == "Finance").OrderBy(r => r.FriendlyName))

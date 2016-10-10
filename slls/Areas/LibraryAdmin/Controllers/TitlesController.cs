@@ -1901,11 +1901,6 @@ namespace slls.Areas.LibraryAdmin
             }
         }
 
-        
-
-        
-        
-
         [HttpPost]
         public JsonResult IsbnUnique(string isbn)
         {
@@ -1931,19 +1926,6 @@ namespace slls.Areas.LibraryAdmin
         [Route("~/LibraryAdmin/Titles/ReportGenerator")]
         public ActionResult ReportGenerator()
         {
-            List<SelectListItem> listReports = new List<SelectListItem>();
-
-            foreach (ReportType report in _db.ReportTypes.OrderBy(r => r.FriendlyName))
-            {
-                SelectListItem selectList = new SelectListItem
-                {
-                    Text = report.FriendlyName,
-                    Value = report.ReportID.ToString()
-                };
-
-                listReports.Add(selectList);
-            }
-
             var notSelected = new[]
             {
                 "Destroyed",
@@ -1953,7 +1935,7 @@ namespace slls.Areas.LibraryAdmin
 
             var viewModel = new ReportsGeneratorViewModel
             {
-                Reports = listReports,
+                Reports = SelectListHelper.CatalogueReportsList(),//listReports,
                 Classmarks = SelectListHelper.ClassmarkList(addDefault: false),
                 Keywords = SelectListHelper.KeywordList(addDefault: false),
                 MediaTypes = SelectListHelper.MediaTypeList(addDefault: false),
@@ -2048,7 +2030,7 @@ namespace slls.Areas.LibraryAdmin
                     {
                         return RedirectToAction("NewAcquisitions_Report", new { caption = friendlyName, statusIdString });
                     }
-                case "NewAcquisitionsFullReport":
+                case "NewAcquisitionsFull":
                     {
                         return RedirectToAction("NewAcquisitionsFull_Report", new { caption = friendlyName, statusIdString });
                     }
@@ -2262,7 +2244,7 @@ namespace slls.Areas.LibraryAdmin
             var office = _db.Locations.Find(officeId);
 
             var titles = (from c in _db.Copies
-                          where statusTypes.Contains(c.StatusID.Value) && c.Location.ParentLocation.LocationID == officeId
+                          where statusTypes.Contains(c.StatusID.Value) && (c.Location.ParentLocation.LocationID == officeId || c.LocationID == officeId)
                           select c.Title).Distinct();
 
             var viewModel = new TitlesReportsViewModel
@@ -2280,8 +2262,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult CatalogueChosenPublisherByAuthorTitle_Report(string caption = "", string statusIdString = "", int publisherId = 0)
         {
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-            var allPublishers = CacheProvider.GetAll<Publisher>("publishers");
-            var publisher = allPublishers.FirstOrDefault(p => p.PublisherID == publisherId);
+            var publisher = _db.Publishers.FirstOrDefault(p => p.PublisherID == publisherId);
 
             var titles = (from t in _db.Titles
                           join c in _db.Copies on t.TitleID equals c.TitleID
@@ -2366,7 +2347,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult ClassmarkCatalogueByAuthorTitle_Report(string caption = "", string statusIdString = "")
         {
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-            var classmarks = (from s in CacheProvider.GetAll<Classmark>("classmarks")
+            var classmarks = (from s in _db.Classmarks
                               join t in _db.Titles on s.ClassmarkID equals t.ClassmarkID
                               join c in _db.Copies on t.TitleID equals c.TitleID
                               where statusTypes.Contains(c.StatusID.Value)
@@ -2386,7 +2367,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult ClassmarkCatalogueByTitle_Report(string caption = "", string statusIdString = "")
         {
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-            var classmarks = (from s in CacheProvider.GetAll<Classmark>("classmarks")
+            var classmarks = (from s in _db.Classmarks
                               join t in _db.Titles on s.ClassmarkID equals t.ClassmarkID
                               join c in _db.Copies on t.TitleID equals c.TitleID
                               where statusTypes.Contains(c.StatusID.Value)
@@ -2408,8 +2389,7 @@ namespace slls.Areas.LibraryAdmin
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
             int[] classmarkIds = classmarkIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
 
-            //var classmarks = from c in CacheProvider.GetClassmarks() where classmarkIds.Contains(c.ClassmarkID) select c;
-            var classmarks = (from s in CacheProvider.GetAll<Classmark>("classmarks")
+            var classmarks = (from s in _db.Classmarks
                               join t in _db.Titles on s.ClassmarkID equals t.ClassmarkID
                               join c in _db.Copies on t.TitleID equals c.TitleID
                               where statusTypes.Contains(c.StatusID.Value) && classmarkIds.Contains(s.ClassmarkID)
@@ -2430,7 +2410,7 @@ namespace slls.Areas.LibraryAdmin
         {
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
             int[] classmarkIds = classmarkIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
-            var classmarks = (from s in CacheProvider.GetAll<Classmark>("classmarks")
+            var classmarks = (from s in _db.Classmarks
                               join t in _db.Titles on s.ClassmarkID equals t.ClassmarkID
                               join c in _db.Copies on t.TitleID equals c.TitleID
                               where statusTypes.Contains(c.StatusID.Value) && classmarkIds.Contains(s.ClassmarkID)
@@ -2452,9 +2432,9 @@ namespace slls.Areas.LibraryAdmin
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
             var location = _db.Locations.Find(locationId);
             var classmarks = (from t in _db.Titles
-                              join s in CacheProvider.GetAll<Classmark>("classmarks") on t.ClassmarkID equals s.ClassmarkID
+                              join s in _db.Classmarks on t.ClassmarkID equals s.ClassmarkID
                               join c in _db.Copies on t.TitleID equals c.TitleID
-                              where c.Location.LocationID == location.LocationID && statusTypes.Contains(c.StatusID.Value)
+                              where c.Location.LocationID == location.LocationID //&& statusTypes.Contains(c.StatusID.Value)
                               select s).Distinct();
 
             var viewModel = new TitlesReportsViewModel
@@ -2474,9 +2454,9 @@ namespace slls.Areas.LibraryAdmin
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
             var office = _db.Locations.Find(officeId);
             var classmarks = (from t in _db.Titles
-                              join s in CacheProvider.GetAll<Classmark>("classmarks") on t.ClassmarkID equals s.ClassmarkID
+                              join s in _db.Classmarks on t.ClassmarkID equals s.ClassmarkID
                               join c in _db.Copies on t.TitleID equals c.TitleID
-                              where c.Location.ParentLocation.LocationID == office.LocationID && statusTypes.Contains(c.StatusID.Value)
+                              where statusTypes.Contains(c.StatusID.Value) && (c.Location.ParentLocation.LocationID == office.LocationID || c.LocationID == office.LocationID)
                               select s).Distinct();
 
             var viewModel = new TitlesReportsViewModel
@@ -2496,7 +2476,7 @@ namespace slls.Areas.LibraryAdmin
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
             var publisher = _db.Publishers.Find(publisherId);
             var classmarks = (from t in _db.Titles
-                              join s in CacheProvider.GetAll<Classmark>("classmarks") on t.ClassmarkID equals s.ClassmarkID
+                              join s in _db.Classmarks on t.ClassmarkID equals s.ClassmarkID
                               join c in _db.Copies on t.TitleID equals c.TitleID
                               where t.PublisherID == publisher.PublisherID && statusTypes.Contains(c.StatusID.Value)
                               select s).Distinct();
@@ -2518,7 +2498,7 @@ namespace slls.Areas.LibraryAdmin
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
             int[] mediaTypeIds = mediaTypeString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
 
-            var mediaTypes = (from m in CacheProvider.GetAll<MediaType>("mediatypes")
+            var mediaTypes = (from m in _db.MediaTypes
                               join t in _db.Titles on m.MediaID equals t.MediaID
                               join c in _db.Copies on t.TitleID equals c.TitleID
                               where mediaTypeIds.Contains(m.MediaID) && statusTypes.Contains(c.StatusID.Value)
@@ -2684,7 +2664,7 @@ namespace slls.Areas.LibraryAdmin
             var office = _db.Locations.Find(officeId);
             var keywords = (from x in _db.SubjectIndexes
                             join c in _db.Copies on x.TitleID equals c.TitleID
-                            where c.Location.ParentLocation.LocationID == office.LocationID && statusTypes.Contains(c.StatusID.Value)
+                            where statusTypes.Contains(c.StatusID.Value) && (c.Location.ParentLocation.LocationID == office.LocationID || c.LocationID == office.LocationID)
                             select x.Keyword).Distinct();
 
             var viewModel = new TitlesReportsViewModel
@@ -2768,7 +2748,7 @@ namespace slls.Areas.LibraryAdmin
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
             int[] mediaTypeIds = mediaTypeString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
 
-            var mediaTypes = (from m in CacheProvider.GetAll<MediaType>("mediatypes")
+            var mediaTypes = (from m in _db.MediaTypes
                               join t in _db.Titles on m.MediaID equals t.MediaID
                               join c in _db.Copies on t.TitleID equals c.TitleID
                               where mediaTypeIds.Contains(m.MediaID) && t.SubjectIndexes.Any() && statusTypes.Contains(c.StatusID.Value)
@@ -2820,7 +2800,7 @@ namespace slls.Areas.LibraryAdmin
                 RefOnlyCount = _db.Volumes.Count(v => v.Deleted == false && v.RefOnly),
                 VolumesOnLoanCount = _db.Volumes.Count(v => v.Deleted == false && v.OnLoan),
                 VolumesAvailableCount = _db.Volumes.Count(v => v.Deleted == false && v.RefOnly == false && v.OnLoan == false),
-                MediaTypes = CacheProvider.GetAll<MediaType>("mediatypes").Where(m => m.Titles.Any()),
+                MediaTypes = _db.MediaTypes.Where(m => m.Titles.Any()),
                 StatusTypesList = _db.StatusTypes.Where(s => s.Copies.Any()),
                 Offices = offices,
                 Locations = locations,
@@ -2951,7 +2931,7 @@ namespace slls.Areas.LibraryAdmin
                     Value = "-1"
                 }
             };
-            lstMediaTypes.AddRange(CacheProvider.GetAll<MediaType>("mediatypes").OrderBy(m => m.Media).Select(item => new SelectListItem
+            lstMediaTypes.AddRange(_db.MediaTypes.OrderBy(m => m.Media).Select(item => new SelectListItem
             {
                 Text = string.IsNullOrEmpty(item.Media) ? "<no name>" : item.Media,
                 Value = item.MediaID.ToString()
@@ -2964,7 +2944,7 @@ namespace slls.Areas.LibraryAdmin
                 MediaTypes = lstMediaTypes, //slls.Utils.Helpers.SelectListHelper.SelectMediaTypeList(addDefault: false),
                 StartDate = DateTime.Today.AddYears(-1),
                 EndDate = DateTime.Today,
-                StatusTypes = _db.StatusTypes.ToList().Select(x => new SelectListItem
+                StatusTypes = _db.StatusTypes.Where(s => s.Status != null).ToList().Select(x => new SelectListItem
                 {
                     Selected = notSelected.Contains(x.Status.ToLower()) == false,
                     Text = string.IsNullOrEmpty(x.Status) ? "<no name>" : x.Status,
@@ -3038,7 +3018,7 @@ namespace slls.Areas.LibraryAdmin
             }
             else
             {
-                var media = from m in CacheProvider.GetAll<MediaType>("mediatypes") where mediaTypes.Contains(m.MediaID) select m.Media;
+                var media = from m in _db.MediaTypes where mediaTypes.Contains(m.MediaID) select m.Media;
                 var mediaTypeParam = string.Join(", ", media);
                 friendlyName = friendlyName + " - " + mediaTypeParam;
                 results = from r in results

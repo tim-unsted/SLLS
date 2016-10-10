@@ -17,7 +17,7 @@
 
             {
                 var copies = from c in title.Copies
-                             where c.StatusID != null && c.Location.ParentLocation.LocationID == Model.Office.LocationID && Model.StatusTypes.Contains(c.StatusID.Value)
+                             where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value) && (c.Location.ParentLocation != null ? c.Location.ParentLocation.LocationID == Model.Office.LocationID : 1 == 0 || c.LocationID == Model.Office.LocationID) 
                              select c;
 
                 foreach (var copy in copies.OrderBy(c => c.CopyNumber))

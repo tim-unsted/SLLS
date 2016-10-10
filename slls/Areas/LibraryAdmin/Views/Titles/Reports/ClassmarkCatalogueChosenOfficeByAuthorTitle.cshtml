@@ -19,7 +19,7 @@
                         DbEntities db = new DbEntities();
                         var titles = (from t in classmark.Titles
                             join c in db.Copies on t.TitleID equals c.TitleID
-                            where c.Location.ParentLocation.LocationID == Model.Office.LocationID && c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value)
+                                      where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value) && (c.Location.ParentLocation != null ? c.Location.ParentLocation.LocationID == Model.Office.LocationID : 1 == 0 || c.LocationID == Model.Office.LocationID)
                             select t).Distinct();
 
 
@@ -32,7 +32,7 @@
 
                                      @{
                                          var copies = from c in title.Copies
-                                             where c.Location.ParentLocation.LocationID == Model.Office.LocationID && c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value)
+                                                      where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value) && ()
                                              select c;
 
                                          foreach (var copy in copies.OrderBy(c => c.CopyNumber))
