@@ -42,7 +42,7 @@ namespace slls.Areas.LibraryAdmin
             
             IEnumerable<Author> authors;
 
-            if (selectedLetter == null)
+            if (string.IsNullOrEmpty(selectedLetter))
             {
                 var count = (from a in allAuthors
                              select new { a.AuthorID }).Count();

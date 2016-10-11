@@ -64,6 +64,12 @@ namespace slls.Models
 
         public Dictionary<string, string> AuthorType { get; set; }
 
+        [LocalDisplayName("Authors.Author_Type", "FieldDisplayName")]
+        public string AuthTypeDisplay
+        {
+            get { return AuthType.ToLower() == "c" ? "Corporate" : "Personal"; }
+        }
+
         [NotMapped]
         public int TitleCount { get; set; }
 
