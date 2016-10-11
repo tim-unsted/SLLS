@@ -84,12 +84,12 @@ namespace slls.Areas.LibraryAdmin
 
         public ActionResult CirculationByUser(string selectedUser)
         {
-            var libraryusers = (from users in _db.Users where users.IsLive && users.CanDelete
+            var libraryusers = (from users in _db.Users where users.IsLive && users.CanDelete && users.Lastname != null
                                 select
                                     new
                                     {
                                         users.Id,
-                                        Fullname = users.Lastname + ", " + users.Firstname + " (" + users.Department.Department1 + ")"
+                                        Fullname = users.Lastname + ", " + users.Firstname,
                                     }).Distinct();
 
             //Start a new list selectlist items ...
@@ -222,11 +222,11 @@ namespace slls.Areas.LibraryAdmin
             };
 
             viewModel.AvailableItems =
-                _db.Users.Where(u => u.Id != libraryUser.Id && u.Circulations.Any() && u.IsLive && u.CanDelete)
+                _db.Users.Where(u => u.Id != libraryUser.Id && u.Circulations.Any() && u.IsLive && u.CanDelete && u.Lastname != null)
                     .Select(x => new SelectListItem
                     {
                         Value = x.Id,
-                        Text = x.Lastname + ", " + x.Firstname + "(" + x.Circulations.Count.ToString() + " Lists)"
+                        Text = x.Lastname + ", " + x.Firstname + " (" + x.Circulations.Count.ToString() + " Lists)"
                     }).OrderBy(c => c.Text)
                     .ToList();
 
@@ -325,7 +325,7 @@ namespace slls.Areas.LibraryAdmin
                 PostSelectId = copy.CopyID
             };
 
-            lbvm.AvailableItems = _db.Users.Include(u => u.Department).Where(u => u.IsLive && u.CanDelete)
+            lbvm.AvailableItems = _db.Users.Include(u => u.Department).Where(u => u.IsLive && u.CanDelete && u.Lastname != null)
                 .Select(x => new SelectListItem
                 {
                     Value = x.Id.ToString(),
@@ -941,7 +941,7 @@ namespace slls.Areas.LibraryAdmin
                 PostSelectIdString = libraryUser.Id
             };
 
-            viewModel.AvailableItems = _db.Users.Where(u => u.Id != libraryUser.Id && u.IsLive && u.CanDelete)
+            viewModel.AvailableItems = _db.Users.Where(u => u.Id != libraryUser.Id && u.IsLive && u.CanDelete && u.Lastname != null)
                 .Select(x => new SelectListItem
                 {
                     Value = x.Id.ToString(),
@@ -998,7 +998,7 @@ namespace slls.Areas.LibraryAdmin
                 Value = "0"
             });
 
-            user1List.AddRange(_db.Users.Where(u => u.Circulations.Any() && u.IsLive && u.CanDelete)
+            user1List.AddRange(_db.Users.Where(u => u.Circulations.Any() && u.IsLive && u.CanDelete && u.Lastname != null)
                 .OrderBy(u => u.Lastname)
                 .ThenBy(u => u.Firstname)
                 .Select(x => new SelectListItem
@@ -1018,7 +1018,7 @@ namespace slls.Areas.LibraryAdmin
                 Value = "0"
             });
 
-            user2List.AddRange(_db.Users.Where(u => u.IsLive && u.CanDelete).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname)
+            user2List.AddRange(_db.Users.Where(u => u.IsLive && u.CanDelete && u.Lastname != null).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname)
                 .Select(x => new SelectListItem
                 {
                     Value = x.Id.ToString(),
@@ -1111,7 +1111,7 @@ namespace slls.Areas.LibraryAdmin
                 OkButtonText = "Add Selected"
             };
 
-            viewModel.AvailableItems = _db.Users.Where(u => u.IsLive && u.CanDelete)
+            viewModel.AvailableItems = _db.Users.Where(u => u.IsLive && u.CanDelete && u.Lastname != null)
                 .Select(x => new SelectListItem
                 {
                     Value = x.Id.ToString(),
@@ -1221,7 +1221,7 @@ namespace slls.Areas.LibraryAdmin
 
         public ActionResult PostRemoveNonLiveRecipients(DeleteConfirmationViewModel viewModel)
         {
-            var recipients = _db.Users.Where(u => u.IsLive && u.CanDelete);
+            var recipients = _db.Users.Where(u => u.IsLive && u.CanDelete && u.Lastname != null);
             var circulations = from c in _db.Circulations
                                join u in recipients on c.RecipientUser.Id equals u.Id
                                where u.IsLive != true
@@ -1611,7 +1611,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             viewModel.AvailableItems =
-                _db.Users.Where(u => u.Circulations.Any() && u.IsLive && u.CanDelete)
+                _db.Users.Where(u => u.Circulations.Any() && u.IsLive && u.CanDelete && u.Lastname != null)
                     .Select(x => new SelectListItem
                     {
                         Value = x.Id.ToString(),
@@ -1649,7 +1649,7 @@ namespace slls.Areas.LibraryAdmin
 
             if (string.IsNullOrEmpty(id))
             {
-                recipients = _db.Users.Where(u => u.Circulations.Any() && u.IsLive && u.CanDelete).OrderBy(r => r.Lastname);
+                recipients = _db.Users.Where(u => u.Circulations.Any() && u.IsLive && u.CanDelete && u.Lastname != null).OrderBy(r => r.Lastname);
                 ViewBag.Title = "Circulation List Review Memos";
             }
             else

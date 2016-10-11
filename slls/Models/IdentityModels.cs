@@ -75,6 +75,24 @@ namespace slls.Models
             }
         }
 
+        [NotMapped]
+        [LocalDisplayName("Users.Fullname", "FieldDisplayName")]
+        public string FullnameRevDept
+        {
+            get
+            {
+                if(!string.IsNullOrEmpty(Department.Department1))
+                {
+                    return string.Format("{0}, {1} ({3})", Lastname, Firstname, Department.Department1);
+                }
+            else
+                {
+                    return string.Format("{0}, {1}", Lastname, Firstname);
+                }
+                
+            }
+        }
+
         public virtual ICollection<Borrowing> Borrowings { get; set; }
         public virtual ICollection<Circulation> Circulations { get; set; }
         public virtual Department Department { get; set; }

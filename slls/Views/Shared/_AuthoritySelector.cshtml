@@ -21,7 +21,7 @@
             }
             @ViewBag.Message
             <div class="form-group">
-                @Html.LabelFor(m => m.LabelText, new { @class = "control-label col-sm-4" })
+                @Html.Label(Model.LabelText, new { @class = "control-label col-sm-4" })
                 <div class="col-sm-8">
                     @Html.DropDownListFor(m => m.SelectedValue, Model.AuthorityList, new { @class = "form-control", @id = "lstAuthority" })
                 </div>
