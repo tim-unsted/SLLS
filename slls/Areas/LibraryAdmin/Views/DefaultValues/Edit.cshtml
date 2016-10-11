@@ -16,26 +16,30 @@
 
         <div class="modal-body">
 
+            <div class="alert alert-info">
+                <span class="help-block"><strong><span class="glyphicon light"></span> </strong>: Select the appropriate @Model.FieldName to use as the default when adding new @Model.TableName.</span>
+            </div>
+
             <div class="form-group">
-                @Html.LabelFor(model => model.TableName, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.LabelFor(model => model.TableName, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     <p class="form-control-static">@Html.DisplayFor(model => model.TableName)</p>
                 </div>
             </div>
-            
+
             <div class="form-group">
-                @Html.LabelFor(model => model.FieldName, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.LabelFor(model => model.FieldName, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     <p class="form-control-static">@Html.DisplayFor(model => model.FieldName)</p>
                 </div>
             </div>
-            
+
             <div class="form-group">
-                @Html.LabelFor(model => model.DefaultValueId, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.Label(Model.FieldName, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
-                    @Html.DropDownListFor(model => model.DefaultValueId, new SelectList(ViewBag.AuthorityList, "Key", "Value"), new { @class = "form-control" })
+                    @Html.DropDownListFor(model => model.DefaultValueId, new SelectList(ViewBag.AuthorityList, "Key", "Value"), new {@class = "form-control"})
                     <span class="help-inline">Select the appropriate authority list item to use as the default when adding new records</span>
-                    @Html.ValidationMessageFor(model => model.DefaultValueId, "", new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(model => model.DefaultValueId, "", new {@class = "text-danger"})
                 </div>
             </div>
 

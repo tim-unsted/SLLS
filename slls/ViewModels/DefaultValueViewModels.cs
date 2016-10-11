@@ -17,7 +17,7 @@ namespace slls.ViewModels
         [DisplayName("Field name")]
         public string FieldName { get; set; }
 
-        [DisplayName("Affected data")]
+        [DisplayName("Authority List")]
         public string ChildTableName { get; set; }
 
         [DisplayName("Default Value")]

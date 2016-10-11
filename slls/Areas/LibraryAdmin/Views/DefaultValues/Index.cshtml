@@ -16,7 +16,7 @@
                    "width": "10%",
                    "searchable": false,
                    "sortable": false,
-                   "targets": [3]
+                   "targets": [4]
                }
             ]
         });
@@ -27,7 +27,7 @@
 
 <div class="alert alert-info">
     <p>
-        Use this feaure to set the default values that are applied when adding new records.
+        <strong>Tip: </strong>Use this feature to set the default values that are applied when adding new records. These values are derived from their respective authority lists.
     </p>
 </div>
 
@@ -43,6 +43,9 @@
         <th>
             @Html.DisplayNameFor(model => model.DefaultValues.FirstOrDefault().DefaultValueId)
         </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DefaultValues.FirstOrDefault().ChildTableName)
+        </th>
         <th></th>
     </tr>
     </thead>
@@ -54,10 +57,13 @@
                     @Html.DisplayFor(modelItem => item.TableName)
                 </td>
                 <td>
-                    @Html.ActionLink(item.FieldName, "Edit", "DefaultValues", new { id = item.DefaultId }, new { @class = "modal-link", title = "Edit Default Value" })
+                    @Html.DisplayFor(modelItem => item.FieldName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.DefaultValue)
+                    @Html.ActionLink(item.DefaultValue, "Edit", "DefaultValues", new {id = item.DefaultId}, new {@class = "modal-link", title = "Edit Default Value"})
+                </td>
+                <td>
+                    <a href="@Url.Action("Index", item.ChildTableName)" title="View/Edit Authority List">@item.ChildTableName</a>
                 </td>
                 <td class="just-right">
                     <a href="@Url.Action("Edit", new {id = item.DefaultId})" class="btn btn-link modal-link" title="Edit Default Value"><span class="glyphicon glyphicon-pencil"></span></a>

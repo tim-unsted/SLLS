@@ -333,9 +333,9 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            viewModel.FieldName = fieldName;
+            viewModel.FieldName = fieldName.Replace("Default","");
             ViewData["AuthorityList"] = authorityList;
-            ViewBag.Title = "Edit Default Value";
+            ViewBag.Title = "Edit Default " + fieldName;
             return PartialView(viewModel);
         }
 
