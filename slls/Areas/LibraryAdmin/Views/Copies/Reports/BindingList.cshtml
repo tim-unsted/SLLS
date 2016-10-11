@@ -1,4 +1,4 @@
-﻿@model IEnumerable<slls.Models.Location>
+﻿@model slls.ViewModels.TitlesReportsViewModel
 
 <!DOCTYPE html>
 <html lang="en">
@@ -20,10 +20,10 @@
 
         @{
             //Find the last item in the list ...
-            var last = Model.Last();
+            var last = Model.Locations.Any() ? Model.Locations.Last() : null;
         }
 
-        @foreach (var location in Model)
+        @foreach (var location in Model.Locations)
         {
             if (location != null)
             {

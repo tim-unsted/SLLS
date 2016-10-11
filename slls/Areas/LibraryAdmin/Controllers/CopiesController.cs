@@ -836,12 +836,19 @@ namespace slls.Areas.LibraryAdmin
 
         public ActionResult Report_BindingList()
         {
-            var locations = (from c in _db.Copies
+            var boundCopies = _db.Copies.Where(c => c.Bind);
+            var locations = (from c in boundCopies
                 where c.Bind
                 select c.Location.ParentLocation).Distinct();
 
+            var viewModel = new TitlesReportsViewModel()
+            {
+                Locations = locations,
+                HasData = boundCopies.Any()
+            };
+
             ViewBag.Title = "Binding List";
-            return PartialView("Reports/BindingList", locations);
+            return View("Reports/BindingList", viewModel);
         }
 
 
