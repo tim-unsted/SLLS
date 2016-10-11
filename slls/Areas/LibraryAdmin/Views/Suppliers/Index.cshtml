@@ -48,11 +48,11 @@
 </script>
 
 @Html.Partial("_HeaderSeeAlso", Model)
-
-<div class="well">
-    @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))
+@Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))
+<p>
     <a href="@Url.Action("Create", "Suppliers")" title="Add new @DbRes.T("Suppliers.Supplier", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
-</div>
+</p>
+
 
 <table id="companies" class="table table-hover">
     <thead>

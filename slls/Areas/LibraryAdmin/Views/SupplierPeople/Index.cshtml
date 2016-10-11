@@ -37,16 +37,10 @@
 
 <h2>@ViewBag.Title</h2>
 
-@*<form>
-    <div class="form-group" title="@ViewBag.Message">
-        @Html.DropDownList("SelectContact", null, new { onchange = "window.location.href = 'Edit/' + this.options[this.selectedIndex].value;", @class = "form-control" })
-    </div>
-</form>*@
-
-<div class="well">
-    @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))
-    <a href="@Url.Action("Create", "SupplierPeople", new {callingAction = "index"})" title="Add new @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#stdModal"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
-</div>
+@Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))
+<p>
+    <a href="@Url.Action("Create", "SupplierPeople", new {callingAction = "index"})" title="Add new @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#stdModal"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>    
+</p>
 
 <table id="contacts" class="table table-hover">
     <thead>
