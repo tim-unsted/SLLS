@@ -44,8 +44,8 @@
 
                             @foreach (var order in allOrders.OrderBy(o => o.Title.Title1.Substring(o.Title.NonFilingChars)))
                             {
-                                var authority = from u in Model.AllUsers where u.Id == order.AuthoriserUser.Id select u.FullnameRev;
-                                var requester = from u in Model.AllUsers where u.Id == order.RequesterUser.Id select u.FullnameRev;
+                                var authority = order.AuthoriserUser == null ? "" : Model.AllUsers.FirstOrDefault(u => u.Id == order.AuthoriserUser.Id).FullnameRev;
+                                var requester = order.RequesterUser == null ? "" : Model.AllUsers.FirstOrDefault(u => u.Id == order.RequesterUser.Id).FullnameRev;
 
                                 <tr>
                                     <td>

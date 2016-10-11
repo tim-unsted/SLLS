@@ -155,8 +155,8 @@
     <tbody>
         @foreach (var item in Model.Orders)
         {
-            var authority = from u in Model.AllUsers where u.Id == item.AuthoriserUser.Id select u.FullnameRev;
-            var requester = from u in Model.AllUsers where u.Id == item.RequesterUser.Id select u.FullnameRev;
+            var authority = item.AuthoriserUser == null ? "" : Model.AllUsers.FirstOrDefault(u => u.Id == item.AuthoriserUser.Id).FullnameRev;
+            var requester = item.RequesterUser == null ? "" : Model.AllUsers.FirstOrDefault(u => u.Id == item.RequesterUser.Id).FullnameRev;
             
             <tr>
                 <td>
