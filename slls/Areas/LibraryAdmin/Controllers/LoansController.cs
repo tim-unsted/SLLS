@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Globalization;
@@ -31,13 +32,46 @@ namespace slls.Areas.LibraryAdmin
         }
 
 
-        // All loand (Historical)
-        public ActionResult Index()
+        // All loans (Historical)
+        public ActionResult Index(int month = 0, int year = 0)
         {
-            var allloans = _db.Borrowings;
+            if (year == 0)
+            {
+                year = DateTime.Today.Year;
+            }
+
+            if (month == 0)
+            {
+                month = DateTime.Today.Month;
+            }
+            
+            var viewModel = new BorrowingIndexViewModel()
+            {
+                Month = month,
+                Year = year
+            };
+
+            viewModel.Loans = month == -1 ? _db.Borrowings.Where(b => b.Borrowed.Value.Year == year) : _db.Borrowings.Where(b => b.Borrowed.Value.Year == year && b.Borrowed.Value.Month == month);
+
+            var months = new Dictionary<int, string> {{-1, "All Year"}};
+            for (int i = 0; i < 12; i++)
+            {
+                months.Add(i+1, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[i]);
+            }
+
+            var years = new Dictionary<int, string>();
+            for (int i = 1970; i < DateTime.Today.AddYears(1).Year; i++)
+            {
+                years.Add(i, i.ToString());
+            }
+
+            ViewData["Months"] = months;
+            ViewData["Years"] = years;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("BorrowingSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
+            ViewBag.InfoMsg =
+                "Historical loans (borrowing) data can get quite large. To help filter to just the records you want to see, use the Month and Year drop-down lists below:";
             ViewBag.Title = "All Loans (Historical)";
-            return View(allloans.ToList());
+            return View(viewModel);
         }
 
         // Current loans (i.e. Returned IS NULL)

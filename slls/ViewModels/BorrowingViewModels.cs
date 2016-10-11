@@ -10,6 +10,15 @@ using slls.Models;
 
 namespace slls.ViewModels
 {
+    public class BorrowingIndexViewModel
+    {
+        public IEnumerable<Borrowing> Loans { get; set; }
+        public int Month { get; set; }
+        public int Year { get; set; }
+        public List<string> Years { get; set; }
+        public List<string> Months { get; set; }
+    }
+    
     public class NewLoanViewModel
     {
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]

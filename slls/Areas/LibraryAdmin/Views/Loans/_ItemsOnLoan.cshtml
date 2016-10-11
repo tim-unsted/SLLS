@@ -2,12 +2,16 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var dataTable = $('#itemsonloan').DataTable({
-            "searching": false,
-            "paging": false,
-            "lengthChange": false,
-            "info": false,
-            "columnDefs": [{
+        $('#itemsonloan').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs":
+            [{
                 "visible": false,
                 "targets": [6, 7, 8]
             },
@@ -24,11 +28,9 @@
                 "targets": [0]
             },
             {
-                "width": "30%",
-                "targets": [0]
-            },
-            {
-                "width": "20%",
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
                 "targets": [9]
             }]
         });
@@ -69,15 +71,15 @@
                 <td>
                     @if (String.IsNullOrEmpty(item.Volume.Copy.Title.Title1))
                     {
-                        @Html.ActionLink(" ", "Edit", "Titles", new { id = item.Volume.Copy.TitleID }, new { @Class = "modal-link" })
+                        @Html.ActionLink(" ", "Edit", "Titles", new { id = item.Volume.Copy.TitleID })
                     }
                     else
                     {
-                        @Html.ActionLink(item.Volume.Copy.Title.Title1, "Edit", "Titles", new { id = item.Volume.Copy.TitleID }, new { @Class = "btn btn-link" })
+                        @Html.ActionLink(item.Volume.Copy.Title.Title1, "Edit", "Titles", new { id = item.Volume.Copy.TitleID })
                     }
                 </td>
                 <td>
-                    @Html.ActionLink(item.Volume.Copy.CopyNumber.ToString(), "Edit", "Copies", new { id = item.Volume.CopyID }, new { @Class = "btn btn-link" })
+                    @Html.ActionLink(item.Volume.Copy.CopyNumber.ToString(), "Edit", "Copies", new { id = item.Volume.CopyID })
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Volume.Barcode)

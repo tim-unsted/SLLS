@@ -1389,6 +1389,7 @@
     <Content Include="Views\Shared\_NoData.cshtml" />
     <Content Include="Scripts\modal.min.js" />
     <Content Include="Views\LIbraryUserLoans\Index.cshtml" />
+    <Content Include="Views\Shared\_SelectMonthYear.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
