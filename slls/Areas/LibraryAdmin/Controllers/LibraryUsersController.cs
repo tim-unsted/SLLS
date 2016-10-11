@@ -51,16 +51,19 @@ namespace slls.Areas.LibraryAdmin
         // GET: LibraryUsers
         public ActionResult Index(string selectedLetter = "A", bool showAll = false)
         {
-            var users = UserManager.Users
-                //.Include(u => u.Location)
-                .Where(u => u.CanDelete && u.Lastname != null)
-                .ToList();
+            var allUsers = UserManager.Users
+                .Where(u => u.CanDelete && u.Lastname != null);
+
+            if (showAll == false)
+            {
+                allUsers = allUsers.Where(u => u.IsLive);
+            }
 
             IEnumerable<ApplicationUser> libraryUsers;
 
             if (selectedLetter == null)
             {
-                var count = (from u in users
+                var count = (from u in allUsers
                              select new { u.Id }).Count();
 
                 selectedLetter = count > 1000 ? "A" : "All";
@@ -69,7 +72,7 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new LibraryUsersIndexViewModel
             {
                 SelectedLetter = selectedLetter,
-                FirstLetters = users
+                FirstLetters = allUsers
                     .GroupBy(u => u.Lastname.Substring(0, 1))
                     .Select(x => x.Key.ToUpper())
                     .ToList(),
@@ -79,14 +82,14 @@ namespace slls.Areas.LibraryAdmin
             // Get a view of users starting with the selected letter/number ...
             if (string.IsNullOrEmpty(selectedLetter) || selectedLetter == "All")
             {
-                libraryUsers = users; //_db.LibraryUsers.ToList();
+                libraryUsers = allUsers; //_db.LibraryUsers.ToList();
             }
             else
             {
                 if (selectedLetter == "0-9")
                 {
                     var numbers = Enumerable.Range(0, 10).Select(i => i.ToString());
-                    libraryUsers = users
+                    libraryUsers = allUsers.ToList()
                         .Where(u => numbers.Contains(u.Lastname.Substring(0, 1)))
                         .ToList();
                 }
@@ -98,20 +101,20 @@ namespace slls.Areas.LibraryAdmin
                     var nonalpha3 = Enumerable.Range(123, 4).Select(i => ((char)i).ToString()).ToList();
                     var nonalpha = nonalpha1.Concat(nonalpha2).Concat(nonalpha3);
 
-                    libraryUsers = users
+                    libraryUsers = allUsers.ToList()
                         .Where(u => nonalpha.Contains(u.Lastname.Substring(0, 1)))
                         .ToList();
                 }
                 else
                 {
-                    libraryUsers = users
+                    libraryUsers = allUsers.ToList()
                         .Where(u => u.Lastname.StartsWith(selectedLetter,StringComparison.InvariantCultureIgnoreCase))
                         .ToList();
                 }
 
             }
 
-            viewModel.LibraryUsers = showAll == false ? libraryUsers.Where(u => u.IsLive) : libraryUsers;
+            viewModel.LibraryUsers = libraryUsers;
             ViewBag.Title = showAll == false ? ViewBag.Title + " (Live Only)" : ViewBag.Title + " (All)";
             return View(viewModel);
         }
