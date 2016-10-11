@@ -21,6 +21,8 @@ namespace slls.ViewModels
         public IEnumerable<ApplicationUser> Requestors { get; set; }
         public IEnumerable<ApplicationUser> Authorisers { get; set; }
         //public IEnumerable<SelectListItem> ListAuthorisers { get; set; }
+        public int Month { get; set; }
+        public int Year { get; set; }   
 
     }
     

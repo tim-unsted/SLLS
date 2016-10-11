@@ -38,28 +38,54 @@ namespace slls.Areas.LibraryAdmin
         [Route("AllOrders")]
         [Route("ViewAll")]
         [Route("~/LibraryAdmin/OrderDetails/Index")]
-        public ActionResult Index(int listSupplier = 0)
+        public ActionResult Index(int listSupplier = 0, int month = 0, int year = 0)
         {
-            //Get the list of suppliers with orders ...
-            var suppliers = (from x in _db.Suppliers
-                             join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count() })
-                .Distinct().OrderBy(x => x.SupplierName);
-
-            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers); //supplierList;
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "index");
-            
-            var allOrders = _db.OrderDetails.Include(o => o.AccountYear).Include(o => o.BudgetCode).Include(o => o.OrderCategory).Include(o => o.Supplier).Include(o => o.Title);
-            if (listSupplier > 0)
+            if (year == 0)
             {
-                allOrders = allOrders.Where(o => o.SupplierID == listSupplier);
+                year = DateTime.Today.Year;
+            }
+
+            if (month == 0)
+            {
+                month = -1;
             }
 
             var viewModel = new OrderDetailsListViewModel()
             {
-                Orders = allOrders
+                Month = month,
+                Year = year
             };
 
+            var allOrders = year == -1 ? _db.OrderDetails : _db.OrderDetails.Where(o => o.OrderDate.Value.Year == year);
+            allOrders = month == -1 ? allOrders : allOrders.Where(o => o.OrderDate.Value.Month == month);
+            viewModel.Orders = listSupplier > 0 ? allOrders.Where(o => o.SupplierID == listSupplier) : allOrders;
+
+            //Get a list of months ...
+            var months = new Dictionary<int, string> { { -1, "All Months" } };
+            for (int i = 0; i < 12; i++)
+            {
+                months.Add(i + 1, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[i]);
+            }
+
+            //Get a list of years back to 1970 ..
+            var years = new Dictionary<int, string> { { -1, "All Years" } };
+            for (int i = 1970; i < DateTime.Today.AddYears(1).Year; i++)
+            {
+                years.Add(i, i.ToString());
+            }
+
+            //Get the list of suppliers with orders ...
+            var suppliers = (from x in _db.Suppliers
+                             join o in allOrders on x.SupplierID equals o.SupplierID
+                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = allOrders.Count(s => s.SupplierID == x.SupplierID) })
+                .Distinct().OrderBy(x => x.SupplierName);
+
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers); //supplierList;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "index");
+            ViewData["Months"] = months;
+            ViewData["Years"] = years;
+            ViewBag.InfoMsg =
+                "To limit the list to just those order details you want to see, use the Supplier, Year and Month drop-down lists below:";
             ViewBag.Title = "All " + DbRes.T("Orders", "EntityType");
             return View(viewModel);
         }
@@ -69,31 +95,58 @@ namespace slls.Areas.LibraryAdmin
         [Route("AllInvoices")]
         [Route("~/LibraryAdmin/OrderDetails/InvoicesBySupplier")]
         [Route("~/LibraryAdmin/OrderDetails/AllInvoices")]
-        public ActionResult AllInvoices(int listSupplier = 0)
+        public ActionResult AllInvoices(int listSupplier = 0, int month = 0, int year = 0)
         {
-            //Get the list of suppliers with invoices ...
-            var suppliers = (from x in _db.Suppliers
-                             join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
-                             where (o.InvoiceRef != null) && (!o.InvoiceRef.Equals(string.Empty))
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count(i => i.InvoiceRef != null && !i.InvoiceRef.Equals(string.Empty)) })
-                .Distinct().OrderBy(x => x.SupplierName);
-            
-            //Get the actual results if the user has selected anything ...
+            if (year == 0)
+            {
+                year = DateTime.Today.Year;
+            }
+
+            if (month == 0)
+            {
+                month = -1;
+            }
+
+            var viewModel = new OrderDetailsListViewModel()
+            {
+                Month = month,
+                Year = year
+            };
+
             var allInvoices =
                 from o in
                     _db.OrderDetails
                 where (o.InvoiceRef != null && !o.InvoiceRef.Equals(string.Empty))
                 select o;
-            if (listSupplier > 0)
+
+            allInvoices = year == -1 ? allInvoices : allInvoices.Where(i => i.InvoiceDate.Value.Year == year);
+            allInvoices = month == -1 ? allInvoices : allInvoices.Where(i => i.InvoiceDate.Value.Month == month);
+            viewModel.Orders = listSupplier > 0 ? allInvoices.Where(i => i.SupplierID == listSupplier) : allInvoices;
+
+            //Get a list of months ...
+            var months = new Dictionary<int, string> { { -1, "All Months" } };
+            for (int i = 0; i < 12; i++)
             {
-                allInvoices = allInvoices.Where(o => o.SupplierID == listSupplier);
+                months.Add(i + 1, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[i]);
             }
 
-            var viewModel = new OrderDetailsListViewModel()
+            //Get a list of years back to 1970 ..
+            var years = new Dictionary<int, string> { { -1, "All Years" } };
+            for (int i = 1970; i < DateTime.Today.AddYears(1).Year; i++)
             {
-                Orders = allInvoices
-            };
+                years.Add(i, i.ToString());
+            }
 
+            //Get the list of suppliers with invoices ...
+            var suppliers = (from x in _db.Suppliers
+                             join o in allInvoices on x.SupplierID equals o.SupplierID
+                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = allInvoices.Count(s => s.SupplierID == x.SupplierID)})
+                .Distinct().OrderBy(x => x.SupplierName);
+            
+            ViewData["Months"] = months;
+            ViewData["Years"] = years;
+            ViewBag.InfoMsg =
+                "To limit the list to just those invoices you want to see, use the Supplier, Year and Month drop-down lists below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllInvoices");
             ViewBag.Title = "All " + DbRes.T("Invoices", "EntityType");

@@ -5,20 +5,26 @@
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
-
-<div class="well">
-
-    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "OrdersTable" }))
-    {
-        <form>
-            <div class="form-group" title="@ViewBag.Message">
-                @Html.DropDownList("ListSupplier", null, "Filter by Supplier", new { @class = "form-control", onchange = "this.form.submit();" })
+@using (Html.BeginForm(null, null, FormMethod.Get, new { id = "OrdersTable" }))
+{
+    <div class="alert alert-info">
+        <span class="help-block"><strong>Info: </strong>@ViewBag.InfoMsg</span>
+        <div class="row">
+            <div class="col-md-7">
+                @Html.DropDownList("ListSupplier", null, "Filter by Supplier", new {@class = "form-control", onchange = "this.form.submit();"})
             </div>
-        </form>
-    }
-    <a href="@Url.Action("Create", "OrderDetails")" title="Add new @DbRes.T("Orders.Order", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+            <div class="col-md-2">
+                @Html.DropDownList("year", new SelectList(ViewBag.Years, "Key", "Value"), new { @class = "form-control", onchange = "this.form.submit();" })
+            </div>
+            <div class="col-md-3">
+                @Html.DropDownList("month", new SelectList(ViewBag.Months, "Key", "Value"), new {@class = "form-control", onchange = "this.form.submit();"})
+            </div>
+                
+        </div>
+    </div>
+}
 
-</div>
+<a href="@Url.Action("Create", "OrderDetails")" title="Add new @DbRes.T("Orders.Order", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 
 <div>
     @Html.Partial("_Index", Model)
