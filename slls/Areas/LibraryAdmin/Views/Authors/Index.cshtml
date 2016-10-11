@@ -1,5 +1,6 @@
-﻿@using Westwind.Globalization
-@model IEnumerable<slls.ViewModels.AuthorIndexViewModel>
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.AuthorIndexViewModel
 
 <script type="text/javascript">
 
@@ -42,14 +43,12 @@
 
 </script>
 
-@*<h2>@ViewBag.Title</h2>*@
 @Html.Partial("_HeaderSeeAlso", Model)
+@Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))
 
 <p>
     <a href="@Url.Action("Create", "Authors")" title="Add new @DbRes.T("Authors.Display_Name", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
-
-<hr/>
 
 <table id="authors" class="table table-hover">
     <thead>
@@ -67,7 +66,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Authors)
         {
             <tr>
                 <td>

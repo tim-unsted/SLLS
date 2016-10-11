@@ -35,12 +35,67 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Authors
-        public ActionResult Index()
+        public ActionResult Index(string selectedLetter = "A")
         {
-            var authors = CacheProvider.GetAll<Author>("authors")
-                .Select(x => new AuthorIndexViewModel { AuthorID = x.AuthorID, DisplayName = x.DisplayName, AuthType = x.AuthType.Contains("P") ? "Personal" : "Corporate", TitleAuthors = x.TitleAuthors, TitleEditors = x.TitleEditors});
+            var allAuthors = CacheProvider.GetAll<Author>("authors");
+                //.Select(x => new AuthorIndexViewModel { AuthorID = x.AuthorID, DisplayName = x.DisplayName, AuthType = x.AuthType.Contains("P") ? "Personal" : "Corporate", TitleAuthors = x.TitleAuthors, TitleEditors = x.TitleEditors});
+            
+            IEnumerable<Author> authors;
+
+            if (selectedLetter == null)
+            {
+                var count = (from a in allAuthors
+                             select new { a.AuthorID }).Count();
+
+                selectedLetter = count > 1000 ? "A" : "All";
+            }
+
+            var viewModel = new AuthorIndexViewModel
+            {
+                SelectedLetter = selectedLetter,
+                FirstLetters = allAuthors
+                    .GroupBy(u => u.DisplayName.Substring(0, 1))
+                    .Select(x => x.Key.ToUpper())
+                    .ToList()
+            };
+
+            // Get a view of users starting with the selected letter/number ...
+            if (string.IsNullOrEmpty(selectedLetter) || selectedLetter == "All")
+            {
+                authors = allAuthors;
+            }
+            else
+            {
+                if (selectedLetter == "0-9")
+                {
+                    var numbers = Enumerable.Range(0, 10).Select(i => i.ToString());
+                    authors = allAuthors
+                        .Where(u => numbers.Contains(u.DisplayName.Substring(0, 1)))
+                        .ToList();
+                }
+                else if (selectedLetter == "non alpha")
+                {
+                    //Get a list of non-alpha characters
+                    var nonalpha1 = Enumerable.Range(32, 16).Select(i => ((char)i).ToString()).ToList();
+                    var nonalpha2 = Enumerable.Range(91, 6).Select(i => ((char)i).ToString()).ToList();
+                    var nonalpha3 = Enumerable.Range(123, 4).Select(i => ((char)i).ToString()).ToList();
+                    var nonalpha = nonalpha1.Concat(nonalpha2).Concat(nonalpha3);
+
+                    authors = allAuthors
+                        .Where(u => nonalpha.Contains(u.DisplayName.Substring(0, 1)))
+                        .ToList();
+                }
+                else
+                {
+                    authors = allAuthors
+                        .Where(u => u.DisplayName.StartsWith(selectedLetter, StringComparison.InvariantCultureIgnoreCase))
+                        .ToList();
+                }
+            }
+
+            viewModel.Authors = authors;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("authlistsSeeAlso", ControllerContext.RouteData.Values["controller"].ToString(), ControllerContext.RouteData.Values["controller"].ToString());
-            return View(authors.ToList());
+            return View(viewModel);
         }
         
 

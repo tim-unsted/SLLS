@@ -30,28 +30,34 @@ namespace slls.ViewModels
 
     public class AuthorIndexViewModel
     {
-        public int AuthorID { get; set; }
+        public IEnumerable<Author> Authors { get; set; }
 
-        [LocalDisplayName("Authors.Title", "FieldDisplayName")]
-        public string Title { get; set; }
+        //Stuff to handle the alphabetical paging links on the index view ...
+        public List<string> FirstLetters { get; set; }
+        public string SelectedLetter { get; set; }
+        
+        //public int AuthorID { get; set; }
 
-        [LocalDisplayName("Authors.Display_Name", "FieldDisplayName")]
-        public string DisplayName { get; set; }
+        //[LocalDisplayName("Authors.Title", "FieldDisplayName")]
+        //public string Title { get; set; }
 
-        [LocalDisplayName("Authors.Author_Type", "FieldDisplayName")]
-        public string AuthType { get; set; }
+        //[LocalDisplayName("Authors.Display_Name", "FieldDisplayName")]
+        //public string DisplayName { get; set; }
 
-        [LocalDisplayName("Authors.Author_Titles", "FieldDisplayName")]
-        public virtual ICollection<TitleAuthor> TitleAuthors { get; set; }
+        //[LocalDisplayName("Authors.Author_Type", "FieldDisplayName")]
+        //public string AuthType { get; set; }
 
-        [LocalDisplayName("Authors.Editor_Titles", "FieldDisplayName")]
-        public virtual ICollection<TitleEditor> TitleEditors { get; set; }
+        //[LocalDisplayName("Authors.Author_Titles", "FieldDisplayName")]
+        //public virtual ICollection<TitleAuthor> TitleAuthors { get; set; }
 
-        [DisplayName("Can update?")]
-        public bool CanUpdate { get; set; }
+        //[LocalDisplayName("Authors.Editor_Titles", "FieldDisplayName")]
+        //public virtual ICollection<TitleEditor> TitleEditors { get; set; }
 
-        [DisplayName("Can delete?")]
-        public bool CanDelete { get; set; }
+        //[DisplayName("Can update?")]
+        //public bool CanUpdate { get; set; }
+
+        //[DisplayName("Can delete?")]
+        //public bool CanDelete { get; set; }
 
         //public AuthorIndexViewModel()
         //{
