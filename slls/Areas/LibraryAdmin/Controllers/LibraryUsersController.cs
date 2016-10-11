@@ -414,7 +414,7 @@ namespace slls.Areas.LibraryAdmin
             }
             
             var store = new UserStore<ApplicationUser>(_db);
-            var newPassword = viewModel.Password;
+            var newPassword = viewModel.NewPassword;
             var hashedNewPassword = UserManager.PasswordHasher.HashPassword(newPassword);
             
             await store.SetPasswordHashAsync(libraryUser, hashedNewPassword);
