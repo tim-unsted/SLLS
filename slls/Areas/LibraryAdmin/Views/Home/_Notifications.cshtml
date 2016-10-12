@@ -5,25 +5,23 @@
     <div class="panel-heading">
         <span class="panel-title">
             <span class="glyphicon glyphicon-info-sign"></span>&nbsp;<span is="gadget-Title">@ViewBag.Title</span>
-            @if (Model.LibraryStaff)
-            {
-                <span class="pull-right"><a href="@Url.Action("Index", "Notifications", new {area = "LibraryAdmin"})" title="Maintain @DbRes.T("Notifications", "EntityType")"><span class="glyphicon glyphicon-pencil"></span></a></span>
-            }
+            <span class="pull-right"><a href="@Url.Action("Index", "Notifications", new { scope = "A", area = "LibraryAdmin"})" title="Maintain @DbRes.T("Notifications", "EntityType")"><span class="glyphicon glyphicon-pencil"></span></a></span>
         </span>
     </div>
     <div class="panel-body">
         <table class="table table-compact table-no-border">
             <tbody>
-            @foreach (var notification in Model.Notifications)
-            {
-                <tr>
-                    <td>
-                        <p><strong>@Html.Raw(notification.Headline)</strong>
-                        </p>
-                        <p>@Html.Raw(notification.Text)</p>
-                    </td>
-                </tr>
-            }
+                @foreach (var notification in Model.Notifications.Where(o => o.Visible && (o.ExpireDate == null || o.ExpireDate > DateTime.Today)).OrderBy(o => o.Position))
+                {
+                    <tr>
+                        <td>
+                            <p>
+                                <strong>@Html.Raw(notification.Headline)</strong>
+                            </p>
+                            <p>@Html.Raw(notification.Text)</p>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
     </div>
@@ -33,5 +31,5 @@
             Showing 1-@ViewBag.Showing of <a href="@Url.Action("Notifications", "Home")" title="View full list">@ViewBag.Count</a> @ViewBag.CountLabel.
         </div>
     }
-   
+
 </div>

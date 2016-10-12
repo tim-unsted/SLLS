@@ -511,6 +511,8 @@
     <Content Include="Content\bootstrap-datepicker.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\bootstrap.icon-large.css" />
+    <Content Include="Content\bootstrap.icon-large.min.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.min.css.map" />
     <Content Include="Content\jquery-ui.css" />
@@ -565,6 +567,7 @@
     <Content Include="DataTables\plugins.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Images\glyphicons.png" />
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
     <Content Include="Images\bailey-footer-logo.png" />
@@ -583,7 +586,7 @@
     <Content Include="Images\simple logo MAIN portrait colour rgb.png" />
     <Content Include="Images\simple logo MAIN square black rgb.png" />
     <Content Include="Images\sky.gif" />
-    <Content Include="Images\ui-icons_888888_256x240.png" />
+    <Content Include="Images\ui-icons_444444_256x240.png" />
     <Content Include="App_Code\Helpers.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\web.config" />
     <Content Include="Areas\LibraryAdmin\Views\_ViewStart.cshtml" />

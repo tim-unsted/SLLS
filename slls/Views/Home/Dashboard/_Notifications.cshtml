@@ -1,24 +1,24 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.OPACHomePageViewModel
 
-<div class="panel panel-success shadowed">
+<div class="panel panel-default shadowed">
     <div class="panel-heading">
         <span class="panel-title">
             <span class="glyphicon glyphicon-info-sign"></span>&nbsp;<span is="gadget-Title">@ViewBag.Title</span>
             @if (Model.LibraryStaff)
             {
-                <span class="pull-right"><a href="@Url.Action("Index", "Notifications", new {area = "LibraryAdmin"})" title="Maintain @DbRes.T("Notifications", "EntityType")"><span class="glyphicon glyphicon-pencil"></span></a></span>
+                <span class="pull-right"><a href="@Url.Action("Index", "Notifications", new { scope = "O", area = "LibraryAdmin"})" title="Maintain @DbRes.T("Notifications", "EntityType")"><span class="glyphicon glyphicon-pencil"></span></a></span>
             }
         </span>
     </div>
     <div class="panel-body">
         <table class="table table-compact table-no-border">
             <tbody>
-            @foreach (var notification in Model.Notifications)
+            @foreach (var notification in Model.Notifications.Where(o => o.Visible && (o.ExpireDate == null || o.ExpireDate > DateTime.Today)).OrderBy(o => o.Position))
             {
                 <tr>
                     <td>
-                        <p><strong>@Html.Raw(notification.Headline)</strong>
+                        <p><h3 style="margin-bottom: 0; margin-top: 0px; color: #777;">@Html.Raw(notification.Headline)</h3>
                         </p>
                         <p>@Html.Raw(notification.Text)</p>
                     </td>

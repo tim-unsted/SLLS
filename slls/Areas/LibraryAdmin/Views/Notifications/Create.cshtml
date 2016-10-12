@@ -7,9 +7,9 @@
     @Html.AntiForgeryToken()
 
     <div class="modal-body">
-
+         
         <div class="alert alert-info" role="alert">
-            <span><strong>Info: </strong>Notifications can be displayed on both the OPAC 'Home' page and the Admin 'Dashboard', if enabled. Notifications are simply announcements or snippets of information that you want your users to see.  Notifications can include HTML.</span>
+            <span><span class="glyphicon glyphicon-info-sign"></span> Notifications can be displayed on both the OPAC 'Home' page and the Admin 'Dashboard', if enabled. Notifications are simply announcements or snippets of information that you want your users to see.  Notifications can include HTML.</span>
         </div>
 
         <div class="form-horizontal">
@@ -19,6 +19,7 @@
                 @Html.LabelFor(model => model.Headline, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.Headline, new {htmlAttributes = new {@class = "form-control"}})
+                    <span class="help-inline">This is the headline of the announcement. Keep it short!</span>
                     @Html.ValidationMessageFor(model => model.Headline, "", new {@class = "text-danger"})
                 </div>
             </div>
@@ -27,6 +28,7 @@
                 @Html.LabelFor(model => model.Text, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.Text, new {htmlAttributes = new {@class = "form-control"}})
+                    <span class="help-inline">This is the main content of the announcement. This can include HTML.</span>
                     @Html.ValidationMessageFor(model => model.Text, "", new {@class = "text-danger"})
                 </div>
             </div>
@@ -35,15 +37,38 @@
                 @Html.LabelFor(model => model.Scope, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     @Html.DropDownListFor(model => model.Scope, new SelectList(ViewBag.ScopeTypes, "Key", "Value"), new {@class = "form-control"})
+                    <span class="help-inline">Where do you want other users to see this notification?</span>
                     @Html.ValidationMessageFor(model => model.Scope, "", new {@class = "text-danger"})
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.ExpireDate, htmlAttributes: new {@class = "control-label col-md-3"})
+                @Html.LabelFor(model => model.Position, htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-2">
+                    @Html.EditorFor(model => model.Position, new {htmlAttributes = new {@class = "form-control"}})
+                    <span class="help-inline">Sort order</span>
+                    @Html.ValidationMessageFor(model => model.Position, "", new {@class = "text-danger"})
+                </div>
+            </div>
+            
+            <div class="form-group">
+                @Html.LabelFor(model => model.Visible, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-8">
-                    @Html.EditorFor(model => model.ExpireDate, new {htmlAttributes = new {@class = "form-control"}})
-                    @Html.ValidationMessageFor(model => model.ExpireDate, "", new {@class = "text-danger"})
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.Visible)
+                        <span class="help-inline">Is it visible?</span>
+                        @Html.ValidationMessageFor(model => model.Visible, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group has-feedback">
+                @Html.LabelFor(model => model.ExpireDate, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.ExpireDate, new { htmlAttributes = new { @class = "form-control" } })
+                    <span class="help-inline">Add an expiry date if you want it to be automatically removed.</span>
+                    @Html.ValidationMessageFor(model => model.ExpireDate, "", new { @class = "text-danger" })
+                    <i class="glyphicon glyphicon-calendar form-control-feedback"></i>
                 </div>
             </div>
         </div>
@@ -52,3 +77,29 @@
      @Html.Partial("_ModalAddFooter")
 }
 
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $("#Scope").change(function () {
+            var position = $("#Position");
+            var selectedScope = { Scope: $("#Scope").val() };
+            
+            $.ajax({
+                url: '@Url.Action("GetNextPosition", "Notifications")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedScope),
+                success: function (data) {
+                    if (data.success) {
+                        position.val(data.Position);
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+        });
+    });
+</script>

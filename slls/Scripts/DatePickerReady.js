@@ -22,8 +22,8 @@ $(function () {
         todayHighlight: true,
         weekStart: 0,
         dateFormat: dateFormat,
-        changeYear: true,
-        changeMonth: true,
+        //changeYear: true,
+        //changeMonth: true,
         autoclose: true
     });
 });
