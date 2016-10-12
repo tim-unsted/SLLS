@@ -32,7 +32,7 @@
 
                                      @{
                                          var copies = from c in title.Copies
-                                                      where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value) && ()
+                                                      where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value)
                                              select c;
 
                                          foreach (var copy in copies.OrderBy(c => c.CopyNumber))
