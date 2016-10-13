@@ -162,7 +162,7 @@ namespace slls.Controllers
                 case "notifications":
                 {
                     var allNotifications = CacheProvider.GetAll<Notification>("notifications").ToList();
-                    var opacNotifications = allNotifications.Where(n => n.Scope == "O").OrderByDescending(n => n.InputDate).Take(5).ToList();
+                    var opacNotifications = allNotifications.Where(n => n.Scope == "O" && n.Visible && (n.ExpireDate == null || n.ExpireDate > DateTime.Today)).OrderBy(n => n.Position).Take(5).ToList();
 
                     if (!opacNotifications.Any())
                     {

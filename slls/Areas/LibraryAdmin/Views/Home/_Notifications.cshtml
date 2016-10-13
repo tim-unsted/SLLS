@@ -11,7 +11,7 @@
     <div class="panel-body">
         <table class="table table-compact table-no-border">
             <tbody>
-                @foreach (var notification in Model.Notifications.Where(o => o.Visible && (o.ExpireDate == null || o.ExpireDate > DateTime.Today)).OrderBy(o => o.Position))
+                @foreach (var notification in Model.Notifications.OrderBy(o => o.Position))
                 {
                     <tr>
                         <td>
