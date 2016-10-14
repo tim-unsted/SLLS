@@ -29,7 +29,7 @@ namespace slls.Controllers
         // GET: LibraryUserBookmarks
         public ActionResult Index()
         {
-            var userId = User.Identity.GetUserId();
+            var userId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
             var libraryUserBookmarks = _db.LibraryUserBookmarks.Where(b => b.UserID == userId);
 
             if (!libraryUserBookmarks.Any())

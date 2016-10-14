@@ -1,4 +1,6 @@
-﻿using System.Web.Mvc;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using slls.Models;
 using slls.Utils.Helpers;
@@ -20,21 +22,27 @@ namespace slls.Controllers
         {
             if (User != null)
             {
-                //var db = new DbEntities();
                 var context = new ApplicationDbContext();
-                //var username = User.Identity.Name;
-                var currentUserId = User.Identity.GetUserId();
+                var currentUserId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
+                
+                //if (currentUserId == null)
+                //{
+                //    System.Security.Principal.IPrincipal xuser = System.Web.HttpContext.Current.User;
+                //    var userName = Regex.Replace(xuser.Identity.Name,".*\\\\(.*)", "$1",RegexOptions.None); 
+                //    user = context.Users.FirstOrDefault(u => u.UserName == userName);
+                //}
+                //else
+                //{
+                //    user = context.Users.Find(currentUserId);
+                //}
+                
+                var user = context.Users.Find(currentUserId);
 
-                if (currentUserId != null)
+                if (user != null)
                 {
-                    //var user = context.Users.SingleOrDefault(u => u.UserName == username);
-                    var user = context.Users.Find(currentUserId);
-                    if (user != null)
-                    {
-                        string fullName = string.Concat(new[] { user.Firstname, " ", user.Lastname });
-                        ViewData.Add("FirstName", user.Firstname);
-                        ViewData.Add("FullName", fullName);
-                    }
+                    string fullName = string.Concat(new[] { user.Firstname, " ", user.Lastname });
+                    ViewData.Add("FirstName", user.Firstname);
+                    ViewData.Add("FullName", fullName);
                 }
             }
             base.OnActionExecuted(filterContext);

@@ -104,7 +104,7 @@ namespace slls.Controllers
         public ActionResult RenderGadget(int col = 0, int row = 0, bool hasTitles = false)
         {
             //Get the current user's ID ...
-            var userId = User.Identity.GetUserId();
+            var userId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
             var allGadgets = CacheProvider.GetAll<DashboardGadget>("dashboardgadgets").ToList();
             var gadgetAction =
                 allGadgets.Where(x => x.Row == row && x.Column == col && x.Area == "Home").Select(g => g.Name).FirstOrDefault();

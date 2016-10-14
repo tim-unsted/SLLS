@@ -42,7 +42,7 @@ namespace slls.Controllers
             var allItems = (from m in _menuItems.Where(m => m.IsVisible).OrderBy(x => x.SortOrder) select m).ToList();
 
             //Get the current user's ID ...
-            var id = User.Identity.GetUserId();
+            var id = Utils.PublicFunctions.GetUserId(); //Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
 
             //If the user is not logged in, only the menu items with the role "All" or "Anonymous"
             if (String.IsNullOrEmpty(id))

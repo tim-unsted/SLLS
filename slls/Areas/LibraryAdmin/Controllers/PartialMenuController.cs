@@ -34,7 +34,7 @@ namespace slls.Areas.LibraryAdmin
             var allItems = (from m in _menuItems.OrderBy(x => x.SortOrder) select m).ToList();
 
             //Get the current user's ID ...
-            var id = User.Identity.GetUserId();
+            var id = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
 
             //If the user is not logged in, only the menu items with the role "All" or "Anonymous"
             if (String.IsNullOrEmpty(id))
@@ -98,7 +98,7 @@ namespace slls.Areas.LibraryAdmin
             //Get the admin menu items that match the user's roles
             //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
             //var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            //var id = User.Identity.GetUserId();
+            //var id = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
             //var roles = userManager.GetRoles(id);
             var userRoles = Roles.GetUserRoles();
             var userItems = from m in allItems

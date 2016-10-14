@@ -27,7 +27,7 @@ namespace slls.Controllers
         // GET: LibraryUserLoans
         public ActionResult Index()
         {
-            var userId = User.Identity.GetUserId();
+            var userId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
             var myCurrentLoans = _db.Borrowings.Where(b => b.BorrowerUser.Id == userId && b.Returned == null);
             var myOverdueLoans = myCurrentLoans.Any(l => l.ReturnDue < DateTime.Today);
 

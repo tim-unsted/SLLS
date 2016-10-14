@@ -24,7 +24,7 @@ namespace slls.Utils.Helpers
 
         public static IList<string> GetUserRoles()
         {
-            var userId = HttpContext.Current.User.Identity.GetUserId();
+            var userId = Utils.PublicFunctions.GetUserId(); //HttpContext.Current.User.Identity.GetUserId();
             var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             if (userId == null)
             {

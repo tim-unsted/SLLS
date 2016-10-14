@@ -30,7 +30,7 @@ namespace slls.Controllers
         // GET: LibraryUserSavedSearches
         public ActionResult Index()
         {
-            var userId = User.Identity.GetUserId();
+            var userId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
             var mySavedSearches = _db.LibraryUserSavedSearches.Where(x => x.UserID == userId);
 
             ViewBag.HasAlert = "false";

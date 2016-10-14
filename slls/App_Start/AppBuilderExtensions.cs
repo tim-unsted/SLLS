@@ -5,6 +5,7 @@ using System.DirectoryServices.AccountManagement;
 using System.Linq;
 using System.Security.Claims;
 using System.Web;
+using System.Web.Configuration;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -22,6 +23,13 @@ namespace slls
         {
             var config = (OWinConfigSection)System.Configuration.ConfigurationManager.GetSection("ExternalLogins");
             if (config == null) return;
+
+            //Get the current authentication mode ...
+            AuthenticationMode authMode =
+                ((AuthenticationSection) ConfigurationManager.GetSection("system.web/authentication")).Mode;
+            
+            //If it is "Windows" then bomb out here ...
+            if (authMode == AuthenticationMode.Windows) return;
 
             // Enable the application to use a cookie to store information for the signed in user
             // and to use a cookie to temporarily store information about a user logging in with a third party login provider
@@ -113,6 +121,10 @@ namespace slls
 
     public class OWinConfigSection : ConfigurationSection
     {
+        //[ConfigurationProperty("Windows", IsRequired = false)]
+        //public WindowsAuthenticationConfigurationElement WindowsAuthentication
+        //{ get { return (WindowsAuthenticationConfigurationElement)this["Windows"]; } }
+        
         [ConfigurationProperty("Microsoft", IsRequired = false)]
         public MicrosoftAccountConfigurationElement MicrosoftAccountAuthentication
         { get { return (MicrosoftAccountConfigurationElement)this["Microsoft"]; } }
@@ -133,6 +145,13 @@ namespace slls
         public MixedModeConfigurationElement MixedModeAuthentication
         { get { return (MixedModeConfigurationElement)this["MixedMode"]; } }
     }
+
+    //public class WindowsAuthenticationConfigurationElement : ConfigurationElement
+    //{
+    //    [ConfigurationProperty("Enabled", DefaultValue = "false", IsRequired = false)]
+    //    public bool Enabled
+    //    { get { return (bool)this["Enabled"]; } set { this["enabled"] = value; } }
+    //}
 
     public class MicrosoftAccountConfigurationElement : ConfigurationElement
     {

@@ -47,7 +47,7 @@ namespace slls.Controllers
                                     : message == ManageMessageId.RemovePhoneSuccess
                                         ? "Your phone number was removed."
                                         : "";
-            var currentUserId = User.Identity.GetUserId();
+            var currentUserId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
             var user = UserManager.FindById(currentUserId);
 
             var model = new IndexViewModel

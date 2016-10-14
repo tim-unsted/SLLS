@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using slls.Models;
 using Microsoft.AspNet.Identity;
@@ -44,7 +45,7 @@ namespace slls.Utils
         public static string GetCurrentUserName()
         {
             string userName = "";
-            var currentUserId = HttpContext.Current.User.Identity.GetUserId();
+            var currentUserId = Utils.PublicFunctions.GetUserId(); //HttpContext.Current.User.Identity.GetUserId();
             if (currentUserId == null) return userName;
             var db = new DbEntities();
             var user = db.Users.Find(currentUserId);
@@ -53,6 +54,19 @@ namespace slls.Utils
                 userName = string.Concat(new[] { user.Lastname, ", ", user.Firstname });
             }
             return userName;
+        }
+
+        public static string GetUserId()
+        {
+            var context = new ApplicationDbContext();
+            System.Security.Principal.IPrincipal User = System.Web.HttpContext.Current.User;
+            var userName = Regex.Replace(User.Identity.Name, ".*\\\\(.*)", "$1", RegexOptions.None);
+            var currentUser = context.Users.FirstOrDefault(u => u.UserName == userName);
+            if (currentUser != null)
+            {
+                return currentUser.Id;
+            }
+            return null;
         }
     }
 }
