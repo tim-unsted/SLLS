@@ -290,6 +290,7 @@
     <Compile Include="Controllers\LibraryUserLoansController.cs" />
     <Compile Include="Controllers\LibraryUserSavedSearchesController.cs" />
     <Compile Include="App_Settings\CssManager.cs" />
+    <Compile Include="Controllers\MessagingController.cs" />
     <Compile Include="DAO\DataCaches.cs" />
     <Compile Include="DAO\DataExport.cs" />
     <Compile Include="Hubs\ProgressHub.cs" />
@@ -344,6 +345,7 @@
     <Compile Include="ViewModels\DashboardViewModels.cs" />
     <Compile Include="ViewModels\DataExportViewModels.cs" />
     <Compile Include="ViewModels\DefaultValueViewModels.cs" />
+    <Compile Include="ViewModels\EmailViewModels.cs" />
     <Compile Include="ViewModels\LoanTypesViewModels.cs" />
     <Compile Include="ViewModels\MenuViewModels.cs" />
     <Compile Include="ViewModels\NotificationViewModels.cs" />
@@ -1393,6 +1395,7 @@
     <Content Include="Scripts\modal.min.js" />
     <Content Include="Views\LIbraryUserLoans\Index.cshtml" />
     <Content Include="Views\Shared\_SelectMonthYear.cshtml" />
+    <Content Include="Views\Messaging\NewEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

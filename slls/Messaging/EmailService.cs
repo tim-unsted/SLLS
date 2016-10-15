@@ -7,7 +7,7 @@ namespace slls.Messaging
 {
     public class EmailService
     {
-        public static void SendDbMail(string destination, string from = "", string cc = "", string subject = "",
+        public static void SendDbMail(string destination, string from = "", string cc = "", string bcc = "", string subject = "",
             string body = "")
         {
             DbEntities db = new DbEntities();
@@ -27,6 +27,7 @@ namespace slls.Messaging
                         cmd.Parameters.Add("@Body", SqlDbType.NText).Value = body;
                         cmd.Parameters.Add("@Subject", SqlDbType.VarChar, 100).Value = subject;
                         cmd.Parameters.Add("@CC", SqlDbType.VarChar, 255).Value = cc;
+                        cmd.Parameters.Add("@BCC", SqlDbType.VarChar, 255).Value = bcc;
                         cmd.ExecuteNonQuery();
                     }
                 }

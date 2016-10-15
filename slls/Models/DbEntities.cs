@@ -915,5 +915,7 @@ namespace slls.Models
         public System.Data.Entity.DbSet<slls.ViewModels.ParametersAddEditViewModel> ParametersAddEditViewModels { get; set; }
 
         public System.Data.Entity.DbSet<slls.ViewModels.SelectClassmarkEditorViewModel> SelectClassmarkEditorViewModels { get; set; }
+
+        public System.Data.Entity.DbSet<slls.ViewModels.NewEmailViewModel> NewEmailViewModels { get; set; }
     }
 }
