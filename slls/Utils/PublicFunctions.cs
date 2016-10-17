@@ -45,7 +45,8 @@ namespace slls.Utils
         public static string GetCurrentUserName()
         {
             string userName = "";
-            var currentUserId = Utils.PublicFunctions.GetUserId(); //HttpContext.Current.User.Identity.GetUserId();
+            //var currentUserId = HttpContext.Current.User.Identity.GetUserId();
+            var currentUserId = Utils.PublicFunctions.GetUserId();
             if (currentUserId == null) return userName;
             var db = new DbEntities();
             var user = db.Users.Find(currentUserId);

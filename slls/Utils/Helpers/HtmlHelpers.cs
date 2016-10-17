@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.WebPages;
@@ -19,13 +20,11 @@ namespace slls.Utils.Helpers
             );
         }
 
-
         public static MvcHtmlString ResolveUrl(this HtmlHelper htmlHelper, string url)
         {
             var urlHelper = new UrlHelper(htmlHelper.ViewContext.RequestContext);
             return MvcHtmlString.Create(urlHelper.Content(url));
         }
-
 
         public static HtmlString AlphabeticalPager(this HtmlHelper html, string selectedLetter, IEnumerable<string> firstLetters, Func<string, string> pageLink)
         {
@@ -166,6 +165,16 @@ namespace slls.Utils.Helpers
 
             return new MvcHtmlString(htmlBuilder.ToString());
         }
+
+        public static IHtmlString reCaptcha(this HtmlHelper helper) {
+        StringBuilder sb = new StringBuilder();
+        string publickey = WebConfigurationManager.AppSettings["RecaptchaPublicKey"];
+        //sb.AppendLine("<script type=\"text/javascript\" src='https://www.google.com/recaptcha/api.js'></script>");
+        //sb.AppendLine("");
+        sb.AppendLine("<div class=\"g-recaptcha\" data-sitekey=\""+ publickey+"\"></div>");
+        return MvcHtmlString.Create(sb.ToString()); 
+    }
+
 
     }
 }

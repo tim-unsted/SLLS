@@ -110,6 +110,27 @@ namespace slls.Controllers
             return View(viewModel);
         }
 
+        [HttpPost]
+        public ActionResult SendEnquiry(NewEmailViewModel viewModel, bool captchaValid)
+        {
+            if (!captchaValid)
+            {
+                ModelState.AddModelError("reCaptcha", "Please verify that you are human! ");
+
+                var enquiryTypes = new Dictionary<string, string>
+                {
+                    {"info@baileysolutions.co.uk", "General Enquiry"},
+                    {"support@baileysolutions.co.uk", "Support Request"}
+                };
+                ViewBag.EnquiryTypes = enquiryTypes;
+                ViewBag.Title = "Contact Us";
+                return View("Contact", viewModel);
+            }
+
+            Messaging.EmailService.SendDbMail(destination: viewModel.To, from: viewModel.From, cc: viewModel.Cc, bcc: viewModel.Bcc, subject: viewModel.Subject, body: viewModel.Message);
+            return RedirectToAction("Contact", "Home", new { success = true });
+        }
+
         public ActionResult NotFound()
         {
             return View();

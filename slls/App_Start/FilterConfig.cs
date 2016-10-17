@@ -1,5 +1,6 @@
 ﻿using System.Web;
 using System.Web.Mvc;
+using slls.Filters;
 
 namespace slls
 {
@@ -9,6 +10,7 @@ namespace slls
         {
             filters.Add(new HandleErrorAttribute());
             //filters.Add(new AuthorizeAttribute());
+            filters.Add(new RecaptchaFilter());
         }
     }
 }
