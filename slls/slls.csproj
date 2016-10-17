@@ -1395,7 +1395,10 @@
     <Content Include="Scripts\modal.min.js" />
     <Content Include="Views\LIbraryUserLoans\Index.cshtml" />
     <Content Include="Views\Shared\_SelectMonthYear.cshtml" />
-    <Content Include="Views\Messaging\NewEmail.cshtml" />
+    <Content Include="Views\Shared\NewEmail.cshtml" />
+    <Content Include="Views\Shared\_NewEmailPartial.cshtml" />
+    <Content Include="Views\Shared\NewEmailPopup.cshtml" />
+    <Content Include="Views\Shared\_NewEmail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -1406,6 +1409,7 @@
     <Folder Include="Utils\Mvc\Extensions\" />
     <Folder Include="Utils\Settings\" />
     <Folder Include="Views\Home\EditorTemplates\" />
+    <Folder Include="Views\Messaging\" />
     <Folder Include="Views\sllsBase\" />
   </ItemGroup>
   <ItemGroup>

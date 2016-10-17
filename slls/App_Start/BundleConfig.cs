@@ -89,8 +89,8 @@ namespace slls
             var otherCssBundle = new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap-datepicker.min.css.map",
                 "~/Content/jquery-ui.css",
-                "~/Content/jquery-ui.theme.css",
-                "~/Content/site.min.css");
+                "~/Content/jquery-ui.theme.css"); 
+                //,"~/Content/site.css");
             bundles.Add(otherCssBundle);
 
 

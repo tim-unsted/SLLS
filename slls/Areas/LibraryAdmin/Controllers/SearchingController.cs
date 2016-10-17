@@ -9,6 +9,7 @@ using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity;
 using slls.DAO;
 using slls.Models;
+using slls.Utils;
 using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
@@ -3219,7 +3220,7 @@ namespace slls.Areas.LibraryAdmin
 
             var viewModel = new LibraryUserSavedSearchViewModel()
             {
-                UserId = User.Identity.GetUserId(),
+                UserId = PublicFunctions.GetUserId(), //User.Identity.GetUserId(),
                 Description = description,
                 SearchString = currentSearch.SearchString,
                 SearchField = currentSearch.SearchField,
@@ -3262,6 +3263,7 @@ namespace slls.Areas.LibraryAdmin
                     };
                     _db.LibraryUserSavedSearches.Add(newSavedSearch);
                     _db.SaveChanges();
+                    TempData["SuccessDialogMsg"] = "Your search has been saved.";
                     return Json(new { success = true });
                 }
                 catch (Exception e)

@@ -756,7 +756,7 @@ ul li{
 }
 
 .ui-button-text-only .ui-button-text {
-	padding: 0;
+	/*padding: 0;*/
 }
 
 .ui-dialog .ui-dialog-buttonpane {
@@ -766,6 +766,20 @@ ul li{
 .ui-widget-header {
     border: none;
     background: #ffffff;
+}
+
+.ui-button {
+    padding:10px;
+    line-height: 10px;
+    color: #FFFFFF;
+    background-color: #5cb85c;
+    border-color: #4cae4c
+}
+
+.ui-button:hover {
+  color: #FFFFFF;
+  background-color: #449d44;
+  border-color: #398439;
 }
 
 .jumbotron {

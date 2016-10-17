@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using slls.DAO;
 using slls.Models;
+using slls.Utils;
 using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
@@ -50,7 +51,7 @@ namespace slls.Controllers
             var viewModel = new LibraryUserBookmarkViewModel()
             {
                 TitleId = id,
-                UserId = User.Identity.GetUserId(),
+                UserId = PublicFunctions.GetUserId(), //User.Identity.GetUserId(),
                 Title = title.Title1,
                 Description = title.Title1
             };

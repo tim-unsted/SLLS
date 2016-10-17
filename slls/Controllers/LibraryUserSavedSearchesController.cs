@@ -99,6 +99,7 @@ namespace slls.Controllers
                     };
                     _db.LibraryUserSavedSearches.Add(newSavedSearch);
                     _db.SaveChanges();
+                    TempData["SuccessDialogMsg"] = "Your search has been saved.";
                     return Json(new { success = true });
                 }
                 catch (Exception e)

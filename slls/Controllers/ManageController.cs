@@ -53,11 +53,11 @@ namespace slls.Controllers
             var model = new IndexViewModel
             {
                 HasPassword = HasPassword(),
-                PhoneNumber = await UserManager.GetPhoneNumberAsync(User.Identity.GetUserId()),
-                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(User.Identity.GetUserId()),
-                Logins = await UserManager.GetLoginsAsync(User.Identity.GetUserId()),
+                PhoneNumber = await UserManager.GetPhoneNumberAsync(currentUserId),
+                TwoFactor = await UserManager.GetTwoFactorEnabledAsync(currentUserId),
+                Logins = await UserManager.GetLoginsAsync(currentUserId),
                 BrowserRemembered =
-                    await AuthenticationManager.TwoFactorBrowserRememberedAsync(User.Identity.GetUserId()),
+                    await AuthenticationManager.TwoFactorBrowserRememberedAsync(currentUserId),
                 Username = User.Identity.GetUserName(),
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
@@ -70,7 +70,7 @@ namespace slls.Controllers
         // GET: /Account/RemoveLogin
         public ActionResult RemoveLogin()
         {
-            var linkedAccounts = UserManager.GetLogins(User.Identity.GetUserId());
+            var linkedAccounts = UserManager.GetLogins(Utils.PublicFunctions.GetUserId());
             ViewBag.ShowRemoveButton = HasPassword() || linkedAccounts.Count > 1;
             return View(linkedAccounts);
         }
@@ -84,11 +84,11 @@ namespace slls.Controllers
             ManageMessageId? message;
             var result =
                 await
-                    UserManager.RemoveLoginAsync(User.Identity.GetUserId(),
+                    UserManager.RemoveLoginAsync(Utils.PublicFunctions.GetUserId(),
                         new UserLoginInfo(loginProvider, providerKey));
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var user = await UserManager.FindByIdAsync(Utils.PublicFunctions.GetUserId());
                 if (user != null)
                 {
                     await SignInAsync(user, false);
@@ -120,7 +120,7 @@ namespace slls.Controllers
                 return View(model);
             }
             // Generate the token and send it
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), model.Number);
+            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(Utils.PublicFunctions.GetUserId(), model.Number);
             if (UserManager.SmsService != null)
             {
                 var message = new IdentityMessage
@@ -139,7 +139,7 @@ namespace slls.Controllers
         public ActionResult RememberBrowser()
         {
             var rememberBrowserIdentity =
-                AuthenticationManager.CreateTwoFactorRememberBrowserIdentity(User.Identity.GetUserId());
+                AuthenticationManager.CreateTwoFactorRememberBrowserIdentity(Utils.PublicFunctions.GetUserId());
             AuthenticationManager.SignIn(new AuthenticationProperties {IsPersistent = true}, rememberBrowserIdentity);
             return RedirectToAction("Index", "Manage");
         }
@@ -158,8 +158,8 @@ namespace slls.Controllers
         [HttpPost]
         public async Task<ActionResult> EnableTFA()
         {
-            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), true);
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            await UserManager.SetTwoFactorEnabledAsync(Utils.PublicFunctions.GetUserId(), true);
+            var user = await UserManager.FindByIdAsync(Utils.PublicFunctions.GetUserId());
             if (user != null)
             {
                 await SignInAsync(user, false);
@@ -172,8 +172,8 @@ namespace slls.Controllers
         [HttpPost]
         public async Task<ActionResult> DisableTFA()
         {
-            await UserManager.SetTwoFactorEnabledAsync(User.Identity.GetUserId(), false);
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            await UserManager.SetTwoFactorEnabledAsync(Utils.PublicFunctions.GetUserId(), false);
+            var user = await UserManager.FindByIdAsync(Utils.PublicFunctions.GetUserId());
             if (user != null)
             {
                 await SignInAsync(user, false);
@@ -187,7 +187,7 @@ namespace slls.Controllers
         {
             // This code allows you exercise the flow without actually sending codes
             // For production use please register a SMS provider in IdentityConfig and generate a code here.
-            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(User.Identity.GetUserId(), phoneNumber);
+            var code = await UserManager.GenerateChangePhoneNumberTokenAsync(Utils.PublicFunctions.GetUserId(), phoneNumber);
             ViewBag.Status = "For DEMO purposes only, the current code is " + code;
             return phoneNumber == null
                 ? View("Error")
@@ -205,10 +205,10 @@ namespace slls.Controllers
                 return View(model);
             }
             var result =
-                await UserManager.ChangePhoneNumberAsync(User.Identity.GetUserId(), model.PhoneNumber, model.Code);
+                await UserManager.ChangePhoneNumberAsync(Utils.PublicFunctions.GetUserId(), model.PhoneNumber, model.Code);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var user = await UserManager.FindByIdAsync(Utils.PublicFunctions.GetUserId());
                 if (user != null)
                 {
                     await SignInAsync(user, false);
@@ -224,12 +224,12 @@ namespace slls.Controllers
         // GET: /Account/RemovePhoneNumber
         public async Task<ActionResult> RemovePhoneNumber()
         {
-            var result = await UserManager.SetPhoneNumberAsync(User.Identity.GetUserId(), null);
+            var result = await UserManager.SetPhoneNumberAsync(Utils.PublicFunctions.GetUserId(), null);
             if (!result.Succeeded)
             {
                 return RedirectToAction("Index", new {Message = ManageMessageId.Error});
             }
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var user = await UserManager.FindByIdAsync(Utils.PublicFunctions.GetUserId());
             if (user != null)
             {
                 await SignInAsync(user, false);
@@ -255,10 +255,10 @@ namespace slls.Controllers
                 return View(model);
             }
             var result =
-                await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                await UserManager.ChangePasswordAsync(Utils.PublicFunctions.GetUserId(), model.OldPassword, model.NewPassword);
             if (result.Succeeded)
             {
-                var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                var user = await UserManager.FindByIdAsync(Utils.PublicFunctions.GetUserId());
                 if (user != null)
                 {
                     await SignInAsync(user, false);
@@ -284,10 +284,10 @@ namespace slls.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await UserManager.AddPasswordAsync(User.Identity.GetUserId(), model.NewPassword);
+                var result = await UserManager.AddPasswordAsync(Utils.PublicFunctions.GetUserId(), model.NewPassword);
                 if (result.Succeeded)
                 {
-                    var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+                    var user = await UserManager.FindByIdAsync(Utils.PublicFunctions.GetUserId());
                     if (user != null)
                     {
                         await SignInAsync(user, false);
@@ -311,12 +311,12 @@ namespace slls.Controllers
                     : message == ManageMessageId.Error
                         ? "An error has occurred."
                         : "";
-            var user = await UserManager.FindByIdAsync(User.Identity.GetUserId());
+            var user = await UserManager.FindByIdAsync(Utils.PublicFunctions.GetUserId());
             if (user == null)
             {
                 return View("Error");
             }
-            var userLogins = await UserManager.GetLoginsAsync(User.Identity.GetUserId());
+            var userLogins = await UserManager.GetLoginsAsync(Utils.PublicFunctions.GetUserId());
             var otherLogins =
                 AuthenticationManager.GetExternalAuthenticationTypes()
                     .Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider))
@@ -337,19 +337,19 @@ namespace slls.Controllers
         {
             // Request a redirect to the external login provider to link a login for the current user
             return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"),
-                User.Identity.GetUserId());
+                Utils.PublicFunctions.GetUserId());
         }
 
         //
         // GET: /Manage/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
         {
-            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, User.Identity.GetUserId());
+            var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync(XsrfKey, Utils.PublicFunctions.GetUserId());
             if (loginInfo == null)
             {
                 return RedirectToAction("ManageLogins", new {Message = ManageMessageId.Error});
             }
-            var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
+            var result = await UserManager.AddLoginAsync(Utils.PublicFunctions.GetUserId(), loginInfo.Login);
             return result.Succeeded
                 ? RedirectToAction("ManageLogins")
                 : RedirectToAction("ManageLogins", new {Message = ManageMessageId.Error});
@@ -383,7 +383,7 @@ namespace slls.Controllers
 
         private bool HasPassword()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            var user = UserManager.FindById(Utils.PublicFunctions.GetUserId());
             if (user != null)
             {
                 return user.PasswordHash != null;
@@ -393,7 +393,7 @@ namespace slls.Controllers
 
         private bool HasPhoneNumber()
         {
-            var user = UserManager.FindById(User.Identity.GetUserId());
+            var user = UserManager.FindById(Utils.PublicFunctions.GetUserId());
             if (user != null)
             {
                 return user.PhoneNumber != null;

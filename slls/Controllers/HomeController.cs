@@ -13,6 +13,7 @@ using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
 using System.Web.Mvc.Expressions;
+using slls.Utils;
 
 namespace slls.Controllers
 {
@@ -68,10 +69,45 @@ namespace slls.Controllers
             return View();
         }
 
-        public ActionResult Contact()
+        //// Create a simple disctionary that we can used to fill a dropdown list in views
+        //public Dictionary<string, string> EnquiryType()
+        //{
+        //    return new Dictionary<string, string>
+        //    {
+        //        {"info@baileysolutions.co.uk", "General Enquiry"},
+        //        {"support@baileysolutions.co.uk", "Support Request"}
+        //    };
+        //}
+
+        public ActionResult Contact(bool success = false)
         {
-            ViewBag.Message = "Bailey Solutions Ltd";
-            return View();
+            var userId = PublicFunctions.GetUserId();
+            var emailFrom = "";
+            if (userId != null)
+            {
+                emailFrom = _db.Users.Find(userId).Email;
+            }
+
+            var viewModel = new NewEmailViewModel
+            {
+                From = emailFrom,
+                RedirectAction = "Contact",
+                RedirectController = "Home"
+            };
+
+            var enquiryTypes = new Dictionary<string, string>
+            {
+                {"info@baileysolutions.co.uk", "General Enquiry"},
+                {"support@baileysolutions.co.uk", "Support Request"}
+            };
+
+            if (success)
+            {
+                TempData["SuccessDialogMsg"] = "Your Enquiry had been sent.";
+            }
+            ViewBag.EnquiryTypes = enquiryTypes;
+            ViewBag.Title = "Contact Us";
+            return View(viewModel);
         }
 
         public ActionResult NotFound()
@@ -2824,7 +2860,7 @@ namespace slls.Controllers
 
             var viewModel = new LibraryUserSavedSearchViewModel()
             {
-                UserId = User.Identity.GetUserId(),
+                UserId = PublicFunctions.GetUserId(), //User.Identity.GetUserId(),
                 Description = description,
                 SearchString = currentSearch.SearchString,
                 SearchField = currentSearch.SearchField,

@@ -1285,9 +1285,8 @@ namespace slls.Areas.LibraryAdmin
                 _db.SaveChanges();
             }
 
-            return
-                Content(
-                    "<script language='javascript' type='text/javascript'>alert('All Pending Circulations Slips removed successfully');</script>");
+            TempData["SuccessDialogMsg"] = "All Pending Circulations Slips removed successfully.";
+            return Json(new { success = true });
         }
 
 

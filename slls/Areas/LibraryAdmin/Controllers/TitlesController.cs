@@ -1892,6 +1892,7 @@ namespace slls.Areas.LibraryAdmin
                     _repository.Update(copy);
                 }
                 CacheProvider.RemoveCache("newtitles");
+                TempData["SuccessDialogMsg"] = DbRes.T("NewTitlesList", "EntityType") + " has been cleared.";
                 return Json(new { success = true });
             }
             catch (Exception e)

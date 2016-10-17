@@ -8,6 +8,7 @@ using Microsoft.AspNet.Identity;
 using slls.DAO;
 using slls.Migrations;
 using slls.Models;
+using slls.Utils;
 using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
@@ -107,7 +108,7 @@ namespace slls.Areas.LibraryAdmin
                 Visible = viewModel.Visible,
                 ExpireDate = viewModel.ExpireDate,
                 InputDate = DateTime.Now,
-                InputUser = User.Identity.GetUserId()
+                InputUser = PublicFunctions.GetUserId() //User.Identity.GetUserId()
             };
             
             if (ModelState.IsValid)

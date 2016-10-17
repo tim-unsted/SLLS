@@ -669,6 +669,7 @@ namespace slls.Areas.LibraryAdmin
                 {
                     _db.Entry(copy).State = EntityState.Modified;
                     _db.SaveChanges();
+                    TempData["SuccessDialogMsg"] = "All " + _entityName + " removed from Binding List removed successfully.";
                     return Json(new { success = true });
                 }
                 catch (Exception e)

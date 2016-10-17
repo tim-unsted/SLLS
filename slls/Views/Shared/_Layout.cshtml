@@ -7,7 +7,7 @@
     <title>@ViewBag.Title - @GlobalVariables.SiteName</title>
 
     @Styles.Render("~/Content/bootstrap")
-    <link rel="stylesheet" type="text/css" href="~/Content/bootstrap.icon-large.min.css" />
+    @*<link rel="stylesheet" type="text/css" href="~/Content/bootstrap.icon-large.min.css" />*@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @*@Scripts.Render("~/bundles/angular")*@
@@ -19,6 +19,28 @@
 
     <script>
         var dateFormat = "@GlobalVariables.DateFormat";
+
+        $(document).ready(function () {
+        });
+
+        $(function () {
+            $("#dialog").dialog({
+                dialogClass: "no-close",
+                modal: true,
+                buttons: [
+                    {
+                        text: 'OK',
+                        open: function (event, ui) {
+                            setTimeout("$('#dialog').dialog('close')", 3000);
+                        },
+                        click: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                ]
+            });
+        });
+
     </script>
 
     @*Custom (customer) styles ...*@
@@ -83,7 +105,7 @@
 
     <!-- Local styling stuff -->
     <link rel="stylesheet" type="text/css" media="print" href="~/Content/print.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="~/Customer/Styles/styling.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Customer/Styles/styling.css" />
 
     <!-- DataTables.Net for table/list pages ... -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.css" />
@@ -155,6 +177,15 @@
 
     <div class="container">
         @*<div class="breadcrumb">@Html.MvcSiteMap().SiteMapPath()</div>*@
+
+        @*Pop-up to provide a success message*@
+        @if (TempData["SuccessDialogMsg"] != null)
+        {
+            <div id="dialog" title="Success!">
+                @TempData["SuccessDialogMsg"]
+            </div>
+        }
+
         @RenderBody()
         @RenderPage("_Footer.cshtml")
     </div>
@@ -162,6 +193,7 @@
     @Scripts.Render("~/bundles/bootstrapjs")
     @Scripts.Render("~/bundles/bootstrapextras")
     @Scripts.Render("~/bundles/jqueryui")
+    <link rel="stylesheet" type="text/css" href="~/Content/site.css" />
     @RenderSection("scripts", required: false)
 </body>
 </html>

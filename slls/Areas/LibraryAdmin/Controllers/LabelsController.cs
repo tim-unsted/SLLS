@@ -56,6 +56,7 @@ namespace slls.Areas.LibraryAdmin
             try
             {
                 _db.Database.ExecuteSqlCommand("UPDATE Copies SET PrintLabel = 1");
+                TempData["SuccessDialogMsg"] = "All copy labels have been set to print.";
                 return Json(new { success = true });
             }
             catch (Exception e)
@@ -89,6 +90,7 @@ namespace slls.Areas.LibraryAdmin
             try
             {
                 _db.Database.ExecuteSqlCommand("UPDATE Copies SET PrintLabel = 0");
+                TempData["SuccessDialogMsg"] = "Print labels for ALL copies have been cleared successfully.";
                 return Json(new { success = true });
             }
             catch (Exception e)
@@ -122,6 +124,7 @@ namespace slls.Areas.LibraryAdmin
             try
             {
                 _db.Database.ExecuteSqlCommand("UPDATE Volumes SET PrintLabel = 0");
+                TempData["SuccessDialogMsg"] = "Print labels for ALL volumes have been cleared successfully.";
                 return Json(new { success = true });
             }
             catch (Exception e)
