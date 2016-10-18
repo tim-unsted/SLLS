@@ -47,7 +47,7 @@
             <div class="col-md-9">
                 <div class="well">
                     <h4 style="margin-top: 0;">Make an Enquiry:</h4>
-                    @using (Html.BeginForm("SendEnquiry", "Home", FormMethod.Post))
+                    @using (Html.BeginForm("SendEmail", "Messaging", FormMethod.Post))
                     {
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(model => model.RedirectAction)
@@ -91,13 +91,13 @@
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
                                     @Html.ValidationMessage("reCaptcha", new { @class = "text-danger" })
-                                    @Html.reCaptcha()
+                                    @Html.ReCaptcha()
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="col-md-offset-2 col-md-10">
-                                    <input type="submit" value="Send" class="btn btn-success" />
+                                    <button type="submit" id="btnSubmit" value="Send" class="btn btn-success" title="Send message"><span class="glyphicon glyphicon-send"></span> Send</button>
                                 </div>
                             </div>
                         </div>

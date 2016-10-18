@@ -7,10 +7,10 @@ namespace slls.Messaging
 {
     public class EmailService
     {
-        public static void SendDbMail(string destination, string from = "", string cc = "", string bcc = "", string subject = "",
+        public static bool SendDbMail(string destination, string from = "", string cc = "", string bcc = "", string subject = "",
             string body = "")
         {
-            DbEntities db = new DbEntities();
+            var db = new DbEntities();
 
             try
             {
@@ -35,7 +35,9 @@ namespace slls.Messaging
             catch (Exception)
             {
                 //throw;
+                return false;
             }
+            return true;
         }
     }
 }

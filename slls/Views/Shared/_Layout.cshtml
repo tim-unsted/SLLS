@@ -24,14 +24,32 @@
         });
 
         $(function () {
-            $("#dialog").dialog({
+            $("#dialogSuccess").dialog({
                 dialogClass: "no-close",
                 modal: true,
                 buttons: [
                     {
                         text: 'OK',
                         open: function (event, ui) {
-                            setTimeout("$('#dialog').dialog('close')", 3000);
+                            setTimeout("$('#dialogSuccess').dialog('close')", 3000);
+                        },
+                        click: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                ]
+            });
+        });
+
+        $(function () {
+            $("#dialogError").dialog({
+                dialogClass: "no-close",
+                modal: true,
+                buttons: [
+                    {
+                        text: 'OK',
+                        open: function (event, ui) {
+                            setTimeout("$('#dialogError').dialog('close')", 3000);
                         },
                         click: function () {
                             $(this).dialog('close');
@@ -111,8 +129,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.css" />
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
 
-    <!-- Google Recaptcha-->
-    <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
 <body>
 
@@ -184,8 +200,16 @@
         @*Pop-up to provide a success message*@
         @if (TempData["SuccessDialogMsg"] != null)
         {
-            <div id="dialog" title="Success!">
+            <div id="dialogSuccess" title="Success!">
                 @TempData["SuccessDialogMsg"]
+            </div>
+        }
+
+        @*Pop-up to provide a success message*@
+        @if (TempData["ErrorDialogMsg"] != null)
+        {
+            <div id="dialogError" title="Oops, something went wrong!">
+                @TempData["ErrorDialogMsg"]
             </div>
         }
 

@@ -9,14 +9,14 @@
             {
                 <span class="pull-right"><a href="@Url.Action("Index", "UsefulLinks", new {area = "LibraryAdmin"})" title="Maintain @DbRes.T("Useful_Links", "EntityType")"><span class="glyphicon glyphicon-pencil"></span></a></span>
             }
-            </span>
-        </div>
-                <div class="panel-body">
-                    <ul class="list-unstyled">
-                        @foreach (var usefulLink in Model.UsefulLinks)
-                {
-                            <li><a href="@usefulLink.LinkAddress" title="@usefulLink.ToolTip" target="@usefulLink.Target">@usefulLink.DisplayText</a></li>
-                }
-                    </ul>
-                </div>
-            </div>
+        </span>
+    </div>
+    <div class="panel-body">
+        <ul class="list-unstyled">
+            @foreach (var usefulLink in Model.UsefulLinks)
+            {
+                <li><a href="@usefulLink.LinkAddress" title="@usefulLink.ToolTip" target="@usefulLink.Target">@usefulLink.DisplayText</a></li>
+            }
+        </ul>
+    </div>
+</div>

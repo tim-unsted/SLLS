@@ -166,15 +166,14 @@ namespace slls.Utils.Helpers
             return new MvcHtmlString(htmlBuilder.ToString());
         }
 
-        public static IHtmlString reCaptcha(this HtmlHelper helper) {
-        StringBuilder sb = new StringBuilder();
-        string publickey = WebConfigurationManager.AppSettings["RecaptchaPublicKey"];
-        //sb.AppendLine("<script type=\"text/javascript\" src='https://www.google.com/recaptcha/api.js'></script>");
-        //sb.AppendLine("");
-        sb.AppendLine("<div class=\"g-recaptcha\" data-sitekey=\""+ publickey+"\"></div>");
-        return MvcHtmlString.Create(sb.ToString()); 
-    }
-
+        public static IHtmlString ReCaptcha(this HtmlHelper helper) {
+            var sb = new StringBuilder();
+            var publickey = WebConfigurationManager.AppSettings["RecaptchaPublicKey"];
+            sb.AppendLine("<script type=\"text/javascript\" src='https://www.google.com/recaptcha/api.js'></script>");
+            sb.AppendLine("");
+            sb.AppendLine("<div class=\"g-recaptcha\" data-sitekey=\""+ publickey+"\"></div>");
+            return MvcHtmlString.Create(sb.ToString()); 
+        }
 
     }
 }

@@ -68,17 +68,7 @@ namespace slls.Controllers
             ViewBag.Title = "About";
             return View();
         }
-
-        //// Create a simple disctionary that we can used to fill a dropdown list in views
-        //public Dictionary<string, string> EnquiryType()
-        //{
-        //    return new Dictionary<string, string>
-        //    {
-        //        {"info@baileysolutions.co.uk", "General Enquiry"},
-        //        {"support@baileysolutions.co.uk", "Support Request"}
-        //    };
-        //}
-
+        
         public ActionResult Contact(bool success = false)
         {
             var userId = PublicFunctions.GetUserId();
@@ -92,7 +82,8 @@ namespace slls.Controllers
             {
                 From = emailFrom,
                 RedirectAction = "Contact",
-                RedirectController = "Home"
+                RedirectController = "Home",
+                Title = "Contact Us"
             };
 
             var enquiryTypes = new Dictionary<string, string>
@@ -101,35 +92,68 @@ namespace slls.Controllers
                 {"support@baileysolutions.co.uk", "Support Request"}
             };
 
-            if (success)
-            {
-                TempData["SuccessDialogMsg"] = "Your Enquiry had been sent.";
-            }
             ViewBag.EnquiryTypes = enquiryTypes;
             ViewBag.Title = "Contact Us";
             return View(viewModel);
         }
 
-        [HttpPost]
-        public ActionResult SendEnquiry(NewEmailViewModel viewModel, bool captchaValid)
-        {
-            if (!captchaValid)
-            {
-                ModelState.AddModelError("reCaptcha", "Please verify that you are human! ");
+        //[HttpPost]
+        //public ActionResult SendEnquiry(NewEmailViewModel viewModel, bool captchaValid)
+        //{
+        //    if (!captchaValid)
+        //    {
+        //        ModelState.AddModelError("reCaptcha", "Please verify you are human! ");
+        //        TempData["ErrorDialogMsg"] = "Verify that you are human and not a robot!";
 
-                var enquiryTypes = new Dictionary<string, string>
-                {
-                    {"info@baileysolutions.co.uk", "General Enquiry"},
-                    {"support@baileysolutions.co.uk", "Support Request"}
-                };
-                ViewBag.EnquiryTypes = enquiryTypes;
-                ViewBag.Title = "Contact Us";
-                return View("Contact", viewModel);
-            }
+        //        var enquiryTypes = new Dictionary<string, string>
+        //        {
+        //            {"info@baileysolutions.co.uk", "General Enquiry"},
+        //            {"support@baileysolutions.co.uk", "Support Request"}
+        //        };
+        //        ViewBag.EnquiryTypes = enquiryTypes;
+        //        ViewBag.Title = viewModel.Title;
+        //        if (!string.IsNullOrEmpty(viewModel.RedirectAction))
+        //        {
+        //            if (viewModel.RedirectAction == "Contact")
+        //            { 
+        //                return View(viewModel.RedirectAction, viewModel.RedirectController, viewModel);
+        //            }
+        //        }
+        //        return View("NewEmail", viewModel);
+        //    }
 
-            Messaging.EmailService.SendDbMail(destination: viewModel.To, from: viewModel.From, cc: viewModel.Cc, bcc: viewModel.Bcc, subject: viewModel.Subject, body: viewModel.Message);
-            return RedirectToAction("Contact", "Home", new { success = true });
-        }
+        //    //Attempt to send the message ...
+        //    var success = Messaging.EmailService.SendDbMail(destination: viewModel.To, from: viewModel.From, cc: viewModel.Cc, bcc: viewModel.Bcc, subject: viewModel.Subject, body: viewModel.Message);
+
+        //    if (success == false)
+        //    {
+        //        TempData["ErrorDialogMsg"] = "Sorry, your message has not been sent. Please try again.";
+
+        //        var enquiryTypes = new Dictionary<string, string>
+        //        {
+        //            {"info@baileysolutions.co.uk", "General Enquiry"},
+        //            {"support@baileysolutions.co.uk", "Support Request"}
+        //        };
+        //        ViewBag.EnquiryTypes = enquiryTypes;
+        //        ViewBag.Title = viewModel.Title;
+        //        if (!string.IsNullOrEmpty(viewModel.RedirectAction))
+        //        {
+        //            if (viewModel.RedirectAction == "Contact")
+        //            {
+        //                return View(viewModel.RedirectAction, viewModel.RedirectController, viewModel);
+        //            }
+        //        }
+        //        return View("NewEmail", viewModel);
+        //    }
+
+        //    //Else return success ...
+        //    TempData["SuccessDialogMsg"] = "Your message had been sent.";
+        //    if (!string.IsNullOrEmpty(viewModel.RedirectAction))
+        //    {
+        //        return RedirectToAction(viewModel.RedirectAction, viewModel.RedirectController, new { success = true });
+        //    }
+        //    return RedirectToAction("Index", "Home", new { success = true });
+        //}
 
         public ActionResult NotFound()
         {
@@ -175,9 +199,49 @@ namespace slls.Controllers
             {
                 LibraryStaff = Roles.IsLibraryStaff()
             };
-
+            
             switch (gadgetAction.ToLower())
             {
+                case "askthelibrary":
+                {
+                    var emailFrom = "";
+                    var emailTo = Settings.GetParameterValue("EmailSettings.EmailToAddress", "", "Sets the email address for ''Ask the Librarian'', etc.");
+
+                    if (string.IsNullOrEmpty(emailTo))
+                    {
+                        return Null();
+                    }
+                    
+                    if (userId != null)
+                    {
+                        emailFrom = _db.Users.Find(userId).Email;
+                    }
+
+                    if (string.IsNullOrEmpty(emailFrom))
+                    {
+                        return null;
+                    }
+
+                    var newEmailViewModel = new NewEmailViewModel
+                    {
+                        To = emailTo,
+                        From = emailFrom,
+                        RedirectAction = "Index",
+                        RedirectController = "Home",
+                        Title = "Ask a Question"
+                    };
+
+                    var enquiryTypes = new Dictionary<string, string>
+                    {
+                        {"info@baileysolutions.co.uk", "General Enquiry"},
+                        {"support@baileysolutions.co.uk", "Support Request"}
+                    };
+
+                    ViewBag.EnquiryTypes = enquiryTypes;
+                    ViewBag.Title = "Ask a Question";
+                    return PartialView("Dashboard/_AskTheLibrary", newEmailViewModel);
+                }
+                
                 case "usefullinks":
                 {
                     var allLinks = CacheProvider.GetAll<UsefulLink>("usefullinks").ToList();

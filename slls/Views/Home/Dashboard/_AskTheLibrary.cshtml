@@ -1,0 +1,65 @@
+﻿@using slls.Utils.Helpers
+@model slls.ViewModels.NewEmailViewModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var width = $('.g-recaptcha').parent().width();
+        if (width < 302) {
+            var scale = width / 302;
+            $('.g-recaptcha').css('transform', 'scale(' + scale + ')');
+            $('.g-recaptcha').css('-webkit-transform', 'scale(' + scale + ')');
+            $('.g-recaptcha').css('transform-origin', '0 0');
+            $('.g-recaptcha').css('-webkit-transform-origin', '0 0');
+        }
+    });
+</script>
+
+<div class="panel panel-gadget shadowed">
+    <div class="panel-heading">
+        <span class="panel-title">
+            <span class="glyphicon glyphicon-envelope"></span>&nbsp;<span is="gadget-Title">@ViewBag.Title</span>
+        </span>
+    </div>
+    <div class="panel-body">
+        @using (Html.BeginForm("SendEmail", "Messaging", FormMethod.Post))
+        {
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(model => model.To)
+            @Html.HiddenFor(model => model.From)
+            @Html.HiddenFor(model => model.RedirectAction)
+            @Html.HiddenFor(model => model.RedirectController)
+
+            <div class="form-horizontal">
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                <div class="form-group">
+
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.Subject)
+                        @Html.EditorFor(model => model.Subject, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.Subject, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.LabelFor(model => model.Message)
+                        @Html.EditorFor(model => model.Message, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Message, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        @Html.ValidationMessage("reCaptcha", new { @class = "text-danger" })
+                        @Html.ReCaptcha()
+                    </div>
+                </div>
+                
+                <div style="text-align: right;">
+                    <button type="submit" id="btnSubmit" value="Send" class="btn btn-success" title="Send message"><span class="glyphicon glyphicon-send"></span> Send</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>
