@@ -96,65 +96,7 @@ namespace slls.Controllers
             ViewBag.Title = "Contact Us";
             return View(viewModel);
         }
-
-        //[HttpPost]
-        //public ActionResult SendEnquiry(NewEmailViewModel viewModel, bool captchaValid)
-        //{
-        //    if (!captchaValid)
-        //    {
-        //        ModelState.AddModelError("reCaptcha", "Please verify you are human! ");
-        //        TempData["ErrorDialogMsg"] = "Verify that you are human and not a robot!";
-
-        //        var enquiryTypes = new Dictionary<string, string>
-        //        {
-        //            {"info@baileysolutions.co.uk", "General Enquiry"},
-        //            {"support@baileysolutions.co.uk", "Support Request"}
-        //        };
-        //        ViewBag.EnquiryTypes = enquiryTypes;
-        //        ViewBag.Title = viewModel.Title;
-        //        if (!string.IsNullOrEmpty(viewModel.RedirectAction))
-        //        {
-        //            if (viewModel.RedirectAction == "Contact")
-        //            { 
-        //                return View(viewModel.RedirectAction, viewModel.RedirectController, viewModel);
-        //            }
-        //        }
-        //        return View("NewEmail", viewModel);
-        //    }
-
-        //    //Attempt to send the message ...
-        //    var success = Messaging.EmailService.SendDbMail(destination: viewModel.To, from: viewModel.From, cc: viewModel.Cc, bcc: viewModel.Bcc, subject: viewModel.Subject, body: viewModel.Message);
-
-        //    if (success == false)
-        //    {
-        //        TempData["ErrorDialogMsg"] = "Sorry, your message has not been sent. Please try again.";
-
-        //        var enquiryTypes = new Dictionary<string, string>
-        //        {
-        //            {"info@baileysolutions.co.uk", "General Enquiry"},
-        //            {"support@baileysolutions.co.uk", "Support Request"}
-        //        };
-        //        ViewBag.EnquiryTypes = enquiryTypes;
-        //        ViewBag.Title = viewModel.Title;
-        //        if (!string.IsNullOrEmpty(viewModel.RedirectAction))
-        //        {
-        //            if (viewModel.RedirectAction == "Contact")
-        //            {
-        //                return View(viewModel.RedirectAction, viewModel.RedirectController, viewModel);
-        //            }
-        //        }
-        //        return View("NewEmail", viewModel);
-        //    }
-
-        //    //Else return success ...
-        //    TempData["SuccessDialogMsg"] = "Your message had been sent.";
-        //    if (!string.IsNullOrEmpty(viewModel.RedirectAction))
-        //    {
-        //        return RedirectToAction(viewModel.RedirectAction, viewModel.RedirectController, new { success = true });
-        //    }
-        //    return RedirectToAction("Index", "Home", new { success = true });
-        //}
-
+        
         public ActionResult NotFound()
         {
             return View();

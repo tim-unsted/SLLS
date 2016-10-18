@@ -1,4 +1,5 @@
-﻿@using Westwind.Globalization
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
 @model slls.ViewModels.TitleLinksAddViewModel
 
 @Html.Partial("_ModalAddHeader")
@@ -22,42 +23,47 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Url, htmlAttributes: new {@class = "control-label col-md-3"})
+            @Html.LabelFor(model => model.Url, htmlAttributes: new { @class = "control-label col-md-3" })
             <div class="col-md-8">
-                @Html.EditorFor(model => model.Url, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Url, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HelpInline("This can be the path to a website (e.g. 'http://' or 'https://'), or to an internal document (e.g '&#92;&#92;sharename&#92;...')")
+                @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.DisplayText, htmlAttributes: new {@class = "control-label col-md-3"})
+            @Html.LabelFor(model => model.DisplayText, htmlAttributes: new { @class = "control-label col-md-3" })
             <div class="col-md-8">
-                @Html.EditorFor(model => model.DisplayText, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.DisplayText, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.DisplayText, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HelpInline("This is the friendly text that is displayed in the link in place of the full URL.")
+                @Html.ValidationMessageFor(model => model.DisplayText, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.HoverTip, htmlAttributes: new {@class = "control-label col-md-3"})
+            @Html.LabelFor(model => model.HoverTip, htmlAttributes: new { @class = "control-label col-md-3" })
             <div class="col-md-8">
-                @Html.EditorFor(model => model.HoverTip, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.HoverTip, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.HoverTip, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HelpInline("This is the tool-tip that appears when the mouse is hovered over the link.")
+                @Html.ValidationMessageFor(model => model.HoverTip, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Login, htmlAttributes: new {@class = "control-label col-md-3"})
+            @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "control-label col-md-3" })
             <div class="col-md-8">
-                @Html.EditorFor(model => model.Login, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Login, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HelpInline("Optional: This is a default login/username required to access the resource. ")
+                @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Password, htmlAttributes: new {@class = "control-label col-md-3"})
+            @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-3" })
             <div class="col-md-8">
-                @Html.EditorFor(model => model.Password, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Password, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.HelpInline("Optional: This is a default password required to access the resource. ")
+                @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
             </div>
         </div>
     </div>

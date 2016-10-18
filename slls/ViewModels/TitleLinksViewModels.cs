@@ -16,6 +16,7 @@ namespace slls.ViewModels
         public string Title { get; set; }
 
         [Required]
+        [RegularExpression(@"^(http(s)?://|ftp://|file://|[\w]\:|\\).+$", ErrorMessage = "This URL does not appear to be valid. Are you missing a prefix (e.g. 'http://')?")]
         [LocalDisplayName("TitleLinks.URL_Path", "FieldDisplayName")]
         public string Url { get; set; }
 
@@ -44,6 +45,8 @@ namespace slls.ViewModels
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
         public string Title { get; set; }
 
+        [Required]
+        [RegularExpression(@"^(http(s)?://|ftp://|file://|[\w]\:|\\).+$", ErrorMessage = "This URL does not appear to be valid. Are you missing a prefix (e.g. 'http://')?")]
         [LocalDisplayName("TitleLinks.URL_Path", "FieldDisplayName")]
         public string Url { get; set; }
 

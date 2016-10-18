@@ -83,11 +83,10 @@ namespace slls.Areas.LibraryAdmin
                     Password = viewModel.Password,
                     InputDate = DateTime.Now
                 };
-
+                
                 _db.TitleLinks.Add(titleLink);
                 _db.SaveChanges();
 
-                //return RedirectToAction("Edit", "Titles", new { id = viewModel.TitleId });
                 return Json(new { success = true });
             }
 
