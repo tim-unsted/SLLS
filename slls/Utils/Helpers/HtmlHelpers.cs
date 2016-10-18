@@ -183,5 +183,14 @@ namespace slls.Utils.Helpers
             return MvcHtmlString.Create(sb.ToString()); 
         }
 
+        //Standard 'Save' Button Helper    
+        public static MvcHtmlString SaveButton(this HtmlHelper helper, string buttonText)
+        {
+            string str =
+                "<button type=\"submit\" id=\"btnSave\" value=\"Save\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-ok\"></span> " +
+                buttonText + "</button>";
+            return new MvcHtmlString(str);
+        } 
+
     }
 }

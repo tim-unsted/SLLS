@@ -11,6 +11,7 @@
     var value = "";
     if (Model.HasValue) {
         value = string.Format("{0:d}", Model.Value.ToString(System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern));
+        
     }
 }
 @Html.TextBox("", value, new { @class = "form-control datepicker", type = "text" })

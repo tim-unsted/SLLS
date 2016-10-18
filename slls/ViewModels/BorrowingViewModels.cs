@@ -32,10 +32,12 @@ namespace slls.ViewModels
         public string UserID { get; set; }
 
         [LocalDisplayName("Borrowing.Borrowed", "FieldDisplayName")]
+        [Column(TypeName = "smalldatetime")]
         public DateTime Borrowed { get; set; }
 
         [LocalDisplayName("Borrowing.Date_Return_Due", "FieldDisplayName")]
-        [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        //[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+        [Column(TypeName = "smalldatetime")]
         [Required(ErrorMessage = "Please enter a return date.")]
         public DateTime ReturnDue { get; set; }
 
