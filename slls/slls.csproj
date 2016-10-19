@@ -578,6 +578,7 @@
     <Content Include="DataTables\plugins.js" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Images\Cake-Chocolate-icon.png" />
     <Content Include="Images\glyphicons.png" />
     <Content Include="Global.asax" />
     <Content Include="Content\site.css" />
