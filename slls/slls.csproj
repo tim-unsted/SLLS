@@ -268,6 +268,7 @@
     <Compile Include="Areas\LibraryAdmin\Controllers\CirculationController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\CirculationMessagesController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\CommMethodTypesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\DataImportController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\DefaultValuesController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\ExportDataController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\InvoicesController.cs" />
@@ -353,6 +354,7 @@
     <Compile Include="ViewModels\ConfirmationViewModels.cs" />
     <Compile Include="ViewModels\DashboardViewModels.cs" />
     <Compile Include="ViewModels\DataExportViewModels.cs" />
+    <Compile Include="ViewModels\DataImportViewModels.cs" />
     <Compile Include="ViewModels\DefaultValueViewModels.cs" />
     <Compile Include="ViewModels\EmailViewModels.cs" />
     <Compile Include="ViewModels\LoanTypesViewModels.cs" />
@@ -1000,6 +1002,8 @@
     <Content Include="Areas\LibraryAdmin\Views\Titles\AddEditor.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\SimpleSearch.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Volumes\Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\DataImport\_BrowseForFile.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\DataImport\ImportUsers.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

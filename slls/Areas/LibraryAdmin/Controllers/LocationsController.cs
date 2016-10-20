@@ -147,6 +147,49 @@ namespace slls.Areas.LibraryAdmin
             return PartialView(lvm);
         }
 
+        public static int GetLocationId(string location, int parentLocationId)
+        {
+            location = location.Trim();
+            var db = new DbEntities();
+            var allLocations = CacheProvider.GetAll<Location>("locations");
+            var model = allLocations.FirstOrDefault(x => string.Equals(x.Location1, location, StringComparison.OrdinalIgnoreCase) && x.ParentLocationID == parentLocationId);
+            if (model != null) return model.LocationID;
+            //insert new Location now ...
+            var newLocation = new Location
+            {
+                Location1 = location,
+                ParentLocationID = parentLocationId,
+                CanUpdate = true,
+                CanDelete = true,
+                InputDate = DateTime.Now
+            };
+            db.Locations.Add(newLocation);
+            db.SaveChanges();
+            CacheProvider.RemoveCache("locations");
+            return newLocation.LocationID;
+        }
+
+        public static int GetOfficeId(string location)
+        {
+            location = location.Trim();
+            var db = new DbEntities();
+            var allLocations = CacheProvider.GetAll<Location>("locations");
+            var model = allLocations.FirstOrDefault(x => string.Equals(x.Location1, location, StringComparison.OrdinalIgnoreCase) && x.ParentLocationID == null);
+            if (model != null) return model.LocationID;
+            //insert new Parent Location now ...
+            var newLocation = new Location
+            {
+                Location1 = location,
+                ParentLocationID = null,
+                CanUpdate = true,
+                CanDelete = true,
+                InputDate = DateTime.Now
+            };
+            db.Locations.Add(newLocation);
+            db.SaveChanges();
+            CacheProvider.RemoveCache("locations");
+            return newLocation.LocationID;
+        }
 
         [HttpGet]
         public ActionResult Delete(int id = 0)

@@ -1,0 +1,73 @@
+﻿@using System.Web.Http
+@using Westwind.Globalization
+@using slls.Utils.Helpers
+@model slls.ViewModels.DataImportViewModel
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title" id="headerLabel">@Model.Title</h3>
+</div>
+
+@using (Html.BeginForm("_BrowseForFile", "DataImport", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="modal-body">
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-horizontal">
+
+            <div class="form-group">
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.File, new {type = "file", multiple = "multiple", accept = ".xml, .XML, .csv, .CSV", @style = "display: none;"})
+                            </span>
+                        </label>
+                        <input type="text" class="form-control" readonly>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.File)
+                    @Html.HelpInline(Model.Tip)
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        @Html.SubmitButton(Model.ButtonText, Model.Glyphicon)
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+        <script type="text/javascript">
+            $(function () {
+
+                // We can attach the `fileselect` event to all file inputs on the page
+                $(document).on('change', ':file', function () {
+                    var input = $(this),
+                        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                    input.trigger('fileselect', [numFiles, label]);
+                });
+
+                // We can watch for our custom `fileselect` event like this
+                $(document).ready(function () {
+                    $(':file').on('fileselect', function (event, numFiles, label) {
+
+                        var input = $(this).parents('.input-group').find(':text'),
+                            log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                        if (input.length) {
+                            input.val(log);
+                        } else {
+                            if (log) alert(log);
+                        }
+
+                    });
+                });
+
+            });
+        </script>

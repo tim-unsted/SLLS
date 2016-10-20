@@ -195,28 +195,6 @@ namespace slls.Areas.LibraryAdmin
                             "Add New " + _entityName + " Failed - The following error(s) were encountered: <br>",
                             (current, error) => current + (error + "<br>"));
                     ModelState.AddModelError("", exceptionText);
-
-                    //ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1", viewModel.DepartmentId);
-                    //ViewBag.LocationID = new SelectList(_db.Locations, "LocationID", "Location1", viewModel.LocationId);
-
-                    ////Establish what roles the current user has. A user may not grant another user greater permissions than they have themselves ...
-                    //var userRoles = Roles.GetUserRoles();
-
-                    ////Only Admin users can get this far, so ensure that any lower user type is included by default ...
-                    //userRoles.Add("OPAC User");
-
-                    ////Create a list of all default roles that should be selected/ticked when the form opens ...
-                    //var defaultMenuRoles = new List<string> { "OPAC User" };
-                    //viewModel.RolesList =
-                    //    RoleManager.Roles.Where(r => userRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
-                    //    {
-                    //        Selected = defaultMenuRoles.Contains(x.Name),
-                    //        Text = x.Name,
-                    //        Value = x.Name
-                    //    });
-                    //ViewBag.Title = "Add New " + _entityName;
-                    //return View(viewModel);
-                    //return RedirectToAction("Index");
                 }
                 else
                 {

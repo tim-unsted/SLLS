@@ -190,6 +190,14 @@ namespace slls.Utils.Helpers
                 "<button type=\"submit\" id=\"btnSave\" value=\"Save\" class=\"btn btn-success\"><span class=\"glyphicon glyphicon-ok\"></span> " +
                 buttonText + "</button>";
             return new MvcHtmlString(str);
+        }
+
+        //Standard 'Submit' Button Helper    
+        public static MvcHtmlString SubmitButton(this HtmlHelper helper, string buttonText, string glyphicon = "glyphicon glyphicon-ok")
+        {
+            string str =
+                "<button type=\"submit\" id=\"btnSubmit\" value=\"Submit\" class=\"btn btn-success\"><span class=\"" + glyphicon + "\"></span>&nbsp;&nbsp;" + buttonText + "</button>";
+            return new MvcHtmlString(str);
         } 
 
     }

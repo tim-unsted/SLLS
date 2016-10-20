@@ -158,6 +158,27 @@ namespace slls.Areas.LibraryAdmin
             CacheProvider.RemoveCache("departments");
             return Json(new { success = true });
         }
+
+        public static int GetDepartmentId(string department)
+        {
+            department = department.Trim();
+            var db = new DbEntities();
+            var allDepartments = CacheProvider.GetAll<Department>("departments");
+            var model = allDepartments.FirstOrDefault(x => String.Equals(x.Department1, department, StringComparison.OrdinalIgnoreCase));
+            if (model != null) return model.DepartmentID;
+            //insert new Department now ...
+            var newDepartment = new Department
+            {
+                Department1 = department,
+                CanUpdate = true,
+                CanDelete = true,
+                InputDate = DateTime.Now
+            };
+            db.Departments.Add(newDepartment);
+            db.SaveChanges();
+            CacheProvider.RemoveCache("departments");
+            return newDepartment.DepartmentID;
+        }
         
         [HttpGet]
         public ActionResult Delete(int id = 0)
