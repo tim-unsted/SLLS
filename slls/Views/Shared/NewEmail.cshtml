@@ -1,0 +1,19 @@
+﻿@model slls.ViewModels.NewEmailViewModel
+
+@Html.Partial("_HeaderCancel")
+
+@using (Html.BeginForm("SendEmail", "Messaging", FormMethod.Post)) 
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+
+        @Html.Partial("_NewEmailPartial")
+
+        <div class="form-footer">
+            <button type="submit" id="btnSubmit" value="Send" class="btn btn-success" title="Send message"><span class="glyphicon glyphicon-send"></span> Send</button>
+            &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+        </div>
+    </div>
+}
+

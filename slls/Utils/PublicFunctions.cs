@@ -60,8 +60,8 @@ namespace slls.Utils
         public static string GetUserId()
         {
             var context = new ApplicationDbContext();
-            System.Security.Principal.IPrincipal User = System.Web.HttpContext.Current.User;
-            var userName = Regex.Replace(User.Identity.Name, ".*\\\\(.*)", "$1", RegexOptions.None);
+            System.Security.Principal.IPrincipal user = System.Web.HttpContext.Current.User;
+            var userName = Regex.Replace(user.Identity.Name, ".*\\\\(.*)", "$1", RegexOptions.None);
             var currentUser = context.Users.FirstOrDefault(u => u.UserName == userName);
             if (currentUser != null)
             {

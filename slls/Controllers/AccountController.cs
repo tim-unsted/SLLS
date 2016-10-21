@@ -230,7 +230,11 @@ namespace slls.Controllers
 
                 var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking here: <a href=\"" + callbackUrl + "\">link</a>");
+                var msgSubject = App_Settings.Settings.GetParameterValue("Security.Passwords.ResetMessageSubject",
+                    "Reset Password for Simple Little Library System", "The email 'Subject' when generating an 'Forgot Password' reset email.");
+                var msgBody = App_Settings.Settings.GetParameterValue("Security.Passwords.ResetMessageBody",
+                    "Forgotton your password for Simple Little Library System? You can reset your password now by clicking on the link below:", "The email 'Body' when generating an 'Forgot Password' reset email.");
+                await UserManager.SendEmailAsync(user.Id, msgSubject, msgBody + "<br><br><a href=\"" + callbackUrl + "\">Follow this link to reset your password</a>");
                 ViewBag.Link = callbackUrl;
                 return View("ForgotPasswordConfirmation");
             }
