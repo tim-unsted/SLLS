@@ -45,8 +45,8 @@
     var db = new DbEntities();
 }
 
-
-<h2>@ViewBag.Title</h2>
+@Html.Partial("_HeaderSeeAlso")
+@*<h2>@ViewBag.Title</h2>*@
 @Html.CheckBoxFor(model => model.ShowAll, new { @title = "Show ALL users, including those no longer 'Live'" }) Show All
 @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x, showAll = Model.ShowAll }))
 <p>

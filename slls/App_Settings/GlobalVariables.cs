@@ -11,6 +11,7 @@ namespace slls.App_Settings
         private static string _siteName = "SiteName";
         private static string _opacName = "OpacName";
         private static string _dateFormat = "DateFormat";
+        private static string _popupTimeout = "PopupTimeout";
 
         public static string SiteName
         {
@@ -68,6 +69,31 @@ namespace slls.App_Settings
             {
                 HttpContext.Current.Application.Lock();
                 HttpContext.Current.Application[_dateFormat] = value;
+                HttpContext.Current.Application.UnLock();
+            }
+        }
+
+        public static string PopupTimeout
+        {
+            get
+            {
+                if (HttpContext.Current.Application[_popupTimeout] == null)
+                {
+                    HttpContext.Current.Application.Lock();
+                    var seconds = Int16.Parse(Settings.GetParameterValue("General.PopupTimeout", "3", "The number of seconds a confirmation or acknowledgement pop-up stays on screen. The default is 3 seconds."));
+                    if (seconds == 0 || seconds == null)
+                    {
+                        seconds = 3;
+                    }
+                    HttpContext.Current.Application[_popupTimeout] = seconds*1000;
+                    HttpContext.Current.Application.UnLock();
+                }
+                return HttpContext.Current.Application[_popupTimeout].ToString();
+            }
+            set
+            {
+                HttpContext.Current.Application.Lock();
+                HttpContext.Current.Application[_popupTimeout] = value;
                 HttpContext.Current.Application.UnLock();
             }
         }

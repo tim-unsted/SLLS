@@ -116,6 +116,7 @@ namespace slls.Areas.LibraryAdmin
 
             viewModel.LibraryUsers = libraryUsers;
             ViewBag.Title = showAll == false ? ViewBag.Title + " (Live Only)" : ViewBag.Title + " (All)";
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("usersSeeAlso", ControllerContext.RouteData.Values["controller"].ToString(), ControllerContext.RouteData.Values["controller"].ToString());
             return View(viewModel);
         }
 

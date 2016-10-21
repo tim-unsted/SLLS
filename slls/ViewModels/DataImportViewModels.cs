@@ -14,7 +14,8 @@ namespace slls.ViewModels
             Title = "Select File ...";
             ButtonText = "Open";
             Glyphicon = "glyphicon glyphicon-folder-open";
-            Tip = "Browse for and select the file and then click the 'Open' button.";
+            Tip = "Browse for and select the file you require, then click the 'Open' button.";
+            AcceptedFileTypes = ".txt, .TXT, .xml, .XML, .csv, .CSV, .xls, .XLS, .xlsx, .XLSX";
         }
         
         [Required(ErrorMessage = "Please select a file.")]
@@ -22,7 +23,7 @@ namespace slls.ViewModels
         public string FilePath { get; set; }
         public string FileName { get; set; }
         public int Rows { get; set; }
-
+        public string AcceptedFileTypes { get; set; }
         public string Title { get; set; }
         public string Tip { get; set; }
         public string ButtonText { get; set; }

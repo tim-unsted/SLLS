@@ -1,9 +1,35 @@
 ﻿@model System.Web.Mvc.HandleErrorInfo
-
 @{
     ViewBag.Title = "Error";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>&nbsp;</h1>
+            <div class="col-md-3">
+                <img title="Cake!" alt="" src="~/Images/Cake-Chocolate-icon.png" />
+            </div>
+            <div class="col-md-9">
+                <h1>Oops!</h1>
+                <h3 class="text-muted">Sorry, something went wrong with your last request.</h3>
 
+                @if (Model != null)
+                {
+                    TempData["ErrorInfo"] = Model;
+                    <div>                        
+                        <a href="@Url.Action("ErrorEmail", "Messaging", new { area = "" })" title="Email Support" class="btn btn-primary"><span class="glyphicon glyphicon-envelope"></span> Send To Support</a>
+                        &nbsp;&nbsp;or&nbsp;<input type="button" value="Go Back" class="btn btn-link" onclick="window.history.back();"/>
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <input type="button" value="Go Back" class="btn btn-link" onclick="window.history.back();" />
+                    </div>
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
