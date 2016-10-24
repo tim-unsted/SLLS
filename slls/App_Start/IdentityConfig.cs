@@ -59,12 +59,12 @@ namespace slls.Models
             // Configure validation logic for passwords
             manager.PasswordValidator = new CustomPasswordValidator
             {
-                RequiredLength = int.Parse(Settings.GetParameterValue("Security.Passwords.MinimumLength", "8", "Specifies the minimum required length of a password.")), //10, //int.Parse(ConfigurationManager.AppSettings["pwRequiredLength"]),
-                RequireNonLetterOrDigit = Settings.GetParameterValue("Security.Passwords.RequireNonLetterOrDigit", "false", "Specifies whether the password requires at least one non-alphanumeric character (e.g. '$', '~', '?', etc.") == "true",//false,
-                RequireDigit = Settings.GetParameterValue("Security.Passwords.RequireDigit", "false", "Specifies whether the password requires at least one digit (0-9).") == "true",//true,
-                RequireLowercase = Settings.GetParameterValue("Security.Passwords.RequireLowercase", "false", "Specifies whether the password requires at least one lower-case letter.") == "true",//false,
-                RequireUppercase = Settings.GetParameterValue("Security.Passwords.RequireUppercase", "false", "Specifies whether the password requires at least one upper-case letter") == "true",//false,
-                MaxLength = int.Parse(Settings.GetParameterValue("Security.Passwords.MaximumLength", "999", "Specifies the maximum required length of a password.")),//999
+                RequiredLength = int.Parse(Settings.GetParameterValue("Security.Passwords.MinimumLength", "8", "Specifies the minimum required length of a password.")),
+                RequireNonLetterOrDigit = Settings.GetParameterValue("Security.Passwords.RequireNonLetterOrDigit", "false", "Specifies whether the password requires at least one non-alphanumeric character (e.g. '$', '~', '?', etc.") == "true",
+                RequireDigit = Settings.GetParameterValue("Security.Passwords.RequireDigit", "false", "Specifies whether the password requires at least one digit (0-9).") == "true",
+                RequireLowercase = Settings.GetParameterValue("Security.Passwords.RequireLowercase", "false", "Specifies whether the password requires at least one lower-case letter.") == "true",
+                RequireUppercase = Settings.GetParameterValue("Security.Passwords.RequireUppercase", "false", "Specifies whether the password requires at least one upper-case letter") == "true",
+                MaxLength = int.Parse(Settings.GetParameterValue("Security.Passwords.MaximumLength", "999", "Specifies the maximum required length of a password."))
             };
 
             // Configure user lockout defaults

@@ -7,9 +7,12 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                @Html.ActionLink("Hello " + (ViewData["FirstName"]) + "!", "Index", "Manage", routeValues: new { area = "" }, htmlAttributes: new { title = "Manage", area = "" })
+                @Html.ActionLink("Hello " + (ViewData["FirstName"]) + "!", "Index", "Manage", routeValues: new {area = ""}, htmlAttributes: new {title = "Manage", area = ""})
             </li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            @if ((bool)ViewData["WindowsAuth"] == false)
+            {
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            }
         </ul>
     }
 }

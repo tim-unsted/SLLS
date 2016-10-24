@@ -26,6 +26,10 @@ namespace slls.Controllers
 
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
+            var authMode =
+                        ((AuthenticationSection)ConfigurationManager.GetSection("system.web/authentication")).Mode;
+            ViewData.Add("WindowsAuth", authMode == AuthenticationMode.Windows);
+
             if (User != null)
             {
                 var context = new ApplicationDbContext();
@@ -42,8 +46,8 @@ namespace slls.Controllers
                 }
                 else //User record not yet in database, so add it now if using Windows Authentication: Get the details from AD ...
                 {
-                    var authMode =
-                        ((AuthenticationSection)ConfigurationManager.GetSection("system.web/authentication")).Mode;
+                    //var authMode =
+                    //    ((AuthenticationSection)ConfigurationManager.GetSection("system.web/authentication")).Mode;
                     if (authMode == AuthenticationMode.Windows)
                     {
                         var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();

@@ -1007,6 +1007,8 @@
     <Content Include="Areas\LibraryAdmin\Views\Volumes\Select.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\DataImport\_BrowseForFile.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\DataImport\ImportUsers.cshtml" />
+    <Content Include="Customer\Settings\Authentication.config" />
+    <Content Include="Customer\Settings\Globalization.config" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
