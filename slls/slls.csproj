@@ -575,9 +575,8 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="Customer\Images\beach_huts.gif" />
     <Content Include="Customer\Images\slls-logo.png" />
-    <Content Include="Customer\Styles\styling.css" />
+    <Content Include="Customer\Styling\customer.css" />
     <Content Include="DataTables\autocat.txt" />
     <Content Include="DataTables\lang.txt" />
     <Content Include="DataTables\plugins.js" />
@@ -916,7 +915,7 @@
     <Content Include="Scripts\locales\bootstrap-datepicker.zh-TW.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Views\Home\Dashboard\_Notifications.cshtml" />
-    <Content Include="Customer\ExternalLogins.config" />
+    <Content Include="Customer\Settings\ExternalLogins.config" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersByAccountYear.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersByRequester.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersByAuthoriser.cshtml" />

@@ -49,7 +49,7 @@
                     {
                         text: 'OK',
                         open: function (event, ui) {
-                            setTimeout("$('#dialogError').dialog('close')", 3000);
+                            setTimeout("$('#dialogError').dialog('close')", popupTimeout);
                         },
                         click: function () {
                             $(this).dialog('close');
@@ -123,7 +123,7 @@
 
     <!-- Local styling stuff -->
     <link rel="stylesheet" type="text/css" media="print" href="~/Content/print.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="~/Customer/Styles/styling.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Customer/Styling/customer.css" />
 
     <!-- DataTables.Net for table/list pages ... -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.css" />
