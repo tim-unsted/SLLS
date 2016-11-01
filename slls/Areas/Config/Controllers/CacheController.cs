@@ -51,9 +51,6 @@ namespace slls.Areas.Config
         [HttpGet]
         public ActionResult RemoveAll()
         {
-            //CacheProvider.RemoveAll();
-            //return RedirectToAction("Index", "Home");
-
             var newTitlesList = DbRes.T("NewTitlesList", "EntityType");
             var gcvm = new GenericConfirmationViewModel
             {

@@ -11,6 +11,7 @@ namespace slls.Utils.Helpers
 {
     public class SelectListHelper
     {
+        
         public static IEnumerable<SelectListItem> CatalogueReportsList(int id = 0, string msg = "Select a Report ", bool addDefault = true)
         {
             DbEntities db = new DbEntities();
@@ -103,6 +104,44 @@ namespace slls.Utils.Helpers
             }
 
             return accountYearsList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
+        }
+
+        public static IEnumerable<SelectListItem> ActivityTypesList(int id = 0, string msg = "Select an ", bool addDefault = true, bool addNew = true)
+        {
+            DbEntities db = new DbEntities();
+            var activityTypesList = new List<SelectListItem>();
+
+            //Add a default value if required ...
+            if (addDefault)
+            {
+                activityTypesList.Add(new SelectListItem
+                {
+                    Text = msg + DbRes.T("ActivityTypes.Activity_Type", "FieldDisplayName"),
+                    Value = "0"
+                });
+            };
+
+            //Add New
+            if (addNew)
+            {
+                activityTypesList.Add(new SelectListItem
+                {
+                    Text = "[Add New " + DbRes.T("ActivityTypes.Activity_Type", "FieldDisplayName") + "]",
+                    Value = "-1"
+                });
+            }
+
+            //Add the actual activity types ...
+            foreach (var item in CacheProvider.GetAll<ActivityType>("activitytypes").OrderBy(a => a.Activity))
+            {
+                activityTypesList.Add(new SelectListItem
+                {
+                    Text = string.IsNullOrEmpty(item.Activity) ? "<No name>" : item.Activity,
+                    Value = item.ActivityCode.ToString()
+                });
+            }
+
+            return activityTypesList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
         }
 
         public static IEnumerable<SelectListItem> BudgetCodesList(int id = 0, string msg = "", bool addDefault = true, bool addNew = true)
@@ -210,15 +249,10 @@ namespace slls.Utils.Helpers
 
             //Add the actual author names ...
             var authors = CacheProvider.GetAll<Author>("authors");
-            foreach (var item in authors.OrderBy(a => a.DisplayName))
+            authorList.AddRange(authors.OrderBy(a => a.DisplayName).Select(item => new SelectListItem
             {
-                authorList.Add(new SelectListItem
-                {
-                    //Text = string.IsNullOrEmpty(item.DisplayName) ? "<no name>" : item.DisplayName,
-                    Text = item.DisplayName ?? "",
-                    Value = item.AuthorID.ToString()
-                });
-            }
+                Text = item.DisplayName ?? "", Value = item.AuthorID.ToString()
+            }));
 
             return authorList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
         }

@@ -1,0 +1,171 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.MergeAuthorityListViewModel
+
+@*<script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
+
+@*<div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h3 class="modal-title" id="titleLabel">@ViewBag.Title</h3>
+    </div>*@
+
+@Html.Partial("_HeaderCancel")
+
+@using (Html.BeginForm("PostUpdateMergeAuthorityList", "AdminTools", FormMethod.Post, new { @class = "form-horizontal", id = "mergeAuthValues", name = "mergeAuthValues" }))
+{
+    @Html.ValidationSummary()
+
+    <div class="alert alert-info">
+        <span class="help-block"><span class="glyphicon glyphicon-info-sign"></span> Use this tool to perform a global move or a merger of two or more values from an authority list into an existing or new value. (E.g. move all items from locations a, b and c to new location z).</span>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12">
+            @Html.Label("1: Select Authority List to edit", htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(x => x.AuthorityList, new SelectList(ViewBag.AuthorityLists, "Key", "Value"), "Select an Authority List", new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.AuthorityList, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12">
+            @Html.Label("2: Select current values to move/merge - choose one or more values from the list", htmlAttributes: new { @class = "control-label" })
+            @Html.ListBoxFor(x => x.SelectedIds, Model.AvailableItems, new { size = 15, @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.SelectedIds, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-12">
+            @Html.Label("3a: Select a current value to accept the move/merger - choose just one value from the list", htmlAttributes: new { @class = "control-label" })
+            @Html.DropDownListFor(x => x.NewId, Model.AvailableItems, new { @class = "form-control" })
+        </div>
+    </div>
+    <strong> --- Or ---</strong>
+    <div class="form-group">
+        <div class="col-md-12">
+            @Html.Label("3b: Enter a new value to accept the move/merger", htmlAttributes: new { @class = "control-label" })
+            @Html.TextBoxFor(x => x.NewValue, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-footer">
+        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Continue</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<div id="confirmDialog" title="Confirm Update/Merge Authority List Values">
+    <p>Please confirm this move/merger:</p>
+    <p>
+        <strong>Authority List: </strong><span id="confirmAuthorityList"></span>
+    </p>
+    <p>
+        <strong>Values to move/merge: </strong><span id="confirmSelectedValues"></span>
+    </p>
+    <p>
+        <strong>Value to accept moved/merged data: </strong><span id="confirmNewValue"></span>
+    </p>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#confirmDialog').dialog({
+            dialogClass: "no-close",
+            autoOpen: false,
+            width: 700,
+            modal: true,
+            resizable: false,
+            buttons: {
+                "Submit": function () {
+                    $(".ui.dialog.ui-dialog-buttonpane button:contains('Submit')").button("disable");
+                    $(".ui.dialog.ui-dialog-buttonpane button:contains('Edit')").button("disable");
+                    document.mergeAuthValues.submit();
+                },
+                "Edit": function () {
+                    $(this).dialog("close");
+                }
+            }
+        });
+
+        $('#mergeAuthValues').submit(function (e) {
+            e.preventDefault();
+
+            if ($(this).valid()) {
+                var field;
+                var confirmDiv;
+
+                //Selected Authority list ...
+                field = $('#AuthorityList');
+                confirmDiv = $('#confirmAuthorityList');
+                confirmDiv.parent().show();
+                confirmDiv.html(field.val());
+
+                //Selected values to move/merge ...
+                confirmDiv = $('#confirmSelectedValues');
+                var selectedVal = [];
+                $('#SelectedIds :selected').each(function (i, selected) {
+                    selectedVal[i] = $(selected).text() + '; ';
+                });
+                confirmDiv.parent().show();
+                confirmDiv.html(selectedVal);
+
+                //Selected value or new value to accept move/merger ...
+                confirmDiv = $('#confirmNewValue');
+                field = $('#NewValue');
+                if (field.val() == '') {
+                    //field = $('#NewId');
+                    confirmDiv.html($('#NewId option:selected').text());
+                } else {
+                    confirmDiv.html(field.val());
+                }
+                confirmDiv.parent().show();
+                
+                $('#confirmDialog').dialog("open");
+            }
+            
+            return false;
+        });
+
+        $("#AuthorityList").change(function () {
+            var list1 = $("#SelectedIds");
+            var select1 = $("#NewId");
+            list1.empty();
+            select1.empty();
+
+            var authList = { AuthList: $("#AuthorityList").val() };
+
+            $.ajax({
+                url: '@Url.Action("GetAuthorityValues", "AdminTools")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(authList),
+                success: function (data) {
+                    if (data.success) {
+                        select1.append($('<option/>', { value: "0", text: "Select a value to accept move/merger" }));
+                        $.each(data.AuthorityListData, function (index, itemData) {
+                            list1.append($('<option/>', { value: itemData.Value, text: itemData.Text }));
+                            select1.append($('<option/>', { value: itemData.Value, text: itemData.Text }));
+                        }
+                        );
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+        });
+    });
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        $('#SelectedItem').on('dblclick', function () {
+            $("#frmSelect").submit();
+        });
+    });
+</script>
