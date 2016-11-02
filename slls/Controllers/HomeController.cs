@@ -13,6 +13,7 @@ using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
 using System.Web.Mvc.Expressions;
+using System.Web.UI.WebControls.Expressions;
 using slls.Utils;
 
 namespace slls.Controllers
@@ -370,7 +371,7 @@ namespace slls.Controllers
             //Get the list of classmarks in use ...
             var classmarks = (from c in _db.Classmarks
                               where c.Titles.Count > 0
-                              orderby c.Classmark1
+                              //orderby c.Classmark1
                               select
                                   new { c.ClassmarkID, Classmark = c.Classmark1 + " (" + c.Titles.Count + ")" })
                 .Distinct();
@@ -386,7 +387,7 @@ namespace slls.Controllers
             };
 
             //Add the actual classmarks ...
-            foreach (var item in classmarks)
+            foreach (var item in classmarks.OrderBy(c => c.Classmark))
             {
                 classmarkList.Add(new SelectListItem
                 {
