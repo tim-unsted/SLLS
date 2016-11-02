@@ -17,41 +17,38 @@ namespace slls.Areas.LibraryAdmin
         private readonly DbEntities _db = new DbEntities();
         
         //Get the menu items from the database or cache ...
-        //private readonly IEnumerable<Menu> menuItems = DAO.CacheProvider.GetMenusItems();
         private readonly IEnumerable<Menu> _menuItems = CacheProvider.GetAll<Menu>("menuitems");
 
-        //Cache each admin user's menu for 2 hours
-        //[OutputCache(Duration = 7200, VaryByParam = "*")]
         public ActionResult TopMenu()
         {
-            
-            
-            //Get the very top term ...
+            //Get the very top menu item ...
             var topLevelItem = _menuItems.FirstOrDefault(m => m.ParentID == null); // should be ID = -999
             var opacTopItem = _menuItems.FirstOrDefault(m => m.ParentID == topLevelItem.ID && m.Title == "OPAC");
             int parentMenuId = opacTopItem.ID;
 
-            var allItems = (from m in _menuItems.OrderBy(x => x.SortOrder) select m).ToList();
+            //Hust get the entire emenu at this stage ...
+            var allItems = (from m in _menuItems.Where(m => m.IsVisible && m.IsEnabled).OrderBy(x => x.SortOrder) select m).ToList();
 
             //Get the current user's ID ...
             var id = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
 
-            //If the user is not logged in, only the menu items with the role "All" or "Anonymous"
-            if (String.IsNullOrEmpty(id))
+            //If the user is a Bailey Admin then grant them access to everything!
+            if (User.IsInRole("Bailey Admin"))
             {
-                var someItems = from someitems in allItems.Where(y => y.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                            .Any(x => new[] { "All", "Anonymous" }.Contains(x)))
-                                select someitems;
+                var baileyAdminItems = from m in allItems
+                                       where m.MenuArea == "OPAC"
+                                       select m;
+
                 ViewData["ParentMenuID"] = parentMenuId;
-                return View(someItems.ToList());
+                return View(baileyAdminItems);
             }
-            //Get the menu items that match the user's roles
+
+            //Get only the menu items that match the user's roles
             //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
             var userRoles = Roles.GetUserRoles();
 
             var userItems = from m in allItems
-                where m.MenuArea == "OPAC" 
-                      && m.IsVisible
+                where m.MenuArea == "OPAC"
                       && m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
                           .Any(x => userRoles.Contains(x) || x == "All" || x == "Anonymous")
                 select m;
@@ -61,8 +58,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         [AllowAnonymous]
-        //Cache each admin user's menu for 2 hours
-        //[OutputCache(Duration = 7200, VaryByParam = "*")]
         public ActionResult MainMenu()
         {
             var rd = ControllerContext.ParentActionViewContext.RouteData;
@@ -83,31 +78,39 @@ namespace slls.Areas.LibraryAdmin
             var adminTopItem = _menuItems.FirstOrDefault(m => m.ParentID == topLevelItem.ID && m.Title == "LibraryAdmin");
             int parentMenuId = adminTopItem.ID; // should be ID = -40
 
+            //Get just the menu items the admin user should have access to ...
             var userItems = GetAdminUserMenuItems(parentMenuId);
 
             ViewData["ParentMenuID"] = parentMenuId;
             return View(userItems);
         }
 
-        //Cache each admin user's menu for 2 hours
-        //[OutputCache(Duration=7200, VaryByParam="none", Location=OutputCacheLocation.Client, NoStore=true)]
         public IEnumerable<Menu> GetAdminUserMenuItems(int parentMenuId = -40)
         {                        
-            var allItems = (from m in _menuItems.OrderBy(x => x.SortOrder) select m).ToList();
+            var allItems = (from m in _menuItems.Where(m => m.IsEnabled && m.IsVisible).OrderBy(x => x.SortOrder) select m).ToList();
+
+            //If the user is a Bailey Admin then grant them access to everything!
+            if (User.IsInRole("Bailey Admin"))
+            {
+                var baileyAdminItems = from m in allItems
+                                       where m.MenuArea == "LibraryAdmin"
+                                       select m;
+                return baileyAdminItems;
+            }
+            else
+            {
+                //Get the admin menu items that match the user's roles
+                //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
+                var userRoles = Roles.GetUserRoles();
+                var userItems = from m in allItems
+                                where
+                                    m.MenuArea == "LibraryAdmin" &&
+                                    m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
+                                        .Any(x => userRoles.Contains(x) || x == "All" || x == "Anonymous")
+                                select m;
+                return userItems;
+            }
             
-            //Get the admin menu items that match the user's roles
-            //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
-            //var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            //var id = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
-            //var roles = userManager.GetRoles(id);
-            var userRoles = Roles.GetUserRoles();
-            var userItems = from m in allItems
-                where
-                    m.MenuArea == "LibraryAdmin" &&
-                    m.Roles.Split(new[] {";"}, StringSplitOptions.RemoveEmptyEntries)
-                        .Any(x => userRoles.Contains(x) || x == "All" || x == "Anonymous")
-                select m;
-            return userItems;
         }
     }
 }

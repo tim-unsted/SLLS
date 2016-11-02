@@ -17,10 +17,6 @@ namespace slls.Controllers
         {
         }
 
-        //Get the menu items from the database or cache ...
-        //private readonly IEnumerable<Menu> menuItems = CacheProvider.GetMenusItems();
-        //private readonly IEnumerable<Menu> _menuItems = CacheProvider.GetAll<Menu>("menuitems");
-
         [AllowAnonymous]
         public ActionResult MainMenu()
         {
@@ -29,8 +25,6 @@ namespace slls.Controllers
         }
 
         [AllowAnonymous]
-        //Cache each user's menu for 2 hours
-        //[OutputCache(Duration = 7200, VaryByParam = "*")]
         public ActionResult TopMenu()
         {
             var _menuItems = CacheProvider.GetAll<Menu>("menuitems").ToList();
@@ -53,14 +47,27 @@ namespace slls.Controllers
                 ViewData["ParentMenuID"] = parentMenuId;
                 return View(someItems.ToList());
             }
+
+            //If the user is a Bailey Admin then grant them access to everything!
+            if (User.IsInRole("Bailey Admin"))
+            {
+                var baileyAdminItems = from m in allItems
+                                       where m.MenuArea == "OPAC"
+                                       select m;
+
+                ViewData["ParentMenuID"] = parentMenuId;
+                return View(baileyAdminItems);
+            }
             else
             {
                 //Get the menu items that match the user's roles
                 //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
                 var userRoles = Roles.GetUserRoles();
-                var menuAreas = "OPAC";
+                //var menuAreas = "OPAC";
                 var userItems = from m in allItems
-                                where menuAreas.Contains(m.MenuArea) 
+                                //where menuAreas.Contains(m.MenuArea) 
+                                where 
+                                m.MenuArea == "OPAC"
                                 && m.IsVisible
                                 && m.Roles.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
                                     .Any(x => userRoles.Contains(x) || x == "All" || x == "Anonymous")

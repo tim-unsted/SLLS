@@ -16,32 +16,30 @@ namespace slls.Areas.Config
         private readonly DbEntities _db = new DbEntities();
 
         //Get the menu items from the database or cache ...
-        //private readonly IEnumerable<Menu> menuItems = CacheProvider.GetMenusItems();
         private readonly IEnumerable<Menu> _menuItems = CacheProvider.GetAll<Menu>("menuitems");
 
         [AllowAnonymous]
-        //Cache each admin user's menu for 2 hours
-       // [OutputCache(Duration = 7200, VaryByParam = "*")]
         public ActionResult TopMenu()
         {
-            //Get the very top term ...
+            //Get the very top menu item ...
             var topLevelItem = _menuItems.FirstOrDefault(m => m.ParentID == null); // should be ID = -999
             var opacTopItem = _menuItems.FirstOrDefault(m => m.ParentID == topLevelItem.ID && m.Title == "OPAC");
             int parentMenuId = opacTopItem.ID;
 
-            var allItems = (from m in _menuItems.OrderBy(x => x.SortOrder) select m).ToList();
+            var allItems = (from m in _menuItems.Where(m => m.IsEnabled && m.IsVisible).OrderBy(x => x.SortOrder) select m).ToList();
 
             //Get the current user's ID ...
             var id = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
-
-            //If the user is not logged in, only the menu items with the role "All" or "Anonymous"
-            if (String.IsNullOrEmpty(id))
+            
+            //If the user is a Bailey Admin then grant them access to everything!
+            if (User.IsInRole("Bailey Admin"))
             {
-                var someItems = from someitems in allItems.Where(y => y.Roles.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                            .Any(x => new String[] { "All", "Anonymous" }.Contains(x)))
-                                select someitems;
+                var baileyAdminItems = from m in allItems
+                    where m.MenuArea == "OPAC"
+                    select m;
+
                 ViewData["ParentMenuID"] = parentMenuId;
-                return View(someItems.ToList());
+                return View(baileyAdminItems);
             }
             else
             {
@@ -50,8 +48,8 @@ namespace slls.Areas.Config
                 var userRoles = Roles.GetUserRoles();
 
                 var userItems = from m in allItems
-                                where m.MenuArea == "OPAC"
-                                && m.IsVisible  
+                                where 
+                                m.MenuArea == "OPAC"
                                 && m.Roles.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
                                     .Any(x => userRoles.Contains(x) || x == "All" || x == "Anonymous")
                                 select m;
@@ -63,32 +61,39 @@ namespace slls.Areas.Config
         }
 
         [AllowAnonymous]
-        //Cache each admin user's menu for 2 hours
-        //[OutputCache(Duration = 7200, VaryByParam = "*")]
         public ActionResult MainMenu()
         {
             //Get the very top term ...
-            var topLevelItem = _menuItems.Where(m => m.ParentID == null).FirstOrDefault(); // should be ID = -999
-            var configTopItem = _menuItems.Where(m => m.ParentID == topLevelItem.ID && m.Title == "Config").FirstOrDefault();
+            var topLevelItem = _menuItems.FirstOrDefault(m => m.ParentID == null); // should be ID = -999
+            var configTopItem = _menuItems.FirstOrDefault(m => m.ParentID == topLevelItem.ID && m.Title == "Config");
             int parentMenuId = configTopItem.ID;
             
             var allItems = (from m in _menuItems.OrderBy(x => x.SortOrder) select m).ToList();
 
-            //Get the config menu items that match the user's roles
-            //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
-            //var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            //var id = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
-            //var roles = userManager.GetRoles(id);
-            var userRoles = Roles.GetUserRoles();
-            var userItems = from m in allItems
-                where
-                    m.MenuArea == "Config" &&
-                    m.Roles.Split(new[] {";"}, StringSplitOptions.RemoveEmptyEntries)
-                        .Any(x => userRoles.Contains(x) || x == "All" || x == "Anonymous")
-                select m;
+            //If the user is a Bailey Admin then grant them access to everything!
+            if (User.IsInRole("Bailey Admin"))
+            {
+                var baileyAdminItems = from m in allItems
+                                       where m.MenuArea == "Config"
+                                       select m;
+                ViewData["ParentMenuID"] = parentMenuId;
+                return View(baileyAdminItems);
+            }
+            else
+            {
+                //Get the config menu items that match the user's roles
+                //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
+                var userRoles = Roles.GetUserRoles();
+                var userItems = from m in allItems
+                                where
+                                    m.MenuArea == "Config" &&
+                                    m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
+                                        .Any(x => userRoles.Contains(x) || x == "All" || x == "Anonymous")
+                                select m;
 
-            ViewData["ParentMenuID"] = parentMenuId;
-            return View(userItems);
+                ViewData["ParentMenuID"] = parentMenuId;
+                return View(userItems);
+            }
         }
     }
 }
