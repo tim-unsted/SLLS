@@ -98,6 +98,8 @@ namespace slls.ViewModels
         public string Who { get; set; }
         //public string Sources { get; set; }
         public IEnumerable<SelectListItem> Sources { get; set; }
+
+        [Required(ErrorMessage = "Please choose at least one source!")]
         public IEnumerable<string> SelectedSources { get; set; }
     }
 

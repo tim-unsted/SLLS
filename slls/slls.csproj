@@ -268,7 +268,7 @@
     <Compile Include="Areas\Config\Controllers\MenuBuilderController.cs" />
     <Compile Include="Areas\Config\Controllers\ParametersController.cs" />
     <Compile Include="Areas\Config\Controllers\PartialMenuController.cs" />
-    <Compile Include="Areas\LibraryAdmin\AdminToolsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\AdminToolsController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\CirculationController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\CirculationMessagesController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\CommMethodTypesController.cs" />

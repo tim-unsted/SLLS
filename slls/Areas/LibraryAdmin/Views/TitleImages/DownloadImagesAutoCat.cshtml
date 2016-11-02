@@ -2,12 +2,14 @@
 @using slls.Utils.Helpers
 @model slls.ViewModels.DownloadImagesViewmodel
 
-<div>
+@*<div>
     <span class="btn-group pull-right">
         <button type="button" class="btn-link" onclick="window.history.back();">Cancel</button>
     </span>
     <h2>@ViewBag.Title</h2>
-</div>
+</div>*@
+
+@Html.Partial("_HeaderCancel")
 
 <div class="alert alert-info">
     <p>
@@ -19,11 +21,13 @@
 </div>
 
 @using (Ajax.BeginForm("PostDownloadImagesAutoCat", "TitleImages", "Post",
- new AjaxOptions { UpdateTargetId = "progress" }))
+ new AjaxOptions { UpdateTargetId = "progress" }, new { id = "xxx", name ="xxx"}))
 {
     <script src="@Html.ResolveUrl("~/signalr/hubs")"></script>
 
     @Html.AntiForgeryToken()
+    
+    @Html.ValidationSummary()
 
     @Html.HiddenFor(x => Model.Who)
 
@@ -64,11 +68,12 @@
                     @foreach (var item in Model.Sources)
                     {
                         <li>
-                            <input type="checkbox" name="SelectedSources" value="@item.Value" checked="@item.Selected" />
-                            @Html.DisplayFor(model => item.Text, new { @class = "control-label" })
+                            <input type="checkbox" name="SelectedSources" value="@item.Value" checked="@item.Selected"/>
+                            @Html.DisplayFor(model => item.Text, new {@class = "control-label"})
                         </li>
                     }
                 </ul>
+                <span id="warning-msg" class="text-danger" style="display: none;">Please choose at least one available source!</span>
             </div>
         </div>
 
@@ -93,6 +98,17 @@
             .css('width', '0%')
             .attr('aria-valuenow', "0");
         StartMessaging();
+
+        $('#xxx').submit(function(e) {
+            e.preventDefault();
+            $("#warning-msg").hide();
+            if ($("#xxx input:checkbox:checked").length == 0) {
+                $("#warning-msg").show();
+                return false;
+            } else {
+                return true;
+            }
+        });
     });
 
     $.fn.disable = function() {
