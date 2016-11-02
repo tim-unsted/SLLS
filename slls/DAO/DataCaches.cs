@@ -45,7 +45,7 @@ namespace slls.DAO
             {
                 newTitles = (from t in db.Titles
                              join c in db.Copies on t.TitleID equals c.TitleID
-                             where c.AcquisitionsList
+                             where t.Deleted == false && c.Deleted == false && c.AcquisitionsList && c.StatusType.Opac && c.Volumes.Any()
                              select t).Distinct().ToList();
                 Cache["newtitles"] = newTitles;
                 return newTitles;

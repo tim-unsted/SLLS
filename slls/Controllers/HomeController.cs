@@ -110,16 +110,16 @@ namespace slls.Controllers
         
         public ActionResult NewTitles()
         {
-            var viewModel = new TitlesListViewModel();
+            var viewModel = new SimpleSearchingViewModel();
 
             //Get a collection of items on the 'New Titles' list ...
             var newtitles = (from t in _db.Titles
                                 join c in _db.Copies on t.TitleID equals c.TitleID
-                                where c.AcquisitionsList
+                                where t.Deleted == false && c.Deleted == false && c.AcquisitionsList && c.StatusType.Opac && c.Volumes.Any()
                                 orderby t.Title1.Substring(t.NonFilingChars)
                                 select t).Distinct();
 
-            viewModel.Titles = newtitles.ToList();
+            viewModel.Results = newtitles.ToList();
             ViewBag.Title = "New Titles";
             return View(viewModel);
         }

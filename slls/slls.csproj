@@ -1012,7 +1012,6 @@
     <Content Include="Customer\Settings\Authentication.config" />
     <Content Include="Customer\Settings\Globalization.config" />
     <Content Include="Areas\LibraryAdmin\Views\AdminTools\UpdateMergeAuthorityList.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\AdminTools\ConfirmAuthListMerger.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

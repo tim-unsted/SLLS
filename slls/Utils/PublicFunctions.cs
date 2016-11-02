@@ -21,8 +21,8 @@ namespace slls.Utils
 
         public static int GetDefaultValue(string entity = "", string field = "")
         {
-            if (string.IsNullOrEmpty(entity)) return 0;
-            if (string.IsNullOrEmpty(field)) return 0;
+            if (string.IsNullOrEmpty(entity)) return 1;
+            if (string.IsNullOrEmpty(field)) return 1;
 
             var db = new DbEntities();
 
@@ -31,7 +31,7 @@ namespace slls.Utils
                     d.TableName.Equals(entity, StringComparison.OrdinalIgnoreCase) &&
                     d.FieldName.Equals(field, StringComparison.OrdinalIgnoreCase));
                                
-            return defaultValue != null ? defaultValue.DefaultValueId : 0;
+            return defaultValue != null ? defaultValue.DefaultValueId : 1;
         }
 
         public static int GetDefaultLoanType(int mediaId = 0)

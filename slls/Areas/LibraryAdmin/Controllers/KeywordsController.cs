@@ -77,7 +77,7 @@ namespace slls.Areas.LibraryAdmin
                 else
                 {
                     model.keywords = allKeywords
-                        .Where(k => k.KeywordTerm.StartsWith(selectedLetter))
+                        .Where(k => k.KeywordTerm.StartsWith(selectedLetter, StringComparison.InvariantCultureIgnoreCase))
                         .ToList();
                 }
             }

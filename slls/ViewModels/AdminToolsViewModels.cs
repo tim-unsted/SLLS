@@ -19,6 +19,7 @@ namespace slls.ViewModels
         
         public IEnumerable<SelectListItem> AvailableItems { get; set; }
 
+        [Required(ErrorMessage = "Please select at least one value to move/merge")]
         [DisplayName("Current values to move/merge")]
         public List<int> SelectedIds { get; set; }
 
