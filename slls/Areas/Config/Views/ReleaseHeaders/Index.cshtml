@@ -1,0 +1,75 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.ReleaseHeader>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#releases').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs":[            
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [3]}
+            ]
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    <a href="@Url.Action("Create", "ReleaseHeaders")" title="Add new Release" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<table id="releases" class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ReleaseNumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReleaseDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Comments)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ReleaseNotes)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderByDescending(r => r.ReleaseId))
+        {
+            <tr>
+                <td>
+                    @Html.ActionLink(item.ReleaseNumber, "Edit", "ReleaseHeaders", new { id = item.ReleaseId }, new { @class = "modal-link" })
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Comments)
+                </td>
+                <td>
+                    @if (item.ReleaseNotes.Any())
+                    {
+                        <a href="@Url.Action("Index", "ReleaseNotes", new { releaseId = item.ReleaseId })" title="View release details")"><span class="badge badge-link">@item.ReleaseNotes.Count</span></a>
+                    }
+                </td>
+                <td style="text-align: right;">
+                    <a href="@Url.Action("Delete", new {id = item.ReleaseId})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.ReleaseId})" class="btn btn-link modal-link" title="Edit">&nbsp;<span class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
