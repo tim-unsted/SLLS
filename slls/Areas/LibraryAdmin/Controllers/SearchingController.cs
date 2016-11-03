@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
@@ -3198,15 +3199,132 @@ namespace slls.Areas.LibraryAdmin
             TempData["simpleSearchingViewModel"] = viewModel;
         }
 
-        //public ActionResult ShowSearchHelp()
-        //{
-        //    var viewModel = new GenericHelpViewModel()
-        //    {
-        //        HelpText = HelpTextHelper.GetHelpText("searchingtips")
-        //    };
-        //    ViewBag.Title = "Searching Tips";
-        //    return PartialView("_GenericHelp", viewModel);
-        //}
+        public async Task<ActionResult> ExportCatalogueResultsAsync(string exportType = "titles")
+        {
+            var viewModel = (SimpleSearchingViewModel)TempData["simpleSearchingViewModel"];
+
+            await Task.Run(() =>
+            {
+                switch (exportType)
+                {
+                    case "titles":
+                    {
+                        var titlesOnlyList = new List<ExportJustTitlesViewModel>();
+                        foreach (var title in viewModel.Results.ToList())
+                        {
+                            var anotherTitle = new ExportJustTitlesViewModel
+                            {
+                                TitleId = title.TitleID,
+                                Title = title.Title1 ?? "",
+                                Author = title.AuthorString ?? "",
+                                Edition = title.Edition ?? "",
+                                ISBN = title.Isbn ?? "",
+                                Publisher = title.Publisher.PublisherName ?? "",
+                                Year = title.Year ?? "",
+                                PlaceofPublication = title.PlaceofPublication ?? "",
+                                Media = title.MediaType.Media ?? "",
+                                Classmark = title.Classmark.Classmark1 ?? "",
+                                Language = title.Language.Language1 ?? "",
+                                Series = title.Series ?? "",
+                                Copies = title.Copies.Count(c => c.Deleted == false),
+                                DateCatalogued = string.Format("{0:yyyy-MM-dd}", title.DateCatalogued),
+                                Links = title.LinkString ?? "",
+                                Keywords = title.KeywordString ?? "",
+                                TitleTexts = title.TitleTextString ?? ""
+                            };
+                            titlesOnlyList.Add(anotherTitle);
+                        }
+                        DataExport.ExportExcel2007(titlesOnlyList);
+                        break;
+                    }
+                    case "titlescopies":
+                    {
+                        var titlesCopiesList = new List<ExportTitlesCopiesViewModel>();
+                        var copies = from t in viewModel.Results
+                            join c in _db.Copies on t.TitleID equals c.TitleID
+                            select c;
+
+                        foreach (var copy in copies.ToList())
+                        {
+                            var anotherCopy = new ExportTitlesCopiesViewModel
+                            {
+                                TitleId = copy.TitleID,
+                                Title = copy.Title.Title1 ?? "",
+                                Author = copy.Title.AuthorString ?? "",
+                                Edition = copy.Title.Edition ?? "",
+                                ISBN = copy.Title.Isbn ?? "",
+                                Publisher = copy.Title.Publisher.PublisherName ?? "",
+                                Year = copy.Title.Year ?? "",
+                                PlaceofPublication = copy.Title.PlaceofPublication ?? "",
+                                Media = copy.Title.MediaType.Media ?? "",
+                                Classmark = copy.Title.Classmark.Classmark1 ?? "",
+                                Language = copy.Title.Language.Language1 ?? "",
+                                Series = copy.Title.Series ?? "",
+                                Keywords = copy.Title.KeywordString ?? "",
+                                Links = copy.Title.LinkString ?? "",
+                                TitleTexts = copy.Title.TitleTextString ?? "",
+                                Copy = copy.CopyNumber,
+                                Location = copy.Location.LocationString ?? "",
+                                Status = copy.StatusType.Status,
+                                Holdings = copy.Holdings ?? "",
+                                Volumes = copy.Volumes.Count(volume => volume.Deleted == false),
+                                DateCatalogued = string.Format("{0:yyyy-MM-dd}", copy.Title.DateCatalogued)
+                            };
+                            titlesCopiesList.Add(anotherCopy);
+                        }
+                        DataExport.ExportExcel2007(titlesCopiesList);
+                        break;
+                    }
+                    case "titlescopiesvolumes":
+                    {
+                        var titlesCopiesVolumesList = new List<ExportTitlesCopiesVolumesViewModel>();
+                        var allVolumes = from t in viewModel.Results
+                            join c in _db.Copies on t.TitleID equals c.TitleID
+                            join v in _db.Volumes on c.CopyID equals v.CopyID
+                            where t.Deleted == false && c.Deleted == false && v.Deleted == false
+                            select v;
+
+                        foreach (var volume in allVolumes)
+                        {
+                            var anotherVolume = new ExportTitlesCopiesVolumesViewModel()
+                            {
+                                TitleId = volume.Copy.TitleID,
+                                Title = volume.Copy.Title.Title1 ?? "",
+                                Author = volume.Copy.Title.AuthorString ?? "",
+                                Edition = volume.Copy.Title.Edition ?? "",
+                                ISBN = volume.Copy.Title.Isbn ?? "",
+                                Publisher = volume.Copy.Title.Publisher.PublisherName ?? "",
+                                Year = volume.Copy.Title.Year ?? "",
+                                PlaceofPublication = volume.Copy.Title.PlaceofPublication ?? "",
+                                Media = volume.Copy.Title.MediaType.Media ?? "",
+                                Classmark = volume.Copy.Title.Classmark.Classmark1 ?? "",
+                                Language = volume.Copy.Title.Language.Language1 ?? "",
+                                Series = volume.Copy.Title.Series ?? "",
+                                Keywords = volume.Copy.Title.KeywordString ?? "",
+                                Links = volume.Copy.Title.LinkString ?? "",
+                                TitleTexts = volume.Copy.Title.TitleTextString ?? "",
+                                Copy = volume.Copy.CopyNumber,
+                                Location = volume.Copy.Location.Location1 ?? "",
+                                Status = volume.Copy.StatusType.Status,
+                                Holdings = volume.Copy.Holdings ?? "",
+                                Barcode = volume.Barcode ?? "",
+                                LabelText = volume.LabelText ?? "",
+                                LoanType = volume.LoanType.LoanTypeName ?? "",
+                                OnLoan = volume.OnLoan,
+                                DateCatalogued = string.Format("{0:yyyy-MM-dd}", volume.Copy.Title.DateCatalogued)
+                            };
+                            titlesCopiesVolumesList.Add(anotherVolume);
+                        }
+                        DataExport.ExportExcel2007(titlesCopiesVolumesList);
+                        break;
+                    }
+                }
+                
+            });
+
+            TempData["simpleSearchingViewModel"] = viewModel;
+            return null;
+        }
 
         public ActionResult SaveSearch()
         {

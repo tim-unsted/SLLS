@@ -208,7 +208,7 @@ namespace slls.Controllers
                     {
                         return null;
                     }
-
+                    
                     ViewData["SearchField"] = SelectListHelper.SearchFieldsList();
                     ViewBag.Title = DbRes.T("Search", "Terminology");
                     return PartialView("Dashboard/_SearchGadget");
@@ -360,9 +360,13 @@ namespace slls.Controllers
             viewModel.Results =
                 (from t in
                     _db.Titles
-                join a in _db.TitleAuthors on t.TitleID equals a.TitleId
-                where a.AuthorId == listAuthors
-                select t).ToList();
+                    join c in _db.Copies on t.TitleID equals c.TitleID
+                    join a in _db.TitleAuthors on t.TitleID equals a.TitleId
+                    where
+                        t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && a.AuthorId == listAuthors
+                select t).Distinct().ToList();
+            viewModel.LibraryStaff = Roles.IsLibraryStaff();
+            viewModel.IsActualSearch = false;
             return View(viewModel);
         }
 
@@ -371,7 +375,6 @@ namespace slls.Controllers
             //Get the list of classmarks in use ...
             var classmarks = (from c in _db.Classmarks
                               where c.Titles.Count > 0
-                              //orderby c.Classmark1
                               select
                                   new { c.ClassmarkID, Classmark = c.Classmark1 + " (" + c.Titles.Count + ")" })
                 .Distinct();
@@ -401,12 +404,18 @@ namespace slls.Controllers
             ViewBag.Title = "Browse By " + DbRes.T("Classmarks.Classmark", "FieldDisplayName");
 
             //Get the actual results if the user has selected anything ...
-            var viewModel = new SimpleSearchingViewModel();
-            viewModel.Results =
-                (from t in
+            var viewModel = new SimpleSearchingViewModel
+            {
+                Results = (from t in
                     _db.Titles
-                where t.Classmark.ClassmarkID == listClassmarks
-                select t).ToList();
+                    join c in _db.Copies on t.TitleID equals c.TitleID
+                    where
+                        t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() &&
+                        t.ClassmarkID == listClassmarks
+                    select t).Distinct().ToList(),
+                LibraryStaff = Roles.IsLibraryStaff(),
+                IsActualSearch = false
+            };
             return View(viewModel);
         }
 
@@ -444,12 +453,18 @@ namespace slls.Controllers
             ViewBag.Title = "Browse By " + DbRes.T("MediaTypes.Media_Type", "FieldDisplayName");
 
             //Get the actual results if the user has selected anything ...
-            var viewModel = new SimpleSearchingViewModel();
-            viewModel.Results =
-                (from t in
+            var viewModel = new SimpleSearchingViewModel
+            {
+                Results = (from t in
                     _db.Titles
-                where t.MediaType.MediaID == listMedia
-                select t).ToList();
+                           join c in _db.Copies on t.TitleID equals c.TitleID
+                           where
+                               t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() &&
+                               t.MediaID == listMedia
+                           select t).Distinct().ToList(),
+                LibraryStaff = Roles.IsLibraryStaff(),
+                IsActualSearch = false
+            };
             return View(viewModel);
         }
 
@@ -482,12 +497,18 @@ namespace slls.Controllers
             ViewBag.Title = "Browse By " + DbRes.T("Publishers.Publisher", "FieldDisplayName");
 
             //Get the actual results if the user has selected anything ...
-            var viewModel = new SimpleSearchingViewModel();
-            viewModel.Results =
-                (from t in
-                    _db.Titles
-                where t.Publisher.PublisherID == listPublishers
-                select t).ToList();
+            var viewModel = new SimpleSearchingViewModel
+            {
+                Results = (from t in
+                               _db.Titles
+                           join c in _db.Copies on t.TitleID equals c.TitleID
+                           where
+                               t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() &&
+                               t.PublisherID == listPublishers
+                           select t).Distinct().ToList(),
+                LibraryStaff = Roles.IsLibraryStaff(),
+                IsActualSearch = false
+            };
             return View(viewModel);
         }
 
@@ -525,12 +546,18 @@ namespace slls.Controllers
             ViewBag.Title = "Browse By " + DbRes.T("Languages.Language", "FieldDisplayName");
 
             //Get the actual results if the user has selected anything ...
-            var viewModel = new SimpleSearchingViewModel();
-            viewModel.Results =
-                (from t in
-                    _db.Titles
-                where t.LanguageID == listLanguage
-                select t).ToList();
+            var viewModel = new SimpleSearchingViewModel
+            {
+                Results = (from t in
+                               _db.Titles
+                           join c in _db.Copies on t.TitleID equals c.TitleID
+                           where
+                               t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() &&
+                               t.LanguageID == listLanguage
+                           select t).Distinct().ToList(),
+                LibraryStaff = Roles.IsLibraryStaff(),
+                IsActualSearch = false
+            };
             return View(viewModel);
         }
 
@@ -568,12 +595,18 @@ namespace slls.Controllers
             ViewBag.Title = "Browse By " + DbRes.T("Locations.Location", "FieldDisplayName");
 
             //Get the actual results if the user has selected anything ...
-            var viewModel = new SimpleSearchingViewModel();
-            viewModel.Results =
-                (from t in
-                    _db.Titles join c in _db.Copies on t.TitleID equals c.CopyID
-                where c.LocationID == listLocation
-                select t).Distinct().ToList();
+            var viewModel = new SimpleSearchingViewModel
+            {
+                Results = (from t in
+                               _db.Titles
+                           join c in _db.Copies on t.TitleID equals c.TitleID
+                           where
+                               t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() &&
+                               c.LocationID == listLocation
+                           select t).Distinct().ToList(),
+                LibraryStaff = Roles.IsLibraryStaff(),
+                IsActualSearch = false
+            };
             return View(viewModel);
         }
 
@@ -620,13 +653,17 @@ namespace slls.Controllers
             ViewBag.Title = "Browse By " + DbRes.T("Keywords.Keyword", "FieldDisplayName");
 
             //Get a list of all items linked to the selected keyword
-            var viewModel = new SimpleSearchingViewModel();
-            viewModel.Results =
-                (from t in
+            var viewModel = new SimpleSearchingViewModel
+            {
+                Results = (from t in
                     _db.Titles
-                join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
-                where x.KeywordID == listSubjects
-                select t).ToList();
+                           join c in _db.Copies on t.TitleID equals c.TitleID
+                           join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
+                           where t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && x.KeywordID == listSubjects
+                           select t).ToList(),
+                LibraryStaff = Roles.IsLibraryStaff(),
+                IsActualSearch = false
+            };
             return View(viewModel);
         }
 
@@ -670,7 +707,8 @@ namespace slls.Controllers
             var viewModel = new SimpleSearchingViewModel()
             {
                 LibraryStaff = Roles.IsLibraryStaff(),
-                Area = "admin"
+                Area = "admin",
+                IsActualSearch = true
             };
 
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(scope: "opac");
@@ -681,6 +719,8 @@ namespace slls.Controllers
         //[HttpPost]
         public ActionResult SimpleSearchResults(SimpleSearchingViewModel viewModel)
         {
+            viewModel.IsActualSearch = true;
+            
             //Classmarks filter ...
             if (!viewModel.ClassmarksFilter.Any())
             {

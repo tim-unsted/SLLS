@@ -16,6 +16,9 @@ namespace slls.ViewModels
         //Is the current user an admin user
         public bool LibraryStaff { get; set; }
 
+        //Are the results being used in an actual search, or in a Browse By page?
+        public bool IsActualSearch { get; set; }
+        
         public string Area { get; set; }
 
         [LocalDisplayName("Searching.SearchTerm", "FieldDisplayName")]

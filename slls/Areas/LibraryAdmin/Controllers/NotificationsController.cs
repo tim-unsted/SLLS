@@ -30,12 +30,13 @@ namespace slls.Areas.LibraryAdmin
         // Create a simple disctionary that we can used to fill a dropdown list in views
         public Dictionary<string, string> GetScopeTypes()
         {
-            return new Dictionary<string, string>
+            var scopeTypes = new Dictionary<string, string>();
+            if (Roles.IsAdmin())
             {
-                {"A", "Library Admin"},
-                {"O", "OPAC"},
-                {"C", "Config"}
-            };
+                scopeTypes.Add("A", "Library Admin");
+            }
+            scopeTypes.Add("O", "OPAC");
+            return scopeTypes;
         }
 
         // GET: LibraryAdmin/Notifications

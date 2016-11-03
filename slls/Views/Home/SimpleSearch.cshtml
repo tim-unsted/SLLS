@@ -2,6 +2,7 @@
 <h2>@ViewBag.Title</h2>
 
 @Html.HiddenFor(x => Model.ClassmarksFilter)
+@Html.HiddenFor(x => Model.IsActualSearch)
 
 @using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm" }))
 {

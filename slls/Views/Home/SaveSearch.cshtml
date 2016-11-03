@@ -1,4 +1,5 @@
-﻿@model slls.ViewModels.LibraryUserSavedSearchViewModel
+﻿@using Westwind.Globalization
+@model slls.ViewModels.LibraryUserSavedSearchViewModel
 
 @Html.Partial("_ModalDefaultHeader")
 
@@ -26,9 +27,16 @@
                 @Html.HiddenFor(model => model.RequestersFilter)
                 @Html.HiddenFor(model => model.SuppliersFilter)
                 @Html.HiddenFor(model => model.UserId)
-                
-				<div class="form-group">
-					@Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-3" })
+
+			    <div class="alert alert-info" role="alert">
+			        <p>
+			            <strong>Tip: </strong>
+			            Save your current search by giving it a meaningful name so that you can easily find it and run it again in the future. All of your saved searches can be viewed via the 'My Library' menu.
+			        </p>
+			    </div>
+
+			    <div class="form-group">
+					@Html.Label("Save Search As", htmlAttributes: new { @class = "control-label col-md-3" })
 					<div class="col-md-8">
 					    @Html.EditorFor(model => model.Description, new {htmlAttributes = new {@class = "form-control"}}) 
                         @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })

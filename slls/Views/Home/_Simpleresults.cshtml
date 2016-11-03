@@ -40,10 +40,10 @@
 
 </script>
 
-@if (Model.LibraryStaff)
+@if (Model.LibraryStaff && Model.Results.Any()) //Only show the 'Export' button for library staff ...
 {
     <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export results to Excel">
             <span class="glyphicon glyphicon-plus-sign"></span> Export <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
@@ -52,8 +52,13 @@
             <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopiesvolumes"})" title="Export Titles, Copies & Copy Item (Volume) details" class="btn-link">Titles, Copies & Copy Item details</a></li>
         </ul>
     </div>
+}
+
+@if (Model.IsActualSearch && Model.Results.Any()) //Only show the 'Save Search' button for actual searches ...
+{
     <a href="@Url.Action("SaveSearch", "Home")" title="Save Search" class="btn btn-default modal-link"><span class="glyphicon glyphicon-floppy-disk"></span> Save</a>
 }
+
 
 <table id="titles" class="table table-condensed table-no-border">
     <thead>
@@ -98,7 +103,9 @@
                                 colClass = "col-md-10";
                                 <div class="col-md-2">
                                     <div class="coverthumbnail">
-                                        <img src="@Url.Action("ViewImage", "TitleImages", new {id = item.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@item.TitleImages.FirstOrDefault(i => i.IsPrimary).Alt" style="width: 100%;">
+                                        <a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")">
+                                            <img src="@Url.Action("ViewImage", "TitleImages", new {id = item.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@item.TitleImages.FirstOrDefault(i => i.IsPrimary).Alt" style="width: 100%;">
+                                        </a>
                                     </div>
                                 </div>
                             }

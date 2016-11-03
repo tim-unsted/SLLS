@@ -77,6 +77,7 @@ namespace slls.Controllers
                     };
                     _db.LibraryUserBookmarks.Add(newBookmark);
                     _db.SaveChanges();
+                    TempData["SuccessDialogMsg"] = "Your bookmark has been saved. You can find all of your bookmarks under the 'My Library' menu.";
                     return Json(new {success = true});
                 }
                 catch (Exception e)
@@ -84,7 +85,7 @@ namespace slls.Controllers
                     ModelState.AddModelError("", e.Message);
                 }
             }
-            return PartialView(viewModel);
+            return Json(new { success = true });
         }
         
         // GET: LibraryUserBookmarks/Edit/5
