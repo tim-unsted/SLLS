@@ -1,4 +1,5 @@
-﻿@using Westwind.Globalization
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
 @model slls.ViewModels.UsefulLinksAddEditViewModel
 
 @Html.Partial("_ModalAddHeader")
@@ -20,6 +21,7 @@
                 @Html.LabelFor(model => model.LinkAddress, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.LinkAddress, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.HelpInline("This can be the path to a website (e.g. 'http://' or 'https://'), or to an internal document (e.g '&#92;&#92;sharename&#92;...')")
                     @Html.ValidationMessageFor(model => model.LinkAddress, "", new {@class = "text-danger"})
                 </div>
             </div>
@@ -28,6 +30,7 @@
                 @Html.LabelFor(model => model.DisplayText, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.DisplayText, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.HelpInline("This is the friendly text that is displayed in the link in place of the full URL.")
                     @Html.ValidationMessageFor(model => model.DisplayText, "", new {@class = "text-danger"})
                 </div>
             </div>
@@ -36,6 +39,7 @@
                 @Html.LabelFor(model => model.ToolTip, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.ToolTip, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.HelpInline("This is the tool-tip that appears when the mouse is hovered over the link.")
                     @Html.ValidationMessageFor(model => model.ToolTip, "", new {@class = "text-danger"})
                 </div>
             </div>
@@ -44,6 +48,7 @@
                 @Html.LabelFor(model => model.Target, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     @Html.DropDownListFor(model => model.Target, new SelectList(ViewBag.Targets, "Key", "Value"), new {@class = "form-control"})
+                    @Html.HelpInline("Link behaviour: How does this link behave when clicked on?")
                     @Html.ValidationMessageFor(model => model.Target, "", new {@class = "text-danger"})
                 </div>
             </div>
