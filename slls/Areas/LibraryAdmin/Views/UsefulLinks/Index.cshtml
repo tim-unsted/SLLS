@@ -28,7 +28,7 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <p>
-    <a href="@Url.Action("Create", "UsefulLinks")" title="Add new @DbRes.T("Useful_Links.Useful_Link", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Create", "UsefulLinks")" title="Add new @DbRes.T("Useful_Links.Useful_Link", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 <table id="usefulLinks" class="table table-hover table-condensed">
@@ -80,7 +80,7 @@
                 </td>
                 <td class="just-right">
                     <a href="@Url.Action("Delete", new {id = item.LinkID})" class="btn btn-link modal-link" title="Delete this Useful Link"><span class=" glyphicon glyphicon-trash" /></a>
-                    <a href="@Url.Action("Edit", new {id = item.LinkID})" c class="btn btn-link modal-link" title="Edit this Useful Link"><span class="glyphicon glyphicon-pencil" /></a>
+                    <a href="@Url.Action("Edit", new {id = item.LinkID})" c class="btn btn-link modal-link" title="Edit this Useful Link"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
                 </td>
             </tr>
         }

@@ -48,7 +48,7 @@
     {
         @Html.DropDownList("ListSupplier", null, new { @class = "form-control", onchange = "this.form.submit();" })
     }
-    <a href="@Url.Action("Create", "PartsReceived", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
+    <a href="@Url.Action("Create", "PartsReceived", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
 </div>
 
 <div id="partslist">
@@ -119,8 +119,8 @@
                         @Html.Raw(item.DateReceivedSortable)
                     </td>
                     <td class="just-right">
-                        <a href="@Url.Action("Edit", "PartsReceived", new { id = item.PartID })" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="@Url.Action("Create", "PartsReceived", new { id = item.CopyID })" class="btn btn-link modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span></a>
+                        <a href="@Url.Action("Edit", "PartsReceived", new { id = item.PartID })" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="@Url.Action("Create", "PartsReceived", new { id = item.CopyID })" class="btn btn-link modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span></a>
                     </td>
                 </tr>
             }

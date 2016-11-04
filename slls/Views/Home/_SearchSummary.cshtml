@@ -5,7 +5,7 @@
             Summary
             @if (User.Identity.IsAuthenticated)
             {
-                <span class="pull-right"><a href="@Url.Action("Add", "LibraryUserSavedSearches", new { url = Request.Url.PathAndQuery, description = ViewBag.SearchTerm ?? "New Saved Search" })" class="modal-link" title="Save Search">Save <span class="glyphicon glyphicon-save "></span></a></span>
+                <span class="pull-right"><a href="@Url.Action("Add", "LibraryUserSavedSearches", new { url = Request.Url.PathAndQuery, description = ViewBag.SearchTerm ?? "New Saved Search" })" class="modal-link" title="Save Search">Save <span aria-hidden="true" class="glyphicon glyphicon-save "></span></a></span>
             }
         </div>
         <div class="panel-body">
@@ -32,7 +32,7 @@
                               p = item.Key.ToString() == "p" ? 0 : @ViewBag.PublisherID,
                               a = item.Key.ToString() == "a" ? 0 : @ViewBag.AuthorID,
                               k = item.Key.ToString() == "k" ? 0 : @ViewBag.KeywordID
-                          })" title="Remove this filter"><span class="glyphicon glyphicon-remove"></span></a>
+                          })" title="Remove this filter"><span aria-hidden="true" class="glyphicon glyphicon-remove"></span></a>
                         </li>
                     }*@
                     @foreach (var filter in Model.Filters)

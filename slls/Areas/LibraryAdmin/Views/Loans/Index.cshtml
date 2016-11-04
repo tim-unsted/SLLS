@@ -120,11 +120,11 @@
                 <td style="text-align: right;">
                     @if (item.Returned.ToString() == null || item.Returned.ToString() == "")
                     {
-                        <a href="@Url.Action("ConfirmReturnLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span class="glyphicon glyphicon-share-alt"></span></a>
-                        <a href="@Url.Action("ConfirmRenewLoan", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Renew loan"><span class="glyphicon glyphicon-repeat"></span></a>
+                        <a href="@Url.Action("ConfirmReturnLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span aria-hidden="true" class="glyphicon glyphicon-share-alt"></span></a>
+                        <a href="@Url.Action("ConfirmRenewLoan", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Renew loan"><span aria-hidden="true" class="glyphicon glyphicon-repeat"></span></a>
                     }
-                    <a href="@Url.Action("Edit", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil" /></a>
-                    <a href="@Url.Action("Delete", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash" /></a>
+                    <a href="@Url.Action("Edit", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
+                    <a href="@Url.Action("Delete", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash" /></a>
                 </td>
             </tr>
         }

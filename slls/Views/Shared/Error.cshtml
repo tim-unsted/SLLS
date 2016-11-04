@@ -18,7 +18,7 @@
                 {
                     TempData["ErrorInfo"] = Model;
                     <div>                        
-                        <a href="@Url.Action("ErrorEmail", "Messaging", new { area = "" })" title="Email Support" class="btn btn-primary"><span class="glyphicon glyphicon-envelope"></span> Send To Support</a>
+                        <a href="@Url.Action("ErrorEmail", "Messaging", new { area = "" })" title="Email Support" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> Send To Support</a>
                         &nbsp;&nbsp;or&nbsp;<input type="button" value="Go Back" class="btn btn-link" onclick="window.history.back();"/>
                     </div>
                 }

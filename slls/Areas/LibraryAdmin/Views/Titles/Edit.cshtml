@@ -84,7 +84,7 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <p>
-                        <a href="@Url.Action("Add", "SubjectIndexes", new {id = Model.TitleID})" class="btn btn-primary modal-link" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Keywords.Keyword", "FieldDisplayName")</a>
+                        <a href="@Url.Action("Add", "SubjectIndexes", new {id = Model.TitleID})" class="btn btn-primary modal-link" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Keywords.Keyword", "FieldDisplayName")</a>
                     </p>
                     @if (ViewBag.SubjectCount > 0)
                     {
@@ -105,7 +105,7 @@
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-md-12">
-                    <p><a href="@Url.Action("Add", "TitleLinks", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("TitleLinks.Link", "FieldDisplayName")</a></p>
+                    <p><a href="@Url.Action("Add", "TitleLinks", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("TitleLinks.Link", "FieldDisplayName")</a></p>
                     @if (ViewBag.LinksCount > 0)
                     {
                         @Html.Partial("_ListTitleLinks", Model.TitleLinks)
@@ -125,7 +125,7 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <p>
-                        <a href="@Url.Action("AddLongText", "TitleAdditionalFieldData", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("TitleTexts.Text", "FieldDisplayName")</a>
+                        <a href="@Url.Action("AddLongText", "TitleAdditionalFieldData", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("TitleTexts.Text", "FieldDisplayName")</a>
                     </p>
                     @if (ViewBag.LongTextsCount > 0)
                     {
@@ -147,7 +147,7 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <p>
-                        <a href="@Url.Action("Add", "TitleImages", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#stdModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Images.Image", "FieldDisplayName")</a>
+                        <a href="@Url.Action("Add", "TitleImages", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#stdModal" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Images.Image", "FieldDisplayName")</a>
                     </p>
                     @if (ViewBag.ImagesCount > 0)
                     {
@@ -169,7 +169,7 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <p>
-                        <a href="@Url.Action("Add", "Copies", new {id = Model.TitleID})" class="btn btn-primary" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
+                        <a href="@Url.Action("Add", "Copies", new {id = Model.TitleID})" class="btn btn-primary" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
                     </p>
                     @if (ViewBag.CopiesCount > 0)
                     {
@@ -191,7 +191,7 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <p>
-                        <a href="@Url.Action("Add", "OrderDetails", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Orders.New_Order", "FieldDisplayName")</a>
+                        <a href="@Url.Action("Add", "OrderDetails", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Orders.New_Order", "FieldDisplayName")</a>
                     </p>
                     @if (ViewBag.OrdersCount > 0)
                     {

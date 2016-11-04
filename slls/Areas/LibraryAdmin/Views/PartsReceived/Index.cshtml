@@ -9,7 +9,7 @@
             @Html.DropDownList("SelectedCopy", null, new { @class = "form-control", onchange = "this.form.submit();" })
         </div>
     }
-    <a href="@Url.Action("Create", "PartsReceived", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
+    <a href="@Url.Action("Create", "PartsReceived", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
 </div>
 
 @Html.Partial("_IndexNoSupplier")

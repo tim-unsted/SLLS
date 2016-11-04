@@ -132,7 +132,7 @@
                 <td class="just-right">
 
                     <a href="@Url.Action("Delete","Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="Delete this @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")"><span class=" glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="View/Edit this @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="View/Edit this @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
 
                 </td>
             </tr>

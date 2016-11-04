@@ -5,7 +5,7 @@
 
 <div class="well">
     @Html.Partial("_Select")
-    <a href="@Url.Action("Create", "SupplierPeople")" title="Add new @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")</a>
+    <a href="@Url.Action("Create", "SupplierPeople")" title="Add new @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")</a>
 </div>
 
 @using (Html.BeginForm("PostEdit","SupplierPeople", FormMethod.Post))
@@ -93,7 +93,7 @@
         <div class="form-group">
             <div class="col-md-12">
                 <span class="pull-right">
-                    <a href="@Url.Action("Add", "SupplierPeopleComms", new {id = Model.ContactID})" class="btn btn-primary" data-toggle="modal" data-target="#stdModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("CommunicationTypes.Methods", "FieldDisplayName")</a>
+                    <a href="@Url.Action("Add", "SupplierPeopleComms", new {id = Model.ContactID})" class="btn btn-primary" data-toggle="modal" data-target="#stdModal" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("CommunicationTypes.Methods", "FieldDisplayName")</a>
                 </span><h3></h3>@Html.Label(DbRes.T("CommunicationTypes.Methods", "FieldDisplayName"))
                 @if (ViewBag.CommTypesCount > 0)
                 {
@@ -106,8 +106,8 @@
             </div>
         </div>
         <div class="form-footer">
-            <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
-            <a href="@Url.Action("Delete", new {id = Model.ContactID, callingAction="Edit"})" class="btn btn-danger modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+            <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
+            <a href="@Url.Action("Delete", new {id = Model.ContactID, callingAction="Edit"})" class="btn btn-danger modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete</a>
             &nbsp;&nbsp;or&nbsp;<button type="button" value="Cancel" class="btn-link" onclick="window.history.back();">@DbRes.T("Buttons.Cancel", "Terminology")</button>
         </div>
     </div>

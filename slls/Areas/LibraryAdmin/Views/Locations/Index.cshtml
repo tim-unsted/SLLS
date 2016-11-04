@@ -43,7 +43,7 @@
 
 <div class="alert alert-info">
     <p>
-        <span class="glyphicon glyphicon-info-sign"></span> Use this feature to control the various locations used throughout the system. Locations can be hierarchical, so any location can be a top-level, or parent, location (e.g. Main Site) , or a sub-location (e.g. Library at the Main Site).
+        <span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> Use this feature to control the various locations used throughout the system. Locations can be hierarchical, so any location can be a top-level, or parent, location (e.g. Main Site) , or a sub-location (e.g. Library at the Main Site).
         If you only have one site then you may want to keep things simple and just list of your site's locations as top-level locations. If you have multiple sites then making the data hierachical might work better.
     </p>
     <p>
@@ -59,7 +59,7 @@
 }
 
 <p>
-    <a href="@Url.Action("Create", "Locations")" title="Add new @DbRes.T("Locations.Location", "FieldDisplayName")" class=" btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Create", "Locations")" title="Add new @DbRes.T("Locations.Location", "FieldDisplayName")" class=" btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 <table id="locations" class="table table-hover">
@@ -105,9 +105,9 @@
                 <td class="just-right">
                     @if (item.CanDelete && !item.SubLocations.Any() && !item.Copies.Any())
                     {
-                        <a href="@Url.Action("Delete", new {id = item.LocationID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a href="@Url.Action("Delete", new {id = item.LocationID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     }
-                    <a href="@Url.Action("Edit", new {id = item.LocationID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.LocationID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

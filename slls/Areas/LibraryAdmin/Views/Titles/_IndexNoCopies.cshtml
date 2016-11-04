@@ -150,11 +150,11 @@
                     @Html.DisplayFor(modelItem => item.FiledTitle)
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("Edit", new {id = item.TitleID})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="@Url.Action("Delete", new {id = item.TitleID, view = @Html.CurrentViewName()})" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.TitleID})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new {id = item.TitleID, view = @Html.CurrentViewName()})" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     @if (@Html.CurrentViewName() == "TitlesNoCopies")
                     {
-                        <a href="@Url.Action("Add", "Copies", new {id = item.TitleID})" class="btn btn-link" title="Add @DbRes.T("Copies.Copy", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span></a>
+                        <a href="@Url.Action("Add", "Copies", new {id = item.TitleID})" class="btn btn-link" title="Add @DbRes.T("Copies.Copy", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
                     }
                 </td>
             </tr>

@@ -11,8 +11,8 @@
                     <a href="@item.URL" title="@item.HoverTip" target="_blank">@item.DisplayText</a>
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("Edit", "TitleLinks", new {id = item.TitleLinkID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit @DbRes.T("TitleLinks.Link", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="@Url.Action("Delete", "TitleLinks", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Remove @DbRes.T("TitleLinks.Link", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", "TitleLinks", new {id = item.TitleLinkID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit @DbRes.T("TitleLinks.Link", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", "TitleLinks", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Remove @DbRes.T("TitleLinks.Link", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
         }

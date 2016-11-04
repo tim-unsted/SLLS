@@ -6,7 +6,7 @@
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h3 class="modal-title" id="titleLabel"><span class="glyphicon glyphicon-pencil"></span> @ViewBag.Title</h3>
+    <h3 class="modal-title" id="titleLabel"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> @ViewBag.Title</h3>
 </div>
 
 @using (Html.BeginForm())
@@ -61,7 +61,7 @@
     </div>
 
     @*<div class="modal-footer">
-        <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Add", "Terminology")</button>
+        <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Add", "Terminology")</button>
         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
     </div>*@
     @Html.Partial("_ModalEditFooter")

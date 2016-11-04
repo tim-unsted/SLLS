@@ -29,7 +29,7 @@
     </div>
 
     <div class="modal-footer">
-        <button id="btnDelete" class="btn @Model.ButtonClass" type="submit"><span class="glyphicon @Model.ButtonGlyphicon"></span> @Html.DisplayFor(model => model.ButtonText)</button>
+        <button id="btnDelete" class="btn @Model.ButtonClass" type="submit"><span aria-hidden="true" class="glyphicon @Model.ButtonGlyphicon"></span> @Html.DisplayFor(model => model.ButtonText)</button>
         &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
     </div>
     @*@Html.Partial("_ModalDeleteFooter")*@

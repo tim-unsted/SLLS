@@ -56,8 +56,8 @@
                     <div class="thumbnail">
                         <div class="caption" style="border-bottom: 1px solid #ddd; margin-bottom: 15px;">
                             <span class="pull-right">
-                                <a href="@Url.Action("Delete", "Titles", new {id = item.TitleID, view=@Html.CurrentViewName()})" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>
-                                <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="@Url.Action("Delete", "Titles", new {id = item.TitleID, view=@Html.CurrentViewName()})" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                                <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                             </span>
                             @{var title = string.IsNullOrEmpty(item.Title1) ? Html.Raw("[No Title]") : Html.DisplayFor(modelItem => item.Title1); }
                             <h4 style="margin-top: 0;"><a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")">@title</a></h4>

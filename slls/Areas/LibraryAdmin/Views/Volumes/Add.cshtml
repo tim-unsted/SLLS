@@ -7,7 +7,7 @@
 {
     <div class="alert alert-success">
         <p>
-            <strong><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Copies.Copy", "FieldDisplayName") added successfully!</strong>
+            <strong><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @DbRes.T("Copies.Copy", "FieldDisplayName") added successfully!</strong>
             &nbsp;&nbsp;Now add copy items to your new @DbRes.T("Copies.Copy", "FieldDisplayName"):
         </p>
     </div>
@@ -79,8 +79,8 @@
     </div>
 
     <div class="form-footer">
-        <button type="submit" id="btnOk" value="Add" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @ViewBag.BtnText</button>
-        <button type="submit" id="btnAddMore" value="Add" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Save & Add More</button>
+        <button type="submit" id="btnOk" value="Add" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @ViewBag.BtnText</button>
+        <button type="submit" id="btnAddMore" value="Add" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save & Add More</button>
         &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
     </div>
 }

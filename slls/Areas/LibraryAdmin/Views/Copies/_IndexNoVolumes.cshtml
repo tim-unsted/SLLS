@@ -96,9 +96,9 @@
                     @Html.DisplayFor(modelItem => item.Title.FiledTitle)
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("Edit", new { id = item.CopyID })" class="btn btn-link" title="Edit"><span class="glyphicon glyphicon-pencil" /></a>
-                    <a href="@Url.Action("Delete", new {id = item.CopyID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash" /></a>
-                    <a href="@Url.Action("Add", "Volumes", new {id = item.CopyID})" class="btn btn-link" title="Add @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span></a>
+                    <a href="@Url.Action("Edit", new { id = item.CopyID })" class="btn btn-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
+                    <a href="@Url.Action("Delete", new {id = item.CopyID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash" /></a>
+                    <a href="@Url.Action("Add", "Volumes", new {id = item.CopyID})" class="btn btn-link" title="Add @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
                 </td>
             </tr>
         }

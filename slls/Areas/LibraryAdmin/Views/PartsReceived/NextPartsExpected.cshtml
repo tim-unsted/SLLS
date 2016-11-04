@@ -2,7 +2,7 @@
 
 <div class="alert alert-info">
     <span class="help-block"><strong>Info: </strong>This page lists all parts that are expected today or in the future. Please check the <a href="@Url.Action("PartsOverdue")" title="Parts Overdue list">Parts Overdue</a> list for all item that were expected to arrive before today.</span>
-    <span class="help-block"><strong>Tip: </strong>To quickly check-in one of the parts listed below, simply click on the <span class="glyphicon glyphicon-check"></span> to the right of the listed part.</span>
+    <span class="help-block"><strong>Tip: </strong>To quickly check-in one of the parts listed below, simply click on the <span aria-hidden="true" class="glyphicon glyphicon-check"></span> to the right of the listed part.</span>
     @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "selectDaysAhead" }))
     {
         <div class="row">

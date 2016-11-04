@@ -4,8 +4,8 @@
 
 <div class="alert alert-info">
     <span class="help-block"><strong>Info: </strong>This page lists all parts that are overdue. A part is overdue when it has not been checked in and the number of days (as defined by the <a href="@Url.Action("Index", "Frequencies")" class="btn-link" title="View Frequencies Authority List">Frequencies</a> days between issues) since the last part was received has lapsed. For items that are expected today, or sometime in the future, please see the <a href="@Url.Action("NextPartsExpected")" title="Next Parts Expected List">Next Parts Expected</a> list.</span>
-    <span class="help-block"><strong>Tip: </strong>To quickly check-in one of the parts listed below, simply click on the <span class="glyphicon glyphicon-check"></span> to the right of the listed part.</span>
-    <a href="@Url.Action("Create", "PartsReceived")" class="btn btn-primary modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
+    <span class="help-block"><strong>Tip: </strong>To quickly check-in one of the parts listed below, simply click on the <span aria-hidden="true" class="glyphicon glyphicon-check"></span> to the right of the listed part.</span>
+    <a href="@Url.Action("Create", "PartsReceived")" class="btn btn-primary modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
 </div>
 
 @Html.Partial("_IndexPartsExpected")

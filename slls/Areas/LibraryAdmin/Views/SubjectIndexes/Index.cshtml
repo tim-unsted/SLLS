@@ -18,7 +18,7 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-    <a href="@Url.Action("Create","SubjectIndexes")" title="Add new @DbRes.T("Keywords.Keyword", "FieldDisplayName") to a @DbRes.T("Titles.Title", "FieldDisplayName")">Add New <span class="glyphicon glyphicon-plus-sign" /></a>
+    <a href="@Url.Action("Create","SubjectIndexes")" title="Add new @DbRes.T("Keywords.Keyword", "FieldDisplayName") to a @DbRes.T("Titles.Title", "FieldDisplayName")">Add New <span aria-hidden="true" class="glyphicon glyphicon-plus-sign" /></a>
 </p>
 
 <table id="subjectindex" class="table table-hover">
@@ -44,7 +44,7 @@
                     @Html.DisplayFor(modelItem => item.Keyword.KeywordTerm)
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("Delete", new { id = item.SubjectIndexID })" class="btn btn-link" title="Delete"><span class="glyphicon glyphicon-trash" /></a>
+                    <a href="@Url.Action("Delete", new { id = item.SubjectIndexID })" class="btn btn-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash" /></a>
                 </td>
             </tr>
         }

@@ -44,7 +44,7 @@
     {
         <div class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="glyphicon glyphicon-plus-sign"></span> Add @ViewData["UserName"] to Circulation Lists <span class="caret"></span>
+                <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add @ViewData["UserName"] to Circulation Lists <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="@Url.Action("AddItemToRecipientsList", "Circulation", new {id = ViewData["UserID"]})" title="Add @ViewData["UserName"] to more @DbRes.T("Circulation.Circulation_Lists", "FieldDisplayName")" class="btn-link" data-toggle="modal" data-target="#lrgModal">Select @DbRes.T("Circulation.Circulated_Items", "FieldDisplayName")</a></li>
@@ -57,7 +57,7 @@
         {
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <span class="glyphicon glyphicon-minus-sign"></span> Remove @ViewData["UserName"] from <strong>All</strong> Lists <span class="caret"></span>
+                    <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> Remove @ViewData["UserName"] from <strong>All</strong> Lists <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
                     <li><a href="@Url.Action("RemoveRecipientFromAll", new { id = ViewData["UserID"] })" class="modal-link" title="Remove @ViewData["UserName"] from ALL @DbRes.T("Circulation.Circulation_Lists", "FieldDisplayName")">Remove @ViewData["UserName"] from All @DbRes.T("Circulation.Circulation_Lists", "FieldDisplayName")</a></li>
@@ -111,8 +111,8 @@
                     @Html.DisplayFor(modelItem => item.Copy.Circulations.Count)
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn btn-link" title="View/Edit Circulation List"><span class="glyphicon glyphicon-user"></span></a> |
-                    <a href="@Url.Action("RemoveItemFromRecipient", new { id = item.CirculationID })" class="btn btn-link modal-link" title="Remove @ViewData["UserName"] from this @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                    <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn btn-link" title="View/Edit Circulation List"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a> |
+                    <a href="@Url.Action("RemoveItemFromRecipient", new { id = item.CirculationID })" class="btn btn-link modal-link" title="Remove @ViewData["UserName"] from this @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></a>
                 </td>
             </tr>
         }

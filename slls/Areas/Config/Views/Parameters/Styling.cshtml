@@ -59,9 +59,9 @@
                 <td class="just-right">
                     @if (item.CanDelete && Model.IsBaileyAdmin)
                     {
-                        <a href="@Url.Action("Delete", new {id = item.RecID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a href="@Url.Action("Delete", new {id = item.RecID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     }
-                    <a href="@Url.Action("EditStyle", new {id = item.RecID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("EditStyle", new {id = item.RecID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
 
             </tr>

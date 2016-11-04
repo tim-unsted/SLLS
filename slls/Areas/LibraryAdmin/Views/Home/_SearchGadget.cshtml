@@ -3,8 +3,8 @@
 <div class="panel panel-gadget shadowed">
     <div class="panel-heading">
         <span class="panel-title">
-            <span class="glyphicon glyphicon-search"></span>&nbsp;<span is="gadget-Title">@ViewBag.Title</span><span class="pull-right"></span>
-            <span class="pull-right"><a href="@Url.Action("ShowSearchHelp", "Home", new {area = ""})" title="Searching Tips" class="btn btn-link" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-info-sign"></span> Help</a></span>
+            <span aria-hidden="true" class="glyphicon glyphicon-search"></span>&nbsp;<span is="gadget-Title">@ViewBag.Title</span><span class="pull-right"></span>
+            <span class="pull-right"><a href="@Url.Action("ShowSearchHelp", "Home", new {area = ""})" title="Searching Tips" class="btn btn-link" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> Help</a></span>
         </span>
     </div>
     <div class="panel-body">
@@ -24,7 +24,7 @@
                     </div>
                 </div>
             </div>
-            <button type="submit" id="btnSubmit" value="Find" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Find</button>
+            <button type="submit" id="btnSubmit" value="Find" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-search"></span> Find</button>
         }
     </div>
 </div>

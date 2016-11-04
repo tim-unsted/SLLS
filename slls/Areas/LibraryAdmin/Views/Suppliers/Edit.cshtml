@@ -5,7 +5,7 @@
 
 <div class="well">
     @Html.Partial("_Select")
-    <a href="@Url.Action("Create", "Suppliers")" title="Add new @DbRes.T("Suppliers.Supplier", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Suppliers.Supplier", "FieldDisplayName")</a>
+    <a href="@Url.Action("Create", "Suppliers")" title="Add new @DbRes.T("Suppliers.Supplier", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Suppliers.Supplier", "FieldDisplayName")</a>
 
 </div>
 
@@ -28,7 +28,7 @@
         <div class="form-group">
             <div class="col-md-12">
                 <span class="pull-right">
-                    <a href="@Url.Action("Add", "SupplierAddresses", new {id = Model.SupplierID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("SupplierAddress.Address", "FieldDisplayName")</a>
+                    <a href="@Url.Action("Add", "SupplierAddresses", new {id = Model.SupplierID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("SupplierAddress.Address", "FieldDisplayName")</a>
                 </span><h3>@DbRes.T("SupplierAddress.Address", "FieldDisplayName")</h3>
                 @if (ViewBag.AddressCount > 0)
                 {
@@ -44,7 +44,7 @@
         <div class="form-group">
             <div class="col-md-12">
                 <span class="pull-right">
-                    <a href="@Url.Action("Create", "SupplierPeople", new {supplierId = Model.SupplierID})" class="btn btn-primary" data-toggle="modal" data-target="#stdModal" title="Add new">Add New @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")&nbsp;<span class="glyphicon glyphicon-plus-sign"></span></a>
+                    <a href="@Url.Action("Create", "SupplierPeople", new {supplierId = Model.SupplierID})" class="btn btn-primary" data-toggle="modal" data-target="#stdModal" title="Add new">Add New @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
                 </span><h3>@DbRes.T("Suppliers.Contacts", "FieldDisplayName")</h3>
                 @if (ViewBag.ContactsCount > 0)
                 {
@@ -66,8 +66,8 @@
         </div>
 
         <div class="form-footer">
-            <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
-            <a href="@Url.Action("Delete", new {id = Model.SupplierID})" class="btn btn-danger modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span> Delete</a>
+            <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
+            <a href="@Url.Action("Delete", new {id = Model.SupplierID})" class="btn btn-danger modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete</a>
             &nbsp;&nbsp;or&nbsp;<button type="button" value="Cancel" class="btn-link" onclick="window.history.back();">@DbRes.T("Buttons.Cancel", "Terminology")</button>
         </div>
     </div>

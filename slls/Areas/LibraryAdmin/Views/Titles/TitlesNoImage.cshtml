@@ -3,9 +3,9 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="well">
-    <div class="help-block">This page lists all Catalogue Titles that do not currently have a cover image. Add images individually by clicking on the <span class="glyphicon glyphicon-plus-sign"></span> button in the right-hand column alongside a particular title. Alternatively, use the 'Download Images' tool to look for images using AutoCat.</div>
+    <div class="help-block">This page lists all Catalogue Titles that do not currently have a cover image. Add images individually by clicking on the <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> button in the right-hand column alongside a particular title. Alternatively, use the 'Download Images' tool to look for images using AutoCat.</div>
     <p>
-        <a href="@Url.Action("DownloadImagesAutoCat", "TitleImages")" title="Download images using AutoCat" class="btn btn-primary"><span class="glyphicon glyphicon-cloud-download"></span> Download Images</a>
+        <a href="@Url.Action("DownloadImagesAutoCat", "TitleImages")" title="Download images using AutoCat" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-cloud-download"></span> Download Images</a>
     </p>
 </div>
 

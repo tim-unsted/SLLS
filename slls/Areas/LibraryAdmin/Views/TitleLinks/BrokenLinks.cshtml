@@ -13,6 +13,10 @@
                 "url": "/DataTables/lang.txt"
             },
             "columnDefs": [
+                {
+                    "width": "30%",
+                    "targets": [0, 1]
+                },
                {
                    "orderData": 4,
                    "targets": [0],
@@ -42,7 +46,7 @@
 
 
     <p>
-        <a href="@Url.Action("CheckLinks", "TitleLinks")" title="Check @DbRes.T("TitleLinks", "EntityType")" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Recheck Links</a>
+        <a href="@Url.Action("CheckLinks", "TitleLinks")" title="Check @DbRes.T("TitleLinks", "EntityType")" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Recheck Links</a>
     </p>
 
     <table class="table" id="titlelinks">
@@ -72,7 +76,7 @@
                         @Html.DisplayFor(modelItem => item.Title.Title1)
                     </td>
                     <td>
-                        <a href="@item.URL" title="@item.HoverTip" target="_blank">@item.DisplayText</a>
+                        <a href="@item.URL" title="@item.HoverTip" target="_blank">@item.URL</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.IsValid)
@@ -84,8 +88,8 @@
                         @Html.Raw(item.Title.FiledTitle)
                     </td>
                     <td class="just-right">
-                        <a href="@Url.Action("Delete", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash" /></a>
-                        <a href="@Url.Action("Edit", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil" /></a>
+                        <a href="@Url.Action("Delete", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                        <a href="@Url.Action("Edit", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                     </td>
                 </tr>
             }

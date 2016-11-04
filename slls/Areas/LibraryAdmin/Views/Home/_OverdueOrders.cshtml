@@ -3,7 +3,7 @@
 <div class="panel panel-gadget shadowed">
     <div class="panel-heading">
         <span class="panel-title">
-            <span class="gadget-Title">@ViewBag.Title</span><span class="pull-right"><a href="@Url.Action("AllOverdue", "OrderDetails")" title="View All Overdue Issues"><span class="glyphicon glyphicon-eye-open"></span> View All</a></span>
+            <span aria-hidden="true" class="glyphicon glyphicon-warning-sign"></span>&nbsp;&nbsp;<span class="gadget-Title">@ViewBag.Title</span><span class="pull-right"><a href="@Url.Action("AllOverdue", "OrderDetails")" title="View All Overdue Issues" class="btn btn-link"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span> View All</a></span>
         </span>
     </div>
     <div class="panel-body">

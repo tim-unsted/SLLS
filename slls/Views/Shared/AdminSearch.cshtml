@@ -7,12 +7,12 @@
         <div class="row">
             <div class=" col-md-12">
                 <div class="form-group form-inline" style="margin-bottom: 0;">
-                    <span class="pull-right"><a href="#" onclick="$('.alert').toggle()">Help <span class="glyphicon glyphicon-info-sign"></span></a></span>
+                    <span class="pull-right"><a href="#" onclick="$('.alert').toggle()">Help <span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span></a></span>
                     @Html.LabelFor(model => model.SearchString)<span>:&nbsp;</span>
                     @Html.EditorFor(model => model.SearchString, new {htmlAttributes = new {@class = "form-control", placeholder = "Find ...", style = "width: 50%", id = "MainSearchString"}})
                     <span>&nbsp;&nbsp;</span>@Html.Label("In")<span>:&nbsp;</span>
                     @Html.DropDownList("SearchField", null, new {@class = "form-control", style = "width: 20%"})
-                    <button type="submit" id="btnSubmit" value="Find" class="btn btn-primary"><span class="glyphicon glyphicon-search"></span> Find</button>
+                    <button type="submit" id="btnSubmit" value="Find" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-search"></span> Find</button>
                 </div>
                 @Html.ValidationMessageFor(model => model.SearchString, "", new {@class = "text-danger"})
             </div>
@@ -20,7 +20,7 @@
         <br/>
         <div class="alert alert-info" style="display: none;">
             <a class="close" onclick="$('.alert').hide()">×</a>
-            <h4><span class="glyphicon glyphicon-info-sign"></span> Searching Tips</h4>
+            <h4><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> Searching Tips</h4>
             @Html.Raw(ViewBag.SearchTips)
             @*<h5>
                 This search works in a similar way to Google. Search for specific words or "phrases", optionally excluding others.
@@ -88,7 +88,7 @@
                 <div class="panel">
                     <div class="panel-heading" style="padding: 0 10px;">
                         <span style="font-size: 18px;">Refine By</span>
-                        <span class="pull-right"><a href="@Url.Action("ClearAllFilters", "Searching")" class="btn btn-link" title="Clear All Filters"><span class="glyphicon glyphicon-minus-sign"></span> Clear All</a></span>
+                        <span class="pull-right"><a href="@Url.Action("ClearAllFilters", "Searching")" class="btn btn-link" title="Clear All Filters"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> Clear All</a></span>
                     </div>
                     <div class="panel-body">
                         @if (Model.MediaFilter != null)

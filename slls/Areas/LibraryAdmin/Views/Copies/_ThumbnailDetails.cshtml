@@ -9,8 +9,8 @@
             <div class="thumbnail">
                 <div class="caption" style="border-bottom: 1px solid #ddd; margin-bottom: 15px;">
                     <span class="pull-right">
-                        <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="Edit" role="button"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="@Url.Action("Delete", "Copies", new {id = item.CopyID}, null)" class="btn btn-link modal-link" title="Delete" role="button"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="Edit" role="button"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="@Url.Action("Delete", "Copies", new {id = item.CopyID}, null)" class="btn btn-link modal-link" title="Delete" role="button"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     </span>
                     <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="Edit" role="button"><strong>@Html.DisplayNameFor(model => model.CopyNumber):&nbsp;@Html.Raw(item.CopyNumber)</strong></a>
                 </div>

@@ -63,7 +63,7 @@
                 @Html.ValidationMessageFor(model => model.Title1, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-2">
-                <button type="submit" value="Save" class="btn btn-success" title="Save title details and add a new Copy"><span class="glyphicon glyphicon-ok"></span> Save & Continue ></button>
+                <button type="submit" value="Save" class="btn btn-success" title="Save title details and add a new Copy"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save & Continue ></button>
             </div>
         </div>
 
@@ -93,10 +93,10 @@
                 <div id="authors-list">
                     @Html.EditorForMany(x => x.Authors, x => x.Index)
                 </div>
-                <button type="button" id="btnAddAuthor" value="Add Another" title="Add Another Author" class="btn btn-link"><span class="glyphicon glyphicon-plus-sign"></span> Add another ...</button>
+                <button type="button" id="btnAddAuthor" value="Add Another" title="Add Another Author" class="btn btn-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add another ...</button>
             </div>
             <div class="col-sm-1 hidden-sm hidden-xs" style="padding-top: 5px; padding-left: 0">
-                <a href="@Url.Content("~/LibraryAdmin/Authors/_add")" class="button" id="addAuthorLink" title="Author not in the list?&#013;Add a new one now."><span class="glyphicon glyphicon-plus-sign"></span></a>
+                <a href="@Url.Content("~/LibraryAdmin/Authors/_add")" class="button" id="addAuthorLink" title="Author not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
             </div>
         </div>
 
@@ -106,10 +106,10 @@
                     <div id="editors-list">
                         @Html.EditorForMany(x => x.Editors, x => x.Index)
                     </div>
-                    <button type="button" id="btnAddEditor" value="Add Another" title="Add Another Editor" class="btn btn-link"><span class="glyphicon glyphicon-plus-sign"></span> Add another ...</button>
+                    <button type="button" id="btnAddEditor" value="Add Another" title="Add Another Editor" class="btn btn-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add another ...</button>
                 </div>
                 <div class="col-sm-1 hidden-sm hidden-xs" style="padding-top: 5px; padding-left: 0">
-                    <a href="@Url.Content("~/LibraryAdmin/Authors/_add")" class="button" id="addEditorLink" title="Editor not in the list?&#013;Add a new one now."><span class="glyphicon glyphicon-plus-sign"></span></a>
+                    <a href="@Url.Content("~/LibraryAdmin/Authors/_add")" class="button" id="addEditorLink" title="Editor not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
                 </div>
             </div>*@
 
@@ -184,7 +184,7 @@
         </div>
 
         <div class="form-footer">
-            <button type="submit" value="Save" class="btn btn-success" title="Save title details and add a new Copy"><span class="glyphicon glyphicon-ok"></span> Save & Continue ></button>
+            <button type="submit" value="Save" class="btn btn-success" title="Save title details and add a new Copy"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save & Continue ></button>
             &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
         </div>
     </div>

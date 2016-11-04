@@ -62,8 +62,8 @@
                     @Html.DisplayFor(modelItem => item.DateReceivedSortable)
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("Edit", "PartsReceived", new {id = item.PartID})" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="@Url.Action("Delete", "PartsReceived", new { id = item.PartID })" class="btn btn-link modal-link" title="Delete @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", "PartsReceived", new {id = item.PartID})" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", "PartsReceived", new { id = item.PartID })" class="btn btn-link modal-link" title="Delete @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
         }

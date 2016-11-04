@@ -8,6 +8,6 @@
 
         <div class="row" style="margin-right: 0">
             <div class="col-md-10">@Html.DropDownList("TitleId", null, new {onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control"})</div>
-            <div class="col-md-pull"><div class="pull-right"> <a href="@Url.Action("Create", "Titles")" title="Add new @DbRes.T("Titles.Title", "FieldDisplayName")" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Titles.Title", "FieldDisplayName")</a>  <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span class="glyphicon glyphicon-trash"></span></a></div></div>
+            <div class="col-md-pull"><div class="pull-right"> <a href="@Url.Action("Create", "Titles")" title="Add new @DbRes.T("Titles.Title", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Titles.Title", "FieldDisplayName")</a>  <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a></div></div>
         </div>
 }

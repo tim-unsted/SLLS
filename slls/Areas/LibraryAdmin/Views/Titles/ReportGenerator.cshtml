@@ -271,7 +271,7 @@
 @using (Html.BeginForm("PostReportGenerator", "Titles", FormMethod.Post, new {id = "form1"}))
 {
     <div class="alert alert-info">
-        <span class="pull-right" style="padding-left: 10px;"><button type="submit" value="View Report" class="btn btn-success"><span class="glyphicon glyphicon-sunglasses"></span> View Report</button>&nbsp;&nbsp;</span>
+        <span class="pull-right" style="padding-left: 10px;"><button type="submit" value="View Report" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-sunglasses"></span> View Report</button>&nbsp;&nbsp;</span>
         <span><strong>Info: </strong>Use this tool to create the catalogue report you require. Select the basic report from the main list on the left. Then select the appropriate filters/parameters from the boxes displayed on the right.  Once you are happy with your selection, press the 'View Report' button.</span>
     </div>
 
@@ -416,7 +416,7 @@
         </div>
     </div>
     <div class="form-footer">
-        <button type="submit" value="View Report" class="btn btn-success"><span class="glyphicon glyphicon-sunglasses"></span> View Report</button>
+        <button type="submit" value="View Report" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-sunglasses"></span> View Report</button>
         &nbsp;&nbsp;or&nbsp;<a href="@Url.Action("Index")" class="btn-link" title="Cancel">Cancel</a>
     </div>
     

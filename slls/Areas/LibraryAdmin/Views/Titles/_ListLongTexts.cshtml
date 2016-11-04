@@ -12,8 +12,8 @@
                 <div class="thumbnail">
                     <div class="caption">
                         <span class="pull-right">
-                            <a href="@Url.Action("Edit", "TitleAdditionalFieldData", new {id = item.RecID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
-                            <a href="@Url.Action("Delete", "TitleAdditionalFieldData", new {id = item.RecID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                            <a href="@Url.Action("Edit", "TitleAdditionalFieldData", new {id = item.RecID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                            <a href="@Url.Action("Delete", "TitleAdditionalFieldData", new {id = item.RecID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                         </span>
                         <a href="@Url.Action("Edit", "TitleAdditionalFieldData", new {id = item.RecID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit"><strong>@item.TitleAdditionalFieldDef.FieldName</strong></a>
                         @*<strong>@Html.ActionLink(item.TitleAdditionalFieldDef.FieldName, "Edit", "TitleAdditionalFieldData", new { id = item.RecID })</strong>*@

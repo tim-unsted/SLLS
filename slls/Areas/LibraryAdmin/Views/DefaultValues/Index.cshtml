@@ -66,7 +66,7 @@
                     <a href="@Url.Action("Index", item.ChildTableName)" title="View/Edit Authority List">@item.ChildTableName</a>
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("Edit", new {id = item.DefaultId})" class="btn btn-link modal-link" title="Edit Default Value"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.DefaultId})" class="btn btn-link modal-link" title="Edit Default Value"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

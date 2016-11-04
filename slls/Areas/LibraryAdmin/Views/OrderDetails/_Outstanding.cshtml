@@ -173,10 +173,10 @@
                 <td class="just-right">
                     @if (item.ReceivedDate == null)
                     {
-                        <a href="@Url.Action("AddReceipt", new { id = item.OrderID, callingAction = @Html.CurrentViewName() })" class="btn btn-link modal-link" title="Add Receipt">&nbsp;<span class="glyphicon glyphicon-tag"></span></a>
+                        <a href="@Url.Action("AddReceipt", new { id = item.OrderID, callingAction = @Html.CurrentViewName() })" class="btn btn-link modal-link" title="Add Receipt">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-tag"></span></a>
                     }
-                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", new {id = item.OrderID})" class="btn btn-link" title="Edit">&nbsp;<span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.OrderID})" class="btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                     
                 </td>
             </tr>

@@ -21,7 +21,7 @@
 
 <div class="btn-group">
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="glyphicon glyphicon-plus-sign"></span> Add New <span class="caret"></span>
+        <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
         <li><a href="@Url.Action("AddCustomField", "TitleAdditionalFieldDefs")" class="modal-link" title="Add new custom field definition">Custom Field Definition</a></li>
@@ -85,8 +85,8 @@
                     @Html.DisplayFor(modelItem => item.ShowOnOPAC)
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("Delete", new { id = item.FieldID })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("EditCustomField", new {id = item.FieldID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new { id = item.FieldID })" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("EditCustomField", new {id = item.FieldID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
 
                 </td>
             </tr>

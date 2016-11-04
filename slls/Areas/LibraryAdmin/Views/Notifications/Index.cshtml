@@ -41,7 +41,7 @@
 @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "selectMonthYear" }))
 {
     <div class="alert alert-info">
-        <div class="help-block"><span class="glyphicon glyphicon-info-sign"></span> @DbRes.T("Notifications","EntityType") can be displayed on both the OPAC 'Home' page and the Admin 'Dashboard', if enabled. @DbRes.T("Notifications", "EntityType") are simply announcements or snippets of information that you want your users to see. @DbRes.T("Notifications", "EntityType") can include HTML.
+        <div class="help-block"><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> @DbRes.T("Notifications","EntityType") can be displayed on both the OPAC 'Home' page and the Admin 'Dashboard', if enabled. @DbRes.T("Notifications", "EntityType") are simply announcements or snippets of information that you want your users to see. @DbRes.T("Notifications", "EntityType") can include HTML.
         </div>
         <div class="help-block"><strong>Tip: </strong> Use the drop-down below to filter the list of @DbRes.T("Notifications", "EntityType").ToLower() to just the @DbRes.T("Notifications.Scope", "FieldDisplayName").ToLower() you are interested in.</div>
         <div class="row">
@@ -53,7 +53,7 @@
 }
 
 <p>
-    <a href="@Url.Action("Create", "Notifications", new { scope = Model.Scope })" title="Add new @DbRes.T("Notifications.Notification", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Create", "Notifications", new { scope = Model.Scope })" title="Add new @DbRes.T("Notifications.Notification", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 <table id="notifications" class="table table-hover table-condensed">
@@ -108,10 +108,10 @@
                     @Html.Raw(item.ExpireDateSortable)
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("MoveNotificationUpList", new { id = item.NotificationID })" class="btn btn-link" title="Move @DbRes.T("Notifications.Notification", "FieldDisplayName") up the list"><span class="glyphicon glyphicon-arrow-up"></span></a>
-                    <a href="@Url.Action("MoveNotificationDownList", new { id = item.NotificationID })" class="btn btn-link" title="Move @DbRes.T("Notifications.Notification", "FieldDisplayName") down the list"><span class="glyphicon glyphicon-arrow-down"></span></a>
+                    <a href="@Url.Action("MoveNotificationUpList", new { id = item.NotificationID })" class="btn btn-link" title="Move @DbRes.T("Notifications.Notification", "FieldDisplayName") up the list"><span aria-hidden="true" class="glyphicon glyphicon-arrow-up"></span></a>
+                    <a href="@Url.Action("MoveNotificationDownList", new { id = item.NotificationID })" class="btn btn-link" title="Move @DbRes.T("Notifications.Notification", "FieldDisplayName") down the list"><span aria-hidden="true" class="glyphicon glyphicon-arrow-down"></span></a>
                     <a href="@Url.Action("Delete", new {id = item.NotificationID})" class="btn btn-link modal-link" title="Delete this @DbRes.T("Notifications.Notification", "FieldDisplayName")"><span class=" glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", new {id = item.NotificationID})" class="btn btn-link" title="Edit this @DbRes.T("Notifications.Notification", "FieldDisplayName")" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.NotificationID})" class="btn btn-link" title="Edit this @DbRes.T("Notifications.Notification", "FieldDisplayName")" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

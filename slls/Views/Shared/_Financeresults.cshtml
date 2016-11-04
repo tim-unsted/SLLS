@@ -136,8 +136,8 @@
                 @Html.DisplayFor(modelItem => item.OrderDateSortable)
             </td>
             <td class="just-right">
-                <a href="@Url.Action("Edit", "OrderDetails", new {id = item.OrderID})" class="btn btn-link" title="Edit @DbRes.T("Orders.Order", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="@Url.Action("Delete", "OrderDetails", new { id = item.OrderID, view = @Html.CurrentViewName() })" class="btn btn-link modal-link" title="Delete @DbRes.T("Orders.Order", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>
+                <a href="@Url.Action("Edit", "OrderDetails", new {id = item.OrderID})" class="btn btn-link" title="Edit @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("Delete", "OrderDetails", new { id = item.OrderID, view = @Html.CurrentViewName() })" class="btn btn-link modal-link" title="Delete @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                
             </td>
         </tr>

@@ -50,7 +50,7 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))
 <p>
-    <a href="@Url.Action("Create", "Suppliers")" title="Add new @DbRes.T("Suppliers.Supplier", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Create", "Suppliers")" title="Add new @DbRes.T("Suppliers.Supplier", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 
@@ -101,9 +101,9 @@
                 <td style="text-align: right;">
                     @if (item.CanDelete && !item.OrderDetails.Any())
                     {
-                        <a href="@Url.Action("Delete", new {id = item.SupplierID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a href="@Url.Action("Delete", new {id = item.SupplierID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     }
-                    <a href="@Url.Action("Edit", new {id = item.SupplierID})" class="btn btn-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.SupplierID})" class="btn btn-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

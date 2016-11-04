@@ -70,11 +70,11 @@
         });
     });
 </script>
-@*<span><a href="@Url.Action("ExportCatalogueResults", "Searching")" class="btn btn-link" title="Export"><span class="glyphicon glyphicon-export"></span> Export</a></span>*@
+@*<span><a href="@Url.Action("ExportCatalogueResults", "Searching")" class="btn btn-link" title="Export"><span aria-hidden="true" class="glyphicon glyphicon-export"></span> Export</a></span>*@
 
 <div class="btn-group">
     <button type="button" class="btn btn-cancel dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        <span class="glyphicon glyphicon-plus-sign"></span> Export Results <span class="caret"></span>
+        <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Export Results <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
         <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titles"})" class="btn-link" title="Export Title data">Titles only</a></li>
@@ -82,7 +82,7 @@
         <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopiesvolumes"})" title="Export Titles, Copies & Copy Item (Volume) details" class="btn-link">Titles, Copies & Copy Item details</a></li>
     </ul>
 </div>
-<a href="@Url.Action("SaveSearch", "Searching")" title="Save Search" class="btn btn-cancel modal-link"><span class="glyphicon glyphicon-floppy-disk"></span> Save Search</a>
+<a href="@Url.Action("SaveSearch", "Searching")" title="Save Search" class="btn btn-cancel modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save Search</a>
 
 <table id="titles" class="table table-condensed table-hover">
     <thead>
@@ -161,11 +161,11 @@
                 @Html.DisplayFor(modelItem => item.FiledTitle)
             </td>
             <td class="just-right">
-                <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="@Url.Action("Delete", "Titles", new { id = item.TitleID, view = @Html.CurrentViewName() })" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>
+                <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("Delete", "Titles", new { id = item.TitleID, view = @Html.CurrentViewName() })" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                 @if (@Html.CurrentViewName() == "TitlesNoCopies")
                 {
-                    <a href="@Url.Action("Add", "Copies", new {id = item.TitleID})" class="btn btn-link" title="Add @DbRes.T("Copies.Copy", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span></a>
+                    <a href="@Url.Action("Add", "Copies", new {id = item.TitleID})" class="btn btn-link" title="Add @DbRes.T("Copies.Copy", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
                 }
             </td>
         </tr>

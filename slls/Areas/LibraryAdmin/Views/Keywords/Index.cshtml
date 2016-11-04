@@ -43,7 +43,7 @@
 
 <div class="alert alert-info">
     <p>
-        <span class="glyphicon glyphicon-info-sign"></span> Use this feature to control the various subjects, or keywords, used throughout the system. Subjects can be hierarchical, so any subject can be a top-level, or parent, subject (e.g. 'Agriculture') , or a child subject (e.g. 'Livestock').
+        <span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> Use this feature to control the various subjects, or keywords, used throughout the system. Subjects can be hierarchical, so any subject can be a top-level, or parent, subject (e.g. 'Agriculture') , or a child subject (e.g. 'Livestock').
         You can assign any subject a single parent, but you cannot assign a subject to multiple parents. If you have a subject term that may belong to more than one parent you must create a new subject under each parent.
     </p>
 </div>
@@ -52,7 +52,7 @@
 
 
 <p>
-    <a href="@Url.Action("Create", "Keywords")" title="Add new @DbRes.T("Keywords.Keyword", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Create", "Keywords")" title="Add new @DbRes.T("Keywords.Keyword", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 <table id="keywords" class="table table-hover">
@@ -96,9 +96,9 @@
                 <td class="just-right">
                     @if(!item.SubjectIndexes.Any() && item.CanDelete)
                     {
-                        <a href="@Url.Action("Delete", new {id = item.KeywordID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a href="@Url.Action("Delete", new {id = item.KeywordID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     }
-                    <a href="@Url.Action("Edit", new {id = item.KeywordID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.KeywordID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

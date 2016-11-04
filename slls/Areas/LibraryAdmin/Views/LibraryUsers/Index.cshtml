@@ -50,7 +50,7 @@
 @Html.CheckBoxFor(model => model.ShowAll, new { @title = "Show ALL users, including those no longer 'Live'" }) Show All
 @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x, showAll = Model.ShowAll }))
 <p>
-    <a href="@Url.Action("Create", "LibraryUsers")" title="Add new @DbRes.T("Users.LibraryUser", "FieldDisplayName")" class="btn btn-primary" ><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Create", "LibraryUsers")" title="Add new @DbRes.T("Users.LibraryUser", "FieldDisplayName")" class="btn btn-primary" ><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 <table id="users" class="table table-hover">
@@ -113,8 +113,8 @@
                 </td>
 
                 <td class="just-right">
-                    <a href="@Url.Action("Delete", new { id = user.Id })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", new { id = user.Id })" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new { id = user.Id })" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new { id = user.Id })" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

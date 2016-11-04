@@ -13,7 +13,7 @@
     <div class="panel panel-gadget shadowed">
         <div class="panel-heading">
             <span class="panel-title">
-                <span is="gadget-Title">@ViewBag.Title</span><span class="pull-right"><span class="glyphicon glyphicon-cloud-download"></span></span>
+                <span aria-hidden="true" class="glyphicon glyphicon-cloud"></span>&nbsp; <span is="gadget-Title">@ViewBag.Title</span><span class="pull-right"></span>
             </span>
         </div>
         <div class="panel-body">
@@ -35,12 +35,12 @@
                         @Html.ValidationMessageFor(model => model.Isbn, "", new { @class = "text-danger" })
                         <br/>
                         <div id="addNewCopyDiv" style="display: none;">
-                            <a href="@Url.Action("Add", "Copies", new {id = "xxx"})" class="btn btn-success" title="Add a new copy to the existing item" id="btnAddCopy"><span class="glyphicon glyphicon-plus-sign"></span> Add As New Copy</a>
+                            <a href="@Url.Action("Add", "Copies", new {id = "xxx"})" class="btn btn-success" title="Add a new copy to the existing item" id="btnAddCopy"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add As New Copy</a>
                             <br/><span>or</span><br />
                         </div>
                         <div class="btn-group">
                             <button class="btn btn btn-primary dropdown-toggle" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-cloud-download"></span> Download from
+                                <span aria-hidden="true" class="glyphicon glyphicon-cloud-download"></span> Download from
                                 <span class="caret"></span>
                             </button>
                             <ul class="dropdown-menu" id="sources" name="sources">

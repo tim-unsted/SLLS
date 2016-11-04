@@ -12,8 +12,8 @@
 
 <div class="well">
     @Html.Partial("_Select")
-    <a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a>
-    <a href="@Url.Action("DuplicateOrder", "OrderDetails", new {id = Model.OrderID})" class="btn btn-success" title="Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")"><span class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")</a>
+    <a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a>
+    <a href="@Url.Action("DuplicateOrder", "OrderDetails", new {id = Model.OrderID})" class="btn btn-success" title="Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")</a>
 </div>
 
 @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
@@ -173,8 +173,8 @@
                 </div>
 
                 <div class="form-footer">
-                    <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
-                    <a href="@Url.Action("Delete", new {id = Model.OrderID})" class="btn btn-default modal-link" title="Delete Order"><span class="glyphicon glyphicon-trash"></span> Delete Order</a>
+                    <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
+                    <a href="@Url.Action("Delete", new {id = Model.OrderID})" class="btn btn-default modal-link" title="Delete Order"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Order</a>
                     &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
                 </div>
             </div>
@@ -311,8 +311,8 @@
                 </div>
 
                 <div class="form-footer">
-                    <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
-                    <a href="@Url.Action("Delete", new {id = Model.OrderID})" class="btn btn-default modal-link" title="Delete Order"><span class="glyphicon glyphicon-trash"></span> Delete Order</a>
+                    <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
+                    <a href="@Url.Action("Delete", new {id = Model.OrderID})" class="btn btn-default modal-link" title="Delete Order"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Order</a>
                     &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
                 </div>
             </div>

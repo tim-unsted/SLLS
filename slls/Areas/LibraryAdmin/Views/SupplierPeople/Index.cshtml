@@ -39,7 +39,7 @@
 
 @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))
 <p>
-    <a href="@Url.Action("Create", "SupplierPeople", new {callingAction = "index"})" title="Add new @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#stdModal"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>    
+    <a href="@Url.Action("Create", "SupplierPeople", new {callingAction = "index"})" title="Add new @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#stdModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>    
 </p>
 
 <table id="contacts" class="table table-hover">
@@ -89,7 +89,7 @@
                 </td>
                 <td class="just-right">
                     <a href="@Url.Action("Delete", new { id = item.ContactID })" class="btn btn-link modal-link" title="Delete this Contact"><span class=" glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", new {id = item.ContactID, CallingController = "SupplierPeople"})" class="btn btn-link" title="Edit this Contact"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.ContactID, CallingController = "SupplierPeople"})" class="btn btn-link" title="Edit this Contact"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

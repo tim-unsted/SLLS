@@ -1,7 +1,7 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.TitleAddViewModel
 
-@Html.Label(DbRes.T("Frequency.Frequency", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/Frequencies/_add")" class="button" id="addFrequencyLink" title="Frequency not in the list?&#013;Add a new one now."><span class="glyphicon glyphicon-plus-sign"></span></a>
+@Html.Label(DbRes.T("Frequency.Frequency", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/Frequencies/_add")" class="button" id="addFrequencyLink" title="Frequency not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 @Html.DropDownList("FrequencyID", null, new { @class = "form-control" })
 @Html.ValidationMessageFor(model => model.FrequencyID, "", new { @class = "text-danger" })
 

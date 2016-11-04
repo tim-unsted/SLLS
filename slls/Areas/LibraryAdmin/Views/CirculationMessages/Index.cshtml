@@ -31,7 +31,7 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <p>
-    <a href="@Url.Action("Create", "CirculationMessages")" title="Add new @DbRes.T("Circulation.Circulation_Slip_Message", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Create", "CirculationMessages")" title="Add new @DbRes.T("Circulation.Circulation_Slip_Message", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 <table id="circulationmessages" class="table table-condensed table-hover">
@@ -53,9 +53,9 @@
                 <td class="just-right">
                     @if(item.CanDelete)
                     {
-                        <a href="@Url.Action("Delete", new {id = item.CirculationMsgID})" title="Delete" class="btn btn-link modal-link"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a href="@Url.Action("Delete", new {id = item.CirculationMsgID})" title="Delete" class="btn btn-link modal-link"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     }
-                    <a href="@Url.Action("Edit", new {id = item.CirculationMsgID})" title="Edit" class="btn btn-link modal-link"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.CirculationMsgID})" title="Edit" class="btn btn-link modal-link"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

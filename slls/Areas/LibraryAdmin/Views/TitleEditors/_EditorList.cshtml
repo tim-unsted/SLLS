@@ -20,8 +20,8 @@
                         }
                     </td>
                     <td class="just-right">
-                        <a href="@Url.Action("Edit", "TitleEditors", new {id = item.TitleEditorID})" class="btn btn-link modal-link" title="Edit Title @DbRes.T("Authors.Editor", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil" /></a>
-                        <a href="@Url.Action("Delete", "TitleEditors", new { id = item.TitleEditorID })" class="btn btn-link modal-link" title="Remove this @DbRes.T("Authors.Editor", "FieldDisplayName")"><span class="glyphicon glyphicon-trash" /></a>
+                        <a href="@Url.Action("Edit", "TitleEditors", new {id = item.TitleEditorID})" class="btn btn-link modal-link" title="Edit Title @DbRes.T("Authors.Editor", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
+                        <a href="@Url.Action("Delete", "TitleEditors", new { id = item.TitleEditorID })" class="btn btn-link modal-link" title="Remove this @DbRes.T("Authors.Editor", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash" /></a>
                     </td>
                 </tr>
             }

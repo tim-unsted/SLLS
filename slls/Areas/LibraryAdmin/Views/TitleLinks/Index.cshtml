@@ -35,8 +35,8 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-    <a href="@Url.Action("Create", "TitleLinks")" title="Add new @DbRes.T("TitleLinks.Link", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
-    <a href="@Url.Action("CheckLinks", "TitleLinks")" title="Check @DbRes.T("TitleLinks", "EntityType")" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Check Links</a>
+    <a href="@Url.Action("Create", "TitleLinks")" title="Add new @DbRes.T("TitleLinks.Link", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("CheckLinks", "TitleLinks")" title="Check @DbRes.T("TitleLinks", "EntityType")" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Check Links</a>
 </p>
 
 <table class="table" id="titlelinks">
@@ -72,8 +72,8 @@
                     @Html.Raw(item.Title.FiledTitle)
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("Delete", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash" /></a>
-                    <a href="@Url.Action("Edit", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Edit"><span class="glyphicon glyphicon-pencil" /></a>
+                    <a href="@Url.Action("Delete", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash" /></a>
+                    <a href="@Url.Action("Edit", new {id = item.TitleLinkID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
                 </td>
             </tr>
         }

@@ -8,7 +8,7 @@
     @Html.ValidationMessageFor(model => model.StatusId, "", new { @class = "text-danger" })
 </div>
 
-<a href="@Url.Content("~/LibraryAdmin/StatusTypes/_add")" class="button" id="addStatusTypeLink" title="Status Type not in the list?&#013;Add a new one now."><span class="glyphicon glyphicon-plus-sign"></span></a>
+<a href="@Url.Content("~/LibraryAdmin/StatusTypes/_add")" class="button" id="addStatusTypeLink" title="Status Type not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 
 <div id="newStatusTypeDialog" title="Quick Add: New Status Type"></div>
 

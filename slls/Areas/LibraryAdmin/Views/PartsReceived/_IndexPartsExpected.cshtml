@@ -110,7 +110,7 @@
                 </td>
                 <td class="just-right">
                     @*[10]*@
-                    <a href="@Url.Action("Create", "PartsReceived", new { id = item.CopyID })" class="btn btn-link modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span></a>
+                    <a href="@Url.Action("Create", "PartsReceived", new { id = item.CopyID })" class="btn btn-link modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span></a>
                 </td>
             </tr>
         }

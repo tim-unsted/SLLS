@@ -149,7 +149,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult Create()
         {
             ViewData["TitleId"] = new SelectList(_db.Titles.Where(t => t.Copies.Any()).OrderBy(t => t.Title1.Substring(t.NonFilingChars)), "TitleID", "Title1");
-            ViewData["CopyId"] = new SelectList(_db.Copies, "CopyID", "CopyNumber");
+            ViewData["CopyId"] = new SelectList("");
             ViewData["LoanTypeId"] = new SelectList(_db.LoanTypes, "LoanTypeID", "LoanTypeName");
             ViewBag.Title = "Add New " + _entityName;
             ViewBag.BtnText = DbRes.T("Buttons.Confirm_Add", "Terminology");
@@ -231,7 +231,7 @@ namespace slls.Areas.LibraryAdmin
                 Step = step,
                 AddMore = false
             };
-            ViewData["LoanTypeId"] = new SelectList(_db.LoanTypes, "LoanTypeID", "LoanTypeName");
+            ViewData["LoanTypeId"] = new SelectList(_db.LoanTypes, "LoanTypeID", "LoanTypeName", Utils.PublicFunctions.GetDefaultLoanType(title.MediaID));
             ViewBag.Title = step > 1 ? "Step " + step + ": Add New " + _entityName : "Add New " + _entityName;
             ViewBag.BtnText = "Finish";
             return View(viewModel);

@@ -37,7 +37,7 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <p>
-    <a href="@Url.Action("Create", "Publishers")" title="Add new @DbRes.T("Publishers.Publisher", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Create", "Publishers")" title="Add new @DbRes.T("Publishers.Publisher", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 <table id="publishers" class="table">
@@ -77,7 +77,7 @@
                     {
                         <a href="@Url.Action("Delete", new {id = item.PublisherID})" class="btn btn-link modal-link" title="Delete this @DbRes.T("Publishers.Publisher", "FieldDisplayName")"><span class=" glyphicon glyphicon-trash"></span></a>
                     }
-                    <a href="@Url.Action("Edit", new {id = item.PublisherID})" class="btn btn-link modal-link" title="Edit this @DbRes.T("Publishers.Publisher", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.PublisherID})" class="btn btn-link modal-link" title="Edit this @DbRes.T("Publishers.Publisher", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

@@ -35,13 +35,13 @@
         <div class="col-md-12">
             <div class="summary">
                 <div id="viewTitlesIsbnNoImage">
-                    <span class="glyphicon glyphicon-eye-open"></span> @Html.ActionLink("View Titles with an ISBN but no Image", "TitlesNoImage", "Titles", new { Isbn = "true" }, null)
+                    <span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span> @Html.ActionLink("View Titles with an ISBN but no Image", "TitlesNoImage", "Titles", new { Isbn = "true" }, null)
                 </div>
                 <div id="viewTitlesNoImage">
-                    <span class="glyphicon glyphicon-eye-open"></span> @Html.ActionLink("View Titles without an Image", "TitlesNoImage", "Titles")
+                    <span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span> @Html.ActionLink("View Titles without an Image", "TitlesNoImage", "Titles")
                 </div>
                 <div id="viewTitlesNoIsbn">
-                    <span class="glyphicon glyphicon-eye-open"></span> @Html.ActionLink("View Titles without an ISBN", "TitlesNoIsbn", "Titles")
+                    <span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span> @Html.ActionLink("View Titles without an ISBN", "TitlesNoIsbn", "Titles")
                 </div>
             </div>
         </div>
@@ -83,7 +83,7 @@
             </div>
         </div>
 
-        <button type="submit" id="btnDownload" class="btn btn-success" disabled="disabled">Start Download <span class="glyphicon glyphicon-cloud-download"></span></button>
+        <button type="submit" id="btnDownload" class="btn btn-success" disabled="disabled">Start Download <span aria-hidden="true" class="glyphicon glyphicon-cloud-download"></span></button>
         &nbsp;&nbsp;or&nbsp;<button type="button" id="btnCancel" class="btn-link" onclick="window.history.back();">Cancel</button>
 
     </div>

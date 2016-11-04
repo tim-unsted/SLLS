@@ -28,7 +28,7 @@
                 @Html.EditorFor(model => model.NonFilingChars, new {htmlAttributes = new {@class = "form-control"}})
                 @Html.ValidationMessageFor(model => model.NonFilingChars, "", new {@class = "text-danger"})
             </div>
-            @*<button type="submit" value="Save Details" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Save Details</button>*@
+            @*<button type="submit" value="Save Details" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Details</button>*@
         </div>
 
         <div class="form-group">
@@ -49,7 +49,7 @@
 
         <div class="form-group">
             <div class="col-md-6">
-                @Html.Label(DbRes.T("Authors.Author", "FieldDisplayName"))<span class="pull-right"><a href="@Url.Action("Add", "TitleAuthors", new {id = Model.TitleID})" class="modal-link" style="margin-bottom: 5px;" title="Add @DbRes.T("Authors.Author", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Authors.Author", "FieldDisplayName")</a></span>
+                @Html.Label(DbRes.T("Authors.Author", "FieldDisplayName"))<span class="pull-right"><a href="@Url.Action("Add", "TitleAuthors", new {id = Model.TitleID})" class="modal-link" style="margin-bottom: 5px;" title="Add @DbRes.T("Authors.Author", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Authors.Author", "FieldDisplayName")</a></span>
             
                 @if (Model.TitleAuthors.Count > 0)
                 {
@@ -61,7 +61,7 @@
                 }
             </div>
             <div class="col-md-6">
-                @Html.Label(DbRes.T("Authors.Editor", "FieldDisplayName"))<span class="pull-right"><a href="@Url.Action("Add", "TitleEditors", new {id = Model.TitleID})" class="modal-link" style="margin-bottom: 5px;" title="Add @DbRes.T("Authors.Editor", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Authors.Editor", "FieldDisplayName")</a></span>
+                @Html.Label(DbRes.T("Authors.Editor", "FieldDisplayName"))<span class="pull-right"><a href="@Url.Action("Add", "TitleEditors", new {id = Model.TitleID})" class="modal-link" style="margin-bottom: 5px;" title="Add @DbRes.T("Authors.Editor", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Authors.Editor", "FieldDisplayName")</a></span>
                 @if (Model.TitleEditors.Count > 0)
                 {
                     @Html.Partial("_ListEditors", Model.TitleEditors)
@@ -147,8 +147,8 @@
         </div>
 
         <div class="form-footer">
-            <button type="submit" value="Save Details" class="btn btn-success" ><span class="glyphicon glyphicon-ok"></span> Save Details</button>
-            <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span class="glyphicon glyphicon-trash"></span> Delete Title</a>
+            <button type="submit" value="Save Details" class="btn btn-success" ><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Details</button>
+            <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Title</a>
             &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
         </div>
     </div>

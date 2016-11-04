@@ -43,9 +43,9 @@
                 @Html.Raw(item.SortOrder)
             </td>
             <td class="just-right">
-                <a href="@Url.Action("_MoveRecipientUpList", new {id = item.CirculationID})" class="btn btn-link" title="Move @item.RecipientUser.Firstname up List"><span class="glyphicon glyphicon-arrow-up"></span></a>
-                <a href="@Url.Action("_MoveRecipientDownList", new {id = item.CirculationID})" class="btn btn-link" title="Move @item.RecipientUser.Firstname down List"><span class="glyphicon glyphicon-arrow-down"></span></a>
-                <a href="@Url.Action("RemoveRecipient", new {id = item.CirculationID})" class="btn btn-link modal-link" title="Remove @item.RecipientUser.Firstname from List"><span class="glyphicon glyphicon-minus-sign"></span></a>
+                <a href="@Url.Action("_MoveRecipientUpList", new {id = item.CirculationID})" class="btn btn-link" title="Move @item.RecipientUser.Firstname up List"><span aria-hidden="true" class="glyphicon glyphicon-arrow-up"></span></a>
+                <a href="@Url.Action("_MoveRecipientDownList", new {id = item.CirculationID})" class="btn btn-link" title="Move @item.RecipientUser.Firstname down List"><span aria-hidden="true" class="glyphicon glyphicon-arrow-down"></span></a>
+                <a href="@Url.Action("RemoveRecipient", new {id = item.CirculationID})" class="btn btn-link modal-link" title="Remove @item.RecipientUser.Firstname from List"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></a>
             </td>
         </tr>
     }

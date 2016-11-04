@@ -11,7 +11,7 @@
     @Html.ValidationSummary()
 
     <div class="alert alert-info">
-        <span class="help-block"><span class="glyphicon glyphicon-info-sign"></span> Use this tool to perform a global move or a merger of authority list values.</span>
+        <span class="help-block"><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> Use this tool to perform a global move or a merger of authority list values.</span>
         <span class="help-block">To <strong>move</strong> all associated items from one authority list value to another, simply select the value to move from the first list, and then select or enter the existing or new value to accept the moved items. (E.g. move all items from location a to existing location b, or to new location c).</span>
         <span class="help-block">To <strong>merge</strong> two or more authority list values, simply select the values to merge from the first list (hold the Ctrl button down to select more than value) and then select the existing or new value to accept the merged items. (E.g. merge all items from locations a, b and c into existing location d, or into new location e).</span>
     </div>
@@ -48,13 +48,13 @@
     </div>
 
     <div class="form-footer">
-        <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Continue</button>
+        <button type="submit" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Continue</button>
         &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
     </div>
 }
 
 <div id="confirmDialog" title="Confirm Update/Merge Authority List Values">
-    <p><span class="glyphicon glyphicon-alert"></span> You are about to move or merge the following values. Are you sure you want to continue?</p>
+    <p><span aria-hidden="true" class="glyphicon glyphicon-alert"></span> You are about to move or merge the following values. Are you sure you want to continue?</p>
     <p>
         <strong>Affected Authority List: </strong><br/>
         <span id="confirmAuthorityList"></span>

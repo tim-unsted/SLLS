@@ -12,7 +12,7 @@
     <div class="form-group">
         <div class="col-md-12 form-inline">
             <strong>Step 1: Get User Data</strong><br />
-            <a href="@Url.Action("_BrowseForFile")" title="Click to load user data from file" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-user"></span> Load Data</a>
+            <a href="@Url.Action("_BrowseForFile")" title="Click to load user data from file" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-user"></span> Load Data</a>
             <span>@Html.TextBoxFor(model => model.FileName, new {@readonly = "readonly", @class = "form-control"})</span>
         </div>
         <div class="col-md-12">
@@ -27,10 +27,10 @@
         <div class="col-md-12">
             <strong>Step 2: Confirm import</strong><br />
             Number of user records in file: <strong>@Model.Rows</strong>
-            &nbsp;&nbsp;<a href="@Url.Action("ViewFile")" title="View User Data" class="btn btn-link" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> View Data</a>
+            &nbsp;&nbsp;<a href="@Url.Action("ViewFile")" title="View User Data" class="btn btn-link" target="_blank"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span> View Data</a>
         </div>
         <div class="col-md-12">
-            <a href="@Url.Action("DoUserImport")" title="Import the user data" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Import Users</a>
+            <a href="@Url.Action("DoUserImport")" title="Import the user data" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Import Users</a>
             &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" onclick="window.history.back();">Cancel</button>
         </div>
     </div>

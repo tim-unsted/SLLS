@@ -1534,12 +1534,19 @@ namespace slls.Areas.LibraryAdmin
         //Method used to supply a JSON list of copies when selecting a title (Ajax stuf)
         public JsonResult GetTitleCopies(int titleId = 0)
         {
+            var title = _db.Titles.Find(titleId);
+            if (title == null)
+            {
+                return Json( new {success = true});
+            }
+
             var copies = new SelectList(_db.Copies.Where(x => x.TitleID == titleId).ToList(), "CopyID", "CopyNumber");
 
             return Json(new
             {
                 success = true,
-                TitleCopyData = copies
+                TitleCopyData = copies,
+                DefaultloanType = Utils.PublicFunctions.GetDefaultLoanType(title.MediaID)
             });
         }
         

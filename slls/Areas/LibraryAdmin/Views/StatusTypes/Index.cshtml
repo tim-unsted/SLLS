@@ -44,7 +44,7 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <p>
-    <a href="@Url.Action("Create", "StatusTypes")" title="Add new @DbRes.T("StatusTypes.Status_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Create", "StatusTypes")" title="Add new @DbRes.T("StatusTypes.Status_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 <table id="statustypes" class="table table-hover table-condensed">
@@ -91,7 +91,7 @@
                     {
                         <a href="@Url.Action("Delete", new {id = item.StatusID})" class="btn btn-link modal-link" title="Delete this Status Type"><span class=" glyphicon glyphicon-trash"></span></a>
                     }
-                    <a href="@Url.Action("Edit", new {id = item.StatusID})" class="btn btn-link modal-link" title="Edit this Status Type"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.StatusID})" class="btn btn-link modal-link" title="Edit this Status Type"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

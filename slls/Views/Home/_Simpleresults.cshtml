@@ -44,7 +44,7 @@
 {
     <div class="btn-group">
         <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export results to Excel">
-            <span class="glyphicon glyphicon-plus-sign"></span> Export <span class="caret"></span>
+            <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Export <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
             <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titles"})" class="btn-link" title="Export Title data">Titles only</a></li>
@@ -56,7 +56,7 @@
 
 @if (Model.IsActualSearch && Model.Results.Any()) //Only show the 'Save Search' button for actual searches ...
 {
-    <a href="@Url.Action("SaveSearch", "Home")" title="Save Search" class="btn btn-default modal-link"><span class="glyphicon glyphicon-floppy-disk"></span> Save</a>
+    <a href="@Url.Action("SaveSearch", "Home")" title="Save Search" class="btn btn-default modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save</a>
 }
 
 
@@ -81,16 +81,16 @@
                             <span class="pull-right">
                                 @if (Model.LibraryStaff)
                                 {
-                                    @*<a href="@Url.Action("Delete", "Titles", new {id = item.TitleID, view=@Html.CurrentViewName()})" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-trash"></span></a>*@
-                                    <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID, area = "LibraryAdmin"})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span></a>
+                                    @*<a href="@Url.Action("Delete", "Titles", new {id = item.TitleID, view=@Html.CurrentViewName()})" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>*@
+                                    <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID, area = "LibraryAdmin"})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                                 }
                                 else
                                 {
-                                    <a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-eye-open"></span></a>
+                                    <a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span></a>
                                 }
                                 @if (User.Identity.IsAuthenticated)
                                 {
-                                    <a href="@Url.Action("Add", "LibraryUserBookmarks", new {id = item.TitleID})" class="btn btn-link modal-link" title="Bookmark @DbRes.T("Titles.Title", "FieldDisplayName")"><span class="glyphicon glyphicon-bookmark"></span></a>
+                                    <a href="@Url.Action("Add", "LibraryUserBookmarks", new {id = item.TitleID})" class="btn btn-link modal-link" title="Bookmark @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-bookmark"></span></a>
                                 }
 
                             </span>

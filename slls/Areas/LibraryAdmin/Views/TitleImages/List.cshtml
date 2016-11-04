@@ -17,8 +17,8 @@
                             <h4>@item.Alt</h4>
 
                             <span class="pull-right">
-                                <a href="@Url.Action("Edit", "TitleImages", new { id = item.TitleImageId })" class="btn btn-link" data-toggle="modal" data-target="#stdModal" title="Edit" role="button"><span class="glyphicon glyphicon-pencil"></span></a>
-                                <a href="@Url.Action("Delete", "TitleImages", new { id = item.TitleImageId })" class="btn btn-link" data-toggle="modal" data-target="#stdModal" title="Delete" role="button"><span class="glyphicon glyphicon-trash"></span></a>
+                                <a href="@Url.Action("Edit", "TitleImages", new { id = item.TitleImageId })" class="btn btn-link" data-toggle="modal" data-target="#stdModal" title="Edit" role="button"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                                <a href="@Url.Action("Delete", "TitleImages", new { id = item.TitleImageId })" class="btn btn-link" data-toggle="modal" data-target="#stdModal" title="Delete" role="button"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                             </span>
                             <p>Primary Image? @Html.CheckBoxFor(m => item.IsPrimary, new { @disabled = "disabled" })</p>
                         </div>

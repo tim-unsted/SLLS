@@ -51,7 +51,7 @@
 
                 <td class="just-right">
                     <a href="@Url.Action("Delete","Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="Delete this Volume"><span class=" glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="Edit this Volume"><span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="Edit this Volume"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
 
                 </td>
             </tr>

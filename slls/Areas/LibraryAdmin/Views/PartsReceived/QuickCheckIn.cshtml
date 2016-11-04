@@ -30,8 +30,8 @@
                 <div class="panel-heading">
                     <span class="panel-title">
                         <span class="pull-right">
-                            <a href="@Url.Action("Create", "PartsReceived", new {id = Model.CopyID})" class="btn btn-success modal-link" style="margin-bottom: 5px;" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
-                            <a href="@Url.Action("PrintCirculationSlip", "Circulation", new {id = Model.CopyID})" class="btn btn-primary" style="margin-bottom: 5px;" target="_blank" title="Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")"><span class="glyphicon glyphicon-print"></span> Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")</a>
+                            <a href="@Url.Action("Create", "PartsReceived", new {id = Model.CopyID})" class="btn btn-success modal-link" style="margin-bottom: 5px;" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
+                            <a href="@Url.Action("PrintCirculationSlip", "Circulation", new {id = Model.CopyID})" class="btn btn-primary" style="margin-bottom: 5px;" target="_blank" title="Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")</a>
                         </span>
                         <h4>@DbRes.T("CheckIn.Parts_Received", "FieldDisplayName")</h4>
                     </span>
@@ -53,8 +53,8 @@
                 <div class="panel-heading">
                     <span class="panel-title">
                         <span class="pull-right">
-                            <a href="@Url.Action("AddRecipient", "Circulation", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" style="margin-bottom: 5px;" title="Add more @DbRes.T("Circulation.Recipients", "FieldDisplayName")"><span class="glyphicon glyphicon-plus-sign"></span> Add</a>
-                            <a href="@Url.Action("CirculationList", "Circulation", new {copy = ViewData["CopyID"]})" class="btn btn-primary" style="margin-bottom: 5px;" title="Edit @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span class="glyphicon glyphicon-pencil"></span> Edit</a>
+                            <a href="@Url.Action("AddRecipient", "Circulation", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" style="margin-bottom: 5px;" title="Add more @DbRes.T("Circulation.Recipients", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add</a>
+                            <a href="@Url.Action("CirculationList", "Circulation", new {copy = ViewData["CopyID"]})" class="btn btn-primary" style="margin-bottom: 5px;" title="Edit @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Edit</a>
                         </span>
                         <h4>@DbRes.T("Circulation.Circulation_List", "FieldDisplayName")</h4>
                     </span>

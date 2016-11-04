@@ -45,7 +45,7 @@
 {
     <div class="alert alert-danger alert-dismissible" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <span class="glyphicon glyphicon-alert" aria-hidden="true"></span>
+        <span aria-hidden="true" class="glyphicon glyphicon-alert" aria-hidden="true"></span>
         <span class="sr-only">Message:</span>
         You have overdue loans. Please return or renew all overdue items as soon as possible.
     </div>
@@ -89,7 +89,7 @@
                     @{
             if (item.ReturnDue < DateTime.Today)
             {
-                <span class="error">@Html.DisplayFor(x => item.ReturnDue) <span class="glyphicon glyphicon-exclamation-sign"></span></span>
+                <span class="error">@Html.DisplayFor(x => item.ReturnDue) <span aria-hidden="true" class="glyphicon glyphicon-exclamation-sign"></span></span>
             }
             else
             {
@@ -110,11 +110,11 @@
                     @{
                         if (Settings.GetParameterValue("Borrowing.SelfReturnsEnabled", "false", "Sets whether OPAC users can do self-returns") == "true")
                         {
-                            <a href="@Url.Action("ConfirmReturnLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span class="glyphicon glyphicon-share-alt"></span></a>
+                            <a href="@Url.Action("ConfirmReturnLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span aria-hidden="true" class="glyphicon glyphicon-share-alt"></span></a>
                         }
                         if (Settings.GetParameterValue("Borrowing.SelfLoansEnabled", "false", "Set whether OPAC users can do self-borrowing") == "true")
                         {
-                            <a href="@Url.Action("ConfirmRenewLoan", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Renew loan"><span class="glyphicon glyphicon-repeat"></span></a>
+                            <a href="@Url.Action("ConfirmRenewLoan", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Renew loan"><span aria-hidden="true" class="glyphicon glyphicon-repeat"></span></a>
                         }
                     }
                 </td>

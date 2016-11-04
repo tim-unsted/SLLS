@@ -39,7 +39,7 @@
 @using (Html.BeginForm("CLAAuditReport", "Titles", FormMethod.Post, new { id = "form1" }))
 {
     <div class="alert alert-info">
-        <span class="pull-right" style="padding-left: 10px;"><button type="submit" value="View Report" class="btn btn-success"><span class="glyphicon glyphicon-sunglasses"></span> View Report</button>&nbsp;&nbsp;</span>
+        <span class="pull-right" style="padding-left: 10px;"><button type="submit" value="View Report" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-sunglasses"></span> View Report</button>&nbsp;&nbsp;</span>
         <span><strong>CLA Audit</strong> - Copies Purchased reports only include items with a date in the Received Date field. If the Received Date is empty it is treated as still 'On Order'.</span>
     </div>
 
@@ -160,7 +160,7 @@
     </div>
 
     <div class="form-footer">
-        <button type="submit" value="View Report" class="btn btn-success"><span class="glyphicon glyphicon-sunglasses"></span> View Report</button>
+        <button type="submit" value="View Report" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-sunglasses"></span> View Report</button>
         &nbsp;or&nbsp;<a href="@Url.Action("Index","Home")" class="btn-link" title="Cancel">Cancel</a>
     </div>
 }

@@ -50,7 +50,7 @@
 
             <div class="form-group">
                 <div class="col-md-12">
-                    @Html.LabelFor(model => model.Holdings)<span class="pull-right"><a href="@Url.Action("EditHoldings", "Copies", new {id = Model.CopyId})" class="modal-link" style="margin-bottom: 5px;" title="Edit @DbRes.T("Copies.Holdings", "FieldDisplayName")">Edit <span class="glyphicon glyphicon-pencil"></span></a></span>
+                    @Html.LabelFor(model => model.Holdings)<span class="pull-right"><a href="@Url.Action("EditHoldings", "Copies", new {id = Model.CopyId})" class="modal-link" style="margin-bottom: 5px;" title="Edit @DbRes.T("Copies.Holdings", "FieldDisplayName")">Edit <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a></span>
                     @Html.TextAreaFor(model => model.Holdings, new { rows = "", cols = "", @class = "form-control small" })
                     @Html.ValidationMessageFor(model => model.Holdings, "", new { @class = "text-danger" })
                 </div>
@@ -58,7 +58,7 @@
 
             <div class="form-group">
                 <div class="col-md-12">
-                    @Html.LabelFor(model => model.Notes)<span class="pull-right"><a href="@Url.Action("EditNotes", "Copies", new {id = Model.CopyId})" class="modal-link" style="margin-bottom: 5px;" title="Edit @DbRes.T("Copies.Notes", "FieldDisplayName")">Edit <span class="glyphicon glyphicon-pencil"></span></a></span>
+                    @Html.LabelFor(model => model.Notes)<span class="pull-right"><a href="@Url.Action("EditNotes", "Copies", new {id = Model.CopyId})" class="modal-link" style="margin-bottom: 5px;" title="Edit @DbRes.T("Copies.Notes", "FieldDisplayName")">Edit <span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a></span>
                     @Html.TextAreaFor(model => model.Notes, new { rows = "", cols = "", @class = "form-control small" })
                     @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
                 </div>

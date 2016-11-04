@@ -1,7 +1,7 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.TitleAddViewModel
 
-@Html.Label(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/MediaTypes/_add")" class="button" id="addMediaLink" title="Media not in the list?&#013;Add a new one now."><span class="glyphicon glyphicon-plus-sign"></span></a>
+@Html.Label(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/MediaTypes/_add")" class="button" id="addMediaLink" title="Media not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 @Html.DropDownList("MediaID", null, new { @class = "form-control" })
 @Html.ValidationMessageFor(model => model.MediaID, "", new { @class = "text-danger" })
 

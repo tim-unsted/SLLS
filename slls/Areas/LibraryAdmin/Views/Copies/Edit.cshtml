@@ -33,7 +33,7 @@
             </div>
         }
 
-        <a href="@Url.Action("Add", "Copies", new {id = @Model.TitleId}, null)" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
+        <a href="@Url.Action("Add", "Copies", new {id = @Model.TitleId}, null)" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
 
     </div>
 </div>
@@ -61,8 +61,8 @@
                 <span class="pull-left">@Html.Partial("_PaginateDetails", Model)</span>
             }
 
-            <a href="@Url.Action("Add", "Volumes", new {id = Model.CopyId})" class="btn btn-primary" title="Add new"><span class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")</a>
-            <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span class="glyphicon glyphicon-trash"></span> Delete Copy</a>
+            <a href="@Url.Action("Add", "Volumes", new {id = Model.CopyId})" class="btn btn-primary" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")</a>
+            <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
             &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
         </div>
     }

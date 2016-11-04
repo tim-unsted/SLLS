@@ -19,7 +19,7 @@
         <div class="form-horizontal">
 
             <div class="alert alert-info">
-                <span class="help-block"><span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;@Model.Tip</span>
+                <span class="help-block"><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;@Model.Tip</span>
             </div>
 
             <div class="form-group">
@@ -27,7 +27,7 @@
                     <div class="input-group">
                         <label class="input-group-btn">
                             <span class="btn btn-primary">
-                                <span class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.File, new {type = "file", multiple = "multiple", accept = Model.AcceptedFileTypes, @style = "display: none;"})
+                                <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.File, new {type = "file", multiple = "multiple", accept = Model.AcceptedFileTypes, @style = "display: none;"})
                             </span>
                         </label>
                         <input type="text" class="form-control" readonly>

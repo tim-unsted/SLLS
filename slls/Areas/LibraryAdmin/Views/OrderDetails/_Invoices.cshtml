@@ -167,8 +167,8 @@
                 </th>
 
                 <td class="just-right">
-                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", new { id = item.OrderID })#receipts" class="btn btn-link" title="Edit">&nbsp;<span class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new { id = item.OrderID })#receipts" class="btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

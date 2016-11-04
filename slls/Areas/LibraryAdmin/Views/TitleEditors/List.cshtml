@@ -5,7 +5,7 @@
 <h3><a href="@Url.Action("Edit", "Titles", new {id = @Model.FirstOrDefault().TitleID}, null)" title="Back to title">@Model.FirstOrDefault().Title.Title1</a></h3>
 
 <p>
-    <a href="@Url.Action("Add", "TitleEditors", new {id = Model.FirstOrDefault().TitleID}, null)" title="Add new @DbRes.T("Authors.Editor", "FieldDisplayName") to a @DbRes.T("Titles.Title", "FieldDisplayName")">Add New <span class="glyphicon glyphicon-plus-sign" /></a>
+    <a href="@Url.Action("Add", "TitleEditors", new {id = Model.FirstOrDefault().TitleID}, null)" title="Add new @DbRes.T("Authors.Editor", "FieldDisplayName") to a @DbRes.T("Titles.Title", "FieldDisplayName")">Add New <span aria-hidden="true" class="glyphicon glyphicon-plus-sign" /></a>
     <br/><br/>
 </p>
 
@@ -29,8 +29,8 @@
                 @Html.DisplayFor(modelItem => item.OrderSeq)
             </td>
             <td class="just-right">
-                <a href="@Url.Action("Edit", new { id = item.TitleEditorID })" class="btn btn-link" title="Edit"><span class="glyphicon glyphicon-pencil" /></a>
-                <a href="@Url.Action("Delete", new { id = item.TitleEditorID })" class="btn btn-link" title="Delete"><span class="glyphicon glyphicon-trash" /></a>
+                <a href="@Url.Action("Edit", new { id = item.TitleEditorID })" class="btn btn-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
+                <a href="@Url.Action("Delete", new { id = item.TitleEditorID })" class="btn btn-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash" /></a>
             </td>
         </tr>
     }

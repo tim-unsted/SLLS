@@ -18,7 +18,7 @@
         <span class="pull-right">
             @if (User.Identity.IsAuthenticated)
             {
-                <a href="@Url.Action("Add", "LibraryUserBookmarks", new {id = Model.TitleID})" class="btn btn-link modal-link" title="Bookmark @DbRes.T("Titles.Title", "FieldDisplayName")">Bookmark <span class="glyphicon glyphicon-bookmark"></span></a>
+                <a href="@Url.Action("Add", "LibraryUserBookmarks", new {id = Model.TitleID})" class="btn btn-link modal-link" title="Bookmark @DbRes.T("Titles.Title", "FieldDisplayName")">Bookmark <span aria-hidden="true" class="glyphicon glyphicon-bookmark"></span></a>
             }
         </span>
         @{var title = string.IsNullOrEmpty(Model.Title1) ? Html.Raw("[No Title]") : Html.DisplayFor(modelItem => Model.Title1); }

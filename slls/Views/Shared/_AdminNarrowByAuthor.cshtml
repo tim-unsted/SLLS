@@ -6,7 +6,7 @@
     @Html.EditorFor(model => model.AuthorFilter)
 </ul>
 <div>
-    <a href="@Url.Action("AdminShowAllAuthorsFilter", "Searching")" class="btn btn-show-more" title="Show more" data-toggle="modal" data-target="#lrgModal"><span class="glyphicon glyphicon-plus-sign"></span> Show All @DbRes.T("Authors", "EntityType")</a>
+    <a href="@Url.Action("AdminShowAllAuthorsFilter", "Searching")" class="btn btn-show-more" title="Show more" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Show All @DbRes.T("Authors", "EntityType")</a>
 </div>
 <hr class="hr-compact" />
 

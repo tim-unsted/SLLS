@@ -26,7 +26,7 @@
     </div>
 
     <div class="modal-footer">
-        <button id="btnConfirm" class="btn @Model.ConfirmButtonClass" type="submit"><span class="glyphicon @Model.Glyphicon"></span> @Html.DisplayFor(model => model.ConfirmButtonText)</button>
+        <button id="btnConfirm" class="btn @Model.ConfirmButtonClass" type="submit"><span aria-hidden="true" class="glyphicon @Model.Glyphicon"></span> @Html.DisplayFor(model => model.ConfirmButtonText)</button>
         &nbsp;&nbsp;or&nbsp;<button class="btn-link" data-dismiss="modal" aria-hidden="true" type="button">@Html.DisplayFor(model => model.CancelButtonText)</button>
     </div>
 }

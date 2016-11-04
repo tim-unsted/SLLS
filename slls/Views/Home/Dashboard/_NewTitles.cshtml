@@ -3,13 +3,13 @@
 <div class="panel panel-gadget shadowed">
     <div class="panel-heading">
         <span class="panel-title">
-            <span class="glyphicon glyphicon-book"></span>&nbsp;<span id="gadget-Title">@ViewBag.Title</span>
+            <span aria-hidden="true" class="glyphicon glyphicon-book"></span>&nbsp;<span id="gadget-Title">@ViewBag.Title</span>
             <span class="pull-right">
                 @if (Model.LibraryStaff)
                 {
-                    <a href="@Url.Action("NewTitles", "Titles", new {area = "LibraryAdmin"})" title="Maintain New Titles List"><span class="glyphicon glyphicon-pencil"></span></a> 
+                    <a href="@Url.Action("NewTitles", "Titles", new {area = "LibraryAdmin"})" title="Maintain New Titles List"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a> 
                 }
-                <a href="@Url.Action("NewTitles", "Home")" title="View full list"><span class="glyphicon glyphicon-eye-open"></span></a>
+                <a href="@Url.Action("NewTitles", "Home")" title="View full list"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span></a>
             </span>
         </span>
     </div>

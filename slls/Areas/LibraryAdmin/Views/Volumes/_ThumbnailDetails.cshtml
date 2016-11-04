@@ -8,10 +8,10 @@
             <div class="thumbnail">
                 <div class="caption" style="border-bottom: 1px solid #ddd; margin-bottom: 15px;">
                     <span class="pull-right">
-                        <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID}, null)" class="btn btn-link modal-link" title="Edit" role="button"><span class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="@Url.Action("Delete", "Volumes", new {id = item.VolumeID}, null)" class="btn btn-link modal-link" title="Delete" role="button"><span class="glyphicon glyphicon-trash"></span></a>
+                        <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID}, null)" class="btn btn-link modal-link" title="Edit" role="button"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="@Url.Action("Delete", "Volumes", new {id = item.VolumeID}, null)" class="btn btn-link modal-link" title="Delete" role="button"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     </span>
-                    <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID}, null)" class="btn btn-link modal-link" title="Edit" role="button"><span class="glyphicon glyphicon-barcode"></span> <strong>@Html.DisplayNameFor(model => item.Barcode):&nbsp;@Html.Raw(item.Barcode)</strong></a>
+                    <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID}, null)" class="btn btn-link modal-link" title="Edit" role="button"><span aria-hidden="true" class="glyphicon glyphicon-barcode"></span> <strong>@Html.DisplayNameFor(model => item.Barcode):&nbsp;@Html.Raw(item.Barcode)</strong></a>
                 </div>
                 <div class="row">
                     <div class="col-sm-6">

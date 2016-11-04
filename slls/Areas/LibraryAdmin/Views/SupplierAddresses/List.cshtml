@@ -63,8 +63,8 @@
             @Html.DisplayFor(modelItem => item.MainTel)
         </td>
         <td class="just-right">
-            <a href="@Url.Action("Edit", new {id = item.AddressID})" class="btn btn-link" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
-            <a href="@Url.Action("Delete", new { id = item.AddressID })" class="btn btn-link modal-link" title="Delete"><span class="glyphicon glyphicon-trash"></span></a>
+            <a href="@Url.Action("Edit", new {id = item.AddressID})" class="btn btn-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+            <a href="@Url.Action("Delete", new { id = item.AddressID })" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
         </td>
     </tr>
 }
