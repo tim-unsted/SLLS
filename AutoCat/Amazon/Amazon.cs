@@ -18,6 +18,7 @@ namespace AutoCat.Amazon
             var awsAccessKey = ConfigurationManager.AppSettings["AmazonAwsAccessKeyID"];
             var awsSecretKey = ConfigurationManager.AppSettings["AmazonAwsSecretKey"];
             var awsService = ConfigurationManager.AppSettings["AmazonAwsService"];
+            var awsVersion = ConfigurationManager.AppSettings["AmazonAwsVersion"];
             var awsAssociateTag = ConfigurationManager.AppSettings["AmazonAwsAssociateTag"];
             var awsOperation = ConfigurationManager.AppSettings["AmazonAwsOperation"];
             var awsIdType = ConfigurationManager.AppSettings["AmazonAwsIdType"];
@@ -29,6 +30,7 @@ namespace AutoCat.Amazon
             /*** Request is stored as a dictionary .... ***/
             IDictionary<string, string> r1 = new Dictionary<string, string>();
             r1["Service"] = awsService;
+            r1["Version"] = awsVersion;
             r1["AssociateTag"] = awsAssociateTag;
             r1["Operation"] = awsOperation;
             r1["ItemId"] = isbn;
@@ -55,6 +57,12 @@ namespace AutoCat.Amazon
 
             try
             {
+                ////log the url so we can try to troubleshoot errors...
+                //var filename = AppDomain.CurrentDomain.BaseDirectory + "Logs\\" + "logErrors.txt";
+                //var sw = new System.IO.StreamWriter(filename, true);
+                //sw.WriteLine(DateTime.Now.ToString() + " " + requestUrl);
+                //sw.Close();
+
                 WebRequest request = WebRequest.Create(requestUrl);
                 WebResponse response = request.GetResponse();
                 XmlDocument doc = new XmlDocument();

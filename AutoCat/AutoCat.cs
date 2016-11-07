@@ -1,6 +1,7 @@
 ﻿using System;
 using AutoCat.Amazon;
 using AutoCat.Copac;
+using AutoCat.Google;
 using AutoCat.Hammicks;
 using AutoCat.ViewModels;
 using AutoCat.Wildys;
@@ -96,6 +97,12 @@ namespace AutoCat
                     {
                         var copac = new CopacWebServices();
                         data = copac.GetFieldData(isbn);
+                        break;
+                    }
+                case "Google":
+                    {
+                        var google = new GoogleBooks();
+                        data = google.GetFieldData(isbn);
                         break;
                     }
             }
