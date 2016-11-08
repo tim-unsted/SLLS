@@ -1085,6 +1085,28 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
+            //Do links ...
+            if (newTitle.Links != null)
+            {
+                if (newTitle.Links.Any())
+                {
+                    foreach (var link in newTitle.Links)
+                    {
+                        var newTitleLink = new TitleLink()
+                        {
+                            TitleID = titleId,
+                            URL = link.Value,
+                            DisplayText = link.Key,
+                            HoverTip = link.Key,
+                            InputDate = DateTime.Now,
+                            IsValid = true
+                        };
+                        _db.TitleLinks.Add(newTitleLink);
+                        _db.SaveChanges();
+                    }
+                }
+            }
+
             //Do image ...
             if (!string.IsNullOrEmpty(newTitle.ImageUrl))
             {

@@ -46,7 +46,7 @@
                             <ul class="dropdown-menu" id="sources" name="sources">
                                 @foreach (var source in Model.Sources)
                                 {
-                                    <li><input type="submit" name="source" id="source" value=@source class="btn btn-link" /></li>
+                                    <li><button type="submit" name="source" id="source" value=@source title="@source" class="btn btn-link">@source</button></li>
                                 }
                             </ul>
                         </div>
@@ -79,7 +79,7 @@
     function checkInput() {
         var isbn = $("#Isbn").val();
         isbn = cleanIsbn(isbn);
-        if (isbn.length !== 10 && isbn.length !== 13) {
+        if (isbn.length !== 8 && isbn.length !== 10 && isbn.length !== 13) {
             jQuery(input).closest('.form-group').removeClass('has-success').addClass('has-error');
             $("#feedback").removeClass('glyphicon-ok');
             $("#warning-msg").show();
@@ -120,7 +120,7 @@
         $(".field-validation-error").hide();
         var isbn = $("#Isbn").val();
         isbn = cleanIsbn(isbn);
-        if ((isbn.length === 10 && isbn.slice(0, 3) != '978' && isbn.slice(0, 3) != '979') || (isbn.length === 13)) {
+        if ((isbn.length === 10 && isbn.slice(0, 3) != '978' && isbn.slice(0, 3) != '979') || (isbn.length === 13) || (isbn.length === 8)) {
             if (checkIsbn(isbn)) {
                 jQuery(input).closest('.form-group').removeClass('has-error').addClass('has-success');
                 $("#feedback").addClass('glyphicon-ok');

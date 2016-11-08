@@ -65,7 +65,7 @@
         <ul class="dropdown-menu" id="sources" name="sources">
             @foreach (var source in Model.Sources)
             {
-                <li><input type="submit" name="source" id="source" value=@source class="btn btn-link" /></li>
+                <li><button type="submit" name="source" id="source" value=@source title="@source" class="btn btn-link">@source</button></li>
             }
         </ul>
     </div>

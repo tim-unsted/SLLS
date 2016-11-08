@@ -514,6 +514,7 @@
     <Compile Include="App_Start\AppBuilderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Logs\logErrors.txt" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersBySupplier.cshtml">
       <SubType>Code</SubType>
     </Content>
