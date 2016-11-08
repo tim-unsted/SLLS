@@ -38,6 +38,8 @@ namespace AutoCat.ViewModels
 
         public string ISBN13 { get; set; }
 
+        public string ISSN { get; set; }
+
         public string Source { get; set; }
 
         public string Description { get; set; }
@@ -59,6 +61,8 @@ namespace AutoCat.ViewModels
         public string ErrorMessage { get; set; }
 
         public string ImageUrl { get; set; }
+
+        public Dictionary<string,string> Links { get; set; }
     }
 
     
