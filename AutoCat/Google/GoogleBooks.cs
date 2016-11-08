@@ -96,6 +96,14 @@ namespace AutoCat.Google
                     {
                         imageToken = bookDetails[0]["volumeInfo"]["imageLinks"]["thumbnail"];
                     }
+                    if (imageToken == null)
+                    {
+                        imageToken = bookDetails[0]["volumeInfo"]["imageLinks"]["medium"];
+                    }
+                    if (imageToken == null)
+                    {
+                        imageToken = bookDetails[0]["volumeInfo"]["imageLinks"]["large"];
+                    }
                     if (imageToken != null) viewModel.ImageUrl = imageToken.ToString();
                 }
                 
@@ -116,6 +124,10 @@ namespace AutoCat.Google
                         {
                             viewModel.ISBN10 = identifier["identifier"].ToString();
                         }
+                        if (identifierType.ToString() == "ISSN")
+                        {
+                            viewModel.ISSN = identifier["identifier"].ToString();
+                        }
                     }
                     
                 }
@@ -133,13 +145,7 @@ namespace AutoCat.Google
                 {
                     viewModel.Links = links;
                 }
-
-                //Is this an ISSN?
-                if (isbn.Length == 8)
-                {
-                    viewModel.ISSN = isbn;
-                }
-
+                
                 return viewModel;
             }
             return null;
