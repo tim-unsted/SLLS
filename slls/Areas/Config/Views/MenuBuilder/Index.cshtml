@@ -37,7 +37,7 @@
 
 <h2>@ViewBag.Title</h2>
 
-<div class="well">
+<div class="alert alert-info">
     <span class="help-block">
         <p>Use this tool to maintain the menus available to users. Select on any menu item in the left-hand structure to view, edit or delete the selected menu item's attributes.</p>
         <p><strong>Note:</strong> New menu items will be added to the same menu level/branch as the selected item. By default, they will be positioned one place below the selected item unless the sort order is changed when adding.</p>
@@ -49,69 +49,86 @@
     </form>
 </div>
 
-<div class="row">
+<div class="row" id="row">
     <div class="col-md-6">
-        <div class="panel panel-info">
+        <div class="panel panel-default">
             <div class="panel-heading">
                 <span class="panel-title">Menu Structure: @ViewBag.Menu</span>
             </div>
             <div class="panel-body" style="padding: 15px 0;">
                 <div class="collapse navbar-collapse" id="menuStructure">
                     <ul role="menu" class="list">
-                        @{
-                            //Get the top level menu items ...
-                            var itemsL1 = from m in Model.Where(m => m.ParentID == (int)ViewData["ParentMenuID"]).OrderBy(m => m.SortOrder).ToList()
-                                          select m;
-                            foreach (var l1 in itemsL1)
-                            {
-                                <li class="menu-builder-l1">
-                                    @Html.ActionLink(@l1.Title, "Details", new { id = l1.ID }, new { @class = "details-link" })
-                                    @{
-                                //Get the sub menu headings ...
-                                var itemsL2 = from p in Model.Where(m => m.ParentID == l1.ID) select p;
-                                if (itemsL2 != null || itemsL2.Any())
-                                {
+                        <li class="menu-builder-top">
+                            @{
+                                var l0 = (from m in Model.Where(m => m.ID == (int)ViewData["ParentMenuID"]) select m).FirstOrDefault();
+                            }
 
-                                    <ul role="menu" id=l1.ID>
-                                        @foreach (var l2 in itemsL2)
-                                        {
-                                            <li class="menu-builder-l2">
-                                                <a class="dropdown-toggle details-link" data-toggle="dropdown" href="@Url.Action("Details", new { id = l2.ID })">@l2.Title <span class="caret"></span></a>
-                                                <ul class="list2" id="@l2.ID" role="menu" style="display: block;">
-                                                    @{
-                                            //Get the actual sub menu items ...
-                                            var itemsL3 = from l in Model.Where(m => m.ParentID == l2.ID)
-                                                          select l;
-                                            if (itemsL3 != null || itemsL3.Any())
-                                            {
-                                                foreach (var l3 in itemsL3)
+                            <a class="dropdown-toggle details-link " data-toggle="dropdown" href="@Url.Action("Details", new {id = l0.ID, @class = "details-link"})">@l0.Title <span class="caret"></span></a>
+                            <ul role="menu" class="list">
+
+                                @{
+                                    //Get the top level menu items ...
+                                    var itemsL1 = from m in Model.Where(m => m.ParentID == (int) ViewData["ParentMenuID"]).OrderBy(m => m.SortOrder).ToList()
+                                        select m;
+                                    foreach (var l1 in itemsL1)
+                                    {
+                                        <li class="menu-builder-l1">
+                                            @{
+                                                //Get the sub menu headings ...
+                                                var itemsL2 = from p in Model.Where(m => m.ParentID == l1.ID) select p;
+
+                                                if (itemsL2.Any())
                                                 {
-                                                    if (l3.Class == "divider")
-                                                    {
-                                                        <li class="menu-builder-l3" >
-                                                            @Html.ActionLink("____separator____", "Details", new { id = l3.ID }, new { @class = "details-link" })
-                                                        </li>
-                                                    }
-                                                    else
-                                                    {
-                                                        <li class="menu-builder-l3" >
-                                                            @Html.ActionLink(@l3.Title, "Details", new { id = l3.ID }, new { @class = "details-link" })
-                                                        </li>
-                                                    }
+                                                    <a class="dropdown-toggle details-link " data-toggle="dropdown" href="@Url.Action("Details", new {id = l1.ID, @class = "details-link"})">@l1.Title <span class="caret"></span></a>
+                                                }
+                                                else
+                                                {
+                                                    <a class="dropdown-toggle details-link " data-toggle="dropdown" href="@Url.Action("Details", new {id = l1.ID, @class = "details-link"})">@l1.Title </a>
+                                                }
+                                                if (itemsL2 != null || itemsL2.Any())
+                                                {
 
+                                                    <ul role="menu" id=@l1.ID style="display: block;">
+                                                        @foreach (var l2 in itemsL2)
+                                                        {
+                                                            <li class="menu-builder-l2">
+                                                                <a class="dropdown-toggle details-link " data-toggle="dropdown" href="@Url.Action("Details", new {id = l2.ID})">@l2.Title <span class="caret"></span></a>
+                                                                <ul class="list2" id="@l2.ID" role="menu" style="display: none;">
+                                                                    @{
+                                                                        //Get the actual sub menu items ...
+                                                                        var itemsL3 = from l in Model.Where(m => m.ParentID == l2.ID)
+                                                                            select l;
+                                                                        if (itemsL3 != null || itemsL3.Any())
+                                                                        {
+                                                                            foreach (var l3 in itemsL3)
+                                                                            {
+                                                                                if (l3.Class == "divider")
+                                                                                {
+                                                                                    <li class="menu-builder-l3">
+                                                                                        @Html.ActionLink("____separator____", "Details", new {id = l3.ID}, new {@class = "details-link"})
+                                                                                    </li>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <li class="menu-builder-l3">
+                                                                                        @Html.ActionLink(@l3.Title, "Details", new {id = l3.ID}, new {@class = "details-link"})
+                                                                                    </li>
+                                                                                }
+
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                </ul>
+                                                            </li>
+                                                        }
+                                                    </ul>
                                                 }
                                             }
-                                                    }
-                                                </ul>
-
-                                            </li>
-                                        }
-                                    </ul>
-                                }
+                                        </li>
                                     }
-                                </li>
-                            }
-                        }
+                                }
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -124,20 +141,7 @@
 
 
 @*<script type="text/javascript">
-    $(document).ready(function () {
-        $('.list2').each(function () {
-            var ul = $(this);
-            var id = ul.attr('id');
-            var block = localStorage.getItem('menuItemDisplay.' + id);
-            
-            ul.find('li').each(function () {
-                var li = $(this);
-                if (block == 'true') {
-                    li.show();
-                //} else {
-                //    li.toggle('hide');
-                };
-            });
-        });
+        $('#row').scroll(function() {
+            $('#details').css('top', $(this).scrollTop());
     });
-</script>*@
+    </script>*@

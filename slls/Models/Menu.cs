@@ -18,6 +18,9 @@ namespace slls.Models
 
         public int ID { get; set; }
 
+        [StringLength(255)]
+        public string Key { get; set; }
+
         public int? ParentID { get; set; }
 
         [StringLength(255)]

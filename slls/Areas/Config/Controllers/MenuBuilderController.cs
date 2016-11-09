@@ -175,7 +175,7 @@ namespace slls.Areas.Config
             ViewData["ParentID"] = new SelectList(_db.Menus.Where(m => m.ParentID == parentId && allowedAreas.Contains(m.MenuArea)).OrderBy(m => m.Title), "ID", "Title", menuitem.ParentID);
 
             //Create our view model of data to work with, based on the selected menu item ...
-            var viewModel = new MenuViewModel()
+            var viewModel = new MenuViewModel
             {
                 ParentID = menuitem.ParentID,
                 MenuArea = menuitem.MenuArea,
@@ -187,13 +187,43 @@ namespace slls.Areas.Config
                 IsDivider = menuitem.Class == "divider",
                 Target = "_self",
                 Controller = menuitem.Controller,
-                RolesList = RoleManager.Roles.Where(r => includedMenuRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
+                RolesList = new List<SelectListItem>()
+            };
+
+            //Get a list of roles that the current user is allowed to assign ...
+            viewModel.RolesList.AddRange(RoleManager.Roles.Where(r => includedMenuRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
                 {
                     Selected = allMenuRoles.Contains(x.Name),
                     Text = x.Name,
                     Value = x.Name
-                })
-            };
+                }));
+
+            //Add the 'Anonymous' role if we're editing the OPAC menu - this isn't an actual role that any user is assigned ...
+            if (menuitem.MenuArea == "OPAC")
+            {
+                viewModel.RolesList.Add(new SelectListItem
+                {
+                    Text = "Anonymous",
+                    Value = "Anonymous",
+                    Selected = true
+                });
+            }
+
+            //Remove the 'OPAC User' role if we're editing the Library Admin menu ...
+            if (menuitem.MenuArea == "LibraryAdmin")
+            {
+                var opacUser = viewModel.RolesList.Single(r => r.Value == "OPAC User");
+                viewModel.RolesList.Remove(opacUser);
+            }
+
+            //Remove the 'OPAC User' and 'Library Staff' roles if we're editing the Library Admin menu ...
+            if (menuitem.MenuArea == "Config")
+            {
+                var opacUser = viewModel.RolesList.Single(r => r.Value == "OPAC User");
+                viewModel.RolesList.Remove(opacUser);
+                var staff = viewModel.RolesList.Single(r => r.Value == "Library Staff");
+                viewModel.RolesList.Remove(staff);
+            }
 
             //Get data for various drop-down list ...
             ViewBag.Targets = GetTargets();
@@ -234,6 +264,7 @@ namespace slls.Areas.Config
                     CanDelete = true,
                     Deleted = false,
                     SortOrder = viewModel.SortOrder,
+                    Groups = viewModel.Groups,
                     Roles = string.Join(";",selectedRole)
                 };
 
@@ -242,7 +273,6 @@ namespace slls.Areas.Config
                 CacheProvider.RemoveCache("menuitems");
 
                 return Json(new { success = true });
-                //return RedirectToAction("Index", new { id = viewModel.MenuArea });
             }
             ViewBag.Title = "Add New Menu Item";
             return PartialView(viewModel);
@@ -285,7 +315,7 @@ namespace slls.Areas.Config
             }
 
             //Create our view model of data to work with ...
-            var viewModel = new MenuViewModel()
+            var viewModel = new MenuViewModel
             {
                 ID = menuitem.ID,
                 ParentID = menuitem.ParentID,
@@ -307,14 +337,44 @@ namespace slls.Areas.Config
                 SortOrder = menuitem.SortOrder,
                 Roles = menuitem.Roles,
                 Description = menuitem.Description,
-                RolesList = RoleManager.Roles.Where(r => includedMenuRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
-                {
-                    Selected = allMenuRoles.Contains(x.Name),
-                    Text = x.Name,
-                    Value = x.Name
-                })
+                Groups = menuitem.Groups,
+                RolesList = new List<SelectListItem>()
             };
-            
+
+            viewModel.RolesList.AddRange(RoleManager.Roles.Where(r => includedMenuRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
+            {
+                Selected = allMenuRoles.Contains(x.Name),
+                Text = x.Name,
+                Value = x.Name
+            }));
+
+            //Add the 'Anonymous' role if we're editing the OPAC menu - this isn't an actual role that any user is assigned ...
+            if (menuitem.MenuArea == "OPAC")
+            {
+                viewModel.RolesList.Add(new SelectListItem
+                {
+                    Text = "Anonymous",
+                    Value = "Anonymous",
+                    Selected = true
+                });
+            }
+
+            //Remove the 'OPAC User' role if we're editing the Library Admin menu ...
+            if (menuitem.MenuArea == "LibraryAdmin")
+            {
+                var opacUser = viewModel.RolesList.Single(r => r.Value == "OPAC User");
+                viewModel.RolesList.Remove(opacUser);
+            }
+
+            //Remove the 'OPAC User' and 'Library Staff' roles if we're editing the Library Admin menu ...
+            if (menuitem.MenuArea == "Config")
+            {
+                var opacUser = viewModel.RolesList.Single(r => r.Value == "OPAC User");
+                viewModel.RolesList.Remove(opacUser);
+                var staff = viewModel.RolesList.Single(r => r.Value == "Library Staff");
+                viewModel.RolesList.Remove(staff);
+            }
+
             //Get data for various drop-down lists ...
             ViewBag.Targets = GetTargets();
             ViewBag.MenuAreas = GetMenuAreas();
@@ -379,13 +439,13 @@ namespace slls.Areas.Config
                 menuitem.IsVisible = viewModel.IsVisible;
                 menuitem.Class = viewModel.IsDivider == true ? "divider" : null;
                 menuitem.SortOrder = viewModel.SortOrder;
+                menuitem.Groups = viewModel.Groups;
                 menuitem.Roles = string.Join(";",selectedRole);
 
                 _db.Entry(menuitem).State = EntityState.Modified;
                 _db.SaveChanges();
                 CacheProvider.RemoveCache("menuitems");
 
-                //return RedirectToAction("Index", new { id = viewModel.MenuArea });
                 return Json(new { success = true });
             }
             ViewBag.Title = "Edit Menu Item";
@@ -404,6 +464,7 @@ namespace slls.Areas.Config
             var viewModel = new MenuViewModel()
             {
                 ID = menuitem.ID,
+                Key = menuitem.Key,
                 ParentID = menuitem.ParentID ?? 0,
                 Title = menuitem.Title,
                 MenuArea = menuitem.MenuArea,
@@ -420,7 +481,8 @@ namespace slls.Areas.Config
                 IsSelectable = menuitem.IsSelectable,
                 IsEnabled = menuitem.IsEnabled,
                 IsVisible = menuitem.IsVisible,
-                SortOrder = menuitem.SortOrder
+                SortOrder = menuitem.SortOrder,
+                Roles = string.Join("; ", menuitem.Roles)
             };
 
             viewModel.Parent = (viewModel.ParentID == 0) ? "" : _db.Menus.Find(menuitem.ParentID).Title;

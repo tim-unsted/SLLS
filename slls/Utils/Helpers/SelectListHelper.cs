@@ -94,14 +94,10 @@ namespace slls.Utils.Helpers
             }
 
             //Add the actual account years ...
-            foreach (var item in CacheProvider.GetAll<AccountYear>("accountyears").OrderBy(a => a.AccountYear1))
+            accountYearsList.AddRange(CacheProvider.GetAll<AccountYear>("accountyears").OrderBy(a => a.AccountYear1).Select(item => new SelectListItem
             {
-                accountYearsList.Add(new SelectListItem
-                {
-                    Text = string.IsNullOrEmpty(item.AccountYear1) ? "<No name>" : item.AccountYear1,
-                    Value = item.AccountYearID.ToString()
-                });
-            }
+                Text = string.IsNullOrEmpty(item.AccountYear1) ? "<No name>" : item.AccountYear1, Value = item.AccountYearID.ToString()
+            }));
 
             return accountYearsList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
         }

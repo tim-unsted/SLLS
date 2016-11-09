@@ -19,6 +19,9 @@ namespace slls.ViewModels
         [Key]
         public int ID { get; set; }
 
+        [DisplayName("Key")]
+        public string Key { get; set; }
+
         [DisplayName("Parent Item")]
         public int? ParentID { get; set; }
 
@@ -101,6 +104,6 @@ namespace slls.ViewModels
 
         public virtual Menu Menu2 { get; set; }
 
-        public IEnumerable<SelectListItem> RolesList { get; set; }
+        public List<SelectListItem> RolesList { get; set; }
     }
 }

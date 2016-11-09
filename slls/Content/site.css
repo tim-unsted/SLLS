@@ -180,6 +180,14 @@ body {
     border-bottom: 2px solid deeppink;
 }
 
+.menu-builder-top {
+    display: block;
+    padding: 3px 0px;
+    line-height: 1.42857143;
+    color: #555;
+    white-space: nowrap;
+}
+
 .menu-builder-l1 {
     display: block;
     padding: 3px 0px;
@@ -925,3 +933,14 @@ h5 {
 .ui-icon.glyphicon {
   text-indent: initial;
 }
+
+.fixed
+{
+    position: fixed;
+    top: 120px;
+    width: auto;
+}
+    
+.parent { position:fixed; }
+        
+.details { position:fixed;width: auto; }
