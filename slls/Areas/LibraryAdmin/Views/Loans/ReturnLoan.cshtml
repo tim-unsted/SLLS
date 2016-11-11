@@ -18,7 +18,7 @@
         
         <div class="well">
             <div class="form-group has-feedback" id="barcodeGroup">
-                @Html.Label(DbRes.T("Borrowing.Item_To_Loan", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.Label(DbRes.T("Borrowing.Item_To_Return", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-4">
                     @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode) } })
                     @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })

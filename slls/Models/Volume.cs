@@ -42,7 +42,7 @@ namespace slls.Models
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
         public string Barcode { get; set; }
 
-        [LocalDisplayName("Locations.Location", "FieldDisplayName")]
+        [LocalDisplayName("CopyItems.Label_Text", "FieldDisplayName")]
         public string BarcodeWithLabelText
         {
             get { return LabelText == null ? Barcode : Barcode + " - " + LabelText; }
@@ -85,6 +85,16 @@ namespace slls.Models
             get
             {
                 var volumeDetails = string.Format("{0} {1}", string.IsNullOrEmpty(Barcode) ? "" : Barcode.Trim(), string.IsNullOrEmpty(LabelText) ? "" : " - "  + LabelText.Trim());
+                return volumeDetails.Trim();
+            }
+        }
+
+        [LocalDisplayName("CopyItems.Details", "FieldDisplayName")]
+        public string TitleCopyBarcode
+        {
+            get
+            {
+                var volumeDetails = string.Format("{0}: Copy {1} {2}", Copy.Title.Title1, Copy.CopyNumber, string.IsNullOrEmpty(Barcode) ? "" : "(" + Barcode.Trim() + ")");
                 return volumeDetails.Trim();
             }
         }

@@ -209,10 +209,6 @@
                     if (data.success) {
                         details.show();
                         title.text(data.BarcodeDetails);
-                        //alert(data.ReturnDue);
-                        //var dt = new Date(data.ReturnDue);
-                        //returnDue.val(dt.toLocaleDateString().replace(/[^ -~]/g, ''));
-                        //returnDue.val(dt);
                         returnDue.val(data.ReturnDue);
                         errorDiv.hide();
                         barcodeGroup.removeClass("has-error");

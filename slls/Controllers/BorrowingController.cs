@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Data.SqlClient;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Web;
@@ -13,9 +11,9 @@ using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
 
-namespace slls.Areas.LibraryAdmin
+namespace slls.Controllers
 {
-    public class LoansController : AdminBaseController
+    public class BorrowingController : sllsBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private ApplicationUserManager _userManager;
@@ -26,155 +24,30 @@ namespace slls.Areas.LibraryAdmin
             set { _userManager = value; }
         }
 
-        public LoansController()
+        public BorrowingController()
         {
             ViewBag.Title = "Loans";
         }
-
-
-        // All loans (Historical)
-        public ActionResult Index(int month = 0, int year = 0)
-        {
-            if (year == 0)
-            {
-                year = DateTime.Today.Year;
-            }
-
-            if (month == 0)
-            {
-                month = DateTime.Today.Month;
-            }
-            
-            var viewModel = new BorrowingIndexViewModel()
-            {
-                Month = month,
-                Year = year
-            };
-
-            viewModel.Loans = month == -1 ? _db.Borrowings.Where(b => b.Borrowed.Value.Year == year) : _db.Borrowings.Where(b => b.Borrowed.Value.Year == year && b.Borrowed.Value.Month == month);
-
-            var months = new Dictionary<int, string> {{-1, "All Year"}};
-            for (int i = 0; i < 12; i++)
-            {
-                months.Add(i+1, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[i]);
-            }
-
-            var years = new Dictionary<int, string>();
-            for (int i = 1970; i < DateTime.Today.AddYears(1).Year; i++)
-            {
-                years.Add(i, i.ToString());
-            }
-
-            ViewData["Months"] = months;
-            ViewData["Years"] = years;
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("BorrowingSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
-            ViewBag.InfoMsg =
-                "Historical loans (borrowing) data can get quite large. To help filter to just the records you want to see, use the Month and Year drop-down lists below:";
-            ViewBag.Title = "All Loans (Historical)";
-            return View(viewModel);
-        }
-
-        // Current loans (i.e. Returned IS NULL)
-        public ActionResult ItemsOnLoan()
-        {
-            var borrowings = _db.Borrowings.Where(b => b.Returned == null);
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("BorrowingSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
-            ViewBag.Title = "Items Currently On Loan";
-            return View(borrowings.ToList());
-        }
-
-        // Overdue loand (i.e. Returned IS NULL and ReturnDue has passed ...
-        public ActionResult OverdueLoans()
-        {
-            var borrowings = _db.Borrowings.Where(b => b.Returned == null && b.ReturnDue < DateTime.Today);
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("BorrowingSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
-            if (!borrowings.Any())
-            {
-                TempData["NoData"] = "There are currently no overdue loans!";
-            }
-            ViewBag.Title = "Overdue Loans";
-            return View(borrowings.ToList());
-        }
-
-        [HttpGet]
-        public ActionResult Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            var loanDetails = _db.Borrowings.Find(id);
-            if (loanDetails == null)
-            {
-                return HttpNotFound();
-            }
-            if (loanDetails.Borrowed != null)
-            {
-                var viewModel = new EditLoanViewModel()
-                {
-                    BorrowID = id.Value,
-
-                    Title = loanDetails.Volume.Copy.Title.Title1,
-                    CopyNumber = loanDetails.Volume.Copy.CopyNumber,
-                    Barcode = loanDetails.Volume.Barcode,
-                    BorrowerUserId = loanDetails.BorrowerUser.Id,
-                    //TitleId = loanDetails.Volume.Copy.TitleID,
-                    //CopyId = loanDetails.Volume.CopyID,
-                    Borrowed = loanDetails.Borrowed,
-                    ReturnDue = loanDetails.ReturnDue,
-                    VolumeId = loanDetails.VolumeID,
-                    Renewal = loanDetails.Renewal
-                };
-
-                var users = UserManager.Users.OrderBy(u => u.Lastname).ThenBy(u => u.Firstname)
-                .ToList()
-                .Select(u => new
-                {
-                    u.Id,
-                    Fullname = u.FullnameRev,
-                    viewModel.BorrowerUserId
-                });
-
-                ViewBag.UserID = new SelectList(users, "Id", "Fullname", viewModel.BorrowerUserId);
-                ViewBag.Title = "Edit Loan";
-                return PartialView(viewModel);
-            }
-            return null;
-        }
-
-        [HttpPost]
-        public ActionResult Edit(EditLoanViewModel viewModel)
-        {
-            var loanDetails = _db.Borrowings.Find(viewModel.BorrowID);
-            if (loanDetails == null)
-            {
-                return HttpNotFound();
-            }
-            loanDetails.BorrowerUser = _db.Users.Find(viewModel.UserID);
-            loanDetails.ReturnDue = viewModel.ReturnDue;
-            loanDetails.Renewal = viewModel.Renewal;
-
-            _db.Entry(loanDetails).State = EntityState.Modified;
-            _db.SaveChanges();
-
-            return RedirectToAction("ItemsOnLoan");
-        }
-
+        
         // GET: Loans/New
         public ActionResult NewLoan(string userId = "", bool success = false)
         {
-            // Get a list of users for a drop-down list
-            var users = UserManager.Users.Where(u => u.IsLive && u.CanDelete).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname)
-                .ToList()
-                .Select(u => new
-                {
-                    u.Id,
-                    Fullname = u.FullnameRev
-                });
+            //Find the user record in th database: AspNetUsers ...
+            if (string.IsNullOrEmpty(userId))
+            {
+                userId = Utils.PublicFunctions.GetUserId();
+            }
+            var fullName = "";
+            var user = _db.Users.Find(userId);
+
+            if (user != null)
+            {
+                fullName = string.Concat(new[] { user.Firstname, " ", user.Lastname });
+            }
             
             // Get a list of barcodes for a drop-down list
             var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID);
-            var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && v.LoanType.RefOnly == false && v.LoanType.LengthDays > 0 && !currentLoans.Contains(v.VolumeID));
+            var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && v.LoanType.RefOnly == false && v.LoanType.LengthDays > 0 && v.OnLoan == false && !currentLoans.Contains(v.VolumeID));
             var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
             var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
 
@@ -206,19 +79,20 @@ namespace slls.Areas.LibraryAdmin
             {
                 Borrowed = DateTime.Today,
                 ReturnDue = DateTime.Today.AddDays(21),
-                Users = new SelectList(users, "Id", "Fullname", userId),
+                UserID = userId,
+                Borrower = fullName,
                 Volumes = new SelectList(volumes, "VolumeID", "Barcode"),
                 Copies = new SelectList(copies, "CopyID", "CopyNumber"),
                 Titles = new SelectList(titles, "TitleID", "Title"),
-                SeeAlso = MenuHelper.SeeAlso("BorrowingSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
+                SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
-            ViewData["SeeAlso"] = viewModel.SeeAlso; //MenuHelper.SeeAlso("BorrowingSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
+            ViewData["SeeAlso"] = viewModel.SeeAlso; //MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
             if (success)
             {
                 TempData["SuccessMsg"] = "Item loaned successfully. Add another?";
             }
-            ViewBag.Title = "Enter New Loan";
+            ViewBag.Title = "Borrow an Item";
             return View(viewModel);
         }
 
@@ -251,56 +125,42 @@ namespace slls.Areas.LibraryAdmin
                 return RedirectToAction("NewLoan", new { userId = viewModel.UserID, success = true });
             }
 
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("BorrowingSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
-            ViewBag.Title = "New Loan";
+            ViewData["SeeAlso"] = viewModel.SeeAlso;
+            ViewBag.Title = "Borrow an Item";
             return View("NewLoan", viewModel);
         }
 
         //Return Loan
         public ActionResult ReturnLoan(bool success = false)
         {
-            var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID).Distinct();
-            var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && currentLoans.Contains(v.VolumeID));
-            var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
-            var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
-
-            var volumes = availableVolumes
+            var userId = Utils.PublicFunctions.GetUserId();
+            var currentLoans = _db.Borrowings.Where(b => b.BorrowerUser.Id == userId && b.Returned == null).Select(b => b.VolumeID).Distinct();
+            
+            var borrowedVolumes = from t in _db.Titles join c in _db.Copies on t.TitleID equals c.TitleID join v in _db.Volumes on c.CopyID equals v.CopyID where currentLoans.Contains(v.VolumeID) select new {volumeId = v.VolumeID, title = t.Title1};
+            var volumes = borrowedVolumes
                .ToList()
                .Select(v => new
                {
-                   v.VolumeID,
-                   v.Barcode
+                   v.volumeId,
+                   v.title
                });
-
-            var copies = availableCopies.OrderBy(c => c.CopyNumber)
-                .ToList()
-                .Select(c => new
-                {
-                    c.CopyID,
-                    c.CopyNumber
-                });
-
-            var titles = availableTitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars))
-                .ToList()
-                .Select(t => new
-                {
-                    t.TitleID,
-                    Title = t.Title1
-                });
-
+            
             var viewModel = new ReturnLoanViewModel()
             {
-                Volumes = new SelectList(volumes, "VolumeID", "Barcode"),
-                Copies = new SelectList(copies, "CopyID", "CopyNumber"),
-                Titles = new SelectList(titles, "TitleID", "Title"),
+                Volumes = new SelectList(volumes, "volumeId", "title"),
+                SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
+            if (!currentLoans.Any())
+            {
+                TempData["ErrorMsg"] = "You don't currently have any items on loan!";
+            }
             if (success)
             {
-                TempData["SuccessMsg"] = "Loan returned successfully. Return another?";
+                TempData["SuccessMsg"] = "Item returned successfully. Return another?";
             }
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("BorrowingSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
-            ViewBag.Title = "Return Loan";
+            ViewData["SeeAlso"] = viewModel.SeeAlso;
+            ViewBag.Title = "Return Item";
             return View(viewModel);
         }
         
@@ -399,6 +259,8 @@ namespace slls.Areas.LibraryAdmin
             }
             catch (Exception)
             {
+                ViewData["SeeAlso"] = viewModel.SeeAlso;
+                ViewBag.Title = "Return Item";
                 return View("ReturnLoan", viewModel);
             }
 
@@ -411,6 +273,8 @@ namespace slls.Areas.LibraryAdmin
             }
             catch (Exception)
             {
+                ViewData["SeeAlso"] = viewModel.SeeAlso;
+                ViewBag.Title = "Return Item";
                 return View("ReturnLoan", viewModel);
             }
             
@@ -458,48 +322,29 @@ namespace slls.Areas.LibraryAdmin
         //Renew Loan
         public ActionResult RenewLoan(bool success = false)
         {
-            var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID).Distinct();
-            var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && currentLoans.Contains(v.VolumeID));
-            var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
-            var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
-
-            var volumes = availableVolumes
+            var userId = Utils.PublicFunctions.GetUserId();
+            var currentLoans = _db.Borrowings.Where(b => b.BorrowerUser.Id == userId && b.Returned == null).Select(b => b.VolumeID).Distinct();
+            var borrowedVolumes = from t in _db.Titles join c in _db.Copies on t.TitleID equals c.TitleID join v in _db.Volumes on c.CopyID equals v.CopyID where currentLoans.Contains(v.VolumeID) select new { volumeId = v.VolumeID, title = t.Title1 };
+            var volumes = borrowedVolumes
                .ToList()
                .Select(v => new
                {
-                   v.VolumeID,
-                   v.Barcode
+                   v.volumeId,
+                   v.title
                });
-
-            var copies = availableCopies.OrderBy(c => c.CopyNumber)
-                .ToList()
-                .Select(c => new
-                {
-                    c.CopyID,
-                    c.CopyNumber
-                });
-
-            var titles = availableTitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars))
-                .ToList()
-                .Select(t => new
-                {
-                    t.TitleID,
-                    Title = t.Title1
-                });
 
             var viewModel = new RenewLoanViewModel()
             {
-                Volumes = new SelectList(volumes, "VolumeID", "Barcode"),
-                Copies = new SelectList(copies, "CopyID", "CopyNumber"),
-                Titles = new SelectList(titles, "TitleID", "Title"),
+                Volumes = new SelectList(volumes, "volumeId", "title"),
                 ReturnDue = DateTime.Today.AddDays(21),
+                SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
             if (success)
             {
                 TempData["SuccessMsg"] = "Loan renewed successfully. Renew another?";
             }
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("BorrowingSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
+            ViewData["SeeAlso"] = viewModel.SeeAlso;
             ViewBag.Title = "Renew Loan";
             return View(viewModel);
         }
@@ -532,6 +377,8 @@ namespace slls.Areas.LibraryAdmin
             }
             catch (Exception)
             {
+                ViewData["SeeAlso"] = viewModel.SeeAlso;
+                ViewBag.Title = "Renew Loan";
                 return View("RenewLoan", viewModel);
             }
 
@@ -557,6 +404,8 @@ namespace slls.Areas.LibraryAdmin
             }
             catch (Exception)
             {
+                ViewData["SeeAlso"] = viewModel.SeeAlso;
+                ViewBag.Title = "Renew Loan";
                 return View("RenewLoan", viewModel);
             }
 
@@ -759,11 +608,11 @@ namespace slls.Areas.LibraryAdmin
             });
         }
 
-        //Return a JSON object containing details for the selected or entered barcode ...
-        public JsonResult GetBorrowedItemDetails(string barcode = "")
+        //Return a JSON object containing details for the selected volumeId ...
+        public JsonResult GetBorrowedItemDetails(int volumeId = 0)
         {
-            barcode = barcode.Trim();
-            var volume = _db.Volumes.FirstOrDefault(v => v.Barcode == barcode);
+            //barcode = barcode.Trim();
+            var volume = _db.Volumes.Find(volumeId);
             if (volume == null)
             {
                 return Json(new
@@ -781,15 +630,16 @@ namespace slls.Areas.LibraryAdmin
                 });
             }
 
+            var barcode = volume.Barcode;
             var title = volume.Copy.Title.Title1;
             var copy = volume.Copy.CopyNumber;
-            string origReturnDue = DateTime.Today.ToString("dd-MM-yyyy");
-            DateTime newReturnDue = DateTime.Today.AddDays(21);
-            string borrowedBy = "";
+            var origReturnDue = DateTime.Today;
+            var newReturnDue = DateTime.Today.AddDays(21);
+            var borrowedBy = "";
             var borrowing = _db.Borrowings.FirstOrDefault(b => b.VolumeID == volume.VolumeID && b.Returned == null);
             if (borrowing != null)
             {
-                origReturnDue = borrowing.ReturnDue.ToString();
+                origReturnDue = borrowing.ReturnDue.Value;
                 borrowedBy = borrowing.BorrowerUser.Fullname;
             }
 
@@ -801,10 +651,11 @@ namespace slls.Areas.LibraryAdmin
             return Json(new
             {
                 success = true,
+                Barcode = barcode,
                 BarcodeDetails = title + " - Copy " + copy,
                 BorrowedBy = borrowedBy,
-                origReturnDue = origReturnDue,
-                newReturnDue = newReturnDue.Date.ToString("dd/MM/yyyy")
+                origReturnDue = origReturnDue.ToShortDateString(),
+                newReturnDue = newReturnDue.ToShortDateString()
             });
 
         }
@@ -815,6 +666,45 @@ namespace slls.Areas.LibraryAdmin
             barcode = barcode.Trim();
             var volume = _db.Volumes.FirstOrDefault(v => v.Barcode == barcode);
             return Json(volume != null);
+        }
+
+        public ActionResult SelectBorrower()
+        {
+            var viewModel = new SelectPopupViewModel
+            {
+                PostSelectController = "Borrowing",
+                PostSelectAction = "PostSelectBorrower",
+                SelectedItem = "0",
+                HeaderText = "Select a Borrower",
+                DetailsText = "Choose a different borrower from the drop-down list below:",
+                SelectLabel = "",
+                OkButtonText = "Select Borrower"
+            };
+
+            viewModel.AvailableItems = _db.Users.Where(u => u.IsLive && u.CanDelete && u.Lastname != null)
+                .Select(x => new SelectListItem
+                {
+                    Value = x.Id.ToString(),
+                    Text = x.Lastname + ", " + x.Firstname
+                }).OrderBy(c => c.Text)
+                .ToList();
+
+            ViewBag.Title = "Select a Borrower";
+            return PartialView("_SelectPopup", viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult PostSelectBorrower(SelectPopupViewModel viewModel)
+        {
+            var user = _db.Users.Find(viewModel.SelectedItem);
+            if (user != null)
+            {
+                UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                string actionUrl = urlHelper.Action("NewLoan", "Borrowing", new {userId = user.Id});
+                return Json(new { success = true, redirectTo = actionUrl});
+            }
+            RedirectToAction("NewLoan");
+            return Json(new { success = true });
         }
 
         [HttpGet]

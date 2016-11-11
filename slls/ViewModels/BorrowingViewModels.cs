@@ -31,6 +31,8 @@ namespace slls.ViewModels
         [Required(ErrorMessage = "Please select a Borrower.")]
         public string UserID { get; set; }
 
+        public string Borrower { get; set; }
+
         [LocalDisplayName("Borrowing.Borrowed", "FieldDisplayName")]
         [Column(TypeName = "smalldatetime")]
         public DateTime Borrowed { get; set; }
@@ -68,6 +70,7 @@ namespace slls.ViewModels
         public IEnumerable<SelectListItem> Copies { get; set; }
         public IEnumerable<SelectListItem> Titles { get; set; }
         public IEnumerable<SelectListItem> Volumes { get; set; }
+        public List<Menu> SeeAlso { get; set; }
     }
 
     public class RenewLoanViewModel
@@ -92,6 +95,7 @@ namespace slls.ViewModels
         public IEnumerable<SelectListItem> Copies { get; set; }
         public IEnumerable<SelectListItem> Titles { get; set; }
         public IEnumerable<SelectListItem> Volumes { get; set; }
+        public List<Menu> SeeAlso { get; set; }
     }
 
     public class EditLoanViewModel

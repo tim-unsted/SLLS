@@ -300,6 +300,7 @@
     <Compile Include="Areas\LibraryAdmin\Controllers\TitleLinksController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\UsefulLinksController.cs" />
     <Compile Include="ConnectionMapping.cs" />
+    <Compile Include="Controllers\BorrowingController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\LibraryUserBookmarksController.cs" />
     <Compile Include="Controllers\LibraryUserLoansController.cs" />
@@ -1434,6 +1435,10 @@
     <Content Include="Views\Shared\NewEmailPopup.cshtml" />
     <Content Include="Views\Shared\_NewEmail.cshtml" />
     <Content Include="Views\Home\Dashboard\_AskTheLibrary.cshtml" />
+    <Content Include="Views\Borrowing\NewLoan.cshtml" />
+    <Content Include="Views\Borrowing\ReturnLoan.cshtml" />
+    <Content Include="Views\Borrowing\RenewLoan.cshtml" />
+    <Content Include="Views\Shared\_PostAlert.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
