@@ -244,7 +244,7 @@
                                         {
                                             if ((!volume.OnLoan && !volume.LoanType.RefOnly && volume.LoanType.LengthDays > 0))
                                             {
-                                                <td><a href="#" title="Borrow item">Borrow</a></td>
+                                                <td><a href="@Url.Action("ConfirmNewLoan", "Borrowing", new { volumeId = volume.VolumeID, userId = PublicFunctions.GetUserId() })" class="btn btn-link modal-link" title="Borrow Item">Borrow</a></td>
                                             }
                                         }
 

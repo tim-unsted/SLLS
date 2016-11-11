@@ -13,6 +13,8 @@
 {
     @Html.ValidationSummary()
     @Html.HiddenFor(x => x.BorrowID)
+    @Html.HiddenFor(x => x.VolumeID)
+    @Html.HiddenFor(x => x.BorrowerId)
     @Html.HiddenFor(x => x.PostConfirmAction)
     @Html.HiddenFor(x => x.PostConfirmController)
     @Html.HiddenFor(x => x.HeaderText)

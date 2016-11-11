@@ -190,11 +190,11 @@ namespace slls.Controllers
             
             var viewModel = new ConfirmNewLoanRenewReturnViewModel
             {
-                PostConfirmController = "Loans",
+                PostConfirmController = "Borrowing",
                 PostConfirmAction = "DoQuickReturn",
                 ConfirmationText = "<p>Do you want to continue?</p>",
                 DetailsText = "<p>You are about to return the following loan: </p>",
-                ConfirmButtonText = "Return Loan",
+                ConfirmButtonText = "Continue",
                 ConfirmButtonClass = "btn-success",
                 CancelButtonText = "Cancel",
                 HeaderText = "Return Loan?",
@@ -229,18 +229,19 @@ namespace slls.Controllers
 
             var viewModel = new ConfirmNewLoanRenewReturnViewModel
             {
-                PostConfirmController = "Loans",
+                PostConfirmController = "Borrowing",
                 PostConfirmAction = "DoQuickLoan",
                 ConfirmationText = "<p>Do you want to continue?</p>",
                 DetailsText = "<p>You are about to borrow the following item:</p>",
-                ConfirmButtonText = "New Loan",
+                ConfirmButtonText = "Continue",
                 ConfirmButtonClass = "btn-success",
                 CancelButtonText = "Cancel",
                 HeaderText = "Borrow Item?",
                 Glyphicon = "glyphicon-ok",
                 VolumeID = volumeId,
                 Title = copy.Title.Title1,
-                BorrowerUser = borrowerUser,
+                Borrower = borrowerUser.Fullname,
+                BorrowerId = borrowerUser.Id,
                 Borrowed = borrowed.ToShortDateString(),
                 ReturnDue = returnDue.ToShortDateString()
             };
@@ -262,11 +263,11 @@ namespace slls.Controllers
             
             var viewModel = new ConfirmNewLoanRenewReturnViewModel
             {
-                PostConfirmController = "Loans",
+                PostConfirmController = "Borrowing",
                 PostConfirmAction = "DoQuickRenew",
                 ConfirmationText = "<p>Do you want to continue?</p>",
                 DetailsText = "<p>You are about to renew the following loan:</p>",
-                ConfirmButtonText = "Renew Loan",
+                ConfirmButtonText = "Continue",
                 ConfirmButtonClass = "btn-success",
                 CancelButtonText = "Cancel",
                 HeaderText = "Renew Loan?",
@@ -284,7 +285,16 @@ namespace slls.Controllers
         public ActionResult DoQuickLoan(ConfirmNewLoanRenewReturnViewModel viewModel)
         {
             var volume = _db.Volumes.Find(viewModel.VolumeID);
-            
+            if(volume == null)
+            {
+                return Json(new { success = false });
+            }
+            var borrowerUser = _db.Users.Find(viewModel.BorrowerId);
+            if (borrowerUser == null)
+            {
+                return Json(new { success = false });
+            }
+
             //Add a new loan ...
             var daysToAdd = volume.LoanType.LengthDays == 0 ? 21 : volume.LoanType.LengthDays;
 
@@ -293,7 +303,7 @@ namespace slls.Controllers
                 var newLoan = new Borrowing
                 {
                     VolumeID = viewModel.VolumeID,
-                    BorrowerUser = viewModel.BorrowerUser,
+                    BorrowerUser = borrowerUser,
                     Borrowed = DateTime.Today,
                     ReturnDue = DateTime.Today.AddDays(daysToAdd),
                     InputDate = DateTime.Now,

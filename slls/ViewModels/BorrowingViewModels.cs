@@ -130,6 +130,7 @@ namespace slls.ViewModels
         public int VolumeID { get; set; }
         public int BorrowID { get; set; }
         public ApplicationUser BorrowerUser { get; set; }
+        public string BorrowerId { get; set; }
         public string PostConfirmController { get; set; }
         public string PostConfirmAction { get; set; }
         public string HeaderText { get; set; }
