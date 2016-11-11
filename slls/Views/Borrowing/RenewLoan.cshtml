@@ -3,7 +3,7 @@
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
-@using (Html.BeginForm("DoRenewLoan", "Borrowing", FormMethod.Post, new { id = "frmReturnloan", name = "frmRenewloan" }))
+@using (Html.BeginForm("DoRenewLoan", "Borrowing", FormMethod.Post, new { id = "frmRenewloan", name = "frmRenewloan" }))
 {
     @Html.AntiForgeryToken()
 
@@ -59,7 +59,7 @@
     <div class="alert alert-info">
 
         <p>
-            <strong>Tip: </strong>If you don't have the item to hand and you don't know the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") of the item, select it from the drop-down list below:
+            <strong>Tip: </strong>If you don't have the item to hand and you don't know the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") of the item, try selecting it from the drop-down list below:
         </p>
         <br/>
 
@@ -72,15 +72,15 @@
     </div>
 </div>
 
-<div id="confirmDialog" title="Confirm Return">
-    <p>You are about to renew the following loan. Do you want to continue?</p>
+<div id="confirmDialog" title="Confirm Renew">
+    <p>You are about to renew the following item. Do you want to continue?</p>
     <dl class="dl-horizontal">
         <dt>@DbRes.T("Titles.Title", "FieldDisplayName")</dt>
-        <dd><span id="title1"></span></dd>
-        <dt>@DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName")</dt>
-        <dd><span id="borrowedby1"></span></dd>
+        <dd><span id="confirmTitle"></span></dd>
+        <dt>@DbRes.T("CopyItems.Barcode", "FieldDisplayName")&nbsp;&nbsp;<span class="glyphicon glyphicon-barcode"></span></dt>
+        <dd><span id="confirmBarcode"></span></dd>
         <dt>@DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName")</dt>
-        <dd><span id="returndue1"></span></dd>
+        <dd><span id="confirmReturnDue"></span></dd>
     </dl>
 </div>
 
@@ -122,12 +122,12 @@
         function doTitleCopyDetails() {
             var details = $("#barcodeDetails");
             var title = $("#title");
-            var title1 = $("#title1");
+            var confirmTitle = $("#confirmTitle");
+            var confirmBarcode = $("#confirmBarcode");
             var barcode = $("#Barcode");
             var borrowedby = $("#borrowedby");
-            var borrowedby1 = $("#borrowedby1");
             var returndue = $("#returndue");
-            var returndue1 = $("#returndue1");
+            var confirmReturnDue = $("#confirmReturnDue");
             var errorDiv = $("#_barcodeInvalid");
             var errorMsg = $("#errMsg");
             var barcodeGroup = $("#barcodeGroup");
@@ -145,11 +145,11 @@
                         details.show();
                         barcode.val(data.Barcode);
                         title.text(data.BarcodeDetails);
-                        title1.text(data.BarcodeDetails);
+                        confirmTitle.text(data.BarcodeDetails);
+                        confirmBarcode.text(barcode.val());
                         borrowedby.text(data.BorrowedBy);
-                        borrowedby1.text(data.BorrowedBy);
                         returndue.text(data.origReturnDue);
-                        returndue1.text(data.origReturnDue);
+                        confirmReturnDue.text(data.origReturnDue);
                         errorDiv.hide();
                         barcodeGroup.removeClass("has-error");
                         button.prop('disabled', false);

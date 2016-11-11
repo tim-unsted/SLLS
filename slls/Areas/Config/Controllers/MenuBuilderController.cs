@@ -187,7 +187,8 @@ namespace slls.Areas.Config
                 IsDivider = menuitem.Class == "divider",
                 Target = "_self",
                 Controller = menuitem.Controller,
-                RolesList = new List<SelectListItem>()
+                RolesList = new List<SelectListItem>(),
+                IsBsAdmin = Roles.IsBaileyAdmin()
             };
 
             //Get a list of roles that the current user is allowed to assign ...
@@ -247,6 +248,7 @@ namespace slls.Areas.Config
                 var menuitem = new Menu
                 {
                     Title = viewModel.Title,
+                    Key = viewModel.Key,
                     ParentID = viewModel.ParentID,
                     MenuArea = viewModel.MenuArea,
                     Controller = viewModel.Controller,
@@ -318,6 +320,7 @@ namespace slls.Areas.Config
             var viewModel = new MenuViewModel
             {
                 ID = menuitem.ID,
+                Key = menuitem.Key,
                 ParentID = menuitem.ParentID,
                 Title = menuitem.Title,
                 MenuArea = menuitem.MenuArea,
@@ -338,7 +341,8 @@ namespace slls.Areas.Config
                 Roles = menuitem.Roles,
                 Description = menuitem.Description,
                 Groups = menuitem.Groups,
-                RolesList = new List<SelectListItem>()
+                RolesList = new List<SelectListItem>(),
+                IsBsAdmin = Roles.IsBaileyAdmin()
             };
 
             viewModel.RolesList.AddRange(RoleManager.Roles.Where(r => includedMenuRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
@@ -423,6 +427,7 @@ namespace slls.Areas.Config
             if (ModelState.IsValid)
             {
                 menuitem.Title = viewModel.Title;
+                menuitem.Key = viewModel.Key;
                 menuitem.ParentID = viewModel.ParentID;
                 menuitem.MenuArea = viewModel.MenuArea;
                 menuitem.Controller = viewModel.Controller;

@@ -1153,7 +1153,6 @@
     <Content Include="Areas\LibraryAdmin\Views\Titles\_NarrowByKeyword.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\_NarrowByAuthor.cshtml" />
     <Content Include="Areas\Config\Views\MenuBuilder\Index.cshtml" />
-    <Content Include="Areas\Config\Views\MenuBuilder\Create_Old.cshtml" />
     <Content Include="Areas\Config\Views\MenuBuilder\Edit.cshtml" />
     <Content Include="Areas\Config\Views\MenuBuilder\_Details.cshtml" />
     <Content Include="Areas\Config\Views\MenuBuilder\Create.cshtml" />

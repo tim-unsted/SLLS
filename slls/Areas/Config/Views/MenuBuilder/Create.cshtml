@@ -68,7 +68,10 @@
             @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
             {
                 tabs.Tab("Common Attributes", "details");
-                tabs.Tab("Internal Links/Actions", "actions");
+                if (Model.IsBsAdmin)
+                {
+                    tabs.Tab("Internal Links/Actions", "actions");
+                }
                 tabs.Tab("External Links/URLs", "urls");
                 tabs.Tab("Roles & Permissions", "roles");
 
@@ -85,6 +88,16 @@
                             <div class="col-md-8">
                                 @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                                @Html.HelpInline("This the term that will actually be displayed in the menu.")
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Key, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Key, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Key, "", new { @class = "text-danger" })
+                                @Html.HelpInline("This is a unique name that will help identify the menu item programatically, should the title (above) be changed.")
                             </div>
                         </div>
 
@@ -106,6 +119,7 @@
                             <div class="col-md-8">
                                 @Html.EditorFor(model => model.ToolTip, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.ValidationMessageFor(model => model.ToolTip, "", new { @class = "text-danger" })
+                                @Html.HelpInline("This is the text that will pop-up when the mouse is hovered over it.")
                             </div>
                         </div>
 
@@ -155,53 +169,56 @@
 
                 }
 
-                using (tabs.BeginPanel())
+                if (Model.IsBsAdmin)
                 {
-                    <div style="padding: 15px 0;">
-                        <div class="alert alert-info">
-                            <strong>Info:</strong> The properties below define what the link actually does.  These properties are for internal links only (i.e. links within the application itself).
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Controller, htmlAttributes: new { @class = "control-label col-md-3" })
-                            <div class="col-md-3">
-                                @Html.DropDownListFor(model => model.Controller, new SelectList(ViewBag.Controllers), new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.Controller, "", new { @class = "text-danger" })
+                    using (tabs.BeginPanel())
+                    {
+                        <div style="padding: 15px 0;">
+                            <div class="alert alert-info">
+                                <strong>Info:</strong> The properties below define what the link actually does.  These properties are for internal links only (i.e. links within the application itself).
                             </div>
-                            @Html.LabelFor(model => model.Action, htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-3">
-                                @Html.EditorFor(model => model.Action, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.Action, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Controller, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-3">
+                                    @Html.DropDownListFor(model => model.Controller, new SelectList(ViewBag.Controllers), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Controller, "", new { @class = "text-danger" })
+                                </div>
+                                @Html.LabelFor(model => model.Action, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-3">
+                                    @Html.EditorFor(model => model.Action, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Action, "", new { @class = "text-danger" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.LinkArea, htmlAttributes: new { @class = "control-label col-md-3" })
-                            <div class="col-md-3">
-                                @Html.DropDownListFor(model => model.LinkArea, new SelectList(ViewBag.MenuAreas, "Key", "Value"), new { @class = "form-control" })
-                                @Html.ValidationMessageFor(model => model.LinkArea, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.LinkArea, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-3">
+                                    @Html.DropDownListFor(model => model.LinkArea, new SelectList(ViewBag.MenuAreas, "Key", "Value"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.LinkArea, "", new { @class = "text-danger" })
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.DataToggle, htmlAttributes: new {@class = "control-label col-md-3"})
-                            <div class="col-md-3">
-                                @Html.DropDownListFor(model => model.DataToggle, new SelectList(ViewBag.DataToggles, "Key", "Value"), new {@class = "form-control"})
-                                @Html.ValidationMessageFor(model => model.DataToggle, "", new {@class = "text-danger"})
-                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DataToggle, htmlAttributes: new {@class = "control-label col-md-3"})
+                                <div class="col-md-3">
+                                    @Html.DropDownListFor(model => model.DataToggle, new SelectList(ViewBag.DataToggles, "Key", "Value"), new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.DataToggle, "", new {@class = "text-danger"})
+                                </div>
 
-                            @Html.LabelFor(model => model.DataTarget, htmlAttributes: new {@class = "control-label col-md-2"})
-                            <div class="col-md-3">
-                                @Html.DropDownListFor(model => model.DataTarget, new SelectList(ViewBag.DataTargets, "Key", "Value"), new {@class = "form-control"})
-                                @Html.ValidationMessageFor(model => model.DataTarget, "", new {@class = "text-danger"})
+                                @Html.LabelFor(model => model.DataTarget, htmlAttributes: new {@class = "control-label col-md-2"})
+                                <div class="col-md-3">
+                                    @Html.DropDownListFor(model => model.DataTarget, new SelectList(ViewBag.DataTargets, "Key", "Value"), new {@class = "form-control"})
+                                    @Html.ValidationMessageFor(model => model.DataTarget, "", new {@class = "text-danger"})
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Groups, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-8">
+                                    @Html.EditorFor(model => model.Groups, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Groups, "", new { @class = "text-danger" })
+                                    @Html.HelpInline("This attribute is used to group common menu items. For example 'See also ... '")
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            @Html.LabelFor(model => model.Groups, htmlAttributes: new { @class = "control-label col-md-3" })
-                            <div class="col-md-8">
-                                @Html.EditorFor(model => model.Groups, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.ValidationMessageFor(model => model.Groups, "", new { @class = "text-danger" })
-                                @Html.HelpInline("This attribute is used to group common menu items. For example 'See also ... '")
-                            </div>
-                        </div>
-                    </div>
+                    }
                 }
 
                 using (tabs.BeginPanel())

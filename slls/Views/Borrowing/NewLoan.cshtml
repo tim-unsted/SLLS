@@ -77,7 +77,7 @@
     <div class="alert alert-info">
 
         <p>
-            <strong>Tip: </strong>If you don't know the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") of the item you wish to borrow, use the following select lists to help find it:
+            <strong>Tip: </strong>If you don't have the item to hand and you don't know the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") of the item, try selecting it from the drop-down list below:
         </p>
         <br/>
         <div class="form-group">
@@ -104,10 +104,12 @@
 </div>
 
 <div id="confirmDialog" title="Confirm Loan">
-    <p>You are about to borrow the following item. Do you want to continue?</p>
+    <p>You are about to borrow the following item. Please check that the detail below are correct:</p>
     <dl class="dl-horizontal">
         <dt>@DbRes.T("Titles.Title", "FieldDisplayName")</dt>
         <dd><span id="confirmTitle"></span></dd>
+        <dt>@DbRes.T("CopyItems.Barcode", "FieldDisplayName")&nbsp;&nbsp;<span class="glyphicon glyphicon-barcode"></span></dt>
+        <dd><span id="confirmBarcode"></span></dd>
         <dt>@DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName")</dt>
         <dd><span id="confirmReturnDue"></span></dd>
     </dl>
@@ -222,6 +224,7 @@
             var details = $("#_barcodeDetails");
             var title = $("#title");
             var confirmTitle = $("#confirmTitle");
+            var confirmBarcode = $("#confirmBarcode");
             var returnDue = $("#ReturnDue");
             var confirmReturnDue = $("#confirmReturnDue");
             var errorDiv = $("#_barcodeInvalid");
@@ -241,6 +244,7 @@
                         details.show();
                         title.text(data.BarcodeDetails);
                         confirmTitle.text(data.BarcodeDetails);
+                        confirmBarcode.text($("#Barcode").val());
                         returnDue.val(data.ReturnDue);
                         confirmReturnDue.text(data.ReturnDue);
                         errorDiv.hide();

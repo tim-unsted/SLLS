@@ -55,7 +55,7 @@
     <div class="alert alert-info">
 
         <p>
-            <strong>Tip: </strong>If you don't have the item to hand and you don't know the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") of the item, select it from the drop-down list below:
+            <strong>Tip: </strong>If you don't have the item to hand and you don't know the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") of the item, try selecting it from the drop-down list below:
         </p>
         <br/>
 
@@ -73,8 +73,8 @@
     <dl class="dl-horizontal">
         <dt>@DbRes.T("Titles.Title", "FieldDisplayName")</dt>
         <dd><span id="confirmTitle"></span></dd>
-        <dt>@DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName")</dt>
-        <dd><span id="confirmBorrowedBy"></span></dd>
+        <dt>@DbRes.T("CopyItems.Barcode", "FieldDisplayName")&nbsp;&nbsp;<span class="glyphicon glyphicon-barcode"></span></dt>
+        <dd><span id="confirmBarcode"></span></dd>
         <dt>@DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName")</dt>
         <dd><span id="confirmReturnDue"></span></dd>
     </dl>
@@ -121,7 +121,7 @@
             var confirmTitle = $("#confirmTitle");
             var barcode = $("#Barcode");
             var borrowedby = $("#borrowedby");
-            var confirmBorrowedBy = $("#confirmBorrowedBy");
+            var confirmBarcode = $("#confirmBarcode");
             var returndue = $("#returndue");
             var confirmReturnDue = $("#confirmReturnDue");
             var errorDiv = $("#_barcodeInvalid");
@@ -143,7 +143,7 @@
                         title.text(data.BarcodeDetails);
                         confirmTitle.text(data.BarcodeDetails);
                         borrowedby.text(data.BorrowedBy);
-                        confirmBorrowedBy.text(data.BorrowedBy);
+                        confirmBarcode.text($("#Barcode").val());
                         returndue.text(data.origReturnDue);
                         confirmReturnDue.text(data.origReturnDue);
                         errorDiv.hide();

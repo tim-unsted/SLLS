@@ -27,7 +27,6 @@
             var menuItem = $(this).parent().find('ul');
             var id = menuItem.attr('id');
             menuItem.toggle();
-            //alert(menuItem.is(':visible'));
             localStorage.setItem('menuItemDisplay.' + id, menuItem.is(':visible'));
         });
     });
@@ -39,7 +38,7 @@
 
 <div class="alert alert-info">
     <span class="help-block">
-        <p>Use this tool to maintain the menus available to users. Select on any menu item in the left-hand structure to view, edit or delete the selected menu item's attributes.</p>
+        <p>Use this tool to maintain the menus available to users. Select any menu item in the left-hand structure to view, edit or delete the selected menu item's attributes.</p>
         <p><strong>Note:</strong> New menu items will be added to the same menu level/branch as the selected item. By default, they will be positioned one place below the selected item unless the sort order is changed when adding.</p>
     </span>
     <form>

@@ -151,16 +151,27 @@ namespace slls.Controllers
                 SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
-            if (!currentLoans.Any())
-            {
-                TempData["ErrorMsg"] = "You don't currently have any items on loan!";
-            }
             if (success)
             {
-                TempData["SuccessMsg"] = "Item returned successfully. Return another?";
+                if (currentLoans.Any())
+                {
+                    TempData["SuccessMsg"] = "Item renewed successfully. Renew another?";
+                }
+                else
+                {
+                    TempData["SuccessMsg"] = "Item renewed successfully. You have no more " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + ".";
+                }
+
             }
+
+            if (!currentLoans.Any() && !success)
+            {
+                TempData["ErrorMsg"] = "You don't currently have any " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "!";
+                TempData["InfoDialogMsg"] = "You don't currently have any " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "!";
+            }
+
             ViewData["SeeAlso"] = viewModel.SeeAlso;
-            ViewBag.Title = "Return Item";
+            ViewBag.Title = "Return an Item";
             return View(viewModel);
         }
         
@@ -342,10 +353,25 @@ namespace slls.Controllers
 
             if (success)
             {
-                TempData["SuccessMsg"] = "Loan renewed successfully. Renew another?";
+                if (currentLoans.Any())
+                {
+                    TempData["SuccessMsg"] = "Item renewed successfully. Renew another?";
+                }
+                else
+                {
+                    TempData["SuccessMsg"] = "Item renewed successfully. You have no more " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "."; 
+                }
+
             }
+
+            if (!currentLoans.Any() && !success)
+            {
+                TempData["ErrorMsg"] = "You don't currently have any " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "!";
+                TempData["InfoDialogMsg"] = "You don't currently have any " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "!";
+            }
+
             ViewData["SeeAlso"] = viewModel.SeeAlso;
-            ViewBag.Title = "Renew Loan";
+            ViewBag.Title = "Renew an Item";
             return View(viewModel);
         }
 

@@ -60,6 +60,24 @@
             });
         });
 
+        $(function () {
+            $("#dialogInfo").dialog({
+                dialogClass: "no-close",
+                modal: true,
+                buttons: [
+                    {
+                        text: 'OK',
+                        open: function (event, ui) {
+                            setTimeout("$('#dialogInfo').dialog('close')", popupTimeout);
+                        },
+                        click: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                ]
+            });
+        });
+
     </script>
 
     <link rel="stylesheet" type="text/css" href="~/Content/site.css" />
@@ -209,11 +227,19 @@
             </div>
         }
 
-        @*Pop-up to provide a success message*@
+        @*Pop-up to provide an error message*@
         @if (TempData["ErrorDialogMsg"] != null)
         {
             <div id="dialogError" title="Oops, something went wrong!">
                 @TempData["ErrorDialogMsg"]
+            </div>
+        }
+
+        @*Pop-up to provide an information message*@
+        @if (TempData["InfoDialogMsg"] != null)
+        {
+            <div id="dialogInfo" title="Info">
+                @TempData["InfoDialogMsg"]
             </div>
         }
 

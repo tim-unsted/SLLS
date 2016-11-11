@@ -100,6 +100,8 @@ namespace slls.ViewModels
         [DisplayName("Description")]
         public string Description { get; set; }
 
+        public bool IsBsAdmin { get; set; }
+
         public virtual ICollection<Menu> Menu1 { get; set; }
 
         public virtual Menu Menu2 { get; set; }
