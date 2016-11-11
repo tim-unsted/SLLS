@@ -10,9 +10,6 @@ namespace AutoCat.Hammicks
 {
     public class HammicksWebServices
     {
-        
-        //private const string HammicksXmlUrl = "http://www.hammickslegal.com/live/ProductXML/";
-
         public string GetImageUrl(string isbn = "")
         {
             try

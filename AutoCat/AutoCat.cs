@@ -46,6 +46,12 @@ namespace AutoCat
                         url = wildys.GetImageUrl(isbn);
                         break;
                     }
+                case "Google":
+                    {
+                        var google = new GoogleBooks();
+                        url = google.GetImageUrl(isbn);
+                        break;
+                    }
             }
 
             //if (url != null)

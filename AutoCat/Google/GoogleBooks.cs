@@ -11,6 +11,76 @@ namespace AutoCat.Google
 {
     public class GoogleBooks
     {
+        public string GetImageUrl(string isbn = "")
+        {
+            try
+            {
+                var doc = GetJsonObject(isbn);
+
+                if (doc == null)
+                {
+                    return null;
+                }
+
+                if (doc.HasValues)
+                {
+                    var bookDetails = doc.GetValue("items");
+                    if (bookDetails == null)
+                    {
+                        return null;
+                    }
+                    JToken token = bookDetails[0]["volumeInfo"]["imageLinks"];
+                    if (token == null) return null;
+                    var imageToken = ((bookDetails[0]["volumeInfo"]["imageLinks"]["small"] ??
+                                       bookDetails[0]["volumeInfo"]["imageLinks"]["thumbnail"]) ??
+                                      bookDetails[0]["volumeInfo"]["imageLinks"]["medium"]) ??
+                                     bookDetails[0]["volumeInfo"]["imageLinks"]["large"];
+                    if (imageToken != null) return imageToken.ToString();
+                }
+                return null;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+        }
+
+        private static JObject GetJsonObject(string isbn = "")
+        {
+            if (string.IsNullOrEmpty(isbn))
+            {
+                return null;
+            }
+
+            var baseUrl = ConfigurationManager.AppSettings["GoogleBooksUrl"] ?? "https://www.googleapis.com/books/v1/volumes?q=";
+            var apiKey = ConfigurationManager.AppSettings["GoogleApiKey"] ?? "AIzaSyAHbSCwgEgKIBuzPTAW9EdtgNUgnENTSbU";
+            var googleBooksUrl = "";
+
+            if (isbn.Length == 8) //Looks for an ISSN ...
+            {
+                googleBooksUrl = baseUrl + "issn" + isbn + "&projection=full&key=" + apiKey;
+            }
+            else // Otherwise look for an ISBN ...
+            {
+                googleBooksUrl = baseUrl + "isbn" + isbn + "&projection=full&key=" + apiKey;
+            }
+
+
+            try
+            {
+                WebRequest request = WebRequest.Create(googleBooksUrl);
+                WebResponse response = request.GetResponse();
+                StreamReader sreader = new StreamReader(response.GetResponseStream());
+
+                var jsonObject = JObject.Parse(sreader.ReadToEnd());
+                return jsonObject;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+        }
+        
         public AutoCatNewTitle GetFieldData(string isbn = "")
         {
             if (string.IsNullOrEmpty(isbn))
@@ -151,41 +221,7 @@ namespace AutoCat.Google
             return null;
         }
 
-        public JObject GetJsonObject(string isbn = "")
-        {
-            if (string.IsNullOrEmpty(isbn))
-            {
-                return null;
-            }
-
-            var baseUrl = ConfigurationManager.AppSettings["GoogleBooksUrl"] ?? "https://www.googleapis.com/books/v1/volumes?q=";
-            var apiKey = ConfigurationManager.AppSettings["GoogleApiKey"] ?? "AIzaSyAHbSCwgEgKIBuzPTAW9EdtgNUgnENTSbU";
-            var googleBooksUrl = "";
-
-            if (isbn.Length == 8) //Looks for an ISSN ...
-            {
-                googleBooksUrl = baseUrl + "issn" + isbn + "&projection=full&key=" + apiKey;
-            }
-            else // Otherwise look for an ISBN ...
-            {
-                googleBooksUrl = baseUrl + "isbn" + isbn + "&projection=full&key=" + apiKey;
-            }
-            
-
-            try
-            {
-                WebRequest request = WebRequest.Create(googleBooksUrl);
-                WebResponse response = request.GetResponse();
-                StreamReader sreader = new StreamReader(response.GetResponseStream());
-
-                var jsonObject = JObject.Parse(sreader.ReadToEnd());
-                return jsonObject;
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
+        
  
     }
 }
