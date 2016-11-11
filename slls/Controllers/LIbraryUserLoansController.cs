@@ -53,7 +53,7 @@ namespace slls.Controllers
             DateTime borrowed = loan.Borrowed.Value;
             DateTime returnDue = loan.ReturnDue.Value;
 
-            var viewModel = new ConfirmationRenewReturnViewModel
+            var viewModel = new ConfirmNewLoanRenewReturnViewModel
             {
                 PostConfirmController = "Loans",
                 PostConfirmAction = "DoQuickReturn",
@@ -86,7 +86,7 @@ namespace slls.Controllers
             DateTime borrowed = DateTime.Today;
             DateTime returnDue = DateTime.Today.AddDays(volume.LoanType.LengthDays);
 
-            var viewModel = new ConfirmationRenewReturnViewModel
+            var viewModel = new ConfirmNewLoanRenewReturnViewModel
             {
                 PostConfirmController = "Loans",
                 PostConfirmAction = "DoQuickRenew",
@@ -107,7 +107,7 @@ namespace slls.Controllers
         }
 
         [HttpPost]
-        public ActionResult DoQuickReturn(ConfirmationRenewReturnViewModel viewModel)
+        public ActionResult DoQuickReturn(ConfirmNewLoanRenewReturnViewModel viewModel)
         {
             var loan = _db.Borrowings.Find(viewModel.BorrowID);
             if (loan == null)
@@ -146,7 +146,7 @@ namespace slls.Controllers
         }
 
         [HttpPost]
-        public ActionResult DoQuickRenew(ConfirmationRenewReturnViewModel viewModel)
+        public ActionResult DoQuickRenew(ConfirmNewLoanRenewReturnViewModel viewModel)
         {
             var loan = _db.Borrowings.Find(viewModel.BorrowID);
             if (loan == null)

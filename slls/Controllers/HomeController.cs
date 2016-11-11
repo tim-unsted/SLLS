@@ -208,8 +208,8 @@ namespace slls.Controllers
                     {
                         return null;
                     }
-                    
-                    ViewData["SearchField"] = SelectListHelper.SearchFieldsList();
+
+                    ViewData["SearchField"] = SelectListHelper.SearchFieldsList(id:"title");
                     ViewBag.Title = DbRes.T("Search", "Terminology");
                     return PartialView("Dashboard/_SearchGadget");
                 }

@@ -43,7 +43,7 @@
 @if (Model.LibraryStaff && Model.Results.Any()) //Only show the 'Export' button for library staff ...
 {
     <div class="btn-group">
-        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export results to Excel">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export results to Excel">
             <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Export <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
@@ -56,7 +56,7 @@
 
 @if (Model.IsActualSearch && Model.Results.Any()) //Only show the 'Save Search' button for actual searches ...
 {
-    <a href="@Url.Action("SaveSearch", "Home")" title="Save Search" class="btn btn-default modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save</a>
+    <a href="@Url.Action("SaveSearch", "Home")" title="Save Search" class="btn btn-success modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save</a>
 }
 
 

@@ -188,7 +188,7 @@ namespace slls.Controllers
             DateTime borrowed = loan.Borrowed.Value;
             DateTime returnDue = loan.ReturnDue.Value;
             
-            var viewModel = new ConfirmationRenewReturnViewModel
+            var viewModel = new ConfirmNewLoanRenewReturnViewModel
             {
                 PostConfirmController = "Loans",
                 PostConfirmAction = "DoQuickReturn",
@@ -208,6 +208,44 @@ namespace slls.Controllers
             return PartialView("ConfirmRenewReturn", viewModel);
         }
 
+        public ActionResult ConfirmNewLoan(int volumeId = 0, string userId = "")
+        {
+
+            var volume = _db.Volumes.Find(volumeId);
+            if (volume == null)
+            {
+                return HttpNotFound();
+            }
+            var borrowerUser = _db.Users.Find(userId);
+            if (borrowerUser == null)
+            {
+                return HttpNotFound();
+            }
+
+            var copy = volume.Copy;
+            var title = copy.Title.Title1;
+            DateTime borrowed = DateTime.Today;
+            DateTime returnDue = DateTime.Today.AddDays(volume.LoanType.LengthDays);
+
+            var viewModel = new ConfirmNewLoanRenewReturnViewModel
+            {
+                PostConfirmController = "Loans",
+                PostConfirmAction = "DoQuickLoan",
+                ConfirmationText = "<p>Do you want to continue?</p>",
+                DetailsText = "<p>You are about to borrow the following item:</p>",
+                ConfirmButtonText = "New Loan",
+                ConfirmButtonClass = "btn-success",
+                CancelButtonText = "Cancel",
+                HeaderText = "Borrow Item?",
+                Glyphicon = "glyphicon-ok",
+                VolumeID = volumeId,
+                Title = copy.Title.Title1,
+                BorrowerUser = borrowerUser,
+                Borrowed = borrowed.ToShortDateString(),
+                ReturnDue = returnDue.ToShortDateString()
+            };
+            return PartialView("ConfirmRenewReturn", viewModel);
+        }
         
         public ActionResult ConfirmRenewLoan(int id = 0)
         {
@@ -222,7 +260,7 @@ namespace slls.Controllers
             DateTime borrowed = DateTime.Today;
             DateTime returnDue = DateTime.Today.AddDays(volume.LoanType.LengthDays);
             
-            var viewModel = new ConfirmationRenewReturnViewModel
+            var viewModel = new ConfirmNewLoanRenewReturnViewModel
             {
                 PostConfirmController = "Loans",
                 PostConfirmAction = "DoQuickRenew",
@@ -240,6 +278,49 @@ namespace slls.Controllers
                 ReturnDue = returnDue.ToShortDateString()
             };
             return PartialView("ConfirmRenewReturn", viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult DoQuickLoan(ConfirmNewLoanRenewReturnViewModel viewModel)
+        {
+            var volume = _db.Volumes.Find(viewModel.VolumeID);
+            
+            //Add a new loan ...
+            var daysToAdd = volume.LoanType.LengthDays == 0 ? 21 : volume.LoanType.LengthDays;
+
+            try
+            {
+                var newLoan = new Borrowing
+                {
+                    VolumeID = viewModel.VolumeID,
+                    BorrowerUser = viewModel.BorrowerUser,
+                    Borrowed = DateTime.Today,
+                    ReturnDue = DateTime.Today.AddDays(daysToAdd),
+                    InputDate = DateTime.Now,
+                    Renewal = true
+                };
+                _db.Borrowings.Add(newLoan);
+                _db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false });
+            }
+
+            //Mark the volume as 'On Loan'
+            if (volume == null) return Json(new { success = true });
+            try
+            {
+                volume.OnLoan = true;
+                _db.Entry(volume).State = EntityState.Modified;
+                _db.SaveChanges();
+            }
+            catch (Exception)
+            {
+                return Json(new { success = false });
+            }
+
+            return Json(new { success = true });
         }
 
         //Return Loan
@@ -292,7 +373,7 @@ namespace slls.Controllers
             return RedirectToAction("ReturnLoan", new {success = true});
         }
 
-        public ActionResult DoQuickReturn(ConfirmationRenewReturnViewModel viewModel)
+        public ActionResult DoQuickReturn(ConfirmNewLoanRenewReturnViewModel viewModel)
         {
             var loan = _db.Borrowings.Find(viewModel.BorrowID);
             if (loan == null)
@@ -451,7 +532,7 @@ namespace slls.Controllers
         }
 
         [HttpPost]
-        public ActionResult DoQuickRenew(ConfirmationRenewReturnViewModel viewModel)
+        public ActionResult DoQuickRenew(ConfirmNewLoanRenewReturnViewModel viewModel)
         {
             var loan = _db.Borrowings.Find(viewModel.BorrowID);
             if (loan == null)

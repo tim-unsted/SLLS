@@ -1,11 +1,14 @@
 ﻿@using slls.App_Settings
+@using slls.Models
+@using slls.Utils
 @using Westwind.Globalization
 @model slls.Models.Title
 
 @{
     var colClass = "col-md-12";
     var showBorrower = Settings.GetParameterValue("Borrowing.DisplayBorrowerEmail", "false", "Sets whether OPAC will display borrower's Email address") == "true";
-    
+    var selfLoansAllowed = Settings.GetParameterValue("Borrowing.SelfLoansEnabled", "false", "Tells whether OPAC users can do self-borrowing") == "true";
+    var selfReturnsAllowed = Settings.GetParameterValue("Borrowing.Borrowing.SelfReturnsEnabled", "false", "Tells whether OPAC users can do self-returns") == "true";
 }
 
 <div class="page-header">
@@ -13,7 +16,7 @@
     <h2>@ViewBag.Title</h2>
 </div>
 
-<div class="thumbnail">
+<div class="">
     <div class="caption" style="border-bottom: 1px solid #ddd; margin-bottom: 15px;">
         <span class="pull-right">
             @if (User.Identity.IsAuthenticated)
@@ -223,16 +226,42 @@
                                         <td>@Html.DisplayFor(x => volume.LabelText)</td>
                                         <td>@Html.DisplayFor(x => volume.LoanType.RefOnly)</td>
                                         <td>@Html.DisplayFor(x => volume.OnLoan)</td>
+
+                                        @*//Display a link to email the current borrower ...*@
                                         @if (showBorrower && volume.OnLoan)
                                         {
-                                            var borrowedBy = volume.Borrowings.LastOrDefault(b => b.Returned == null).BorrowerUser;
-                                            <td><a href="mailto:@borrowedBy.Email">@borrowedBy.Fullname</a></td>
+                                            var borrowedBy = volume.Borrowings.LastOrDefault(b => b.Returned == null && b.BorrowerUser != null).BorrowerUser;
+                                            <td><a href="@Url.Action("NewEmailPopup","Messaging", new { to = borrowedBy.Email, subject = "Message about '" + volume.Copy.Title.Title1 + "'" })" title="Email the current borrower" data-toggle="modal" data-target="#lrgModal">@borrowedBy.Fullname</a></td>
                                         }
                                         else
                                         {
                                             <td></td>
                                         }
                                         <td>@Html.DisplayFor(x => volume.Borrowings.LastOrDefault(b => b.Returned == null).ReturnDue)</td>
+
+                                        @*//Display a link to borrow the item if allowed ...*@
+                                        @if (selfLoansAllowed)
+                                        {
+                                            if ((!volume.OnLoan && !volume.LoanType.RefOnly && volume.LoanType.LengthDays > 0))
+                                            {
+                                                <td><a href="#" title="Borrow item">Borrow</a></td>
+                                            }
+                                        }
+
+                                        @*//Display a link to return or renew the item if it's on-loan to the current user ...*@
+                                        @if (volume.OnLoan)
+                                        {
+                                            var currentBorrowing = volume.Borrowings.LastOrDefault(b => b.Returned == null);
+                                            if (currentBorrowing != null)
+                                            {
+                                                var borrowedBy = currentBorrowing.BorrowerUser;
+                                                if (borrowedBy.Id == PublicFunctions.GetUserId())
+                                                {
+                                                    <td><a href="@Url.Action("ConfirmReturnLoan", "Borrowing", new {id = currentBorrowing.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span aria-hidden="true" class="glyphicon glyphicon-share-alt"></span> Return</a></td>
+                                                    <td><a href="@Url.Action("ConfirmRenewLoan", "Borrowing", new { id = currentBorrowing.BorrowID })" class="btn btn-link modal-link" title="Renew loan"><span aria-hidden="true" class="glyphicon glyphicon-repeat"></span> Renew</a></td>
+                                                }
+                                            }
+                                        }
                                     </tr>
                                 }
                                 </tbody>

@@ -117,9 +117,9 @@ namespace slls.ViewModels
         
     }
 
-    public class ConfirmationRenewReturnViewModel
+    public class ConfirmNewLoanRenewReturnViewModel
     {
-        public ConfirmationRenewReturnViewModel()
+        public ConfirmNewLoanRenewReturnViewModel()
         {
             ConfirmButtonText = "OK";
             ConfirmButtonClass = "btn-success";
@@ -127,7 +127,9 @@ namespace slls.ViewModels
             Glyphicon = "glyphicon-ok";
         }
 
+        public int VolumeID { get; set; }
         public int BorrowID { get; set; }
+        public ApplicationUser BorrowerUser { get; set; }
         public string PostConfirmController { get; set; }
         public string PostConfirmAction { get; set; }
         public string HeaderText { get; set; }
