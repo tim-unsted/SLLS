@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Script.Serialization;
 using slls.App_Settings;
 using slls.DAO;
 using slls.Localization;
@@ -28,9 +29,13 @@ namespace slls.ViewModels
         [LocalDisplayName("Searching.SearchWhere", "FieldDisplayName")]
         public string SearchField { get; set; }
 
+        [LocalDisplayName("Searching.Order_By", "FieldDisplayName")]
+        public string OrderBy { get; set; }
+
         public IEnumerable<SelectListItem> SearchFields { get; set; }
 
         public List<Title> Results { get; set; }
+        public JsonResult JsonData { get; set; }
         public List<Title> ResultsBeforeFilter { get; set; }
         public List<Title> OpacTitles { get; set; }
 
@@ -61,6 +66,7 @@ namespace slls.ViewModels
             this.NarrowByDefaultRecordCount = int.Parse(Settings.GetParameterValue("Searching.NarrowByDefaultRecordCount", "5"));
             this.SearchResultSize = int.Parse(Settings.GetParameterValue("Searching.SearchResultSize", "10"));
             this.SearchStyle = "prefix";
+            this.OrderBy = "title";
         }
 
         public IEnumerable<int> GetSelectedClassmarkIds()

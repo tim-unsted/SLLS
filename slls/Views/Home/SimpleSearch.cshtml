@@ -3,6 +3,7 @@
 
 @Html.HiddenFor(x => Model.ClassmarksFilter)
 @Html.HiddenFor(x => Model.IsActualSearch)
+@Html.HiddenFor(x => Model.OrderBy)
 
 @using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm" }))
 {

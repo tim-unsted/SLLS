@@ -330,6 +330,7 @@
     <Compile Include="Models\ReleaseHeader.cs" />
     <Compile Include="Models\ReleaseNote.cs" />
     <Compile Include="Models\SearchField.cs" />
+    <Compile Include="Models\SearchOrderType.cs" />
     <Compile Include="Models\SuppliersList.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\Notification.cs" />

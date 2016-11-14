@@ -13,6 +13,7 @@ using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
 using System.Web.Mvc.Expressions;
+using System.Web.Script.Serialization;
 using System.Web.UI.WebControls.Expressions;
 using slls.Utils;
 
@@ -708,6 +709,7 @@ namespace slls.Controllers
             {
                 LibraryStaff = Roles.IsLibraryStaff(),
                 Area = "admin",
+                OrderBy = "title",
                 IsActualSearch = true
             };
 
@@ -720,6 +722,8 @@ namespace slls.Controllers
         public ActionResult SimpleSearchResults(SimpleSearchingViewModel viewModel)
         {
             viewModel.IsActualSearch = true;
+            viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.");
+            ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
             
             //Classmarks filter ...
             if (!viewModel.ClassmarksFilter.Any())
@@ -2271,6 +2275,32 @@ namespace slls.Controllers
                 }
 
                 //Order the results ...
+                //results = results.OrderBy(r => r.Title1.Substring(r.NonFilingChars)).Distinct().ToList();
+                switch (viewModel.OrderBy)
+                {
+                    case "title":
+                    {
+                        results = results.OrderBy(r => r.Title1.Substring(r.NonFilingChars)).Distinct().ToList();
+                        break;
+                    }
+                    case "author":
+                    {
+                        results = results.OrderBy(r => r.AuthorString).Distinct().ToList();
+                        break;
+                    }
+                    case "classmark":
+                    {
+                        results = results.OrderBy(r => r.Classmark).Distinct().ToList();
+                        break;
+                    }
+                    case "pubyear":
+                    {
+                        results = results.OrderBy(r => r.Year).Distinct().ToList();
+                        break;
+                    }
+                }
+
+
                 results = results.OrderBy(r => r.Title1.Substring(r.NonFilingChars)).Distinct().ToList();
 
                 if (selectedMediaIds.Any())
@@ -2348,6 +2378,8 @@ namespace slls.Controllers
                 }
 
                 viewModel.Results = results;
+                var serializer = new JavaScriptSerializer();
+                viewModel.JsonData = Json(results);
 
                 var take = viewModel.NarrowByDefaultRecordCount;
 
@@ -2660,7 +2692,7 @@ namespace slls.Controllers
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(viewModel.SearchField);
             ViewBag.Title = !string.IsNullOrEmpty(q) ? "Search Results" : "Search the Library";
             TempData["simpleSearchingViewModel"] = viewModel;
-
+            
             return View("SimpleSearch", viewModel);
         }
 

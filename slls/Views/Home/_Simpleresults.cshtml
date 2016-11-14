@@ -4,13 +4,13 @@
 
 <script type="text/javascript">
     $(document).ready(function() {
-        $('#titles').DataTable({
+
+        var results = $('#titles').DataTable({
             "dom": sDom,
             "pagingType": sPagingType,
             "pageLength": @Model.SearchResultSize,
             "lengthMenu": sLengthMenu,
             "language": {
-                //"url": "/DataTables/lang.txt",
                 "lengthMenu": "Show _MENU_ results per page",
                 "info": "Displaying _START_ to _END_ of _TOTAL_ results",
                 "infoEmpty": "",
@@ -21,64 +21,113 @@
                     "next": "Next"
                 }
             },
-            //stateSave: true,
-            "order": [1, 'asc'],
+            //"order": [5, 'desc'],
             "columnDefs": [
                 {
-                    "orderData": 1,
-                    "orderSequence": ["desc", "asc"],
+                    "name": "results",
+                    "sortable": false,
                     "targets": [0]
                 },
                 {
+                    "name": "title",
                     "visible": false,
                     "sortable": false,
-                    "targets": [1, 2]
+                    "targets": [1]
+                },
+                {
+                    "name": "titleId",
+                    "visible": false,
+                    "sortable": false,
+                    "targets": [2]
+                },
+                {
+                    "name": "classmark",
+                    "visible": false,
+                    "sortable": false,
+                    "targets": [3]
+                },
+                {
+                    "name": "author",
+                    "visible": false,
+                    "sortable": false,
+                    "targets": [4]
+                },
+                {
+                    "name": "pubyear",
+                    "visible": false,
+                    "sortable": false,
+                    "targets": [5]
                 }
             ]
         });
+
+        //Set the initial sort order ...
+        var selectedOrder = "@Model.OrderBy";
+        var arrOrderBy = selectedOrder.split('.');
+        var colIndex = results.column(arrOrderBy[0] + ':name').index();
+        var direction = arrOrderBy[1];
+        $('#titles').DataTable().order([colIndex, direction]).draw();
+
+        //Change the sort order in the client ...
+        $('#OrderResults').change(function() {
+            selectedOrder = $("#OrderResults").val();
+            arrOrderBy = selectedOrder.split('.');
+            colIndex = results.column(arrOrderBy[0] + ':name').index();
+            direction = arrOrderBy[1];
+            $('#titles').DataTable().order([colIndex, direction]).draw();
+        });
+
     });
 
 </script>
 
-@if (Model.LibraryStaff && Model.Results.Any()) //Only show the 'Export' button for library staff ...
-{
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export results to Excel">
-            <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Export <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titles"})" class="btn-link" title="Export Title data">Titles only</a></li>
-            <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopies"})" title="Export Titles & Copy details" class="btn-link">Titles & Copy details</a></li>
-            <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopiesvolumes"})" title="Export Titles, Copies & Copy Item (Volume) details" class="btn-link">Titles, Copies & Copy Item details</a></li>
-        </ul>
-    </div>
-}
+<div class="form-group form-inline" style="margin-bottom: 10px;">
+    @if (Model.IsActualSearch && Model.Results.Any()) //Only show the 'Save Search' button for actual searches ...
+    {
+        <span class="pull-right">Sort Results: @Html.DropDownList("OrderBy", null, new { @class = "form-control", id = "OrderResults" })</span>
+        <a href="@Url.Action("SaveSearch", "Home")" title="Save Search" class="btn btn-success modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save</a>
+    }
+    
+    
+    @if (Model.LibraryStaff && Model.Results.Any()) //Only show the 'Export' button for library staff ...
+    {
+        <div class="btn-group">
+            <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export results to Excel">
+                <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Export <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titles"})" class="btn-link" title="Export Title data">Titles only</a></li>
+                <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopies"})" title="Export Titles & Copy details" class="btn-link">Titles & Copy details</a></li>
+                <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopiesvolumes"})" title="Export Titles, Copies & Copy Item (Volume) details" class="btn-link">Titles, Copies & Copy Item details</a></li>
+            </ul>
+        </div>
+    }
 
-@if (Model.IsActualSearch && Model.Results.Any()) //Only show the 'Save Search' button for actual searches ...
-{
-    <a href="@Url.Action("SaveSearch", "Home")" title="Save Search" class="btn btn-success modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save</a>
-}
 
+</div>
 
 <table id="titles" class="table table-condensed table-no-border">
     <thead>
         <tr>
-            <th>
-                Click here to re-sort by @Html.DisplayName(DbRes.T("Titles.Title", "FieldDisplayName"))
-            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
-    <tbody>
 
-        @foreach (var item in Model.Results)
-        {
-            var colClass = "col-md-12";
-            <tr>
-                <td>
-                    <div>
-                        <div class="caption">
-                            <span class="pull-right">
+    <tbody>
+    
+    @foreach (var item in Model.Results)
+    {
+        var colClass = "col-md-12";
+        <tr>
+            <td>
+                <div>
+                    <div class="caption">
+                        <span class="pull-right">
                                 @if (Model.LibraryStaff)
                                 {
                                     @*<a href="@Url.Action("Delete", "Titles", new {id = item.TitleID, view=@Html.CurrentViewName()})" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>*@
@@ -94,121 +143,116 @@
                                 }
 
                             </span>
-                            @{var title = string.IsNullOrEmpty(item.Title1) ? Html.Raw("[No Title]") : Html.DisplayFor(modelItem => item.Title1); }
-                            <a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")"><h4 class="results-h4">@title</h4></a>
-                        </div>
-                        <div class="row" style="margin-left: 2px; margin-bottom: 0;">
-                            @if (item.TitleImages.Any())
-                            {
-                                colClass = "col-md-10";
-                                <div class="col-md-2">
-                                    <div class="coverthumbnail">
-                                        <a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")">
-                                            <img src="@Url.Action("ViewImage", "TitleImages", new {id = item.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@item.TitleImages.FirstOrDefault(i => i.IsPrimary).Alt" style="width: 100%;">
-                                        </a>
-                                    </div>
-                                </div>
-                            }
-                            <div class=@colClass>
-                                <dl class="dl-horizontal">
-                                    @if (!string.IsNullOrEmpty(item.Title1))
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Titles.Title", "FieldDisplayName")):</dt>
-                                        <dd>@Html.DisplayFor(modelItem => item.Title1)</dd>
-                                    }
-
-                                    @if (!string.IsNullOrEmpty(item.Edition))
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Titles.Edition", "FieldDisplayName")):</dt>
-                                        <dd>@Html.DisplayFor(modelItem => item.Edition)</dd>
-                                    }
-
-                                    @if (item.TitleAuthors.Any())
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Titles.Authors", "FieldDisplayName")):</dt>
-                                        foreach (var author in item.TitleAuthors)
-                                        {
-                                            <dd>
-                                                <a href="@Url.Action("BrowseByAuthor", "Home", new { listAuthors = author.AuthorId }, null)" title="Browse other items by this Author">@author.Author.DisplayName</a><br />
-                                            </dd>
-                                        }
-                                    }
-
-                                    @if (!string.IsNullOrEmpty(item.Imprint))
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Titles.Imprint", "FieldDisplayName")):</dt>
-                                        <dd>@Html.DisplayFor(modelItem => item.Imprint)</dd>
-                                    }
-
-                                    @if (!string.IsNullOrEmpty(item.Isbn))
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName")):</dt>
-                                        <dd>@Html.DisplayFor(modelItem => item.Isbn)</dd>
-                                    }
-
-                                    @if (!string.IsNullOrEmpty(item.MediaType.Media))
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")):</dt>
-                                        <dd>@Html.DisplayFor(modelItem => item.MediaType.Media)</dd>
-                                    }
-
-                                    @if (item.Copies.Any(x => x.StatusType.Opac))
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Titles.Copies", "FieldDisplayName"))&nbsp;<span class="badge">@item.Copies.Count(x => x.StatusType != null && x.StatusType.Opac)</span>:</dt>
-                                        foreach (var copy in item.Copies)
-                                        {
-                                            <dd>
-                                                @Html.DisplayFor(x => copy.Location.LocationString)
-                                            </dd>
-                                        }
-                                    }
-
-                                    @if (!string.IsNullOrEmpty(item.Classmark.Classmark1))
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Classmarks.Classmark", "FieldDisplayName")):</dt>
-                                        <dd>@Html.DisplayFor(modelItem => item.Classmark.Classmark1)</dd>
-                                    }
-
-                                    @if (item.TitleLinks.Any())
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Titles.Links", "FieldDisplayName")):</dt>
-                                        foreach (var link in item.TitleLinks)
-                                        {
-                                            <dd>
-                                                <a href="@link.URL" title="@link.Title" target="_blank">@link.DisplayText</a><br />
-                                            </dd>
-                                        }
-                                    }
-
-                                    @if (item.SubjectIndexes.Any())
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Titles.Keywords", "FieldDisplayName")):</dt>
-                                        <dd>
-                                            @foreach (var index in item.SubjectIndexes)
-                                            {
-                                                <a href="@Url.Action("BrowseBySubject", "Home", new {listSubjects = index.KeywordID}, null)" title="Browse other items catalogued against this subject" style="text-decoration: underline;">@index.Keyword.KeywordTerm</a>
-                                            }
-                                        </dd>
-
-                                        @*foreach (var index in item.SubjectIndexes)
-                                            {
-                                                <dd>
-                                                    <a href="@Url.Action("BrowseBySubject", "Home", new {listSubjects = index.KeywordID}, null)" title="Browse other items catalogued against this subject" style="text-decoration: underline;">@index.Keyword.KeywordTerm</a>
-                                                </dd>
-                                            }*@
-
-                                    }
-                                </dl>
-                            </div>
-                        </div>
-                        <hr style="margin-top: 0; margin-bottom: 10px;" />
+                        @{var title = string.IsNullOrEmpty(item.Title1) ? Html.Raw("[No Title]") : Html.DisplayFor(modelItem => item.Title1); }
+                        <a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")"><h4 class="results-h4">@title</h4></a>
                     </div>
-                </td>
-                <td>@Html.Raw(item.FiledTitle)</td> @*This field is hidded; it's used for sorting*@
-                <td>@Html.Raw(item.TitleID)</td> @*This field is hidded; it's used for sorting*@
-            </tr>
+                    <div class="row" style="margin-left: 2px; margin-bottom: 0;">
+                        @if (item.TitleImages.Any())
+                        {
+                            colClass = "col-md-10";
+                            <div class="col-md-2">
+                                <div class="coverthumbnail">
+                                    <a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")">
+                                        <img src="@Url.Action("ViewImage", "TitleImages", new {id = item.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@item.TitleImages.FirstOrDefault(i => i.IsPrimary).Alt" style="width: 100%;">
+                                    </a>
+                                </div>
+                            </div>
+                        }
+                        <div class=@colClass>
+                            <dl class="dl-horizontal">
+                                @if (!string.IsNullOrEmpty(item.Title1))
+                                {
+                                    <dt>@Html.DisplayName(DbRes.T("Titles.Title", "FieldDisplayName")):</dt>
+                                    <dd>@Html.DisplayFor(modelItem => item.Title1)</dd>
+                                }
 
-        }
+                                @if (!string.IsNullOrEmpty(item.Edition))
+                                {
+                                    <dt>@Html.DisplayName(DbRes.T("Titles.Edition", "FieldDisplayName")):</dt>
+                                    <dd>@Html.DisplayFor(modelItem => item.Edition)</dd>
+                                }
+
+                                @if (item.TitleAuthors.Any())
+                                {
+                                    <dt>@Html.DisplayName(DbRes.T("Titles.Authors", "FieldDisplayName")):</dt>
+                                    foreach (var author in item.TitleAuthors)
+                                    {
+                                        <dd>
+                                            <a href="@Url.Action("BrowseByAuthor", "Home", new {listAuthors = author.AuthorId}, null)" title="Browse other items by this Author">@author.Author.DisplayName</a><br/>
+                                        </dd>
+                                    }
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.Imprint))
+                                {
+                                    <dt>@Html.DisplayName(DbRes.T("Titles.Imprint", "FieldDisplayName")):</dt>
+                                    <dd>@Html.DisplayFor(modelItem => item.Imprint)</dd>
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.Isbn))
+                                {
+                                    <dt>@Html.DisplayName(DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName")):</dt>
+                                    <dd>@Html.DisplayFor(modelItem => item.Isbn)</dd>
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.MediaType.Media))
+                                {
+                                    <dt>@Html.DisplayName(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")):</dt>
+                                    <dd>@Html.DisplayFor(modelItem => item.MediaType.Media)</dd>
+                                }
+
+                                @if (item.Copies.Any(x => x.StatusType.Opac))
+                                {
+                                    <dt>@Html.DisplayName(DbRes.T("Titles.Copies", "FieldDisplayName"))&nbsp;<span class="badge">@item.Copies.Count(x => x.StatusType != null && x.StatusType.Opac)</span>:</dt>
+                                    foreach (var copy in item.Copies)
+                                    {
+                                        <dd>
+                                            @Html.DisplayFor(x => copy.Location.LocationString)
+                                        </dd>
+                                    }
+                                }
+
+                                @if (!string.IsNullOrEmpty(item.Classmark.Classmark1))
+                                {
+                                    <dt>@Html.DisplayName(DbRes.T("Classmarks.Classmark", "FieldDisplayName")):</dt>
+                                    <dd>@Html.DisplayFor(modelItem => item.Classmark.Classmark1)</dd>
+                                }
+
+                                @if (item.TitleLinks.Any())
+                                {
+                                    <dt>@Html.DisplayName(DbRes.T("Titles.Links", "FieldDisplayName")):</dt>
+                                    foreach (var link in item.TitleLinks)
+                                    {
+                                        <dd>
+                                            <a href="@link.URL" title="@link.Title" target="_blank">@link.DisplayText</a><br/>
+                                        </dd>
+                                    }
+                                }
+
+                                @if (item.SubjectIndexes.Any())
+                                {
+                                    <dt>@Html.DisplayName(DbRes.T("Titles.Keywords", "FieldDisplayName")):</dt>
+                                    <dd>
+                                        @foreach (var index in item.SubjectIndexes)
+                                        {
+                                            <a href="@Url.Action("BrowseBySubject", "Home", new {listSubjects = index.KeywordID}, null)" title="Browse other items catalogued against this subject" style="text-decoration: underline;">@index.Keyword.KeywordTerm</a>
+                                        }
+                                    </dd>
+                                }
+                            </dl>
+                        </div>
+                    </div>
+                    <hr style="margin-top: 0; margin-bottom: 10px;"/>
+                </div>
+            </td>
+            <td>@Html.Raw(item.FiledTitle)</td> @*Column 1: This field is hidden; it's used for sorting*@
+            <td>@Html.Raw(item.TitleID)</td> @*Column 2: This field is hidden; it's used for sorting*@
+            <td>@Html.Raw(item.Classmark.Classmark1)</td> @*Column 3: This field is hidden; it's used for sorting*@
+            <td>@Html.Raw(item.AuthorString)</td> @*Column 4: This field is hidden; it's used for sorting*@
+            <td>@Html.Raw(item.Year)</td> @*Column 5: This field is hidden; it's used for sorting*@
+        </tr>
+
+    }
     </tbody>
 
 </table>

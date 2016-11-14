@@ -1207,6 +1207,26 @@ namespace slls.Utils.Helpers
             return searchFieldsList.Select(l => new SelectListItem { Selected = (l.Value == id), Text = l.Text, Value = l.Value });
         }
 
+        //
+        public static IEnumerable<SelectListItem> OpacResultsOrderBy(string selected = "title.asc", string msg = "Any available field")
+        {
+            DbEntities db = new DbEntities();
+            var orderByList = new List<SelectListItem>();
+            
+            //Add the actual search order types ...
+            var allSearchOrderTypes = CacheProvider.GetAll<SearchOrderType>("searchordertypes");
+            foreach (var item in allSearchOrderTypes.Where(x => x.Scope.Contains('o')).OrderBy(x => x.Display).ThenBy(x => x.OrderTypeFriendly))
+            {
+                orderByList.Add(new SelectListItem
+                {
+                    Text = item.OrderTypeFriendly ?? "",
+                    Value = item.OrderType
+                });
+            }
+
+            return orderByList.Select(list => new SelectListItem { Selected = (list.Value == selected), Text = list.Text, Value = list.Value });
+        }
+
         public static IEnumerable<SelectListItem> VersionReleases(int id = 0, bool addDefault = true, string msg = "Select a Release ...")
         {
             DbEntities db = new DbEntities();
