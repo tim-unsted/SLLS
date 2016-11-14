@@ -1,19 +1,15 @@
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Web;
 using slls.Localization;
 
-namespace slls.Models
+namespace slls.ViewModels
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    [Table("SearchOrderTypes")]
-    public partial class SearchOrderType
+    public class SearchOrderTypeViewModel
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int OrderTypeID { get; set; }
 
         [Required]

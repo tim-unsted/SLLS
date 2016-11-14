@@ -1,0 +1,67 @@
+﻿@using Westwind.Globalization
+@model IEnumerable<slls.Models.SearchOrderType>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#searchordertypes').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [1, 'asc'],
+            "columnDefs": [
+                {
+                    "width": "10%",
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [2]
+                }
+            ]
+        });
+    });
+</script>
+
+@*@Html.Partial("_HeaderSeeAlso", Model)*@
+
+<h3>@ViewBag.Title</h3>
+
+<p>
+    <a href="@Url.Action("AddOrderType", "SearchConfig")" title="Add new @DbRes.T("LoanTypes.Loan_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<table class="table" id="searchordertypes">
+    <thead>
+        <tr>
+            <th>
+                @Html.Label(DbRes.T("Searching.Order_By", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label("Display Position")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderBy(m => m.Display).ThenBy(m => m.OrderTypeFriendly))
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("EditOrderType", new {id = item.OrderTypeID})" class="btn btn-link modal-link" title="Edit">@Html.DisplayFor(modelItem => item.OrderTypeFriendly)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Display)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("EditOrderType", new {id = item.OrderTypeID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("MoveUp", new { id = item.OrderTypeID })" class="btn btn-link" title="Move selected item up one place"><span aria-hidden="true" class="glyphicon glyphicon-arrow-up"></span></a>
+                    <a href="@Url.Action("MoveDown", new { id = item.OrderTypeID })" class="btn btn-link" title="Move selected item down one place"><span aria-hidden="true" class="glyphicon glyphicon-arrow-down"></span></a>
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

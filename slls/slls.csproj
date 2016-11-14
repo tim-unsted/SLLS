@@ -270,6 +270,7 @@
     <Compile Include="Areas\Config\Controllers\MenuBuilderController.cs" />
     <Compile Include="Areas\Config\Controllers\ParametersController.cs" />
     <Compile Include="Areas\Config\Controllers\PartialMenuController.cs" />
+    <Compile Include="Areas\Config\Controllers\SearchConfigController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\AdminToolsController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\CirculationController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\CirculationMessagesController.cs" />
@@ -383,6 +384,7 @@
     <Compile Include="ViewModels\PrintLabelsViewModels.cs" />
     <Compile Include="ViewModels\ReleaseNotesViewModels.cs" />
     <Compile Include="ViewModels\ReportsGeneratorViewModels.cs" />
+    <Compile Include="ViewModels\SearchingConfigViewModels.cs" />
     <Compile Include="ViewModels\SearchingViewModels.cs" />
     <Compile Include="ViewModels\SettingsViewModels.cs" />
     <Compile Include="ViewModels\StatisticsViewModels.cs" />
@@ -1022,6 +1024,9 @@
     <Content Include="Customer\Settings\Authentication.config" />
     <Content Include="Customer\Settings\Globalization.config" />
     <Content Include="Areas\LibraryAdmin\Views\AdminTools\UpdateMergeAuthorityList.cshtml" />
+    <Content Include="Areas\Config\Views\SearchConfig\SearchOrderTypes.cshtml" />
+    <Content Include="Areas\Config\Views\SearchConfig\EditOrderType.cshtml" />
+    <Content Include="Areas\Config\Views\SearchConfig\AddOrderType.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
