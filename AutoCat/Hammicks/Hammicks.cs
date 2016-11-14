@@ -15,7 +15,8 @@ namespace AutoCat.Hammicks
             try
             {
                 var hammicksImageUrl = ConfigurationManager.AppSettings["HammicksImageUrl"] ?? "http://www.hammickslegal.com/live/ProductImage/";
-                var imageUrl = hammicksImageUrl + isbn;
+                var hammicksToken = ConfigurationManager.AppSettings["HammicksToken"] ?? "?user_id=31a1d5146f0af580dcdebdcfac4385e1";
+                var imageUrl = hammicksImageUrl + isbn + hammicksToken;
 
                 //Test what we get returned from this URL ...
                 using (var client = new WebClient())
@@ -63,8 +64,9 @@ namespace AutoCat.Hammicks
                 return null;
             }
 
-            var baseXmlUrl = ConfigurationManager.AppSettings["HammicksXmlUrl"];
-            var hammicksXmlUrl = baseXmlUrl + isbn;
+            var baseXmlUrl = ConfigurationManager.AppSettings["HammicksXmlUrl"] ?? "http://www.hammickslegal.com/live/ProductXML/";
+            var hammicksToken = ConfigurationManager.AppSettings["HammicksToken"] ?? "?user_id=31a1d5146f0af580dcdebdcfac4385e1";
+            var hammicksXmlUrl = baseXmlUrl + isbn + hammicksToken;
 
             try
             {
