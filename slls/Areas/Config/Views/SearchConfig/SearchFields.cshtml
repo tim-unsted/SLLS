@@ -1,0 +1,79 @@
+﻿@using iTextSharp.xmp.impl
+@using Westwind.Globalization
+@model IEnumerable<slls.Models.SearchField>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#searchfields').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [1, 'asc'],
+            "columnDefs": [
+                {
+                    "width": "10%",
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [3]
+                }
+            ]
+        });
+    });
+</script>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="alert alert-info">
+    <strong>Info: </strong>Use this page to control the fields that users can limit their searches to. These fields appear in a drop-down list on the search screens and widgets.
+</div>
+
+@if (slls.Utils.Helpers.Roles.IsBaileyAdmin())
+{
+    <p>
+        <a href="@Url.Action("AddSearchField", "SearchConfig")" title="Add new @DbRes.T("LoanTypes.Loan_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    </p>
+}
+
+<table class="table" id="searchfields">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(m => m.DisplayName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Enabled)
+            </th>
+            <th>
+                @Html.DisplayNameFor(m => m.Position)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.OrderBy(m => m.Position).ThenBy(m => m.DisplayName))
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("EditSearchField", new {id = item.RecId})" class="btn btn-link modal-link" title="Edit">@Html.DisplayFor(modelItem => item.DisplayName)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Enabled)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Position)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("EditSearchField", new { id = item.RecId })" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("MoveSearchFieldUp", new { id = item.RecId })" class="btn btn-link" title="Move selected item up one place"><span aria-hidden="true" class="glyphicon glyphicon-arrow-up"></span></a>
+                    <a href="@Url.Action("MoveSearchFieldDown", new { id = item.RecId })" class="btn btn-link" title="Move selected item down one place"><span aria-hidden="true" class="glyphicon glyphicon-arrow-down"></span></a>
+
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>

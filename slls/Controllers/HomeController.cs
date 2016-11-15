@@ -113,12 +113,14 @@ namespace slls.Controllers
         public ActionResult NewTitles()
         {
             var viewModel = new SimpleSearchingViewModel();
+            viewModel.LibraryStaff = Roles.IsLibraryStaff();
+            viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultNewTitlesSortOrder", "commenced.desc", "Sets the default sort order for the 'New Titles' list.");
+            ViewData["OrderBy"] = SelectListHelper.NewTitlesOrderBy(viewModel.OrderBy);
 
             //Get a collection of items on the 'New Titles' list ...
             var newtitles = (from t in _db.Titles
                                 join c in _db.Copies on t.TitleID equals c.TitleID
                                 where t.Deleted == false && c.Deleted == false && c.AcquisitionsList && c.StatusType.Opac && c.Volumes.Any()
-                                orderby t.Title1.Substring(t.NonFilingChars)
                                 select t).Distinct();
 
             viewModel.Results = newtitles.ToList();
@@ -263,9 +265,22 @@ namespace slls.Controllers
                         return null;
                     }
 
-                    viewModel.NewTitles = allnewtitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)).Take(10).ToList();
+                    var newTitlesSortOrder = Settings.GetParameterValue("Searching.DefaultNewTitlesSortOrder",
+                        "commenced.desc", "Sets the default sort order for the 'New Titles' list.");
+                    if (newTitlesSortOrder == "title.asc")
+                    {
+                        var newTitles = allnewtitles.OrderBy(t => t.Title.Substring(t.NonFilingChars)).GroupBy(x => x.TitleId).Select(t => t.First()).ToList();
+                        viewModel.NewTitles = newTitles.Take(10).ToList();
+                        ViewBag.Count = newTitles.Count();
+                    }
+                    else
+                    {
+                        var newTitles = allnewtitles.OrderByDescending(t => t.Commenced).GroupBy(x => x.TitleId).Select(t => t.First()).ToList();
+                        viewModel.NewTitles = newTitles.Take(10).ToList();
+                        ViewBag.Count = newTitles.Count();
+                    }
+                    
                     ViewBag.Title = DbRes.T("Titles.New_Titles", "FieldDisplayName");
-                    ViewBag.Count = allnewtitles.Count();
                     ViewBag.Showing = allnewtitles.Count() < 10 ? allnewtitles.Count() : 10;
                     return PartialView("Dashboard/_NewTitles", viewModel);
                 }

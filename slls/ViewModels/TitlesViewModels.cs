@@ -98,6 +98,14 @@ namespace slls.ViewModels
         }
 
     }
+
+    public class NewTitlesSimpleViewModel
+    {
+        public int TitleId { get; set; }
+        public string Title { get; set; }
+        public int NonFilingChars { get; set; }
+        public DateTime? Commenced { get; set; }   
+    }
     
     public class TitleAddViewModel
     {

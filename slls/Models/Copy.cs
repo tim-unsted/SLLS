@@ -56,6 +56,12 @@ namespace slls.Models
         [Column(TypeName = "smalldatetime")]
         [LocalDisplayName("Copies.Date_Commenced", "FieldDisplayName")]
         public DateTime? Commenced { get; set; }
+
+        [NotMapped]
+        public string CommencedSortable
+        {
+            get { return string.Format("{0:yyyy-MM-dd HH:mm:ss}", Commenced); }
+        }
         
         [Column(TypeName = "smalldatetime")]
         public DateTime? Cancellation { get; set; }

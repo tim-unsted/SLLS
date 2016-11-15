@@ -15,7 +15,7 @@ namespace slls.ViewModels
         public List<UsefulLink> UsefulLinks { get; set; }
         public List<LibraryUserSavedSearch> SavedSearches { get; set; }
         public List<LibraryUserBookmark> UserBookmarks { get; set; }
-        public List<Title> NewTitles { get; set; }
+        public List<NewTitlesSimpleViewModel> NewTitles { get; set; }
         public List<Notification> Notifications { get; set; }
         public bool LibraryStaff { get; set; }
     }

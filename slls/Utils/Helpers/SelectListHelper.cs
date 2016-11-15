@@ -1199,16 +1199,16 @@ namespace slls.Utils.Helpers
             {
                 searchFieldsList.Add(new SelectListItem
                 {
-                    Text = item.FieldName ?? "",
-                    Value = item.FieldId
+                    Text = item.DisplayName ?? "",
+                    Value = item.FieldName
                 });
             }
 
             return searchFieldsList.Select(l => new SelectListItem { Selected = (l.Value == id), Text = l.Text, Value = l.Value });
         }
 
-        //
-        public static IEnumerable<SelectListItem> OpacResultsOrderBy(string selected = "title.asc", string msg = "Any available field")
+        
+        public static IEnumerable<SelectListItem> OpacResultsOrderBy(string selected = "title.asc")
         {
             DbEntities db = new DbEntities();
             var orderByList = new List<SelectListItem>();
@@ -1226,6 +1226,27 @@ namespace slls.Utils.Helpers
 
             return orderByList.Select(list => new SelectListItem { Selected = (list.Value == selected), Text = list.Text, Value = list.Value });
         }
+
+
+        public static IEnumerable<SelectListItem> NewTitlesOrderBy(string selected = "commenced.desc")
+        {
+            DbEntities db = new DbEntities();
+            var orderByList = new List<SelectListItem>();
+
+            //Add the actual 'New Titles' order types ...
+            var allSearchOrderTypes = CacheProvider.GetAll<SearchOrderType>("searchordertypes");
+            foreach (var item in allSearchOrderTypes.Where(x => x.Scope.Contains('n')).OrderBy(x => x.Display).ThenBy(x => x.OrderTypeFriendly))
+            {
+                orderByList.Add(new SelectListItem
+                {
+                    Text = item.OrderTypeFriendly ?? "",
+                    Value = item.OrderType
+                });
+            }
+
+            return orderByList.Select(list => new SelectListItem { Selected = (list.Value == selected), Text = list.Text, Value = list.Value });
+        }
+
 
         public static IEnumerable<SelectListItem> VersionReleases(int id = 0, bool addDefault = true, string msg = "Select a Release ...")
         {

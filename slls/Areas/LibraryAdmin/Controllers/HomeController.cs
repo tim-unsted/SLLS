@@ -260,7 +260,8 @@ namespace slls.Areas.LibraryAdmin
                             return null;
                         }
 
-                        viewModel.NewTitles = allnewtitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)).Take(10).ToList();
+                        //viewModel.NewTitles = allnewtitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)).Take(10).ToList();
+                        viewModel.NewTitles = allnewtitles.OrderBy(t => t.Title.Substring(t.NonFilingChars)).Take(10).ToList();
                         ViewBag.Title = DbRes.T("Titles.New_Titles", "FieldDisplayName");
                         ViewBag.Count = allnewtitles.Count();
                         ViewBag.Showing = allnewtitles.Count() < 10 ? allnewtitles.Count() : 10;

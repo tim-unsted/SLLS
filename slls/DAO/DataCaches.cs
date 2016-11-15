@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.Data.Entity.SqlServer;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -12,6 +13,7 @@ using System.Web.Caching;
 using System.Web.Mvc;
 using System.Web.UI;
 using slls.Models;
+using slls.ViewModels;
 
 namespace slls.DAO
 {
@@ -36,17 +38,17 @@ namespace slls.DAO
             Cache[key] = data;
             return data;
         }
-        
-        public static List<Title> NewTitles()
+
+        public static List<NewTitlesSimpleViewModel> NewTitles()
         {
-            var newTitles = Cache["newtitles"] as List<Title>;
+            var newTitles = Cache["newtitles"] as List<NewTitlesSimpleViewModel>;
             if (newTitles != null) return newTitles;
             using (var db = new DbEntities())
             {
                 newTitles = (from t in db.Titles
                              join c in db.Copies on t.TitleID equals c.TitleID
                              where t.Deleted == false && c.Deleted == false && c.AcquisitionsList && c.StatusType.Opac && c.Volumes.Any()
-                             select t).Distinct().ToList();
+                             select new NewTitlesSimpleViewModel { TitleId = t.TitleID, Title = t.Title1, NonFilingChars = t.NonFilingChars, Commenced = c.Commenced }).Distinct().ToList();
                 Cache["newtitles"] = newTitles;
                 return newTitles;
             }

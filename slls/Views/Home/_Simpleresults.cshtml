@@ -57,6 +57,12 @@
                     "visible": false,
                     "sortable": false,
                     "targets": [5]
+                },
+                {
+                    "name": "commenced",
+                    "visible": false,
+                    "sortable": false,
+                    "targets": [6]
                 }
             ]
         });
@@ -82,16 +88,18 @@
 </script>
 
 <div class="form-group form-inline" style="margin-bottom: 10px;">
-    @if (Model.IsActualSearch && Model.Results.Any()) //Only show the 'Save Search' button for actual searches ...
+    @if (Model.Results.Any()) 
     {
         <span class="pull-right">Sort Results: @Html.DropDownList("OrderBy", null, new { @class = "form-control", id = "OrderResults" })</span>
+    }
+    @if (Model.IsActualSearch && Model.Results.Any())
+    {
+        //Only show the 'Save Search' button for actual searches ...
         <a href="@Url.Action("SaveSearch", "Home")" title="Save Search" class="btn btn-success modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save</a>
     }
-    
-    
-    @if (Model.LibraryStaff && Model.Results.Any()) //Only show the 'Export' button for library staff ...
-    {
-        <div class="btn-group">
+    <div class="btn-group">
+        @if (Model.LibraryStaff && Model.Results.Any()) //Only show the 'Export' button for library staff ...
+        {
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export results to Excel">
                 <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Export <span class="caret"></span>
             </button>
@@ -100,12 +108,10 @@
                 <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopies"})" title="Export Titles & Copy details" class="btn-link">Titles & Copy details</a></li>
                 <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopiesvolumes"})" title="Export Titles, Copies & Copy Item (Volume) details" class="btn-link">Titles, Copies & Copy Item details</a></li>
             </ul>
-        </div>
-    }
-
-
+        }
+    </div>
 </div>
-
+<br/>
 <table id="titles" class="table table-condensed table-no-border">
     <thead>
         <tr>
@@ -250,6 +256,7 @@
             <td>@Html.Raw(item.Classmark.Classmark1)</td> @*Column 3: This field is hidden; it's used for sorting*@
             <td>@Html.Raw(item.AuthorString)</td> @*Column 4: This field is hidden; it's used for sorting*@
             <td>@Html.Raw(item.Year)</td> @*Column 5: This field is hidden; it's used for sorting*@
+            <td>@Html.DisplayFor(modelItem => item.Copies.OrderByDescending(c => c.Commenced).FirstOrDefault(c => c.AcquisitionsList).CommencedSortable)</td> @*Column 6: This field is hidden; it's used for sorting*@
         </tr>
 
     }

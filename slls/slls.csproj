@@ -1026,7 +1026,9 @@
     <Content Include="Areas\LibraryAdmin\Views\AdminTools\UpdateMergeAuthorityList.cshtml" />
     <Content Include="Areas\Config\Views\SearchConfig\SearchOrderTypes.cshtml" />
     <Content Include="Areas\Config\Views\SearchConfig\EditOrderType.cshtml" />
-    <Content Include="Areas\Config\Views\SearchConfig\AddOrderType.cshtml" />
+    <Content Include="Areas\Config\Views\SearchConfig\SearchOptions.cshtml" />
+    <Content Include="Areas\Config\Views\SearchConfig\SearchFields.cshtml" />
+    <Content Include="Areas\Config\Views\SearchConfig\EditSearchField.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

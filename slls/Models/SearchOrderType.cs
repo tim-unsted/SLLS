@@ -25,9 +25,10 @@ namespace slls.Models
         public string OrderTypeFriendly { get; set; }
 
         [StringLength(10)]
+        [DisplayName("Area")]
         public string Scope { get; set; }
 
-        [DisplayName("Display Position")]
+        [DisplayName("Position in List")]
         public int Display { get; set; }
     }
 }

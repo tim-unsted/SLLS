@@ -1,4 +1,5 @@
-﻿@using Westwind.Globalization
+﻿@using iTextSharp.xmp.impl
+@using Westwind.Globalization
 @model IEnumerable<slls.Models.SearchOrderType>
 
 <script type="text/javascript">
@@ -24,22 +25,27 @@
     });
 </script>
 
-@*@Html.Partial("_HeaderSeeAlso", Model)*@
+@Html.Partial("_HeaderSeeAlso", Model)
 
-<h3>@ViewBag.Title</h3>
+<div class="alert alert-info">
+    <strong>Info: </strong>Use this page to control the search results sort order options available to the OPAC users. To set the default sort order , <a href="@Url.Action("Searchoptions")" title="Click to set the default sort order">click here.</a>
+</div>
 
-<p>
-    <a href="@Url.Action("AddOrderType", "SearchConfig")" title="Add new @DbRes.T("LoanTypes.Loan_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
-</p>
+@if (slls.Utils.Helpers.Roles.IsBaileyAdmin())
+{
+    <p>
+        <a href="@Url.Action("AddOrderType", "SearchConfig")" title="Add new @DbRes.T("LoanTypes.Loan_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    </p>
+}
 
 <table class="table" id="searchordertypes">
     <thead>
         <tr>
             <th>
-                @Html.Label(DbRes.T("Searching.Order_By", "FieldDisplayName"))
+                @Html.DisplayNameFor(m => m.OrderTypeFriendly)
             </th>
             <th>
-                @Html.Label("Display Position")
+                @Html.DisplayNameFor(m => m.Display)
             </th>
             <th></th>
         </tr>

@@ -32,8 +32,9 @@ namespace slls.App_Settings
         public static bool UpdateParameter(string id, string value, string usage = "")
         {
             var repository = new GenericRepository(typeof(Models.Parameter));
-            var db = new DbEntities();
-            var parameter = db.Parameters.Find(id);
+            //var db = new DbEntities();
+            var parameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
+            var parameter = parameters.FirstOrDefault(p => p.ParameterID == id);
 
             if (parameter == null)
             {
