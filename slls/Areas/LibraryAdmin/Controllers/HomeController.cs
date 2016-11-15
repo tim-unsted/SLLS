@@ -250,8 +250,6 @@ namespace slls.Areas.LibraryAdmin
                             return null;
                         }
 
-                        var viewModel = new DashboardViewModel();
-
                         //Get a collection of items on the 'New Titles' list ...
                         var allnewtitles = CacheProvider.NewTitles().ToList();
 
@@ -260,10 +258,26 @@ namespace slls.Areas.LibraryAdmin
                             return null;
                         }
 
+                        var viewModel = new DashboardViewModel();
+
+                        var newTitlesSortOrder = Settings.GetParameterValue("Searching.DefaultNewTitlesSortOrder",
+                            "commenced.desc", "Sets the default sort order for the 'New Titles' list.");
+                        if (newTitlesSortOrder == "title.asc")
+                        {
+                            var newTitles = allnewtitles.OrderBy(t => t.Title.Substring(t.NonFilingChars)).GroupBy(x => x.TitleId).Select(t => t.First()).ToList();
+                            viewModel.NewTitles = newTitles.Take(10).ToList();
+                            ViewBag.Count = newTitles.Count();
+                        }
+                        else
+                        {
+                            var newTitles = allnewtitles.OrderByDescending(t => t.Commenced).GroupBy(x => x.TitleId).Select(t => t.First()).ToList();
+                            viewModel.NewTitles = newTitles.Take(10).ToList();
+                            ViewBag.Count = newTitles.Count();
+                        }
+
                         //viewModel.NewTitles = allnewtitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)).Take(10).ToList();
-                        viewModel.NewTitles = allnewtitles.OrderBy(t => t.Title.Substring(t.NonFilingChars)).Take(10).ToList();
+                        //viewModel.NewTitles = allnewtitles.OrderBy(t => t.Title.Substring(t.NonFilingChars)).Take(10).ToList();
                         ViewBag.Title = DbRes.T("Titles.New_Titles", "FieldDisplayName");
-                        ViewBag.Count = allnewtitles.Count();
                         ViewBag.Showing = allnewtitles.Count() < 10 ? allnewtitles.Count() : 10;
                         return PartialView("_NewTitles", viewModel);
                     }
