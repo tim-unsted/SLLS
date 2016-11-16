@@ -53,16 +53,16 @@ namespace AutoCat.Google
             }
 
             var baseUrl = ConfigurationManager.AppSettings["GoogleBooksUrl"] ?? "https://www.googleapis.com/books/v1/volumes?q=";
-            var apiKey = ConfigurationManager.AppSettings["GoogleApiKey"] ?? "AIzaSyAHbSCwgEgKIBuzPTAW9EdtgNUgnENTSbU";
+            //var apiKey = ConfigurationManager.AppSettings["GoogleApiKey"] ?? "AIzaSyAHbSCwgEgKIBuzPTAW9EdtgNUgnENTSbU";
             var googleBooksUrl = "";
 
             if (isbn.Length == 8) //Looks for an ISSN ...
             {
-                googleBooksUrl = baseUrl + "issn" + isbn + "&projection=full&key=" + apiKey;
+                googleBooksUrl = baseUrl + "issn" + isbn + "&projection=full";
             }
             else // Otherwise look for an ISBN ...
             {
-                googleBooksUrl = baseUrl + "isbn" + isbn + "&projection=full&key=" + apiKey;
+                googleBooksUrl = baseUrl + "isbn" + isbn + "&projection=full";
             }
 
 
