@@ -367,11 +367,7 @@ namespace slls.Controllers
                     Value = item.AuthorID.ToString()
                 });
             }
-
-            ViewData["ListAuthors"] = authorList;
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", "");
-            ViewBag.Title = "Browse By " + DbRes.T("Authors.Author", "FieldDisplayName");
-
+            
             //Get the actual results if the user has selected anything ...
             viewModel.Results =
                 (from t in
@@ -383,6 +379,12 @@ namespace slls.Controllers
                 select t).Distinct().ToList();
             viewModel.LibraryStaff = Roles.IsLibraryStaff();
             viewModel.IsActualSearch = false;
+            viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.");
+
+            ViewData["ListAuthors"] = authorList;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", "");
+            ViewBag.Title = "Browse By " + DbRes.T("Authors.Author", "FieldDisplayName");
+            ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
             return View(viewModel);
         }
 
@@ -414,11 +416,7 @@ namespace slls.Controllers
                     Value = item.ClassmarkID.ToString()
                 });
             }
-
-            ViewData["ListClassmarks"] = classmarkList;
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
-            ViewBag.Title = "Browse By " + DbRes.T("Classmarks.Classmark", "FieldDisplayName");
-
+            
             //Get the actual results if the user has selected anything ...
             var viewModel = new SimpleSearchingViewModel
             {
@@ -430,8 +428,14 @@ namespace slls.Controllers
                         t.ClassmarkID == listClassmarks
                     select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
-                IsActualSearch = false
+                IsActualSearch = false,
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
             };
+            
+            ViewData["ListClassmarks"] = classmarkList;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
+            ViewBag.Title = "Browse By " + DbRes.T("Classmarks.Classmark", "FieldDisplayName");
+            ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
             return View(viewModel);
         }
 
@@ -464,10 +468,6 @@ namespace slls.Controllers
                 });
             }
 
-            ViewData["ListMedia"] = mediaList;
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
-            ViewBag.Title = "Browse By " + DbRes.T("MediaTypes.Media_Type", "FieldDisplayName");
-
             //Get the actual results if the user has selected anything ...
             var viewModel = new SimpleSearchingViewModel
             {
@@ -479,8 +479,14 @@ namespace slls.Controllers
                                t.MediaID == listMedia
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
-                IsActualSearch = false
+                IsActualSearch = false,
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
             };
+            
+            ViewData["ListMedia"] = mediaList;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
+            ViewBag.Title = "Browse By " + DbRes.T("MediaTypes.Media_Type", "FieldDisplayName");
+            ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
             return View(viewModel);
         }
 
@@ -508,10 +514,6 @@ namespace slls.Controllers
                 Value = item.PublisherID.ToString()
             }));
             
-            ViewData["ListPublishers"] = publisherList;
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
-            ViewBag.Title = "Browse By " + DbRes.T("Publishers.Publisher", "FieldDisplayName");
-
             //Get the actual results if the user has selected anything ...
             var viewModel = new SimpleSearchingViewModel
             {
@@ -523,8 +525,14 @@ namespace slls.Controllers
                                t.PublisherID == listPublishers
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
-                IsActualSearch = false
+                IsActualSearch = false,
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
             };
+            
+            ViewData["ListPublishers"] = publisherList;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
+            ViewBag.Title = "Browse By " + DbRes.T("Publishers.Publisher", "FieldDisplayName");
+            ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
             return View(viewModel);
         }
 
@@ -557,10 +565,6 @@ namespace slls.Controllers
                 });
             }
 
-            ViewData["ListLanguage"] = languageList;
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
-            ViewBag.Title = "Browse By " + DbRes.T("Languages.Language", "FieldDisplayName");
-
             //Get the actual results if the user has selected anything ...
             var viewModel = new SimpleSearchingViewModel
             {
@@ -572,8 +576,14 @@ namespace slls.Controllers
                                t.LanguageID == listLanguage
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
-                IsActualSearch = false
+                IsActualSearch = false,
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
             };
+            
+            ViewData["ListLanguage"] = languageList;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
+            ViewBag.Title = "Browse By " + DbRes.T("Languages.Language", "FieldDisplayName");
+            ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
             return View(viewModel);
         }
 
@@ -586,29 +596,25 @@ namespace slls.Controllers
                                 new { locationID = l.LocationID, location = l.Location1 })
                 .Distinct().OrderBy(x => x.location);
 
-            //Start a new list selectlist items ...
-            List<SelectListItem> locationList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = "Select a " + DbRes.T("Locations.Location", "FieldDisplayName"),
-                    Value = "0"
-                }
-            };
+            ////Start a new list selectlist items ...
+            //List<SelectListItem> locationList = new List<SelectListItem>
+            //{
+            //    new SelectListItem
+            //    {
+            //        Text = "Select a " + DbRes.T("Locations.Location", "FieldDisplayName"),
+            //        Value = "0"
+            //    }
+            //};
 
-            //Add the actual locations ...
-            foreach (var item in location)
-            {
-                locationList.Add(new SelectListItem
-                {
-                    Text = item.location,
-                    Value = item.locationID.ToString()
-                });
-            }
-
-            ViewData["Listlocation"] = locationList;
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
-            ViewBag.Title = "Browse By " + DbRes.T("Locations.Location", "FieldDisplayName");
+            ////Add the actual locations ...
+            //foreach (var item in location)
+            //{
+            //    locationList.Add(new SelectListItem
+            //    {
+            //        Text = item.location,
+            //        Value = item.locationID.ToString()
+            //    });
+            //}
 
             //Get the actual results if the user has selected anything ...
             var viewModel = new SimpleSearchingViewModel
@@ -621,8 +627,14 @@ namespace slls.Controllers
                                c.LocationID == listLocation
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
-                IsActualSearch = false
+                IsActualSearch = false,
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
             };
+
+            ViewData["Listlocation"] = SelectListHelper.OfficeLocationList(); //locationList;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
+            ViewBag.Title = "Browse By " + DbRes.T("Locations.Location", "FieldDisplayName");
+            ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
             return View(viewModel);
         }
 
@@ -663,11 +675,7 @@ namespace slls.Controllers
                     Value = item.keywordid.ToString()
                 });
             }
-
-            ViewData["ListSubjects"] = kwdList;
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
-            ViewBag.Title = "Browse By " + DbRes.T("Keywords.Keyword", "FieldDisplayName");
-
+            
             //Get a list of all items linked to the selected keyword
             var viewModel = new SimpleSearchingViewModel
             {
@@ -678,8 +686,14 @@ namespace slls.Controllers
                            where t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && x.KeywordID == listSubjects
                            select t).ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
-                IsActualSearch = false
+                IsActualSearch = false,
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
             };
+            
+            ViewData["ListSubjects"] = kwdList;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
+            ViewBag.Title = "Browse By " + DbRes.T("Keywords.Keyword", "FieldDisplayName");
+            ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
             return View(viewModel);
         }
 
