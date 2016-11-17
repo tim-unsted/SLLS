@@ -1,10 +1,12 @@
-﻿@using (Html.BeginForm())
+﻿<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
     
     <form>
         <div class="form-group" title="@ViewBag.Message">
-            @Html.DropDownList("selectOrder", null, new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control" })
+            @Html.DropDownList("selectOrder", null, new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control", style = "font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;" })
         </div>
     </form>
 }

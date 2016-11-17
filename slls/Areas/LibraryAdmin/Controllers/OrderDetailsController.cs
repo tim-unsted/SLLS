@@ -17,9 +17,9 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    [RouteArea("LibraryAdmin", AreaPrefix = "Admin")]
-    [RoutePrefix("Orders")]
-    [Route("{action=index}")]
+    //[RouteArea("LibraryAdmin", AreaPrefix = "Admin")]
+    //[RoutePrefix("Orders")]
+    //[Route("{action=index}")]
     public class OrderDetailsController : AdminBaseController
     {
         private readonly DbEntities _db = new DbEntities();
@@ -32,53 +32,61 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/ViewAll
-        //[Route]
-        [Route("Index")]
-        [Route("All")]
-        [Route("AllOrders")]
-        [Route("ViewAll")]
-        [Route("~/LibraryAdmin/OrderDetails/Index")]
-        public ActionResult Index(int listSupplier = 0, int month = 0, int year = 0)
+        ////[Route]
+        //[Route("Index")]
+        //[Route("All")]
+        //[Route("AllOrders")]
+        //[Route("ViewAll")]
+        //[Route("~/LibraryAdmin/OrderDetails/Index")]
+        public ActionResult Index(int listSupplier = -1, int month = -1, int year = -1)
         {
-            if (year == 0)
-            {
-                year = DateTime.Today.Year;
-            }
-
-            if (month == 0)
-            {
-                month = -1;
-            }
-
             var viewModel = new OrderDetailsListViewModel()
             {
                 Month = month,
                 Year = year
             };
 
-            var allOrders = year == -1 ? _db.OrderDetails : _db.OrderDetails.Where(o => o.OrderDate.Value.Year == year);
-            allOrders = month == -1 ? allOrders : allOrders.Where(o => o.OrderDate.Value.Month == month);
-            viewModel.Orders = listSupplier > 0 ? allOrders.Where(o => o.SupplierID == listSupplier) : allOrders;
+            var allOrders =
+                from o in _db.OrderDetails
+                select o;
 
-            //Get a list of months ...
+            //Initialise some objects to hold years and months ...
             var months = new Dictionary<int, string> { { -1, "All Months" } };
-            for (int i = 0; i < 12; i++)
-            {
-                months.Add(i + 1, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[i]);
-            }
-
-            //Get a list of years back to 1970 ..
             var years = new Dictionary<int, string> { { -1, "All Years" } };
-            for (int i = 1970; i < DateTime.Today.AddYears(1).Year; i++)
+            
+            //Get the actual results if the user has selected anything ...
+            var filteredOrders =
+                from o in _db.OrderDetails
+                where o.SupplierID == listSupplier || o.OrderDate.Value.Year == year || o.OrderDate.Value.Month == month
+                select o;
+
+            //Return any filtered orders
+            viewModel.Orders = filteredOrders; 
+            
+            if (!filteredOrders.Any() && allOrders.Any())
             {
-                years.Add(i, i.ToString());
+                filteredOrders = allOrders;
             }
 
-            //Get the list of suppliers with orders ...
+            //Get a list of suppliers for the filtered orders ...
             var suppliers = (from x in _db.Suppliers
                              join o in allOrders on x.SupplierID equals o.SupplierID
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = allOrders.Count(s => s.SupplierID == x.SupplierID) })
+                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = filteredOrders.Count(s => s.SupplierID == x.SupplierID) })
                 .Distinct().OrderBy(x => x.SupplierName);
+
+            //Fill the dropdown lists for Years and Months ...
+            var orderMonths = (from o in filteredOrders select new { Month = o.OrderDate.Value.Month }).Distinct();
+            var orderYears = (from o in filteredOrders select new { Year = o.OrderDate.Value.Year }).Distinct();
+
+            foreach (var item in orderMonths.OrderBy(m => m.Month))
+            {
+                months.Add(item.Month, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[item.Month - 1]);
+            }
+
+            foreach (var item in orderYears.OrderBy(y => y.Year))
+            {
+                years.Add(item.Year, item.Year.ToString());
+            }
 
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers); //supplierList;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "index");
@@ -91,10 +99,10 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Invoices/
-        [Route("Invoices")]
-        [Route("AllInvoices")]
-        [Route("~/LibraryAdmin/OrderDetails/InvoicesBySupplier")]
-        [Route("~/LibraryAdmin/OrderDetails/AllInvoices")]
+        //[Route("Invoices")]
+        //[Route("AllInvoices")]
+        //[Route("~/LibraryAdmin/OrderDetails/InvoicesBySupplier")]
+        //[Route("~/LibraryAdmin/OrderDetails/AllInvoices")]
         public ActionResult AllInvoices(int listSupplier = 0, int month = 0, int year = 0)
         {
             if (year == 0)
@@ -154,11 +162,11 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/AllReceived
-        [Route("Received")]
-        [Route("AllReceived")]
-        [Route("ReceivedOnly")]
-        [Route("ViewReceived")]
-        [Route("~/LibraryAdmin/OrderDetails/AllReceived")]
+        //[Route("Received")]
+        //[Route("AllReceived")]
+        //[Route("ReceivedOnly")]
+        //[Route("ViewReceived")]
+        //[Route("~/LibraryAdmin/OrderDetails/AllReceived")]
         public ActionResult AllReceived(int listSupplier = 0)
         {
             //Get the list of suppliers with orders ...
@@ -180,6 +188,8 @@ namespace slls.Areas.LibraryAdmin
                 Orders = receivedOrders
             };
 
+            ViewBag.InfoMsg =
+                "To limit the list to just those orders from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllReceived");
             ViewBag.Title = "Received " + DbRes.T("Orders", "EntityType");
@@ -187,11 +197,11 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/AllUnassigned
-        [Route("Unassigned")]
-        [Route("AllUnassigned")]
-        [Route("Unallocated")]
-        [Route("AllUnallocated")]
-        [Route("~/LibraryAdmin/OrderDetails/AllUnassigned")]
+        //[Route("Unassigned")]
+        //[Route("AllUnassigned")]
+        //[Route("Unallocated")]
+        //[Route("AllUnallocated")]
+        //[Route("~/LibraryAdmin/OrderDetails/AllUnassigned")]
         public ActionResult AllUnassigned(int listSupplier = 0)
         {
             //Get the list of suppliers with unassigned orders ...
@@ -213,6 +223,8 @@ namespace slls.Areas.LibraryAdmin
                 Orders = unallocatedOrders
             };
 
+            ViewBag.InfoMsg =
+                "To limit the list to just those orders from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AlUnassigned");
             ViewBag.Title = "Unallocated " + DbRes.T("Orders", "EntityType");
@@ -220,11 +232,11 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/OutstandingOrders
-        [Route("Outstanding")]
-        [Route("AllOutstanding")]
-        [Route("OutstandingOnly")]
-        [Route("ViewOutstanding")]
-        [Route("~/LibraryAdmin/OrderDetails/AllOutstanding")]
+        //[Route("Outstanding")]
+        //[Route("AllOutstanding")]
+        //[Route("OutstandingOnly")]
+        //[Route("ViewOutstanding")]
+        //[Route("~/LibraryAdmin/OrderDetails/AllOutstanding")]
         public ActionResult AllOutstanding(int listSupplier = 0)
         {
             //Get the list of suppliers with outstanding orders ...
@@ -246,6 +258,8 @@ namespace slls.Areas.LibraryAdmin
                 Orders = outstandingOrders
             };
 
+            ViewBag.InfoMsg =
+                "To limit the list to just those orders from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOutstanding");
             ViewBag.Title = "Current (Outstanding) " + DbRes.T("Orders", "EntityType");
@@ -253,11 +267,11 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/OverdueOrders
-        [Route("Overdue")]
-        [Route("AllOverdue")]
-        [Route("OverdueOnly")]
-        [Route("ViewOverdue")]
-        [Route("~/LibraryAdmin/OrderDetails/AllOverdue")]
+        //[Route("Overdue")]
+        //[Route("AllOverdue")]
+        //[Route("OverdueOnly")]
+        //[Route("ViewOverdue")]
+        //[Route("~/LibraryAdmin/OrderDetails/AllOverdue")]
         public ActionResult AllOverdue(int listSupplier = 0)
         {
             //Get the list of suppliers with overdue orders ...
@@ -280,6 +294,8 @@ namespace slls.Areas.LibraryAdmin
                 Orders = overdueOrders
             };
 
+            ViewBag.InfoMsg =
+                "To limit the list to just those orders from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOverdue");
             ViewBag.Title = "Overdue " + DbRes.T("Orders", "EntityType");
@@ -287,11 +303,11 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/AllOnApproval
-        [Route("OnApproval")]
-        [Route("AllOnApproval")]
-        [Route("OnApprovalOnly")]
-        [Route("ViewOnApproval")]
-        [Route("~/LibraryAdmin/OrderDetails/AllOnApproval")]
+        //[Route("OnApproval")]
+        //[Route("AllOnApproval")]
+        //[Route("OnApprovalOnly")]
+        //[Route("ViewOnApproval")]
+        //[Route("~/LibraryAdmin/OrderDetails/AllOnApproval")]
         public ActionResult AllOnApproval(int listSupplier = 0)
         {
             //Get the list of suppliers with outstanding orders ...
@@ -314,6 +330,8 @@ namespace slls.Areas.LibraryAdmin
                 AllUsers = UserManager.Users.AsEnumerable()
             };
 
+            ViewBag.InfoMsg =
+                "To limit the list to just those orders from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOnApproval");
             ViewBag.Title = DbRes.T("Orders", "EntityType") + " On Approval";
@@ -321,9 +339,9 @@ namespace slls.Areas.LibraryAdmin
         }
 
         //GET: Select an order ...
-        [Route("Select")]
-        [Route("SelectOrder")]
-        [Route("~/LibraryAdmin/OrderDetails/Select")]
+        //[Route("Select")]
+        //[Route("SelectOrder")]
+        //[Route("~/LibraryAdmin/OrderDetails/Select")]
         public ActionResult Select(string callingAction = "edit")
         {
             var viewModel = new SelectOrderViewmodel {Orders = SelectListHelper.OrdersList()};
@@ -333,9 +351,9 @@ namespace slls.Areas.LibraryAdmin
             {
                 case "edit":
                 {
-                    ViewBag.Title = "Edit Order";
-                    viewModel.BtnText = "Edit Order";
-                    viewModel.Message = "Select an Order to edit";
+                    ViewBag.Title = "Edit/Update Order";
+                    viewModel.BtnText = "Edit/Update Order";
+                    viewModel.Message = "Select an Order to edit/update";
                     viewModel.ReturnAction = "Edit";
                     break;
                 }
@@ -367,6 +385,16 @@ namespace slls.Areas.LibraryAdmin
                     break;
                 }
 
+                case "addInvoice":
+                {
+                    ViewBag.Title = "Add Invoice";
+                    viewModel.BtnText = "Add Invoice";
+                    viewModel.Message = "Select an Order to add an Invoice to";
+                    viewModel.ReturnAction = "Edit";
+                    viewModel.Tab = "invoice";
+                    break;
+                }
+
                 default:
                 {
                     ViewBag.Title = "Select Order";
@@ -389,7 +417,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 return null;
             }
-            return RedirectToAction(viewModel.ReturnAction, new { id = viewModel.OrderID });
+            return RedirectToAction(viewModel.ReturnAction, new { id = viewModel.OrderID, tab = viewModel.Tab });
         }
 
         public ActionResult PrintOrder(int id = 0)
@@ -413,8 +441,8 @@ namespace slls.Areas.LibraryAdmin
 
 
         // GET: Admin/Orders/BySupplier
-        [Route("BySupplier")]
-        [Route("~/LibraryAdmin/OrderDetails/OrdersBySupplier")]
+        //[Route("BySupplier")]
+        //[Route("~/LibraryAdmin/OrderDetails/OrdersBySupplier")]
         public ActionResult OrdersBySupplier(int listSupplier = 0)
         {
             //Get the list of suppliers with orders ...
@@ -444,8 +472,8 @@ namespace slls.Areas.LibraryAdmin
 
 
         // GET: Admin/Orders/ByRequester
-        [Route("ByRequester")]
-        [Route("~/LibraryAdmin/OrderDetails/OrdersByRequester")]
+        //[Route("ByRequester")]
+        //[Route("~/LibraryAdmin/OrderDetails/OrdersByRequester")]
         public ActionResult OrdersByRequester(string listRequesters = "")
         {
             //Get the list of requesters with orders ...
@@ -480,8 +508,8 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/ByAuthoriser
-        [Route("ByAuthoriser")]
-        [Route("~/LibraryAdmin/OrderDetails/OrdersByAuthoriser")]
+        //[Route("ByAuthoriser")]
+        //[Route("~/LibraryAdmin/OrderDetails/OrdersByAuthoriser")]
         public ActionResult OrdersByAuthoriser(string listAuthorisers = "")
         {
             //Get the list of authorisers with orders ...
@@ -516,8 +544,8 @@ namespace slls.Areas.LibraryAdmin
 
 
         // GET: Admin/Orders/ByTitle
-        [Route("ByTitle")]
-        [Route("~/LibraryAdmin/OrderDetails/OrdersByTitle")]
+        //[Route("ByTitle")]
+        //[Route("~/LibraryAdmin/OrderDetails/OrdersByTitle")]
         public ActionResult OrdersByTitle(int listTitles = 0)
         {
             //Get the list of ordered titles  ...
@@ -563,8 +591,8 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/ByBudgetCode
-        [Route("ByBudgetCode")]
-        [Route("~/LibraryAdmin/OrderDetails/OrdersByBudgetCode")]
+        //[Route("ByBudgetCode")]
+        //[Route("~/LibraryAdmin/OrderDetails/OrdersByBudgetCode")]
         public ActionResult OrdersByBudgetCode(int listBudgetCodes = 0)
         {
             //Get the list of ordered titles  ...
@@ -603,8 +631,8 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/ByCategory
-        [Route("ByCategory")]
-        [Route("~/LibraryAdmin/OrderDetails/OrdersByCategory")]
+        //[Route("ByCategory")]
+        //[Route("~/LibraryAdmin/OrderDetails/OrdersByCategory")]
         public ActionResult OrdersByCategory(int listCategories = 0)
         {
             //Get the list of ordered titles  ...
@@ -643,8 +671,8 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/ByAccountYear
-        [Route("ByAccountYear")]
-        [Route("~/LibraryAdmin/OrderDetails/OrdersByAccountYear")]
+        //[Route("ByAccountYear")]
+        //[Route("~/LibraryAdmin/OrderDetails/OrdersByAccountYear")]
         public ActionResult OrdersByAccountYear(int listAccountYears = 0)
         {
             //Get the list of AccountYears  ...
@@ -682,8 +710,8 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/OrderDetails/Add/5
-        [Route("Add/{id?}")]
-        [Route("~/LibraryAdmin/OrderDetails/Add/{id?}")]
+        //[Route("Add/{id?}")]
+        //[Route("~/LibraryAdmin/OrderDetails/Add/{id?}")]
         public ActionResult Add(int? id)
         {
             if (id == null)
@@ -725,8 +753,8 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/OrderDetails/Create
-        [Route("Create/{id?}")]
-        [Route("~/LibraryAdmin/OrderDetails/Create/{id?}")]
+        //[Route("Create/{id?}")]
+        //[Route("~/LibraryAdmin/OrderDetails/Create/{id?}")]
         public ActionResult Create(int? id)
         {
             var titleid = id ?? 0;
@@ -782,6 +810,26 @@ namespace slls.Areas.LibraryAdmin
             return RedirectToAction("Add");
         }
 
+        public ActionResult AddInvoice(int id = 0)
+        {
+            if (id == 0)
+            {
+                return RedirectToAction("Select", new { callingAction = "addInvoice" });
+            }
+
+            var orderDetail = _db.OrderDetails.Find(id);
+            if (orderDetail == null)
+            {
+                return HttpNotFound();
+            }
+            if (orderDetail.Deleted)
+            {
+                return HttpNotFound();
+            }
+
+            return RedirectToAction("Edit", new { id = orderDetail.OrderID, tag = "invoice"});
+        }
+
         public ActionResult DuplicateOrder(int id = 0)
         {
             if (id == 0)
@@ -826,8 +874,8 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/OrderDetails/EditTitle/5
-        [Route("EditTitle/{id?}")]
-        [Route("~/LibraryAdmin/OrderDetails/EditTitle/{id}")]
+        //[Route("EditTitle/{id?}")]
+        //[Route("~/LibraryAdmin/OrderDetails/EditTitle/{id}")]
         public ActionResult EditTitle(int? id)
         {
             if (id == null)
@@ -838,14 +886,13 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/OrderDetails/Edit/5
-        [Route("Edit/{id?}")]
-        [Route("~/LibraryAdmin/OrderDetails/Edit/{id}")]
-        public ActionResult Edit(int? id, string callingController = "orderdetails")
+        public ActionResult Edit(int? id, string callingController = "orderdetails", string tab = "orderdetails", bool success = false)
         {
             if (id == 0)
             {
                 return RedirectToAction("Select", new { callingAction = "edit"});
             }
+
             var orderDetail = _db.OrderDetails.Find(id);
             if (orderDetail == null)
             {
@@ -890,56 +937,38 @@ namespace slls.Areas.LibraryAdmin
                 Suppliers = new SelectList(_db.Suppliers, "SupplierID", "SupplierName"),
                 RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
-                CallingController = callingController
+                CallingController = callingController,
+                Tab = tab
             };
 
-            //if (viewModel.CallingController == "titles")
-            //{
-            //    //Get all copies for this title ...
-            //    var query = _db.OrderDetails
-            //        .Where(x => x.TitleID == orderDetail.TitleID)
-            //        .OrderByDescending(x => x.OrderDate)
-            //        .ThenBy(x => x.OrderNo);
+            if (success)
+            {
+                TempData["SuccessMsg"] = "Order details have been updated successfully.";
+            }
 
-            //    //Get the index of where the current OrderID is in a list ordered by OrderNo ASC ..
-            //    var rowIndex = query.AsEnumerable().Select((x, index) => new { x.OrderID, index }).First(i => i.OrderID == id).index;
-
-            //    //Get the first OrderID ...
-            //    var firstId = query.AsEnumerable().Select(i => i.OrderID).First();
-
-            //    //Get the last OrderID ...
-            //    var lastId = query.AsEnumerable().Select(i => i.OrderID).Last();
-
-            //    //Get the next OrderID to move forward to ...
-            //    var nextId = query.AsEnumerable()
-            //        .OrderBy(i => i.OrderNo)
-            //        .SkipWhile(i => i.OrderID != id)
-            //        .Skip(1)
-            //        .Select(i => i.OrderID).FirstOrDefault();
-
-            //    //Get the previous OrderID to move back to ...
-            //    var previousId = query.AsEnumerable()
-            //        .OrderByDescending(i => i.OrderNo)
-            //        .SkipWhile(i => i.OrderID != id)
-            //        .Skip(1)
-            //        .Select(i => i.OrderID).FirstOrDefault();
-
-            //    ViewBag.FirstID = firstId;
-            //    ViewBag.LastID = lastId;
-            //    ViewBag.NextID = nextId;
-            //    ViewBag.PreviousID = previousId;
-            //    ViewBag.RowIndex = rowIndex + 1;
-            //    ViewBag.RecordCount = query.Count();
-            //    ViewBag.RecordType = "Order";
-
-            //}
-
+            //Check some values and issue info or warning messages if appropriate ...
+            if (orderDetail.ReceivedDate == null && orderDetail.InvoiceDate == null && orderDetail.InvoiceRef == null)
+            {
+                viewModel.WarningMsg =
+                    "<strong>Info: </strong>This order is still outstanding. You can add a receipt and invoice on the 'Invoices' tab'.";
+            }
+            if (orderDetail.ReceivedDate == null && (orderDetail.InvoiceDate != null || orderDetail.InvoiceRef != null))
+            {
+                viewModel.WarningMsg =
+                    "<strong>Info: </strong>An invoice has been entered for this order, but the order has not been marked as received and is still outstanding. You can enter a received date on the 'Invoices' tab'.";
+            }
+            if (orderDetail.ReceivedDate != null && (orderDetail.InvoiceDate == null && orderDetail.InvoiceRef == null))
+            {
+                viewModel.WarningMsg =
+                    "<strong>Info: </strong>This order has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
+            }
+            
             ViewData["selectOrder"] = SelectListHelper.OrdersList(id.Value);
             ViewData["AccountYearID"] = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", orderDetail.AccountYearID);
             ViewData["BudgetCodeID"] = new SelectList(_db.BudgetCodes, "BudgetCodeID", "BudgetCode1", orderDetail.BudgetCodeID);
             ViewData["OrderCategoryID"] = new SelectList(_db.OrderCategories, "OrderCategoryID", "OrderCategory1", orderDetail.OrderCategoryID);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "Edit");
-            ViewBag.Title = "Order Details";
+            ViewBag.Title = "Edit/Update Order";
             return View(viewModel);
         }
 
@@ -990,11 +1019,7 @@ namespace slls.Areas.LibraryAdmin
 
                 _db.Entry(orderDetail).State = EntityState.Modified;
                 _db.SaveChanges();
-                if (viewModel.CallingController == "orderdetails")
-                {
-                    return RedirectToAction("Index");
-                }
-                return RedirectToAction("Edit", "Titles", new { id = viewModel.TitleID });
+                return RedirectToAction("Edit", "OrderDetails", new { id = viewModel.OrderID, success = true });
             }
             ViewData["selectOrder"] = SelectListHelper.OrdersList(viewModel.OrderID);
             ViewData["AccountYearID"] = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", viewModel.AccountYearID);
@@ -1007,8 +1032,8 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/OrderDetails/Edit/5
-        [Route("AddReceipt/{id?}")]
-        [Route("~/LibraryAdmin/OrderDetails/AddReceipt/{id}")]
+        //[Route("AddReceipt/{id?}")]
+        //[Route("~/LibraryAdmin/OrderDetails/AddReceipt/{id}")]
         public ActionResult AddReceipt(int? id, string callingAction = "index")
         {
             if (id == null)
@@ -1046,10 +1071,16 @@ namespace slls.Areas.LibraryAdmin
                 CallingAction = callingAction
             };
 
+            if (orderDetail.InvoiceDate == null || orderDetail.ReceivedDate == null || orderDetail.Passed == null)
+            {
+                viewModel.DateWarningMsg =
+                    "<p><strong>Note: </strong>The dates highlighted in <span style=\"color: #3c763d;\"><strong>green</strong></span> have been auto-filled for you.  Please check to ensure that the dates are corect for your invoice.</p>";
+            }
+
             ViewData["AccountYearID"] = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", orderDetail.AccountYearID);
             ViewData["BudgetCodeID"] = new SelectList(_db.BudgetCodes, "BudgetCodeID", "BudgetCode1", orderDetail.BudgetCodeID);
             ViewData["OrderCategoryID"] = new SelectList(_db.OrderCategories, "OrderCategoryID", "OrderCategory1", orderDetail.OrderCategoryID);
-            ViewBag.Title = "Order Receipt";
+            ViewBag.Title = "Add Invoice";
             return PartialView(viewModel);
         }
 
@@ -1084,11 +1115,12 @@ namespace slls.Areas.LibraryAdmin
                 _db.Entry(orderDetail).State = EntityState.Modified;
                 _db.SaveChanges();
 
-                if (!string.IsNullOrEmpty(viewModel.CallingAction))
-                {
-                    return RedirectToAction(viewModel.CallingAction);
-                }
-                return RedirectToAction("Index");
+                //if (!string.IsNullOrEmpty(viewModel.CallingAction))
+                //{
+                //    return RedirectToAction(viewModel.CallingAction);
+                //}
+                //return RedirectToAction("Index");
+                return Json( new { success = true });
 
             }
             return PartialView("AddReceipt", viewModel);
@@ -1096,8 +1128,8 @@ namespace slls.Areas.LibraryAdmin
 
 
 
-        [Route("ReportGenerator")]
-        [Route("~/LibraryAdmin/OrderDetails/ReportGenerator")]
+        //[Route("ReportGenerator")]
+        //[Route("~/LibraryAdmin/OrderDetails/ReportGenerator")]
         public ActionResult ReportGenerator()
         {
             if (TempData["NoReportSelected"] != null)

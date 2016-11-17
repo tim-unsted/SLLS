@@ -14,17 +14,20 @@
                 @Html.DropDownList("ListSupplier", null, "Filter by Supplier", new {@class = "form-control", onchange = "this.form.submit();"})
             </div>
             <div class="col-md-2">
-                @Html.DropDownList("year", new SelectList(ViewBag.Years, "Key", "Value"), new { @class = "form-control", onchange = "this.form.submit();" })
+                @Html.DropDownList("year", new SelectList(ViewBag.Years, "Key", "Value"), new {@class = "form-control", onchange = "this.form.submit();"})
             </div>
             <div class="col-md-3">
                 @Html.DropDownList("month", new SelectList(ViewBag.Months, "Key", "Value"), new {@class = "form-control", onchange = "this.form.submit();"})
             </div>
-                
         </div>
+        <br/>
+        <p>
+            <a href="@Url.Action("Create", "OrderDetails")" title="Add new @DbRes.T("Orders.Order", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+        </p>
     </div>
 }
 
-<a href="@Url.Action("Create", "OrderDetails")" title="Add new @DbRes.T("Orders.Order", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+
 
 <div>
     @Html.Partial("_Index", Model)

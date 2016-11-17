@@ -1013,9 +1013,23 @@ namespace slls.Utils.Helpers
                 }
             };
 
+            var title = "Item:";
+            var supplier = "Supplier:";
+            var orderNo = "Order:";
+            var orderDate = "Order Date:";
+            title = title.PadRight(50, '\u00A0');
+            supplier = supplier.PadRight(40, '\u00A0');
+            orderNo = orderNo.PadRight(20, '\u00A0');
+
+            ordersList.Add(new SelectListItem
+            {
+                Text = string.Format("{0} {1} {2} {3}", title, supplier, orderNo, orderDate),
+                Value = "-1"
+            });
+
             //Add the actual orders ...
             var validOrders = db.OrderDetails.Where(o => o.Title.Title1 != null);
-            foreach (var item in validOrders.OrderBy(x => x.Title.Title1)) //.ThenBy(x => x.Supplier.SupplierName).ThenByDescending(x => x.OrderDate))
+            foreach (var item in validOrders.OrderBy(x => x.Title.Title1.Substring(x.Title.NonFilingChars)).ThenByDescending(x => x.OrderID))
             {
                 ordersList.Add(new SelectListItem
                 {
@@ -1043,7 +1057,7 @@ namespace slls.Utils.Helpers
             }
             supplierList.AddRange(suppliers.Select(item => new SelectListItem
             {
-                Text = item.SupplierName + " (" + item.Count.ToString() + ")",
+                Text = item.SupplierName,// + " (" + item.Count.ToString() + ")",
                 Value = item.SupplierId.ToString()
             }));
 

@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using slls.Localization;
+using slls.Utils.Helpers;
 
 namespace slls.Models
 {
@@ -135,8 +136,16 @@ namespace slls.Models
         {
             get
             {
-               // return string.Format("{0}:   ({1}:  {2})", Title.Title1, Supplier.SupplierName, OrderDate);
-                return Title.Title1;
+                var orderNumber = OrderNo ?? OrderID.ToString();
+                var title = StringHelper.Truncate(Title.Title1, 45);
+                var supplier = Supplier == null ? "".PadRight(35, '\u00A0') : StringHelper.Truncate(Supplier.SupplierName, 30);
+                var dateOrdered = string.Format("{0:dd-MMM-yyyy}", OrderDate);
+                
+                title = title.PadRight(50, '\u00A0');
+                supplier = supplier.PadRight(40, '\u00A0');
+                orderNumber = orderNumber.PadRight(20, '\u00A0');
+
+                return string.Format("{0} {1} {2} {3}", title, supplier, orderNumber, dateOrdered);
             }
         }
 

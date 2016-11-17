@@ -102,6 +102,13 @@ namespace slls.ViewModels
 
     public class OrderDetailsEditViewModel
     {
+        public OrderDetailsEditViewModel()
+        {
+            InfoMsg = "";
+            WarningMsg = "";
+            Tab = "orderdetails";
+        }
+        
         [Key]
         public int OrderID { get; set; }
 
@@ -213,6 +220,15 @@ namespace slls.ViewModels
         public string Notes { get; set; }
 
         public string CallingController { get; set; }
+
+        public string Tab { get; set; } 
+
+        [AllowHtml]
+        public string InfoMsg { get; set; }
+
+        [AllowHtml]
+        public string WarningMsg { get; set; }
+
     }
 
     public class OrderReceiptsViewModel
@@ -276,6 +292,9 @@ namespace slls.ViewModels
         public string CallingController { get; set; }
 
         public string CallingAction { get; set; }
+
+        [AllowHtml]
+        public string DateWarningMsg { get; set; }
     }
 
     public class OrderDetailsDeleteViewModel
@@ -309,6 +328,11 @@ namespace slls.ViewModels
 
     public class SelectOrderViewmodel
     {
+        public SelectOrderViewmodel()
+        {
+            Tab = "orderdetails";
+        }
+        
         public string Title { get; set; }
         public string Message { get; set; }
         public string BtnText { get; set; }
@@ -319,6 +343,8 @@ namespace slls.ViewModels
         [Range(1, Int32.MaxValue, ErrorMessage = "Please select an Order!")]
         [Required(ErrorMessage = "Please select an Order!")]
         public int OrderID { get; set; }
+
+        public string Tab { get; set; } 
     }
     
 }

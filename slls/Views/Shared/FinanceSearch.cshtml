@@ -7,7 +7,7 @@
         <div class="row">
             <div class=" col-md-12">
                 <div class="form-group form-inline" style="margin-bottom: 0;">
-                    @Html.LabelFor(model => model.SearchString)
+                    @Html.LabelFor(model => model.SearchString):&nbsp;
                     @Html.EditorFor(model => model.SearchString, new { htmlAttributes = new { @class = "form-control", placeholder = "Find ...", style = "width: 50%", id = "MainSearchString" } })
                     @Html.DropDownList("SearchField", null, new { @class = "form-control", style = "width: 20%" })
                     <button type="submit" id="btnSubmit" value="Find" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-search"></span> Find</button>
