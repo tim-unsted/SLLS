@@ -22,7 +22,7 @@
                 "targets": [0],
                 "data": 0,
                 "render": function (data, type, row) {
-                    return '<a href="Edit/' + row[11] + '" class="btn-link">' + data + '</a>';
+                    return '<a href="Edit/' + row[11] + '" class="btn-link" title="Edit/Update Order">' + data + '</a>';
                 }
             },
             {
@@ -30,7 +30,7 @@
                 "targets": [1],
                 "data": 1,
                 "render": function (data, type, row) {
-                    return '<a href="EditTitle/' + row[10] + '" class="btn-link">' + data + '</a>';
+                    return '<a href="EditTitle/' + row[10] + '" class="btn-link" title="View/Edit Title">' + data + '</a>';
                 }
             },
             {
@@ -182,9 +182,13 @@
                     @Html.DisplayFor(modelItem => item.OrderID)
                 </td>
                 <td class="just-right">
+                    @if (item.InvoiceDate == null && item.InvoiceRef == null)
+                    {
+                        <a href="@Url.Action("AddReceipt", new {id = item.OrderID, callingAction = @Html.CurrentViewName()})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Add Invoice">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-tag"></span></a>
+                    }
                     @if (item.ReceivedDate == null)
                     {
-                        <a href="@Url.Action("AddReceipt", new { id = item.OrderID, callingAction = @Html.CurrentViewName() })" class="btn btn-link modal-link" title="Add Receipt">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-tag"></span></a>
+                        <a href="@Url.Action("QuickReceipt", new {id = item.OrderID})" class="btn btn-link modal-link" data-toggle="modal" data-target="#stdModal" title="Quick Receipt">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-calendar"></span></a>
                     }
                     <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     <a href="@Url.Action("Edit", new {id = item.OrderID})" class="btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>

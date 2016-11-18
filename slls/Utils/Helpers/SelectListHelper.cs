@@ -306,11 +306,11 @@ namespace slls.Utils.Helpers
             }
 
             //Add the actual author names ...
-            foreach (var item in db.Titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+            foreach (var item in db.Titles.Where(t => t.Deleted == false).OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
             {
                 titlesList.Add(new SelectListItem
                 {
-                    Text = string.IsNullOrEmpty(item.Title1) ? "<empty title>" : item.Title1,
+                    Text = string.IsNullOrEmpty(item.Title1) ? "<empty title>" : StringHelper.Truncate(item.Title1, 100),
                     Value = item.TitleID.ToString()
                 });
             }
@@ -1001,7 +1001,7 @@ namespace slls.Utils.Helpers
             return libraryUserList.Select(x => new SelectListItem { Selected = (x.Value == id), Text = x.Text, Value = x.Value });
         }
 
-        public static IEnumerable<SelectListItem> OrdersList(int id = 0, string msg = "Select an ")
+        public static IEnumerable<SelectListItem> OrdersList(int id = 0, string msg = "Select an ", string filter = "")
         {
             DbEntities db = new DbEntities();
             var ordersList = new List<SelectListItem>
@@ -1029,6 +1029,12 @@ namespace slls.Utils.Helpers
 
             //Add the actual orders ...
             var validOrders = db.OrderDetails.Where(o => o.Title.Title1 != null);
+
+            if (filter == "noinvoice")
+            {
+                validOrders = validOrders.Where(o => o.InvoiceDate == null && o.InvoiceRef == null);
+            }
+
             foreach (var item in validOrders.OrderBy(x => x.Title.Title1.Substring(x.Title.NonFilingChars)).ThenByDescending(x => x.OrderID))
             {
                 ordersList.Add(new SelectListItem
@@ -1043,7 +1049,7 @@ namespace slls.Utils.Helpers
 
 
         //Provides a list of suppliers based on the data provided ...
-        public static IEnumerable<SelectListItem> SuppliersListCustom(IOrderedQueryable<SupplierList> suppliers, bool addDefault = false )
+        public static IEnumerable<SelectListItem> SuppliersListCustom(IOrderedQueryable<SupplierList> suppliers, bool addDefault = true )
         {
             var supplierList = new List<SelectListItem>();
 
@@ -1057,7 +1063,7 @@ namespace slls.Utils.Helpers
             }
             supplierList.AddRange(suppliers.Select(item => new SelectListItem
             {
-                Text = item.SupplierName,// + " (" + item.Count.ToString() + ")",
+                Text = item.SupplierName + " (" + item.Count.ToString() + ")",
                 Value = item.SupplierId.ToString()
             }));
 

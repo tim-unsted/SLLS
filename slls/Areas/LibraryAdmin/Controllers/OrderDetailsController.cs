@@ -344,7 +344,7 @@ namespace slls.Areas.LibraryAdmin
         //[Route("~/LibraryAdmin/OrderDetails/Select")]
         public ActionResult Select(string callingAction = "edit")
         {
-            var viewModel = new SelectOrderViewmodel {Orders = SelectListHelper.OrdersList()};
+            var viewModel = new SelectOrderViewmodel(); // {Orders = SelectListHelper.OrdersList()};
 
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso");
             switch (callingAction)
@@ -354,7 +354,9 @@ namespace slls.Areas.LibraryAdmin
                     ViewBag.Title = "Edit/Update Order";
                     viewModel.BtnText = "Edit/Update Order";
                     viewModel.Message = "Select an Order to edit/update";
+                    viewModel.HelpText = "Select the order you wish to edit/update from the dropdown list of available orders below.";
                     viewModel.ReturnAction = "Edit";
+                    viewModel.Orders = SelectListHelper.OrdersList();
                     break;
                 }
 
@@ -363,7 +365,9 @@ namespace slls.Areas.LibraryAdmin
                     ViewBag.Title = "Print Order";
                     viewModel.BtnText = "Print Order";
                     viewModel.Message = "Select an Order to Print";
+                    viewModel.HelpText = "Select the order you wishto print from the dropdown list of available orders below.";
                     viewModel.ReturnAction = "PrintOrder";
+                    viewModel.Orders = SelectListHelper.OrdersList();
                     break;
                 }
 
@@ -371,8 +375,10 @@ namespace slls.Areas.LibraryAdmin
                 {
                     ViewBag.Title = "Reprint Order";
                     viewModel.BtnText = "Reprint Order";
-                    viewModel.Message = "Select an Order to Reprint";
+                    viewModel.Message = "Select an order to Reprint";
+                    viewModel.HelpText = "Select the Order you wish to reprint from the dropdown list of available orders below.";
                     viewModel.ReturnAction = "PrintOrder";
+                    viewModel.Orders = SelectListHelper.OrdersList();
                     break;
                 }
 
@@ -381,7 +387,9 @@ namespace slls.Areas.LibraryAdmin
                     ViewBag.Title = "Duplicate Order";
                     viewModel.BtnText = "Duplicate Order";
                     viewModel.Message = "Select an Order to Duplicate";
+                    viewModel.HelpText = "Select the Order you wish to duplicate from the dropdown list of available orders below.";
                     viewModel.ReturnAction = "DuplicateOrder";
+                    viewModel.Orders = SelectListHelper.OrdersList();
                     break;
                 }
 
@@ -390,8 +398,10 @@ namespace slls.Areas.LibraryAdmin
                     ViewBag.Title = "Add Invoice";
                     viewModel.BtnText = "Add Invoice";
                     viewModel.Message = "Select an Order to add an Invoice to";
-                    viewModel.ReturnAction = "Edit";
-                    viewModel.Tab = "invoice";
+                    viewModel.HelpText = "<strong>Note: </strong>The list below <emp>only</emp> shows order with no invoice. To see all orders, choose another option.";
+                    viewModel.ReturnAction = "AddInvoice";
+                    viewModel.Tab = "#invoice";
+                    viewModel.Orders = SelectListHelper.OrdersList(filter:"noinvoice");
                     break;
                 }
 
@@ -400,7 +410,9 @@ namespace slls.Areas.LibraryAdmin
                     ViewBag.Title = "Select Order";
                     viewModel.BtnText = "Ok";
                     viewModel.Message = "Select an Order";
+                    viewModel.HelpText = "Select an order from the dropdown list of available orders below.";
                     viewModel.ReturnAction = "Edit";
+                    viewModel.Orders = SelectListHelper.OrdersList();
                     break;
                 }
             }
@@ -417,7 +429,8 @@ namespace slls.Areas.LibraryAdmin
             {
                 return null;
             }
-            return RedirectToAction(viewModel.ReturnAction, new { id = viewModel.OrderID, tab = viewModel.Tab });
+            TempData["GoToTab"] = viewModel.Tab;
+            return RedirectToAction(viewModel.ReturnAction, new { id = viewModel.OrderID });
         }
 
         public ActionResult PrintOrder(int id = 0)
@@ -765,7 +778,8 @@ namespace slls.Areas.LibraryAdmin
                 VAT = 0,
                 OrderDate = DateTime.Now,
                 Expected = DateTime.Now.AddDays(28),
-                Titles = new SelectList(_db.Titles, "TitleID", "Title1", titleid),
+                //Titles = new SelectList(_db.Titles, "TitleID", "Title1", titleid),
+                Titles = SelectListHelper.TitlesList(titleid),
                 Suppliers = SelectListHelper.SupplierList(PublicFunctions.GetDefaultValue("OrderDetails", "SupplierID")),
                 OrderCategories = SelectListHelper.OrderCategoryList(PublicFunctions.GetDefaultValue("OrderDetails", "OrderCategoryID")),
                 BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a " + DbRes.T("BudgetCode.Budget_Code", "FieldDisplayName"), true, false),
@@ -796,21 +810,26 @@ namespace slls.Areas.LibraryAdmin
                 Price = viewModel.Price ?? 0,
                 VAT = viewModel.VAT ?? 0,
                 SupplierID = viewModel.SupplierID == 0 ? 1 : viewModel.SupplierID,
-                Notes = viewModel.Notes
+                Notes = viewModel.Notes,
+                ReceivedDate = viewModel.ReceivedDate,
+                Passed = viewModel.Passed,
+                InvoiceDate = viewModel.InvoiceDate,
+                InvoiceRef = viewModel.InvoiceRef,
+                Link = viewModel.Link
             };
 
             if (ModelState.IsValid)
             {
                 _db.OrderDetails.Add(newOrder);
                 _db.SaveChanges();
-                //return viewModel.CallingAction == "add" ? RedirectToAction("Edit", "Titles", new { id = viewModel.TitleID }) : RedirectToAction("AllOutstanding", new { listSupplier = viewModel.SupplierID });
-                return Json(new { success = true });
+                //return Json(new { success = true });
+                return RedirectToAction("Edit", new {id = newOrder.OrderID});
             }
             
             return RedirectToAction("Add");
         }
 
-        public ActionResult AddInvoice(int id = 0)
+        public ActionResult AddInvoice(int id = 0, bool success = false)
         {
             if (id == 0)
             {
@@ -826,8 +845,75 @@ namespace slls.Areas.LibraryAdmin
             {
                 return HttpNotFound();
             }
+            
+            var viewModel = new OrderDetailsEditViewModel
+            {
+                OrderID = orderDetail.OrderID,
+                OrderDate = orderDetail.OrderDate,
+                OrderCategoryID = orderDetail.OrderCategoryID,
+                OrderNo = orderDetail.OrderNo,
+                OnApproval = orderDetail.OnApproval,
+                AccountYearID = orderDetail.AccountYearID,
+                Authority = orderDetail.AuthoriserUser == null ? null : orderDetail.AuthoriserUser.Id,
+                Accepted = orderDetail.Accepted,
+                BudgetCodeID = orderDetail.BudgetCodeID,
+                RequestedBy = orderDetail.RequesterUser == null ? null : orderDetail.RequesterUser.Id,
+                Cancelled = orderDetail.Cancelled,
+                Chased = orderDetail.Chased,
+                NumCopies = orderDetail.NumCopies,
+                InvoiceDate = orderDetail.InvoiceDate,
+                MonthSubDue = orderDetail.MonthSubDue,
+                ReceivedDate = orderDetail.ReceivedDate,
+                ReturnedDate = orderDetail.ReturnedDate,
+                Expected = orderDetail.Expected,
+                InvoiceRef = orderDetail.InvoiceRef,
+                Item = orderDetail.Item,
+                TitleID = orderDetail.TitleID,
+                Link = orderDetail.Link,
+                Notes = orderDetail.Notes,
+                Price = orderDetail.Price,
+                Passed = orderDetail.Passed,
+                Report = orderDetail.Report,
+                SupplierID = orderDetail.SupplierID,
+                VAT = orderDetail.VAT,
+                Titles = new SelectList(_db.Titles, "TitleID", "Title1"),
+                Suppliers = new SelectList(_db.Suppliers, "SupplierID", "SupplierName"),
+                RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
+                AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
+                CallingAction = "AddInvoice",
+                SelectedTab = "#invoice"
+            };
 
-            return RedirectToAction("Edit", new { id = orderDetail.OrderID, tag = "invoice"});
+            if (success && viewModel.InvoiceDate != null)
+            {
+                TempData["SuccessMsg"] = "Invoice added successfully.";
+                ViewBag.Title = "Order - Full Details";
+                ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
+            }
+            else
+            {
+                ViewBag.Title = "Add Invoice";
+                ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID, filter: "noinvoice");
+            }
+
+            //Check some values and issue info or warning messages if appropriate ...
+            if (orderDetail.ReceivedDate == null && (orderDetail.InvoiceDate != null || orderDetail.InvoiceRef != null))
+            {
+                viewModel.WarningMsg =
+                    "<strong>Info: </strong>An invoice has been entered for this order, but the order has not been marked as received and is still outstanding. You can enter a received date on the 'Invoices' tab'.";
+            }
+            if (orderDetail.ReceivedDate != null && (orderDetail.InvoiceDate == null && orderDetail.InvoiceRef == null))
+            {
+                viewModel.WarningMsg =
+                    "<strong>Info: </strong>This order has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
+            }
+
+            //ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID, filter: "noinvoice");
+            ViewData["AccountYearID"] = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", orderDetail.AccountYearID);
+            ViewData["BudgetCodeID"] = new SelectList(_db.BudgetCodes, "BudgetCodeID", "BudgetCode1", orderDetail.BudgetCodeID);
+            ViewData["OrderCategoryID"] = new SelectList(_db.OrderCategories, "OrderCategoryID", "OrderCategory1", orderDetail.OrderCategoryID);
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AddInvoice");
+            return View("AddInvoice", viewModel);
         }
 
         public ActionResult DuplicateOrder(int id = 0)
@@ -886,7 +972,7 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/OrderDetails/Edit/5
-        public ActionResult Edit(int? id, string callingController = "orderdetails", string tab = "orderdetails", bool success = false)
+        public ActionResult Edit(int? id, bool success = false)
         {
             if (id == 0)
             {
@@ -937,9 +1023,13 @@ namespace slls.Areas.LibraryAdmin
                 Suppliers = new SelectList(_db.Suppliers, "SupplierID", "SupplierName"),
                 RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
-                CallingController = callingController,
-                Tab = tab
+                CallingAction = "Edit"
             };
+
+            //if (TempData["GoToTab"] != null)
+            //{
+            //    viewModel.SelectedTab = TempData["GoToTab"].ToString();
+            //}
 
             if (success)
             {
@@ -962,8 +1052,24 @@ namespace slls.Areas.LibraryAdmin
                 viewModel.WarningMsg =
                     "<strong>Info: </strong>This order has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
             }
-            
-            ViewData["selectOrder"] = SelectListHelper.OrdersList(id.Value);
+
+            //if (TempData["FormFunction"] != null)
+            //{
+            //    if (TempData["FormFunction"].ToString() == "addInvoice")
+            //    {
+            //        ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID,filter:"noinvoice");
+            //    }
+            //    else
+            //    {
+            //        ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
+            //    }
+            //}
+            //else
+            //{
+            //    ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
+            //}
+
+            ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
             ViewData["AccountYearID"] = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", orderDetail.AccountYearID);
             ViewData["BudgetCodeID"] = new SelectList(_db.BudgetCodes, "BudgetCodeID", "BudgetCode1", orderDetail.BudgetCodeID);
             ViewData["OrderCategoryID"] = new SelectList(_db.OrderCategories, "OrderCategoryID", "OrderCategory1", orderDetail.OrderCategoryID);
@@ -975,7 +1081,7 @@ namespace slls.Areas.LibraryAdmin
         // POST: LibraryAdmin/OrderDetails/Update/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Update([Bind(Include = "OrderID,OrderNo,OrderDate,SupplierID,TitleID,Item,NumCopies,Price,VAT,Authority,RequestedBy,OnApproval,Expected,AccountYearID,OrderCategoryID,BudgetCodeID,Cancelled,Chased,Report,ReceivedDate,Accepted,ReturnedDate,InvoiceRef,Passed,MonthSubDue,InvoiceDate,Link,Notes,CallingController")] OrderDetailsEditViewModel viewModel)
+        public ActionResult Update([Bind(Include = "OrderID,OrderNo,OrderDate,SupplierID,TitleID,Item,NumCopies,Price,VAT,Authority,RequestedBy,OnApproval,Expected,AccountYearID,OrderCategoryID,BudgetCodeID,Cancelled,Chased,Report,ReceivedDate,Accepted,ReturnedDate,InvoiceRef,Passed,MonthSubDue,InvoiceDate,Link,Notes,CallingAction,SelectedTab")] OrderDetailsEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -1019,21 +1125,41 @@ namespace slls.Areas.LibraryAdmin
 
                 _db.Entry(orderDetail).State = EntityState.Modified;
                 _db.SaveChanges();
-                return RedirectToAction("Edit", "OrderDetails", new { id = viewModel.OrderID, success = true });
+                return RedirectToAction(viewModel.CallingAction, "OrderDetails", new { id = viewModel.OrderID, success = true });
             }
-            ViewData["selectOrder"] = SelectListHelper.OrdersList(viewModel.OrderID);
+            
             ViewData["AccountYearID"] = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", viewModel.AccountYearID);
             ViewData["BudgetCodeID"] = new SelectList(_db.BudgetCodes, "BudgetCodeID", "BudgetCode1", viewModel.BudgetCodeID);
             ViewData["Authority"] = new SelectList(UserManager.Users, "Id", "Username", viewModel.Authority);
             ViewData["RequestedBy"] = new SelectList(UserManager.Users, "Id", "Username", viewModel.RequestedBy);
             ViewData["OrderCategoryID"] = new SelectList(_db.OrderCategories, "OrderCategoryID", "OrderCategory1", viewModel.OrderCategoryID);
-            ViewBag.Title = "Order Details";
-            return View("Edit", viewModel);
+            
+            switch (viewModel.CallingAction)
+            {
+                case "Edit":
+                {
+                    ViewData["selectOrder"] = SelectListHelper.OrdersList(id:viewModel.OrderID);
+                    ViewBag.Title = "Edit/Update Order";
+                    break;
+                }
+                case "AddInvoice":
+                {
+                    ViewData["selectOrder"] = SelectListHelper.OrdersList(id:viewModel.OrderID, filter:"noinvoice");
+                    ViewBag.Title = "Add Invoice";
+                    break;
+                }
+                default:
+                {
+                    ViewData["selectOrder"] = SelectListHelper.OrdersList(id:viewModel.OrderID);
+                    ViewBag.Title = "Order Details";
+                    break;
+                }
+            }
+            
+            return View(viewModel.CallingAction, viewModel);
         }
 
         // GET: LibraryAdmin/OrderDetails/Edit/5
-        //[Route("AddReceipt/{id?}")]
-        //[Route("~/LibraryAdmin/OrderDetails/AddReceipt/{id}")]
         public ActionResult AddReceipt(int? id, string callingAction = "index")
         {
             if (id == null)
@@ -1074,7 +1200,7 @@ namespace slls.Areas.LibraryAdmin
             if (orderDetail.InvoiceDate == null || orderDetail.ReceivedDate == null || orderDetail.Passed == null)
             {
                 viewModel.DateWarningMsg =
-                    "<p><strong>Note: </strong>The dates highlighted in <span style=\"color: #3c763d;\"><strong>green</strong></span> have been auto-filled for you.  Please check to ensure that the dates are corect for your invoice.</p>";
+                    "<p><strong>Note: </strong>The dates highlighted in <span style=\"color: #3c763d;\"><strong>green</strong></span> have been auto-filled for you.  Please check to ensure that the dates are correct for your invoice.</p>";
             }
 
             ViewData["AccountYearID"] = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", orderDetail.AccountYearID);
@@ -1115,21 +1241,71 @@ namespace slls.Areas.LibraryAdmin
                 _db.Entry(orderDetail).State = EntityState.Modified;
                 _db.SaveChanges();
 
-                //if (!string.IsNullOrEmpty(viewModel.CallingAction))
-                //{
-                //    return RedirectToAction(viewModel.CallingAction);
-                //}
-                //return RedirectToAction("Index");
                 return Json( new { success = true });
 
             }
             return PartialView("AddReceipt", viewModel);
         }
 
+        // GET: LibraryAdmin/OrderDetails/Edit/5
+        public ActionResult QuickReceipt(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            OrderDetail orderDetail = _db.OrderDetails.Find(id);
+            if (orderDetail == null)
+            {
+                return HttpNotFound();
+            }
+            if (orderDetail.Deleted)
+            {
+                return HttpNotFound();
+            }
 
+            var viewModel = new OrderReceiptsViewModel
+            {
+                OrderID = orderDetail.OrderID,
+                OrderNo = orderDetail.OrderNo,
+                ReceivedDate = orderDetail.ReceivedDate ?? DateTime.Now,
+                Title = orderDetail.Title.Title1
+            };
+
+            if (orderDetail.ReceivedDate == null)
+            {
+                viewModel.DateWarningMsg =
+                    "<p><strong>Note: </strong>The received date (highlighted in <span style=\"color: #3c763d;\"><strong>green</strong></span>) has been auto-filled for you.  Please check to ensure that this date is correct for your order.</p>";
+            }
+            
+            ViewBag.Title = "Quick Receipt";
+            return PartialView(viewModel);
+        }
+
+        public ActionResult PostQuickReceipt([Bind(Include = "OrderID,ReceivedDate")] OrderReceiptsViewModel viewModel)
+        {
+            var orderDetail = _db.OrderDetails.Find(viewModel.OrderID);
+            if (orderDetail == null)
+            {
+                return HttpNotFound();
+            }
+            if (orderDetail.Deleted)
+            {
+                return HttpNotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                orderDetail.ReceivedDate = viewModel.ReceivedDate ?? DateTime.Now;
+                _db.Entry(orderDetail).State = EntityState.Modified;
+                _db.SaveChanges();
+
+                return Json(new { success = true });
+            }
+            return PartialView("QuickReceipt", viewModel);
+        }
 
         //[Route("ReportGenerator")]
-        //[Route("~/LibraryAdmin/OrderDetails/ReportGenerator")]
         public ActionResult ReportGenerator()
         {
             if (TempData["NoReportSelected"] != null)

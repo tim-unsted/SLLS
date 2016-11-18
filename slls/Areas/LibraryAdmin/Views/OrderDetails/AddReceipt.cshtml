@@ -16,8 +16,6 @@
                 <p>Use this form to add receipt and invoice details for your order.</p>
                 @Html.Raw(Model.DateWarningMsg)
             </div>
-            
-            
 
             @Html.ValidationSummary(true, "", new {@class = "text-danger"})
             @Html.HiddenFor(model => model.OrderID)

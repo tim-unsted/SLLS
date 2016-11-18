@@ -3,22 +3,28 @@
 
 <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 
-<h2>@ViewBag.Title</h2>
+@*<h2>@ViewBag.Title</h2>*@
+@Html.Partial("_HeaderSeeAlso")
 
 <div class="well">
+
+    <span class="help-block">@Html.Raw(Model.HelpText)</span>
+
     @using (Html.BeginForm("PostSelect", "OrderDetails", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-        
-        @Html.HiddenFor(model => model.ReturnAction)
 
-            <div class="form-group" title="@Model.Message">
-                @Html.DropDownListFor(model => model.OrderID, Model.Orders, new { @class = "form-control", style = "font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;" })
-                @Html.ValidationMessageFor(model => model.OrderID, "", new { @class = "text-danger" })
-            </div>
-        <button title="Submit" type="submit" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span> @Model.BtnText</button>
-        <span>&nbsp;&nbsp;or&nbsp;</span>
-        <button type="button" class="btn-link" onclick="window.history.back();">Cancel</button>
+        @Html.HiddenFor(model => model.ReturnAction)
+        @Html.HiddenFor(model => model.Tab)
+
+        <div class="form-group" title="@Model.Message">
+            @Html.DropDownListFor(model => model.OrderID, Model.Orders, new {@class = "form-control", style = "font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;", onchange = "this.form.submit();"})
+            @Html.ValidationMessageFor(model => model.OrderID, "", new {@class = "text-danger"})
+        </div>
     }
+
+    <p>
+        <a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a>
+    </p>
 
 </div>

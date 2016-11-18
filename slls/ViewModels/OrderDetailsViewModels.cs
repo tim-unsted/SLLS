@@ -28,6 +28,12 @@ namespace slls.ViewModels
     
     public class OrderDetailsAddViewModel
     {
+        public OrderDetailsAddViewModel()
+        {
+            CallingAction = "Create";
+            DateWarningMsg = "<p><strong>Note: </strong>The dates highlighted in <span style=\"color: #3c763d;\"><strong>green</strong></span> have been auto-filled for you.  Please check to ensure that the dates are correct for your order.</p>"; ;
+        }
+        
         [Key]
         public int OrderID { get; set; }
         
@@ -86,6 +92,26 @@ namespace slls.ViewModels
         [LocalDisplayName("Orders.Category", "FieldDisplayName")]
         public int? OrderCategoryID { get; set; }
 
+        [Column(TypeName = "smalldatetime")]
+        [LocalDisplayName("Orders.Date_Received", "FieldDisplayName")]
+        public DateTime? ReceivedDate { get; set; }
+
+        [Column(TypeName = "smalldatetime")]
+        [LocalDisplayName("Orders.Date_On_Invoice", "FieldDisplayName")]
+        public DateTime? InvoiceDate { get; set; }
+
+        [StringLength(255)]
+        [LocalDisplayName("Orders.Invoice_Reference", "FieldDisplayName")]
+        public string InvoiceRef { get; set; }
+
+        [Column(TypeName = "smalldatetime")]
+        [LocalDisplayName("Orders.Date_Invoice_Passed", "FieldDisplayName")]
+        public DateTime? Passed { get; set; }
+
+        [StringLength(1000)]
+        [LocalDisplayName("Orders.Link_URL", "FieldDisplayName")]
+        public string Link { get; set; }
+
         [LocalDisplayName("Orders.Notes", "FieldDisplayName")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -98,6 +124,8 @@ namespace slls.ViewModels
         public IEnumerable<SelectListItem> OrderCategories { get; set; }
         
         public string CallingAction { get; set; }
+
+        public string DateWarningMsg { get; set; }
     }
 
     public class OrderDetailsEditViewModel
@@ -106,7 +134,8 @@ namespace slls.ViewModels
         {
             InfoMsg = "";
             WarningMsg = "";
-            Tab = "orderdetails";
+            SelectedTab = "#orderdetails";
+            CallingAction = "Edit";
         }
         
         [Key]
@@ -219,9 +248,9 @@ namespace slls.ViewModels
         [LocalDisplayName("Orders.Notes", "FieldDisplayName")]
         public string Notes { get; set; }
 
-        public string CallingController { get; set; }
+        public string CallingAction { get; set; }
 
-        public string Tab { get; set; } 
+        public string SelectedTab { get; set; } 
 
         [AllowHtml]
         public string InfoMsg { get; set; }
@@ -233,6 +262,11 @@ namespace slls.ViewModels
 
     public class OrderReceiptsViewModel
     {
+        public OrderReceiptsViewModel()
+        {
+            DateWarningMsg = "";
+        }
+        
         [Key]
         public int OrderID { get; set; }
 
@@ -299,6 +333,11 @@ namespace slls.ViewModels
 
     public class OrderDetailsDeleteViewModel
     {
+        public OrderDetailsDeleteViewModel()
+        {
+            CallingController = "";
+        }
+
         [Key]
         public int OrderID { get; set; }
 
@@ -330,13 +369,16 @@ namespace slls.ViewModels
     {
         public SelectOrderViewmodel()
         {
-            Tab = "orderdetails";
+            Tab = "#orderdetails";
         }
         
         public string Title { get; set; }
         public string Message { get; set; }
         public string BtnText { get; set; }
-        public string ReturnController { get; set; }
+
+        [AllowHtml]
+        public string HelpText { get; set; }
+
         public string ReturnAction { get; set; }
         public IEnumerable<SelectListItem> Orders { get; set; }
 

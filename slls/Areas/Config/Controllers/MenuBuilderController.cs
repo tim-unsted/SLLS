@@ -487,6 +487,7 @@ namespace slls.Areas.Config
                 IsEnabled = menuitem.IsEnabled,
                 IsVisible = menuitem.IsVisible,
                 SortOrder = menuitem.SortOrder,
+                Groups = menuitem.Groups,
                 Roles = string.Join("; ", menuitem.Roles)
             };
 
