@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Expressions;
 using System.Web.WebSockets;
 using Microsoft.AspNet.Identity.Owin;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using slls.Models;
 using slls.Utils;
 using slls.Utils.Helpers;
@@ -18,12 +19,12 @@ using Westwind.Globalization;
 namespace slls.Areas.LibraryAdmin
 {
     //[RouteArea("LibraryAdmin", AreaPrefix = "Admin")]
-    //[RoutePrefix("Orders")]
-    //[Route("{action=index}")]
     public class OrderDetailsController : AdminBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private ApplicationUserManager _userManager;
+        private readonly string _entityName = DbRes.T("Orders.Order", "FieldDisplayName");
+        private readonly string _entityType = DbRes.T("Orders", "EntityType");
 
         private ApplicationUserManager UserManager
         {
@@ -31,13 +32,12 @@ namespace slls.Areas.LibraryAdmin
             set { _userManager = value; }
         }
 
+        public OrderDetailsController()
+        {
+            ViewBag.Title = DbRes.T("Orders", "EntityType");
+        }
+
         // GET: Admin/Orders/ViewAll
-        ////[Route]
-        //[Route("Index")]
-        //[Route("All")]
-        //[Route("AllOrders")]
-        //[Route("ViewAll")]
-        //[Route("~/LibraryAdmin/OrderDetails/Index")]
         public ActionResult Index(int listSupplier = -1, int month = -1, int year = -1)
         {
             var viewModel = new OrderDetailsListViewModel()
@@ -50,29 +50,62 @@ namespace slls.Areas.LibraryAdmin
                 from o in _db.OrderDetails
                 select o;
 
+            //var filteredOrders = allOrders.Where(o => o.SupplierID == listSupplier || o.OrderDate.Value.Year == year || o.OrderDate.Value.Month == month);
+            var filteredOrders = allOrders.Where(o => o.OrderDate.Value.Year == year || o.OrderDate.Value.Month == month);
+
             //Initialise some objects to hold years and months ...
             var months = new Dictionary<int, string> { { -1, "All Months" } };
             var years = new Dictionary<int, string> { { -1, "All Years" } };
             
             //Get the actual results if the user has selected anything ...
-            var filteredOrders =
-                from o in _db.OrderDetails
-                where o.SupplierID == listSupplier || o.OrderDate.Value.Year == year || o.OrderDate.Value.Month == month
-                select o;
-
-            //Return any filtered orders
-            viewModel.Orders = filteredOrders; 
-            
-            if (!filteredOrders.Any() && allOrders.Any())
+            if (listSupplier > 0)
             {
-                filteredOrders = allOrders;
+                filteredOrders =
+                from o in filteredOrders
+                where o.SupplierID == listSupplier
+                select o;
+            }
+            if(year > 0)
+            {
+                filteredOrders =
+                from o in filteredOrders
+                where o.OrderDate.Value.Year == year
+                select o;
+            }
+            if (month > 0)
+            {
+                filteredOrders =
+                from o in filteredOrders
+                where o.OrderDate.Value.Month == month
+                select o;
             }
 
+            viewModel.Orders = filteredOrders; 
+            
+
             //Get a list of suppliers for the filtered orders ...
-            var suppliers = (from x in _db.Suppliers
-                             join o in allOrders on x.SupplierID equals o.SupplierID
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = filteredOrders.Count(s => s.SupplierID == x.SupplierID) })
+            if (filteredOrders.Any())
+            {
+                var suppliers = (from x in _db.Suppliers
+                    join o in allOrders on x.SupplierID equals o.SupplierID
+                    select
+                        new SupplierList
+                        {
+                            SupplierId = x.SupplierID,
+                            SupplierName = x.SupplierName,
+                            Count = filteredOrders.Count(s => s.SupplierID == x.SupplierID)
+                        })
+                    .Distinct().OrderBy(x => x.SupplierName);
+                ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
+            }
+            else
+            {
+                var suppliers = (from x in _db.Suppliers
+                                 join o in allOrders on x.SupplierID equals o.SupplierID
+                                 select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = allOrders.Count(s => s.SupplierID == x.SupplierID) })
                 .Distinct().OrderBy(x => x.SupplierName);
+                ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
+            }
 
             //Fill the dropdown lists for Years and Months ...
             var orderMonths = (from o in filteredOrders select new { Month = o.OrderDate.Value.Month }).Distinct();
@@ -88,21 +121,17 @@ namespace slls.Areas.LibraryAdmin
                 years.Add(item.Year, item.Year.ToString());
             }
 
-            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers); //supplierList;
+            
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "index");
             ViewData["Months"] = months;
             ViewData["Years"] = years;
             ViewBag.InfoMsg =
-                "To limit the list to just those order details you want to see, use the Supplier, Year and Month drop-down lists below:";
+                "To limit the list to just those " + _entityType.ToLower() + " you want to see, use the Supplier, Year and Month drop-down lists below:";
             ViewBag.Title = "All " + DbRes.T("Orders", "EntityType");
             return View(viewModel);
         }
 
         // GET: Admin/Invoices/
-        //[Route("Invoices")]
-        //[Route("AllInvoices")]
-        //[Route("~/LibraryAdmin/OrderDetails/InvoicesBySupplier")]
-        //[Route("~/LibraryAdmin/OrderDetails/AllInvoices")]
         public ActionResult AllInvoices(int listSupplier = 0, int month = 0, int year = 0)
         {
             if (year == 0)
@@ -162,11 +191,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/AllReceived
-        //[Route("Received")]
-        //[Route("AllReceived")]
-        //[Route("ReceivedOnly")]
-        //[Route("ViewReceived")]
-        //[Route("~/LibraryAdmin/OrderDetails/AllReceived")]
         public ActionResult AllReceived(int listSupplier = 0)
         {
             //Get the list of suppliers with orders ...
@@ -189,7 +213,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.InfoMsg =
-                "To limit the list to just those orders from a particular Supplier, use the drop-down list below:";
+                "To limit the list to just those " + _entityType.ToLower()  + " from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllReceived");
             ViewBag.Title = "Received " + DbRes.T("Orders", "EntityType");
@@ -197,11 +221,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/AllUnassigned
-        //[Route("Unassigned")]
-        //[Route("AllUnassigned")]
-        //[Route("Unallocated")]
-        //[Route("AllUnallocated")]
-        //[Route("~/LibraryAdmin/OrderDetails/AllUnassigned")]
         public ActionResult AllUnassigned(int listSupplier = 0)
         {
             //Get the list of suppliers with unassigned orders ...
@@ -224,7 +243,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.InfoMsg =
-                "To limit the list to just those orders from a particular Supplier, use the drop-down list below:";
+                "To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AlUnassigned");
             ViewBag.Title = "Unallocated " + DbRes.T("Orders", "EntityType");
@@ -232,11 +251,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/OutstandingOrders
-        //[Route("Outstanding")]
-        //[Route("AllOutstanding")]
-        //[Route("OutstandingOnly")]
-        //[Route("ViewOutstanding")]
-        //[Route("~/LibraryAdmin/OrderDetails/AllOutstanding")]
         public ActionResult AllOutstanding(int listSupplier = 0)
         {
             //Get the list of suppliers with outstanding orders ...
@@ -259,7 +273,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.InfoMsg =
-                "To limit the list to just those orders from a particular Supplier, use the drop-down list below:";
+                "To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOutstanding");
             ViewBag.Title = "Current (Outstanding) " + DbRes.T("Orders", "EntityType");
@@ -267,11 +281,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/OverdueOrders
-        //[Route("Overdue")]
-        //[Route("AllOverdue")]
-        //[Route("OverdueOnly")]
-        //[Route("ViewOverdue")]
-        //[Route("~/LibraryAdmin/OrderDetails/AllOverdue")]
         public ActionResult AllOverdue(int listSupplier = 0)
         {
             //Get the list of suppliers with overdue orders ...
@@ -295,7 +304,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.InfoMsg =
-                "To limit the list to just those orders from a particular Supplier, use the drop-down list below:";
+                "To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOverdue");
             ViewBag.Title = "Overdue " + DbRes.T("Orders", "EntityType");
@@ -303,11 +312,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/AllOnApproval
-        //[Route("OnApproval")]
-        //[Route("AllOnApproval")]
-        //[Route("OnApprovalOnly")]
-        //[Route("ViewOnApproval")]
-        //[Route("~/LibraryAdmin/OrderDetails/AllOnApproval")]
         public ActionResult AllOnApproval(int listSupplier = 0)
         {
             //Get the list of suppliers with outstanding orders ...
@@ -331,7 +335,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.InfoMsg =
-                "To limit the list to just those orders from a particular Supplier, use the drop-down list below:";
+                "To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOnApproval");
             ViewBag.Title = DbRes.T("Orders", "EntityType") + " On Approval";
@@ -339,44 +343,41 @@ namespace slls.Areas.LibraryAdmin
         }
 
         //GET: Select an order ...
-        //[Route("Select")]
-        //[Route("SelectOrder")]
-        //[Route("~/LibraryAdmin/OrderDetails/Select")]
-        public ActionResult Select(string callingAction = "edit")
+        public ActionResult Select(string callingAction = "edit", string filter = "")
         {
-            var viewModel = new SelectOrderViewmodel(); // {Orders = SelectListHelper.OrdersList()};
+            var viewModel = new SelectOrderViewmodel();
 
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso");
             switch (callingAction)
             {
                 case "edit":
                 {
-                    ViewBag.Title = "Edit/Update Order";
-                    viewModel.BtnText = "Edit/Update Order";
-                    viewModel.Message = "Select an Order to edit/update";
-                    viewModel.HelpText = "Select the order you wish to edit/update from the dropdown list of available orders below.";
+                    ViewBag.Title = "Edit/Update " + _entityName;
+                    viewModel.BtnText = "Edit/Update " + _entityName;
+                    viewModel.Message = "Select an " + _entityName.ToLower() + " to edit/update";
+                    viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to edit/update from the dropdown list of available " + _entityType.ToLower() + " below.";
                     viewModel.ReturnAction = "Edit";
-                    viewModel.Orders = SelectListHelper.OrdersList();
+                    viewModel.Orders = SelectListHelper.OrdersList(filter:"outstanding");
                     break;
                 }
 
                 case "print":
                 {
-                    ViewBag.Title = "Print Order";
+                    ViewBag.Title = "Print " + _entityName;
                     viewModel.BtnText = "Print Order";
-                    viewModel.Message = "Select an Order to Print";
-                    viewModel.HelpText = "Select the order you wishto print from the dropdown list of available orders below.";
+                    viewModel.Message = "Select an " + _entityName.ToLower() + " to print";
+                    viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to print from the dropdown list of available " + _entityType.ToLower() + " below.";
                     viewModel.ReturnAction = "PrintOrder";
-                    viewModel.Orders = SelectListHelper.OrdersList();
+                    viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
                     break;
                 }
 
                 case "reprint":
                 {
-                    ViewBag.Title = "Reprint Order";
-                    viewModel.BtnText = "Reprint Order";
-                    viewModel.Message = "Select an order to Reprint";
-                    viewModel.HelpText = "Select the Order you wish to reprint from the dropdown list of available orders below.";
+                    ViewBag.Title = "Reprint " + _entityName;
+                    viewModel.BtnText = "Reprint " + _entityName;
+                    viewModel.Message = "Select an " + _entityName.ToLower() + " to Reprint";
+                    viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to reprint from the dropdown list of available " + _entityType.ToLower() + " below.";
                     viewModel.ReturnAction = "PrintOrder";
                     viewModel.Orders = SelectListHelper.OrdersList();
                     break;
@@ -384,10 +385,10 @@ namespace slls.Areas.LibraryAdmin
 
                 case "duplicate":
                 {
-                    ViewBag.Title = "Duplicate Order";
-                    viewModel.BtnText = "Duplicate Order";
-                    viewModel.Message = "Select an Order to Duplicate";
-                    viewModel.HelpText = "Select the Order you wish to duplicate from the dropdown list of available orders below.";
+                    ViewBag.Title = "Duplicate " + _entityName;
+                    viewModel.BtnText = "Duplicate " + _entityName;
+                    viewModel.Message = "Select an " + _entityName.ToLower() + " to Duplicate";
+                    viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to duplicate from the dropdown list of available " + _entityType.ToLower() + " below.";
                     viewModel.ReturnAction = "DuplicateOrder";
                     viewModel.Orders = SelectListHelper.OrdersList();
                     break;
@@ -398,7 +399,7 @@ namespace slls.Areas.LibraryAdmin
                     ViewBag.Title = "Add Invoice";
                     viewModel.BtnText = "Add Invoice";
                     viewModel.Message = "Select an Order to add an Invoice to";
-                    viewModel.HelpText = "<strong>Note: </strong>The list below <emp>only</emp> shows order with no invoice. To see all orders, choose another option.";
+                    viewModel.HelpText = "<strong>Note: </strong>The list below <emp>only</emp> shows " + _entityType.ToLower() + " with no invoice. To see all " + _entityType.ToLower() + ", choose another option.";
                     viewModel.ReturnAction = "AddInvoice";
                     viewModel.Tab = "#invoice";
                     viewModel.Orders = SelectListHelper.OrdersList(filter:"noinvoice");
@@ -407,12 +408,12 @@ namespace slls.Areas.LibraryAdmin
 
                 default:
                 {
-                    ViewBag.Title = "Select Order";
+                    ViewBag.Title = "Select  " + _entityName;
                     viewModel.BtnText = "Ok";
-                    viewModel.Message = "Select an Order";
-                    viewModel.HelpText = "Select an order from the dropdown list of available orders below.";
+                    viewModel.Message = "Select an " + _entityName;
+                    viewModel.HelpText = "Select an " + _entityName.ToLower() + " from the dropdown list of available " + _entityType.ToLower() + " below.";
                     viewModel.ReturnAction = "Edit";
-                    viewModel.Orders = SelectListHelper.OrdersList();
+                    viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
                     break;
                 }
             }
@@ -454,8 +455,6 @@ namespace slls.Areas.LibraryAdmin
 
 
         // GET: Admin/Orders/BySupplier
-        //[Route("BySupplier")]
-        //[Route("~/LibraryAdmin/OrderDetails/OrdersBySupplier")]
         public ActionResult OrdersBySupplier(int listSupplier = 0)
         {
             //Get the list of suppliers with orders ...
@@ -485,8 +484,6 @@ namespace slls.Areas.LibraryAdmin
 
 
         // GET: Admin/Orders/ByRequester
-        //[Route("ByRequester")]
-        //[Route("~/LibraryAdmin/OrderDetails/OrdersByRequester")]
         public ActionResult OrdersByRequester(string listRequesters = "")
         {
             //Get the list of requesters with orders ...
@@ -521,8 +518,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/ByAuthoriser
-        //[Route("ByAuthoriser")]
-        //[Route("~/LibraryAdmin/OrderDetails/OrdersByAuthoriser")]
         public ActionResult OrdersByAuthoriser(string listAuthorisers = "")
         {
             //Get the list of authorisers with orders ...
@@ -557,15 +552,13 @@ namespace slls.Areas.LibraryAdmin
 
 
         // GET: Admin/Orders/ByTitle
-        //[Route("ByTitle")]
-        //[Route("~/LibraryAdmin/OrderDetails/OrdersByTitle")]
         public ActionResult OrdersByTitle(int listTitles = 0)
         {
             //Get the list of ordered titles  ...
             var titles = (from x in _db.Titles
                           where x.OrderDetails.Count > 0
                           select
-                              new { x.TitleID, Title = x.Title1 + " (" + x.OrderDetails.Count + ")", x.NonFilingChars })
+                              new { TitleID = x.TitleID, Title = x.Title1, OrderCount = x.OrderDetails.Count, x.NonFilingChars })
                 .Distinct().OrderBy(x => x.Title.Substring(x.NonFilingChars));
 
             //Start a new list selectlist items ...
@@ -577,11 +570,15 @@ namespace slls.Areas.LibraryAdmin
                     Value = "0"
                 }
             };
-            titlesList.AddRange(titles.Select(item => new SelectListItem
+            foreach (var item in titles)
             {
-                Text = item.Title,
-                Value = item.TitleID.ToString()
-            }));
+                titlesList.Add(new SelectListItem
+                {
+                    Text = StringHelper.Truncate(item.Title, 100) + " (" + item.OrderCount + ")",
+                    Value = item.TitleID.ToString()
+                });
+            }
+            
 
             //Add the actual ordered titles ...
             //Get the actual results if the user has selected anything ...
@@ -604,8 +601,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/ByBudgetCode
-        //[Route("ByBudgetCode")]
-        //[Route("~/LibraryAdmin/OrderDetails/OrdersByBudgetCode")]
         public ActionResult OrdersByBudgetCode(int listBudgetCodes = 0)
         {
             //Get the list of ordered titles  ...
@@ -644,8 +639,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/ByCategory
-        //[Route("ByCategory")]
-        //[Route("~/LibraryAdmin/OrderDetails/OrdersByCategory")]
         public ActionResult OrdersByCategory(int listCategories = 0)
         {
             //Get the list of ordered titles  ...
@@ -684,8 +677,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/ByAccountYear
-        //[Route("ByAccountYear")]
-        //[Route("~/LibraryAdmin/OrderDetails/OrdersByAccountYear")]
         public ActionResult OrdersByAccountYear(int listAccountYears = 0)
         {
             //Get the list of AccountYears  ...
@@ -723,8 +714,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/OrderDetails/Add/5
-        //[Route("Add/{id?}")]
-        //[Route("~/LibraryAdmin/OrderDetails/Add/{id?}")]
         public ActionResult Add(int? id)
         {
             if (id == null)
@@ -752,10 +741,9 @@ namespace slls.Areas.LibraryAdmin
                 NumCopies = 1,
                 Price = 0,
                 VAT = 0,
-                //Titles = new SelectList(_db.Titles, "TitleID", "Title1"),
                 Suppliers = SelectListHelper.SupplierList(PublicFunctions.GetDefaultValue("OrderDetails", "SupplierID")),
                 OrderCategories = SelectListHelper.OrderCategoryList(PublicFunctions.GetDefaultValue("OrderDetails", "OrderCategoryID")),
-                BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a " + DbRes.T("BudgetCode.Budget_Code", "FieldDisplayName"), true, false),
+                BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a ", true, false),
                 RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 CallingAction = "add"
@@ -766,8 +754,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/OrderDetails/Create
-        //[Route("Create/{id?}")]
-        //[Route("~/LibraryAdmin/OrderDetails/Create/{id?}")]
         public ActionResult Create(int? id)
         {
             var titleid = id ?? 0;
@@ -778,11 +764,10 @@ namespace slls.Areas.LibraryAdmin
                 VAT = 0,
                 OrderDate = DateTime.Now,
                 Expected = DateTime.Now.AddDays(28),
-                //Titles = new SelectList(_db.Titles, "TitleID", "Title1", titleid),
                 Titles = SelectListHelper.TitlesList(titleid),
                 Suppliers = SelectListHelper.SupplierList(PublicFunctions.GetDefaultValue("OrderDetails", "SupplierID")),
                 OrderCategories = SelectListHelper.OrderCategoryList(PublicFunctions.GetDefaultValue("OrderDetails", "OrderCategoryID")),
-                BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a " + DbRes.T("BudgetCode.Budget_Code", "FieldDisplayName"), true, false),
+                BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a ", true, false),
                 RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 CallingAction = "create"
@@ -887,7 +872,7 @@ namespace slls.Areas.LibraryAdmin
             if (success && viewModel.InvoiceDate != null)
             {
                 TempData["SuccessMsg"] = "Invoice added successfully.";
-                ViewBag.Title = "Order - Full Details";
+                ViewBag.Title = _entityName + " - Full Details";
                 ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
             }
             else
@@ -900,12 +885,12 @@ namespace slls.Areas.LibraryAdmin
             if (orderDetail.ReceivedDate == null && (orderDetail.InvoiceDate != null || orderDetail.InvoiceRef != null))
             {
                 viewModel.WarningMsg =
-                    "<strong>Info: </strong>An invoice has been entered for this order, but the order has not been marked as received and is still outstanding. You can enter a received date on the 'Invoices' tab'.";
+                    "<strong>Info: </strong>An invoice has been entered for this " + _entityName.ToLower() + ", but the " + _entityName.ToLower() + " has not been marked as received and is still outstanding. You can enter a received date on the 'Invoices' tab'.";
             }
             if (orderDetail.ReceivedDate != null && (orderDetail.InvoiceDate == null && orderDetail.InvoiceRef == null))
             {
                 viewModel.WarningMsg =
-                    "<strong>Info: </strong>This order has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
+                    "<strong>Info: </strong>This  " + _entityName.ToLower() + " has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
             }
 
             //ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID, filter: "noinvoice");
@@ -960,8 +945,6 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/OrderDetails/EditTitle/5
-        //[Route("EditTitle/{id?}")]
-        //[Route("~/LibraryAdmin/OrderDetails/EditTitle/{id}")]
         public ActionResult EditTitle(int? id)
         {
             if (id == null)
@@ -1025,54 +1008,33 @@ namespace slls.Areas.LibraryAdmin
                 AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 CallingAction = "Edit"
             };
-
-            //if (TempData["GoToTab"] != null)
-            //{
-            //    viewModel.SelectedTab = TempData["GoToTab"].ToString();
-            //}
-
+            
             if (success)
             {
-                TempData["SuccessMsg"] = "Order details have been updated successfully.";
+                TempData["SuccessMsg"] = _entityName + " details have been updated successfully.";
             }
 
             //Check some values and issue info or warning messages if appropriate ...
             if (orderDetail.ReceivedDate == null && orderDetail.InvoiceDate == null && orderDetail.InvoiceRef == null)
             {
                 viewModel.WarningMsg =
-                    "<strong>Info: </strong>This order is still outstanding. You can add a receipt and invoice on the 'Invoices' tab'.";
+                    "<strong>Info: </strong>This " + _entityName.ToLower() + " is still outstanding. You can add a receipt and invoice on the 'Invoices' tab'.";
             }
             if (orderDetail.ReceivedDate == null && (orderDetail.InvoiceDate != null || orderDetail.InvoiceRef != null))
             {
                 viewModel.WarningMsg =
-                    "<strong>Info: </strong>An invoice has been entered for this order, but the order has not been marked as received and is still outstanding. You can enter a received date on the 'Invoices' tab'.";
+                    "<strong>Info: </strong>An invoice has been entered for this " + _entityName.ToLower() + ", but the order has not been marked as received and is still outstanding. You can enter a received date on the 'Invoices' tab'.";
             }
             if (orderDetail.ReceivedDate != null && (orderDetail.InvoiceDate == null && orderDetail.InvoiceRef == null))
             {
                 viewModel.WarningMsg =
-                    "<strong>Info: </strong>This order has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
+                    "<strong>Info: </strong>This " + _entityName.ToLower() + " has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
             }
-
-            //if (TempData["FormFunction"] != null)
-            //{
-            //    if (TempData["FormFunction"].ToString() == "addInvoice")
-            //    {
-            //        ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID,filter:"noinvoice");
-            //    }
-            //    else
-            //    {
-            //        ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
-            //    }
-            //}
-            //else
-            //{
-            //    ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
-            //}
-
+            
             ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
-            ViewData["AccountYearID"] = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", orderDetail.AccountYearID);
-            ViewData["BudgetCodeID"] = new SelectList(_db.BudgetCodes, "BudgetCodeID", "BudgetCode1", orderDetail.BudgetCodeID);
-            ViewData["OrderCategoryID"] = new SelectList(_db.OrderCategories, "OrderCategoryID", "OrderCategory1", orderDetail.OrderCategoryID);
+            ViewData["AccountYearID"] = SelectListHelper.AccountYearsList(id: orderDetail.AccountYearID ?? 0,addNew:false);
+            ViewData["BudgetCodeID"] = SelectListHelper.BudgetCodesList(id: orderDetail.BudgetCodeID ?? 0, addNew: false);
+            ViewData["OrderCategoryID"] = SelectListHelper.OrderCategoriesList(id: orderDetail.OrderCategoryID ?? 0, addNew:false);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "Edit");
             ViewBag.Title = "Edit/Update Order";
             return View(viewModel);
@@ -1127,19 +1089,20 @@ namespace slls.Areas.LibraryAdmin
                 _db.SaveChanges();
                 return RedirectToAction(viewModel.CallingAction, "OrderDetails", new { id = viewModel.OrderID, success = true });
             }
-            
-            ViewData["AccountYearID"] = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", viewModel.AccountYearID);
-            ViewData["BudgetCodeID"] = new SelectList(_db.BudgetCodes, "BudgetCodeID", "BudgetCode1", viewModel.BudgetCodeID);
+
+            ViewData["AccountYearID"] = SelectListHelper.AccountYearsList(id: viewModel.AccountYearID ?? 0, addNew: false);
+            ViewData["BudgetCodeID"] = SelectListHelper.BudgetCodesList(id: viewModel.BudgetCodeID ?? 0, addNew: false);
+            ViewData["OrderCategoryID"] = SelectListHelper.OrderCategoriesList(id: viewModel.OrderCategoryID ?? 0, addNew: false);
             ViewData["Authority"] = new SelectList(UserManager.Users, "Id", "Username", viewModel.Authority);
             ViewData["RequestedBy"] = new SelectList(UserManager.Users, "Id", "Username", viewModel.RequestedBy);
-            ViewData["OrderCategoryID"] = new SelectList(_db.OrderCategories, "OrderCategoryID", "OrderCategory1", viewModel.OrderCategoryID);
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "Edit");
             
             switch (viewModel.CallingAction)
             {
                 case "Edit":
                 {
                     ViewData["selectOrder"] = SelectListHelper.OrdersList(id:viewModel.OrderID);
-                    ViewBag.Title = "Edit/Update Order";
+                    ViewBag.Title = "Edit/Update " + _entityName;
                     break;
                 }
                 case "AddInvoice":
@@ -1151,7 +1114,7 @@ namespace slls.Areas.LibraryAdmin
                 default:
                 {
                     ViewData["selectOrder"] = SelectListHelper.OrdersList(id:viewModel.OrderID);
-                    ViewBag.Title = "Order Details";
+                    ViewBag.Title = _entityName + " Details";
                     break;
                 }
             }
@@ -1275,7 +1238,7 @@ namespace slls.Areas.LibraryAdmin
             if (orderDetail.ReceivedDate == null)
             {
                 viewModel.DateWarningMsg =
-                    "<p><strong>Note: </strong>The received date (highlighted in <span style=\"color: #3c763d;\"><strong>green</strong></span>) has been auto-filled for you.  Please check to ensure that this date is correct for your order.</p>";
+                    "<p><strong>Note: </strong>The received date (highlighted in <span style=\"color: #3c763d;\"><strong>green</strong></span>) has been auto-filled for you.  Please check to ensure that this date is correct for your " + _entityName.ToLower() + ".</p>";
             }
             
             ViewBag.Title = "Quick Receipt";
@@ -2785,6 +2748,19 @@ namespace slls.Areas.LibraryAdmin
             return View("Reports/OrdersByAuthoriser", viewModel);
         }
 
+
+        //Method used to supply a JSON list of Volumes when selecting a Copy (Ajax stuf)
+        public JsonResult GetOrderList(int orderId = 0, string filter = "")
+        {
+            var allOrders = SelectListHelper.OrdersList(id: orderId, filter: filter);
+            
+            return Json(new
+            {
+                success = true,
+                AllOrders = allOrders
+            });
+        }
+
         
         // GET: LibraryAdmin/OrderDetails/Delete/5
         public ActionResult Delete(int? id, string callingController = "orderdetails")
@@ -2816,7 +2792,7 @@ namespace slls.Areas.LibraryAdmin
                 CallingController = callingController
             };
 
-            ViewBag.Title = "Delete Order?";
+            ViewBag.Title = "Delete " + _entityName + "?";
             return PartialView(viewModel);
         }
 
@@ -2829,12 +2805,14 @@ namespace slls.Areas.LibraryAdmin
             _db.OrderDetails.Remove(orderDetail);
             _db.SaveChanges();
 
-            //return RedirectToAction("Index");
-            if (viewModel.CallingController == "orderdetails")
-            {
-                return RedirectToAction("Index");
-            }
-            return RedirectToAction("Edit", "Titles", new { id = viewModel.TitleID });
+            ////return RedirectToAction("Index");
+            //if (viewModel.CallingController == "orderdetails")
+            //{
+            //    return RedirectToAction("Index");
+            //}
+            //return RedirectToAction("Edit", "Titles", new { id = viewModel.TitleID });
+
+            return Json(new {success = true});
         }
 
         protected override void Dispose(bool disposing)

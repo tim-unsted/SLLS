@@ -140,7 +140,7 @@ namespace slls.Utils.Helpers
             return activityTypesList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
         }
 
-        public static IEnumerable<SelectListItem> BudgetCodesList(int id = 0, string msg = "", bool addDefault = true, bool addNew = true)
+        public static IEnumerable<SelectListItem> BudgetCodesList(int id = 0, string msg = "Select a ", bool addDefault = true, bool addNew = true)
         {
             DbEntities db = new DbEntities();
             var budgetCodesList = new List<SelectListItem>();
@@ -150,7 +150,7 @@ namespace slls.Utils.Helpers
             {
                 budgetCodesList.Add(new SelectListItem
                 {
-                    Text = msg,
+                    Text = msg + DbRes.T("BudgetCode.Budget_Code", "FieldDisplayName"),
                     Value = "0"
                 });
             };
@@ -1030,11 +1030,16 @@ namespace slls.Utils.Helpers
             //Add the actual orders ...
             var validOrders = db.OrderDetails.Where(o => o.Title.Title1 != null);
 
+            if (filter == "outstanding")
+            {
+                validOrders = validOrders.Where(o => o.ReceivedDate == null);
+            }
+            
             if (filter == "noinvoice")
             {
                 validOrders = validOrders.Where(o => o.InvoiceDate == null && o.InvoiceRef == null);
             }
-
+            
             foreach (var item in validOrders.OrderBy(x => x.Title.Title1.Substring(x.Title.NonFilingChars)).ThenByDescending(x => x.OrderID))
             {
                 ordersList.Add(new SelectListItem

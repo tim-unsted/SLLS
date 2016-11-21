@@ -1030,8 +1030,6 @@
     <Content Include="Areas\Config\Views\SearchConfig\SearchFields.cshtml" />
     <Content Include="Areas\Config\Views\SearchConfig\EditSearchField.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_SupplierFilter.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Edit - orig.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Edit - another copy.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_OrderDetails.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AddInvoice.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\QuickReceipt.cshtml" />

@@ -5,10 +5,18 @@
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
-<div class="well">
+<div class="alert alert-info">
     @Html.Partial("_Select")
-    <a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a>
-    <a href="@Url.Action("DuplicateOrder", "OrderDetails", new {id = Model.OrderID})" class="btn btn-primary" title="Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")</a>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Add &bull; Print &bull; Duplicate <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu">
+            <li><a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+            <li><a href="@Url.Action("PrintOrder", "OrderDetails", new {id = Model.OrderID})" title="Print @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+            <li><a href="@Url.Action("DuplicateOrder", "OrderDetails", new {id = Model.OrderID})" title="Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+        </ul>
+    </div>
 </div>
 
 @Html.Partial("_PostSuccess")

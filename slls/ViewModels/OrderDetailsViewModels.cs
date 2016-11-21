@@ -11,20 +11,30 @@ namespace slls.ViewModels
     public class OrderDetailsListViewModel
     {
         public IEnumerable<OrderDetail> Orders { get; set; }
-        public IEnumerable<Supplier> Suppliers { get; set; }
-        public IEnumerable<BudgetCode> BudgetCodes { get; set; }
-        public IEnumerable<MediaType> MediaTypes { get; set; }
-        public IEnumerable<OrderCategory> OrderCategories { get; set; }
-        public IEnumerable<Title> Titles { get; set; }
-        public IEnumerable<Copy> Copies { get; set; }
+        //public IEnumerable<Supplier> Suppliers { get; set; }
+        //public IEnumerable<BudgetCode> BudgetCodes { get; set; }
+        //public IEnumerable<MediaType> MediaTypes { get; set; }
+        //public IEnumerable<OrderCategory> OrderCategories { get; set; }
+        //public IEnumerable<Title> Titles { get; set; }
+        //public IEnumerable<Copy> Copies { get; set; }
         public IEnumerable<ApplicationUser> AllUsers { get; set; }
-        public IEnumerable<ApplicationUser> Requestors { get; set; }
-        public IEnumerable<ApplicationUser> Authorisers { get; set; }
+        //public IEnumerable<ApplicationUser> Requestors { get; set; }
+        //public IEnumerable<ApplicationUser> Authorisers { get; set; }
         //public IEnumerable<SelectListItem> ListAuthorisers { get; set; }
         public int Month { get; set; }
         public int Year { get; set; }   
 
     }
+
+    //public class OrderDetailsIndexViewModel
+    //{
+    //    [Key]
+    //    public int OrderID { get; set; }
+
+    //    [LocalDisplayName("Orders.Order_Number", "FieldDisplayName")]
+    //    public string OrderNo { get; set; }
+
+    //}
     
     public class OrderDetailsAddViewModel
     {
