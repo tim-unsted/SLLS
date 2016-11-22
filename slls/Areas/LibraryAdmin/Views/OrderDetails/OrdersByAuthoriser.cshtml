@@ -4,7 +4,7 @@
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
-<div class="well">
+<div class="alert alert-info">
     @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "OrdersTable" }))
     {
         @Html.DropDownList("ListAuthorisers", null, "Select an Authoriser", new { @class = "form-control", onchange = "this.form.submit();" })

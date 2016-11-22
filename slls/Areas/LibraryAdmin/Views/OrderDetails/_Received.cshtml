@@ -1,4 +1,5 @@
-﻿@using Westwind.Globalization
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
 @model slls.ViewModels.OrderDetailsListViewModel
 
 @*<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>*@
@@ -21,42 +22,44 @@
                 "targets": [0],
                 "data": 0,
                 "render": function (data, type, row) {
-                    return '<a href="Edit/' + row[11] + '#receipts"" class="btn-link">' + data + '</a>';
+                    return '<a href="Edit/' + row[12] + '#receipts"" class="btn-link">' + data + '</a>';
                 }
             },
             {
                 "width": "25%",
-                "targets": [1],
-                "data": 1,
+                "targets": [2],
+                "data": 2,
                 "render": function (data, type, row) {
-                    return '<a href="EditTitle/' + row[10] + '" class="btn-link">' + data + '</a>';
+                    return '<a href="EditTitle/' + row[11] + '" class="btn-link">' + data + '</a>';
                 }
             },
             {
                 "width": "10%",
-                "orderData": [7],
-                "targets": [2]
+                "orderData": [9],
+                "targets": [1]
             },
             {
-                "width": "20%",
+                "width": "15%",
                 "targets": [3]
             },
             {
                 "width": "10%",
-                "targets": [4]
+                "targets": [4, 5]
             },
             {
                 "width": "10%",
-                "orderData": [9],
+                "orderData": [10],
                 "targets": [6]
             },
             {
                 "visible": false,
-                "targets": [5, 7, 8, 9, 10, 11]
+                "targets": [8, 9, 10, 11, 12]
             },
             {
+                "width": "10%",
+                "searchable": false,
                 "orderable": false,
-                "targets": [12]
+                "targets": [13]
             }],
             initComplete: function () {
                 this.api().columns('.select-filter').every(function () {
@@ -89,11 +92,11 @@
             <th class="select-filter">
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderNo)
             </th>
-            <th class="select-filter">
-                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().TitleID)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderDate)
+            </th>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().TitleID)
             </th>
             <th class="select-filter">
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().SupplierID)
@@ -101,9 +104,14 @@
             <th class="select-filter">
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderCategoryID)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().PriceGross)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().ReceivedDate)
+            </th>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().InvoiceRef)
             </th>
             <th></th>
             <th></th>
@@ -127,6 +135,8 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+            <td></td>
         </tr>
     </tfoot>
 
@@ -138,10 +148,10 @@
                     @Html.DisplayFor(modelItem => item.OrderNo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Title.Title1)
+                    @Html.DisplayFor(modelItem => item.OrderDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderDate)
+                    @Html.DisplayFor(modelItem => item.Title.Title1)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
@@ -149,9 +159,14 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.OrderCategory.OrderCategory1)
                 </td>
-                <td></td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriceGross)
+                </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ReceivedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InvoiceRef)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.OrderDateSortable)
@@ -169,8 +184,12 @@
                     @Html.DisplayFor(modelItem => item.OrderID)
                 </td>
                 <td class="just-right">
+                    @if (item.InvoiceDate == null && item.InvoiceRef == null)
+                    {
+                        <a href="@Url.Action("AddReceipt", new {id = item.OrderID, callingAction = @Html.CurrentViewName()})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Add Invoice">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-tag"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.OrderID})" class="btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                     <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", new { id = item.OrderID })#receipts" class=" btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

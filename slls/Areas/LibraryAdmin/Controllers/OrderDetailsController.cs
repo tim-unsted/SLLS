@@ -216,30 +216,89 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/AllReceived
-        public ActionResult AllReceived(int listSupplier = 0)
+        public ActionResult AllReceived(int listSupplier = 0, int year = 0)
         {
-            //Get the list of suppliers with orders ...
-            var suppliers = (from x in _db.Suppliers
-                             join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
-                             where (o.ReceivedDate != null)
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count(y => y.ReceivedDate != null) })
-                .Distinct().OrderBy(x => x.SupplierName);
-
-            var receivedOrders = _db.OrderDetails.Include(o => o.AccountYear).Include(o => o.BudgetCode).Include(o => o.OrderCategory).Include(o => o.Supplier).Include(o => o.Title)
-                .Where(o => o.ReceivedDate != null);
-            if (listSupplier > 0)
-            {
-                receivedOrders = receivedOrders.Where(o => o.SupplierID == listSupplier);
-            }
-
             var viewModel = new OrderDetailsListViewModel()
             {
-                Orders = receivedOrders
+                Year = year
             };
 
+            var allReceivedOrders =
+                from o in _db.OrderDetails
+                where o.ReceivedDate != null
+                select o;
+
+            IEnumerable<OrderDetail> filteredOrders;
+            IEnumerable<OrderDetail> supplierOrders;
+            IEnumerable<OrderDetail> yearOrders;
+
+            //Initialise some objects to hold years and months ...
+            var years = new Dictionary<int, string> { { -1, "All Years" } };
+
+            if (listSupplier > 0 && year == 0)
+            {
+                year = -1;
+                viewModel.Year = -1;
+            }
+            if (listSupplier == 0 && year > 0)
+            {
+                listSupplier = -1;
+            }
+
+            if (year > 0 && listSupplier == -1)
+            {
+                filteredOrders = from o in allReceivedOrders where o.ReceivedDate.Value.Year == year select o;
+                supplierOrders = filteredOrders;
+                yearOrders = allReceivedOrders;
+            }
+            else if (year == -1 && listSupplier > 0)
+            {
+                filteredOrders = from o in allReceivedOrders where o.SupplierID == listSupplier select o;
+                supplierOrders = allReceivedOrders;
+                yearOrders = from o in allReceivedOrders where o.SupplierID == listSupplier select o;
+            }
+            else if (year == -1 && listSupplier == -1)
+            {
+                filteredOrders = from o in allReceivedOrders select o;
+                supplierOrders = from o in allReceivedOrders select o;
+                yearOrders = from o in allReceivedOrders select o;
+            }
+            else if (year > 0 && listSupplier > 0)
+            {
+                filteredOrders = from o in allReceivedOrders where o.ReceivedDate.Value.Year == year && o.SupplierID == listSupplier select o;
+                supplierOrders = from o in allReceivedOrders where o.ReceivedDate.Value.Year == year select o;
+                yearOrders = from o in allReceivedOrders where o.SupplierID == listSupplier select o;
+            }
+            else
+            {
+                filteredOrders = from o in allReceivedOrders where o.ReceivedDate.Value.Year == -1 && o.SupplierID == -1 select o;
+                supplierOrders = allReceivedOrders;
+                yearOrders = allReceivedOrders;
+            }
+
+            viewModel.Orders = filteredOrders;
+
+            var suppliers = (from x in _db.Suppliers
+                             join o in supplierOrders on x.SupplierID equals o.SupplierID
+                             select
+                                 new SupplierList
+                                 {
+                                     SupplierId = x.SupplierID,
+                                     SupplierName = x.SupplierName,
+                                     Count = supplierOrders.Count(s => s.SupplierID == x.SupplierID)
+                                 })
+                .Distinct().OrderBy(x => x.SupplierName);
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers, addDefault: false);
+
+            var orderYears = (from o in yearOrders select new { Year = o.ReceivedDate.Value.Year }).Distinct();
+            foreach (var item in orderYears.OrderBy(y => y.Year))
+            {
+                years.Add(item.Year, item.Year.ToString());
+            }
+
+            ViewData["Years"] = years;;
             ViewBag.InfoMsg =
-                "To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
-            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
+                "To limit the list to just those " + _entityType.ToLower() + " you want to see, use the Year and Supplier drop-down lists below:";
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllReceived");
             ViewBag.Title = "Received " + DbRes.T("Orders", "EntityType");
             return View(viewModel);
@@ -268,7 +327,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.InfoMsg =
-                "To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
+                "This page lists any " + _entityType.ToLower() + " that have no Budget Code or Account Year assigned to them. To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AlUnassigned");
             ViewBag.Title = "Unallocated " + DbRes.T("Orders", "EntityType");

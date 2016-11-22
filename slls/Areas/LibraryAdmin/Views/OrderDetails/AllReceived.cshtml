@@ -4,14 +4,24 @@
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
-@*<div class="well">
-    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "OrdersTable" }))
-    {
-        @Html.DropDownList("ListSupplier", null, "Filter by Supplier", new { @class = "form-control", onchange = "this.form.submit();" })
-    }
-</div>*@
-
-@Html.Partial("_SupplierFilter")
+@using (Html.BeginForm(null, null, FormMethod.Get, new { id = "OrdersTable" }))
+{
+    <div class="alert alert-info">
+        <span class="help-block">@ViewBag.InfoMsg</span>
+        <div class="row">
+            <div class="col-md-3">
+                @Html.Label("Year Ordered:") @Html.DropDownList("year", new SelectList(ViewBag.Years, "Key", "Value"), "Filter by Year", new { @class = "form-control", onchange = "this.form.submit();" })
+            </div>
+            <div class="col-md-9">
+                @Html.Label("Supplier:") @Html.DropDownList("ListSupplier", null, "Filter by Supplier", new { @class = "form-control", onchange = "this.form.submit();" })
+            </div>
+        </div>
+        <br />
+        @*<p>
+            <a href="@Url.Action("Create", "OrderDetails")" title="Add new @DbRes.T("Orders.Order", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+        </p>*@
+    </div>
+}
 
 <div id="OrdersTable">
     @Html.Partial("_Received", Model)

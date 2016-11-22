@@ -33,21 +33,17 @@
                 }
             },
             {
-                "width": "10%",
+                "width": "15%",
                 "targets": [2]
-            },
-            {
-                "width": "20%",
-                "targets": [3]
             },
             {
                 "width": "10%",
                 "orderData": [9],
-                "targets": [4]
+                "targets": [3]
             },
             {
                 "width": "10%",
-                "targets": [5]
+                "targets": [4,5]
             },
             {
                 "width": "10%",
@@ -98,20 +94,20 @@
         <th class="select-filter">
             @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().TitleID)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().PriceGross)
-        </th>
         <th class="select-filter">
             @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().SupplierID)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().ReceivedDate)
         </th>
-        <th class="select-filter">
-            @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().RequesterUser.Fullname)
+        <th>
+            @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().PriceGross)
         </th>
         <th class="select-filter">
-            @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().AuthoriserUser.Fullname)
+            @DbRes.T("Orders.Requested_By", "FieldDisplayName")
+        </th>
+        <th class="select-filter">
+            @DbRes.T("Orders.Authorised_By", "FieldDisplayName")
         </th>
         <th>
             @* hidden *@
@@ -166,13 +162,13 @@
                     @Html.DisplayFor(modelItem => item.Title.Title1)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.PriceGross)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ReceivedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriceGross)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => requester)
@@ -196,8 +192,9 @@
                     @Html.DisplayFor(modelItem => item.OrderID)
                 </td>
                 <td class="just-right">
+
+                    <a href="@Url.Action("Edit", new {id = item.OrderID})" class="btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                     <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", new { id = item.OrderID })" class="btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

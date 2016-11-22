@@ -20,24 +20,24 @@
                 "targets": [0],
                 "data": 0,
                 "render": function ( data, type, row ) {
-                    return '<a href="Edit/' + row[10] + '" class="btn-link" title="Edit/Update Order">' + row[0] + '</a>';
+                    return '<a href="Edit/' + row[11] + '" class="btn-link" title="Edit/Update Order">' + row[0] + '</a>';
                 }
             },
             {
                 "width": "25%",
-                "targets": [1],
-                "data": 1,
+                "targets": [2],
+                "data": 2,
                 "render": function (data, type, row) {
-                    return '<a href="EditTitle/' + row[11] + '" class="btn-link" title="View/Edit Title">' + row[1] + '</a>';
+                    return '<a href="EditTitle/' + row[12] + '" class="btn-link" title="View/Edit Title">' + row[2] + '</a>';
                 }
             },
             {
                 "width": "10%",
-                "orderData": [7],
-                "targets": [2]
+                "orderData": [8],
+                "targets": [1]
             },
             {
-                "width": "25%",
+                "width": "15%",
                 "targets": [3]
             },
             {
@@ -46,16 +46,17 @@
             },
             {
                 "width": "10%",
-                "orderData": [8],
-                "targets": [5]
+                "orderData": [9],
+                "targets": [6]
             },
             {
                 "visible": false,
-                "targets": [6, 7, 8, 9, 10, 11]
+                "targets": [7, 8, 9, 10, 11, 12]
             },
             {
                 "orderable": false,
-                "targets": [12]
+                "searchable": false,
+                "targets": [13]
             }],
             initComplete: function () {
                 this.api().columns('.select-filter').every(function () {
@@ -88,17 +89,20 @@
         <th class="select-filter">
             @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderNo)
         </th>
-        <th class="select-filter">
-            @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().TitleID)
-        </th>
         <th>
             @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderDate)
+        </th>
+        <th class="select-filter">
+            @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().TitleID)
         </th>
         <th class="select-filter">
             @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().SupplierID)
         </th>
         <th class="select-filter">
             @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderCategoryID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().PriceGross)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Expected)
@@ -139,16 +143,19 @@
                     @Html.DisplayFor(modelItem => item.OrderNo)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Title.Title1)
+                    @Html.DisplayFor(modelItem => item.OrderDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderDate)
+                    @Html.DisplayFor(modelItem => item.Title.Title1)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.OrderCategory.OrderCategory1)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriceGross)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Expected)
@@ -179,8 +186,9 @@
                     {
                         <a href="@Url.Action("QuickReceipt", new {id = item.OrderID})" class="btn btn-link modal-link" data-toggle="modal" data-target="#stdModal" title="Quick Receipt">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-calendar"></span></a>
                     }
-                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+
                     <a href="@Url.Action("Edit", new {id = item.OrderID})" class="btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
         }

@@ -22,7 +22,7 @@
                 "targets": [0],
                 "data": 0,
                 "render": function (data, type, row) {
-                    return '<a href="OrderDetails/Edit/' + row[12] + '" class="btn-link" title="Edit/Update Order">' + data + '</a>';
+                    return '<a href="Edit/' + row[12] + '" class="btn-link" title="Edit/Update Order">' + data + '</a>';
                 }
             },
             {
@@ -31,11 +31,11 @@
                 "targets": [1]
             },
             {
-                "width": "25%",
+                "width": "20%",
                 "targets": [2],
                 "data": 2,
                 "render": function (data, type, row) {
-                    return '<a href="OrderDetails/EditTitle/' + row[11] + '" class="btn-link" title="View/Edit Title">' + data + '</a>';
+                    return '<a href="EditTitle/' + row[11] + '" class="btn-link" title="View/Edit Title">' + data + '</a>';
                 }
             },
             
@@ -193,10 +193,11 @@
                     {
                         <a href="@Url.Action("QuickReceipt", new {id = item.OrderID})" class="btn btn-link modal-link" data-toggle="modal" data-target="#stdModal" title="Quick Receipt">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-calendar"></span></a>
                     }
-                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     <a href="@Url.Action("Edit", new {id = item.OrderID})" class="btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new {id = item.OrderID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
         }
+
     </tbody>
 </table>
