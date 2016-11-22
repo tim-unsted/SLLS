@@ -1054,7 +1054,7 @@ namespace slls.Utils.Helpers
 
 
         //Provides a list of suppliers based on the data provided ...
-        public static IEnumerable<SelectListItem> SuppliersListCustom(IOrderedQueryable<SupplierList> suppliers, bool addDefault = true )
+        public static IEnumerable<SelectListItem> SuppliersListCustom(IOrderedQueryable<SupplierList> suppliers, bool addDefault = true, bool showAll = true )
         {
             var supplierList = new List<SelectListItem>();
 
@@ -1066,6 +1066,15 @@ namespace slls.Utils.Helpers
                     Value = "0"
                 });
             }
+            if (showAll)
+            {
+                supplierList.Add(new SelectListItem
+                {
+                    Text = "All " + DbRes.T("Suppliers", "EntityType"),
+                    Value = "-1"
+                });
+            }
+
             supplierList.AddRange(suppliers.Select(item => new SelectListItem
             {
                 Text = item.SupplierName + " (" + item.Count.ToString() + ")",

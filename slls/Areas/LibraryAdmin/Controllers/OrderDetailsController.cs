@@ -38,11 +38,10 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Admin/Orders/ViewAll
-        public ActionResult Index(int listSupplier = -1, int month = -1, int year = -1)
+        public ActionResult Index(int listSupplier = 0, int year = 0)
         {
             var viewModel = new OrderDetailsListViewModel()
             {
-                Month = month,
                 Year = year
             };
 
@@ -50,143 +49,169 @@ namespace slls.Areas.LibraryAdmin
                 from o in _db.OrderDetails
                 select o;
 
-            //var filteredOrders = allOrders.Where(o => o.SupplierID == listSupplier || o.OrderDate.Value.Year == year || o.OrderDate.Value.Month == month);
-            var filteredOrders = allOrders.Where(o => o.OrderDate.Value.Year == year || o.OrderDate.Value.Month == month);
+            IEnumerable<OrderDetail> filteredOrders;
+            IEnumerable<OrderDetail> supplierOrders;
+            IEnumerable<OrderDetail> yearOrders;
 
             //Initialise some objects to hold years and months ...
-            var months = new Dictionary<int, string> { { -1, "All Months" } };
             var years = new Dictionary<int, string> { { -1, "All Years" } };
-            
-            //Get the actual results if the user has selected anything ...
-            if (listSupplier > 0)
+
+            if (listSupplier > 0 && year == 0)
             {
-                filteredOrders =
-                from o in filteredOrders
-                where o.SupplierID == listSupplier
-                select o;
+                year = -1;
+                viewModel.Year = -1;
             }
-            if(year > 0)
+            if (listSupplier == 0 && year > 0)
             {
-                filteredOrders =
-                from o in filteredOrders
-                where o.OrderDate.Value.Year == year
-                select o;
-            }
-            if (month > 0)
-            {
-                filteredOrders =
-                from o in filteredOrders
-                where o.OrderDate.Value.Month == month
-                select o;
+                listSupplier = -1;
             }
 
-            viewModel.Orders = filteredOrders; 
-            
-
-            //Get a list of suppliers for the filtered orders ...
-            if (filteredOrders.Any())
+            if (year > 0 && listSupplier == -1)
             {
-                var suppliers = (from x in _db.Suppliers
-                    join o in allOrders on x.SupplierID equals o.SupplierID
-                    select
-                        new SupplierList
-                        {
-                            SupplierId = x.SupplierID,
-                            SupplierName = x.SupplierName,
-                            Count = filteredOrders.Count(s => s.SupplierID == x.SupplierID)
-                        })
-                    .Distinct().OrderBy(x => x.SupplierName);
-                ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
+                filteredOrders = from o in allOrders where o.OrderDate.Value.Year == year select o;
+                supplierOrders = filteredOrders;
+                yearOrders = allOrders;
+            }
+            else if (year == -1 && listSupplier > 0)
+            {
+                filteredOrders = from o in allOrders where o.SupplierID == listSupplier select o;
+                supplierOrders = allOrders;
+                yearOrders = from o in allOrders where o.SupplierID == listSupplier select o;
+            }
+            else if (year == -1 && listSupplier == -1)
+            {
+                filteredOrders = from o in allOrders  select o;
+                supplierOrders = from o in allOrders  select o;
+                yearOrders = from o in allOrders select o;
+            }
+            else if (year > 0 && listSupplier > 0)
+            {
+                filteredOrders = from o in allOrders where o.OrderDate.Value.Year == year && o.SupplierID == listSupplier select o;
+                supplierOrders = from o in allOrders where o.OrderDate.Value.Year == year select o;
+                yearOrders = from o in allOrders where o.SupplierID == listSupplier select o;
             }
             else
             {
-                var suppliers = (from x in _db.Suppliers
-                                 join o in allOrders on x.SupplierID equals o.SupplierID
-                                 select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = allOrders.Count(s => s.SupplierID == x.SupplierID) })
+                filteredOrders = from o in allOrders where o.OrderDate.Value.Year == -1 && o.SupplierID == -1 select o;
+                supplierOrders = allOrders;
+                yearOrders = allOrders;
+            }
+
+            viewModel.Orders = filteredOrders;
+
+            var suppliers = (from x in _db.Suppliers
+                             join o in supplierOrders on x.SupplierID equals o.SupplierID
+                             select
+                                 new SupplierList
+                                 {
+                                     SupplierId = x.SupplierID,
+                                     SupplierName = x.SupplierName,
+                                     Count = supplierOrders.Count(s => s.SupplierID == x.SupplierID)
+                                 })
                 .Distinct().OrderBy(x => x.SupplierName);
-                ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
-            }
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers, addDefault: false);
 
-            //Fill the dropdown lists for Years and Months ...
-            var orderMonths = (from o in filteredOrders select new { Month = o.OrderDate.Value.Month }).Distinct();
-            var orderYears = (from o in filteredOrders select new { Year = o.OrderDate.Value.Year }).Distinct();
 
-            foreach (var item in orderMonths.OrderBy(m => m.Month))
-            {
-                months.Add(item.Month, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[item.Month - 1]);
-            }
-
+            var orderYears = (from o in yearOrders select new { Year = o.OrderDate.Value.Year }).Distinct();
             foreach (var item in orderYears.OrderBy(y => y.Year))
             {
                 years.Add(item.Year, item.Year.ToString());
             }
 
-            
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "index");
-            ViewData["Months"] = months;
             ViewData["Years"] = years;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "index");
             ViewBag.InfoMsg =
-                "To limit the list to just those " + _entityType.ToLower() + " you want to see, use the Supplier, Year and Month drop-down lists below:";
-            ViewBag.Title = "All " + DbRes.T("Orders", "EntityType");
+                "To limit the list to just those " + _entityType.ToLower() + " you want to see, use the Year and Supplier drop-down lists below:";
+            ViewBag.Title = "All " + DbRes.T("Orders", "EntityType") + " (Historical)";
             return View(viewModel);
         }
 
         // GET: Admin/Invoices/
-        public ActionResult AllInvoices(int listSupplier = 0, int month = 0, int year = 0)
+        public ActionResult AllInvoices(int listSupplier = 0, int year = 0)
         {
-            if (year == 0)
-            {
-                year = DateTime.Today.Year;
-            }
-
-            if (month == 0)
-            {
-                month = -1;
-            }
-
             var viewModel = new OrderDetailsListViewModel()
             {
-                Month = month,
                 Year = year
             };
 
             var allInvoices =
-                from o in
-                    _db.OrderDetails
-                where (o.InvoiceRef != null && !o.InvoiceRef.Equals(string.Empty))
+                from o in _db.OrderDetails
+                where o.InvoiceDate != null
                 select o;
 
-            allInvoices = year == -1 ? allInvoices : allInvoices.Where(i => i.InvoiceDate.Value.Year == year);
-            allInvoices = month == -1 ? allInvoices : allInvoices.Where(i => i.InvoiceDate.Value.Month == month);
-            viewModel.Orders = listSupplier > 0 ? allInvoices.Where(i => i.SupplierID == listSupplier) : allInvoices;
+            IEnumerable<OrderDetail> filteredOrders;
+            IEnumerable<OrderDetail> supplierOrders;
+            IEnumerable<OrderDetail> yearOrders;
 
-            //Get a list of months ...
-            var months = new Dictionary<int, string> { { -1, "All Months" } };
-            for (int i = 0; i < 12; i++)
-            {
-                months.Add(i + 1, System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.MonthNames[i]);
-            }
-
-            //Get a list of years back to 1970 ..
+            //Initialise some objects to hold years and months ...
             var years = new Dictionary<int, string> { { -1, "All Years" } };
-            for (int i = 1970; i < DateTime.Today.AddYears(1).Year; i++)
+
+            if (listSupplier > 0 && year == 0)
             {
-                years.Add(i, i.ToString());
+                year = -1;
+                viewModel.Year = -1;
+            }
+            if (listSupplier == 0 && year > 0)
+            {
+                listSupplier = -1;
             }
 
-            //Get the list of suppliers with invoices ...
+            if (year > 0 && listSupplier == -1)
+            {
+                filteredOrders = from o in allInvoices where o.InvoiceDate.Value.Year == year select o;
+                supplierOrders = filteredOrders;
+                yearOrders = allInvoices;
+            }
+            else if (year == -1 && listSupplier > 0)
+            {
+                filteredOrders = from o in allInvoices where o.SupplierID == listSupplier select o;
+                supplierOrders = allInvoices;
+                yearOrders = from o in allInvoices where o.SupplierID == listSupplier select o;
+            }
+            else if (year == -1 && listSupplier == -1)
+            {
+                filteredOrders = from o in allInvoices select o;
+                supplierOrders = from o in allInvoices select o;
+                yearOrders = from o in allInvoices select o;
+            }
+            else if (year > 0 && listSupplier > 0)
+            {
+                filteredOrders = from o in allInvoices where o.InvoiceDate.Value.Year == year && o.SupplierID == listSupplier select o;
+                supplierOrders = from o in allInvoices where o.InvoiceDate.Value.Year == year select o;
+                yearOrders = from o in allInvoices where o.SupplierID == listSupplier select o;
+            }
+            else
+            {
+                filteredOrders = from o in allInvoices where o.InvoiceDate.Value.Year == -1 && o.SupplierID == -1 select o;
+                supplierOrders = allInvoices;
+                yearOrders = allInvoices;
+            }
+
+            viewModel.Orders = filteredOrders;
+
             var suppliers = (from x in _db.Suppliers
-                             join o in allInvoices on x.SupplierID equals o.SupplierID
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = allInvoices.Count(s => s.SupplierID == x.SupplierID)})
+                             join o in supplierOrders on x.SupplierID equals o.SupplierID
+                             select
+                                 new SupplierList
+                                 {
+                                     SupplierId = x.SupplierID,
+                                     SupplierName = x.SupplierName,
+                                     Count = supplierOrders.Count(s => s.SupplierID == x.SupplierID)
+                                 })
                 .Distinct().OrderBy(x => x.SupplierName);
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers, addDefault: false);
             
-            ViewData["Months"] = months;
+            var orderYears = (from o in yearOrders select new { Year = o.InvoiceDate.Value.Year }).Distinct();
+            foreach (var item in orderYears.OrderBy(y => y.Year))
+            {
+                years.Add(item.Year, item.Year.ToString());
+            }
+
             ViewData["Years"] = years;
             ViewBag.InfoMsg =
-                "To limit the list to just those invoices you want to see, use the Supplier, Year and Month drop-down lists below:";
-            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
+                "To limit the list to just those invoices you want to see, use the Year and Supplier drop-down lists below:";
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllInvoices");
-            ViewBag.Title = "All " + DbRes.T("Invoices", "EntityType");
+            ViewBag.Title = "All " + DbRes.T("Invoices", "EntityType") + " (Historical)";
             return View(viewModel);
         }
 
@@ -213,7 +238,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.InfoMsg =
-                "To limit the list to just those " + _entityType.ToLower()  + " from a particular Supplier, use the drop-down list below:";
+                "To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
             ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllReceived");
             ViewBag.Title = "Received " + DbRes.T("Orders", "EntityType");
@@ -229,7 +254,7 @@ namespace slls.Areas.LibraryAdmin
                              where (o.BudgetCodeID == null || o.AccountYearID == null)
                              select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count(y => y.BudgetCode == null || y.AccountYearID == null) })
                 .Distinct().OrderBy(x => x.SupplierName);
-            
+
             var unallocatedOrders = _db.OrderDetails.Include(o => o.AccountYear).Include(o => o.BudgetCode).Include(o => o.OrderCategory).Include(o => o.Supplier).Include(o => o.Title)
                 .Where(o => o.BudgetCodeID == null || o.AccountYearID == null);
             if (listSupplier > 0)
@@ -290,7 +315,7 @@ namespace slls.Areas.LibraryAdmin
                              where (o.ReceivedDate == null && o.Expected <= today)
                              select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count(y => y.ReceivedDate == null && y.Expected <= today) })
                 .Distinct().OrderBy(x => x.SupplierName);
-            
+
             var overdueOrders = _db.OrderDetails.Include(o => o.AccountYear).Include(o => o.BudgetCode).Include(o => o.OrderCategory).Include(o => o.Supplier).Include(o => o.Title)
                 .Where(o => o.ReceivedDate == null && o.Expected <= today);
             if (listSupplier > 0)
@@ -320,7 +345,7 @@ namespace slls.Areas.LibraryAdmin
                              where (o.OnApproval)
                              select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count(y => y.OnApproval) })
                 .Distinct().OrderBy(x => x.SupplierName);
-            
+
             var onApprovalOrders = _db.OrderDetails.Include(o => o.AccountYear).Include(o => o.BudgetCode).Include(o => o.OrderCategory).Include(o => o.Supplier).Include(o => o.Title)
                 .Where(o => o.OnApproval);
             if (listSupplier > 0)
@@ -351,73 +376,73 @@ namespace slls.Areas.LibraryAdmin
             switch (callingAction)
             {
                 case "edit":
-                {
-                    ViewBag.Title = "Edit/Update " + _entityName;
-                    viewModel.BtnText = "Edit/Update " + _entityName;
-                    viewModel.Message = "Select an " + _entityName.ToLower() + " to edit/update";
-                    viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to edit/update from the dropdown list of available " + _entityType.ToLower() + " below.";
-                    viewModel.ReturnAction = "Edit";
-                    viewModel.Orders = SelectListHelper.OrdersList(filter:"outstanding");
-                    break;
-                }
+                    {
+                        ViewBag.Title = "Edit/Update " + _entityName;
+                        viewModel.BtnText = "Edit/Update " + _entityName;
+                        viewModel.Message = "Select an " + _entityName.ToLower() + " to edit/update";
+                        viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to edit/update from the dropdown list of available " + _entityType.ToLower() + " below.";
+                        viewModel.ReturnAction = "Edit";
+                        viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
+                        break;
+                    }
 
                 case "print":
-                {
-                    ViewBag.Title = "Print " + _entityName;
-                    viewModel.BtnText = "Print Order";
-                    viewModel.Message = "Select an " + _entityName.ToLower() + " to print";
-                    viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to print from the dropdown list of available " + _entityType.ToLower() + " below.";
-                    viewModel.ReturnAction = "PrintOrder";
-                    viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
-                    break;
-                }
+                    {
+                        ViewBag.Title = "Print " + _entityName;
+                        viewModel.BtnText = "Print Order";
+                        viewModel.Message = "Select an " + _entityName.ToLower() + " to print";
+                        viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to print from the dropdown list of available " + _entityType.ToLower() + " below.";
+                        viewModel.ReturnAction = "PrintOrder";
+                        viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
+                        break;
+                    }
 
                 case "reprint":
-                {
-                    ViewBag.Title = "Reprint " + _entityName;
-                    viewModel.BtnText = "Reprint " + _entityName;
-                    viewModel.Message = "Select an " + _entityName.ToLower() + " to Reprint";
-                    viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to reprint from the dropdown list of available " + _entityType.ToLower() + " below.";
-                    viewModel.ReturnAction = "PrintOrder";
-                    viewModel.Orders = SelectListHelper.OrdersList();
-                    break;
-                }
+                    {
+                        ViewBag.Title = "Reprint " + _entityName;
+                        viewModel.BtnText = "Reprint " + _entityName;
+                        viewModel.Message = "Select an " + _entityName.ToLower() + " to Reprint";
+                        viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to reprint from the dropdown list of available " + _entityType.ToLower() + " below.";
+                        viewModel.ReturnAction = "PrintOrder";
+                        viewModel.Orders = SelectListHelper.OrdersList();
+                        break;
+                    }
 
                 case "duplicate":
-                {
-                    ViewBag.Title = "Duplicate " + _entityName;
-                    viewModel.BtnText = "Duplicate " + _entityName;
-                    viewModel.Message = "Select an " + _entityName.ToLower() + " to Duplicate";
-                    viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to duplicate from the dropdown list of available " + _entityType.ToLower() + " below.";
-                    viewModel.ReturnAction = "DuplicateOrder";
-                    viewModel.Orders = SelectListHelper.OrdersList();
-                    break;
-                }
+                    {
+                        ViewBag.Title = "Duplicate " + _entityName;
+                        viewModel.BtnText = "Duplicate " + _entityName;
+                        viewModel.Message = "Select an " + _entityName.ToLower() + " to Duplicate";
+                        viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to duplicate from the dropdown list of available " + _entityType.ToLower() + " below.";
+                        viewModel.ReturnAction = "DuplicateOrder";
+                        viewModel.Orders = SelectListHelper.OrdersList();
+                        break;
+                    }
 
                 case "addInvoice":
-                {
-                    ViewBag.Title = "Add Invoice";
-                    viewModel.BtnText = "Add Invoice";
-                    viewModel.Message = "Select an Order to add an Invoice to";
-                    viewModel.HelpText = "<strong>Note: </strong>The list below <emp>only</emp> shows " + _entityType.ToLower() + " with no invoice. To see all " + _entityType.ToLower() + ", choose another option.";
-                    viewModel.ReturnAction = "AddInvoice";
-                    viewModel.Tab = "#invoice";
-                    viewModel.Orders = SelectListHelper.OrdersList(filter:"noinvoice");
-                    break;
-                }
+                    {
+                        ViewBag.Title = "Add Invoice";
+                        viewModel.BtnText = "Add Invoice";
+                        viewModel.Message = "Select an Order to add an Invoice to";
+                        viewModel.HelpText = "<strong>Note: </strong>The list below <emp>only</emp> shows " + _entityType.ToLower() + " with no invoice. To see all " + _entityType.ToLower() + ", choose another option.";
+                        viewModel.ReturnAction = "AddInvoice";
+                        viewModel.Tab = "#invoice";
+                        viewModel.Orders = SelectListHelper.OrdersList(filter: "noinvoice");
+                        break;
+                    }
 
                 default:
-                {
-                    ViewBag.Title = "Select  " + _entityName;
-                    viewModel.BtnText = "Ok";
-                    viewModel.Message = "Select an " + _entityName;
-                    viewModel.HelpText = "Select an " + _entityName.ToLower() + " from the dropdown list of available " + _entityType.ToLower() + " below.";
-                    viewModel.ReturnAction = "Edit";
-                    viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
-                    break;
-                }
+                    {
+                        ViewBag.Title = "Select  " + _entityName;
+                        viewModel.BtnText = "Ok";
+                        viewModel.Message = "Select an " + _entityName;
+                        viewModel.HelpText = "Select an " + _entityName.ToLower() + " from the dropdown list of available " + _entityType.ToLower() + " below.";
+                        viewModel.ReturnAction = "Edit";
+                        viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
+                        break;
+                    }
             }
-            
+
             return View(viewModel);
         }
 
@@ -462,7 +487,7 @@ namespace slls.Areas.LibraryAdmin
                              join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
                              select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count() })
                 .Distinct().OrderBy(x => x.SupplierName);
-            
+
             //Get the actual results if the user has selected anything ...
             var supplierOrders =
                 from o in
@@ -578,7 +603,7 @@ namespace slls.Areas.LibraryAdmin
                     Value = item.TitleID.ToString()
                 });
             }
-            
+
 
             //Add the actual ordered titles ...
             //Get the actual results if the user has selected anything ...
@@ -643,8 +668,8 @@ namespace slls.Areas.LibraryAdmin
         {
             //Get the list of ordered titles  ...
             var orderCategories = (from x in _db.OrderCategories
-                               where x.OrderDetails.Count > 0
-                               select new { x.OrderCategoryID, OrderCategory = x.OrderCategory1 + " (" + x.OrderDetails.Count + ")" })
+                                   where x.OrderDetails.Count > 0
+                                   select new { x.OrderCategoryID, OrderCategory = x.OrderCategory1 + " (" + x.OrderDetails.Count + ")" })
                 .Distinct().OrderBy(x => x.OrderCategory);
 
             //Start a new list selectlist items ...
@@ -787,7 +812,7 @@ namespace slls.Areas.LibraryAdmin
                 TitleID = viewModel.TitleID ?? 0,
                 OrderCategoryID = viewModel.OrderCategoryID == 0 ? 1 : viewModel.OrderCategoryID,
                 OrderDate = viewModel.OrderDate ?? DateTime.Now,
-                OrderNo = viewModel.OrderNo,
+                OrderNo = viewModel.OrderNo ?? "",
                 Expected = viewModel.Expected ?? DateTime.Now.AddDays(28),
                 RequesterUser = _db.Users.Find(viewModel.RequestedBy),
                 AuthoriserUser = _db.Users.Find(viewModel.Authority),
@@ -807,10 +832,17 @@ namespace slls.Areas.LibraryAdmin
             {
                 _db.OrderDetails.Add(newOrder);
                 _db.SaveChanges();
-                //return Json(new { success = true });
-                return RedirectToAction("Edit", new {id = newOrder.OrderID});
+
+                if(string.IsNullOrEmpty(viewModel.OrderNo))
+                {
+                    newOrder.OrderNo = newOrder.OrderID.ToString();
+                    _db.Entry(newOrder).State = EntityState.Modified;
+                    _db.SaveChanges();
+                }
+
+                return RedirectToAction("Edit", new { id = newOrder.OrderID });
             }
-            
+
             return RedirectToAction("Add");
         }
 
@@ -830,7 +862,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 return HttpNotFound();
             }
-            
+
             var viewModel = new OrderDetailsEditViewModel
             {
                 OrderID = orderDetail.OrderID,
@@ -907,7 +939,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 return RedirectToAction("Select", new { callingAction = "duplicate" });
             }
-            
+
             var orderDetail = _db.OrderDetails.Find(id);
             if (orderDetail == null)
             {
@@ -959,7 +991,7 @@ namespace slls.Areas.LibraryAdmin
         {
             if (id == 0)
             {
-                return RedirectToAction("Select", new { callingAction = "edit"});
+                return RedirectToAction("Select", new { callingAction = "edit" });
             }
 
             var orderDetail = _db.OrderDetails.Find(id);
@@ -1002,13 +1034,14 @@ namespace slls.Areas.LibraryAdmin
                 Report = orderDetail.Report,
                 SupplierID = orderDetail.SupplierID,
                 VAT = orderDetail.VAT,
-                Titles = new SelectList(_db.Titles, "TitleID", "Title1"),
+                //Titles = new SelectList(_db.Titles, "TitleID", "Title1"),
+                Titles = SelectListHelper.TitlesList(orderDetail.TitleID),
                 Suppliers = new SelectList(_db.Suppliers, "SupplierID", "SupplierName"),
                 RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 CallingAction = "Edit"
             };
-            
+
             if (success)
             {
                 TempData["SuccessMsg"] = _entityName + " details have been updated successfully.";
@@ -1030,11 +1063,11 @@ namespace slls.Areas.LibraryAdmin
                 viewModel.WarningMsg =
                     "<strong>Info: </strong>This " + _entityName.ToLower() + " has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
             }
-            
+
             ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
-            ViewData["AccountYearID"] = SelectListHelper.AccountYearsList(id: orderDetail.AccountYearID ?? 0,addNew:false);
+            ViewData["AccountYearID"] = SelectListHelper.AccountYearsList(id: orderDetail.AccountYearID ?? 0, addNew: false);
             ViewData["BudgetCodeID"] = SelectListHelper.BudgetCodesList(id: orderDetail.BudgetCodeID ?? 0, addNew: false);
-            ViewData["OrderCategoryID"] = SelectListHelper.OrderCategoriesList(id: orderDetail.OrderCategoryID ?? 0, addNew:false);
+            ViewData["OrderCategoryID"] = SelectListHelper.OrderCategoriesList(id: orderDetail.OrderCategoryID ?? 0, addNew: false);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "Edit");
             ViewBag.Title = "Edit/Update Order";
             return View(viewModel);
@@ -1096,29 +1129,29 @@ namespace slls.Areas.LibraryAdmin
             ViewData["Authority"] = new SelectList(UserManager.Users, "Id", "Username", viewModel.Authority);
             ViewData["RequestedBy"] = new SelectList(UserManager.Users, "Id", "Username", viewModel.RequestedBy);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "Edit");
-            
+
             switch (viewModel.CallingAction)
             {
                 case "Edit":
-                {
-                    ViewData["selectOrder"] = SelectListHelper.OrdersList(id:viewModel.OrderID);
-                    ViewBag.Title = "Edit/Update " + _entityName;
-                    break;
-                }
+                    {
+                        ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
+                        ViewBag.Title = "Edit/Update " + _entityName;
+                        break;
+                    }
                 case "AddInvoice":
-                {
-                    ViewData["selectOrder"] = SelectListHelper.OrdersList(id:viewModel.OrderID, filter:"noinvoice");
-                    ViewBag.Title = "Add Invoice";
-                    break;
-                }
+                    {
+                        ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID, filter: "noinvoice");
+                        ViewBag.Title = "Add Invoice";
+                        break;
+                    }
                 default:
-                {
-                    ViewData["selectOrder"] = SelectListHelper.OrdersList(id:viewModel.OrderID);
-                    ViewBag.Title = _entityName + " Details";
-                    break;
-                }
+                    {
+                        ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
+                        ViewBag.Title = _entityName + " Details";
+                        break;
+                    }
             }
-            
+
             return View(viewModel.CallingAction, viewModel);
         }
 
@@ -1204,7 +1237,7 @@ namespace slls.Areas.LibraryAdmin
                 _db.Entry(orderDetail).State = EntityState.Modified;
                 _db.SaveChanges();
 
-                return Json( new { success = true });
+                return Json(new { success = true });
 
             }
             return PartialView("AddReceipt", viewModel);
@@ -1240,7 +1273,7 @@ namespace slls.Areas.LibraryAdmin
                 viewModel.DateWarningMsg =
                     "<p><strong>Note: </strong>The received date (highlighted in <span style=\"color: #3c763d;\"><strong>green</strong></span>) has been auto-filled for you.  Please check to ensure that this date is correct for your " + _entityName.ToLower() + ".</p>";
             }
-            
+
             ViewBag.Title = "Quick Receipt";
             return PartialView(viewModel);
         }
@@ -1366,77 +1399,77 @@ namespace slls.Areas.LibraryAdmin
                         return RedirectToAction("AccountSummary_Report", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
                     }
                 case "AccountByBudgetCode":
-                        {
-                            return RedirectToAction("AccountByBudgetCode", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountByBudgetCode", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountByMedia":
-                        {
-                            return RedirectToAction("AccountByMedia", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountByMedia", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountBySupplier":
-                        {
-                            return RedirectToAction("AccountBySupplier", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountBySupplier", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountOneOffsSummary":
-                        {
-                            return RedirectToAction("AccountOneOffsSummary", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountOneOffsSummary", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSubscriptionsSummary":
-                        {
-                            return RedirectToAction("AccountSubscriptionsSummary", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSubscriptionsSummary", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSinglePurchasesByBudgetCode":
-                        {
-                            return RedirectToAction("AccountSinglePurchasesByBudgetCode", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSinglePurchasesByBudgetCode", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSinglePurchasesByMedia":
-                        {
-                            return RedirectToAction("AccountSinglePurchasesByMedia", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSinglePurchasesByMedia", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSinglePurchasesBySupplier":
-                        {
-                            return RedirectToAction("AccountSinglePurchasesBySupplier", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSinglePurchasesBySupplier", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSubscriptionsByBudgetCode":
-                        {
-                            return RedirectToAction("AccountSubscriptionsByBudgetCode", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSubscriptionsByBudgetCode", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSubscriptionsByMedia":
-                        {
-                            return RedirectToAction("AccountSubscriptionsByMedia", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSubscriptionsByMedia", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSubscriptionsDetailByMedia":
-                        {
-                            return RedirectToAction("AccountSubscriptionsDetailByMedia", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSubscriptionsDetailByMedia", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSubscriptionsBySupplier":
-                        {
-                            return RedirectToAction("AccountSubscriptionsBySupplier", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSubscriptionsBySupplier", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSubscriptionsDetailByBudgetCode":
-                        {
-                            return RedirectToAction("AccountSubscriptionsDetailByBudgetCode", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSubscriptionsDetailByBudgetCode", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSinglePurchasesDetailByBudgetCode":
-                        {
-                            return RedirectToAction("AccountSinglePurchasesDetailByBudgetCode", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSinglePurchasesDetailByBudgetCode", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSinglePurchasesDetailByMedia":
-                        {
-                            return RedirectToAction("AccountSinglePurchasesDetailByMedia", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSinglePurchasesDetailByMedia", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSinglePurchasesDetailBySupplier":
-                        {
-                            return RedirectToAction("AccountSinglePurchasesDetailBySupplier", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSinglePurchasesDetailBySupplier", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "AccountSubscriptionsDetailBySupplier":
-                        {
-                            return RedirectToAction("AccountSubscriptionsDetailBySupplier", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("AccountSubscriptionsDetailBySupplier", new { caption = friendlyName, budgetCodeId, accountYearId, startDate, endDate });
+                    }
                 case "Cancellations":
-                        {
-                            return RedirectToAction("Cancellations_Report", new { caption = friendlyName, accountYearId, startDate, endDate });
-                        }
+                    {
+                        return RedirectToAction("Cancellations_Report", new { caption = friendlyName, accountYearId, startDate, endDate });
+                    }
                 default:
                     {
                         return null;
@@ -1444,25 +1477,25 @@ namespace slls.Areas.LibraryAdmin
             }
         }
 
-        public ActionResult Cancellations_Report(string caption, int accountYearId, DateTime startDate, DateTime endDate )
+        public ActionResult Cancellations_Report(string caption, int accountYearId, DateTime startDate, DateTime endDate)
         {
             var cancelledCopies = from c in _db.Copies
-                where c.Cancellation != null
-                select c;
+                                  where c.Cancellation != null
+                                  select c;
 
             if (accountYearId > 0)
             {
                 cancelledCopies = from c in cancelledCopies
-                         where c.AccountYearID == accountYearId
-                         select c;
+                                  where c.AccountYearID == accountYearId
+                                  select c;
             }
             else
             {
                 cancelledCopies = from c in cancelledCopies
-                         where c.Cancellation >= startDate && c.Cancellation <= endDate
-                         select c;
+                                  where c.Cancellation >= startDate && c.Cancellation <= endDate
+                                  select c;
             }
-            
+
             var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
 
             var viewModel = new OrderReportsViewModel
@@ -1540,20 +1573,20 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult AccountSinglePurchasesByBudgetCode(string caption, string budgetCodeId, int accountYearId, DateTime startDate, DateTime endDate)
         {
             var allOrders = from o in _db.OrderDetails
-                         where o.ReceivedDate != null && o.OrderCategory.Sub == false
-                         select o;
+                            where o.ReceivedDate != null && o.OrderCategory.Sub == false
+                            select o;
 
             if (accountYearId > 0)
             {
                 allOrders = from o in allOrders
-                         where o.AccountYearID == accountYearId
-                         select o;
+                            where o.AccountYearID == accountYearId
+                            select o;
             }
             else
             {
                 allOrders = from o in allOrders
-                         where o.ReceivedDate >= startDate && o.ReceivedDate <= endDate
-                         select o;
+                            where o.ReceivedDate >= startDate && o.ReceivedDate <= endDate
+                            select o;
             }
 
             if (budgetCodeId != null)
@@ -1561,8 +1594,8 @@ namespace slls.Areas.LibraryAdmin
                 if (budgetCodeId != "0")
                 {
                     allOrders = from o in allOrders
-                             where budgetCodeId.Contains(o.BudgetCodeID.ToString())
-                             select o;
+                                where budgetCodeId.Contains(o.BudgetCodeID.ToString())
+                                select o;
                 }
             }
 
@@ -1575,7 +1608,7 @@ namespace slls.Areas.LibraryAdmin
             var allBudgetCodes = (from o in allOrders
                                   where o.BudgetCodeID != null
                                   select o.BudgetCode).Distinct();
-            
+
             var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
 
             var viewModel = new OrderReportsViewModel
@@ -1864,7 +1897,7 @@ namespace slls.Areas.LibraryAdmin
 
             var allTitles = (from o in allOrders
                              select o.Title).Distinct();
-            
+
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
@@ -1889,20 +1922,20 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult AccountOneOffsSummary(string caption, string budgetCodeId, int accountYearId, DateTime startDate, DateTime endDate)
         {
             var allOrders = from o in _db.OrderDetails
-                         where o.ReceivedDate != null && o.OrderCategory.Sub == false
-                         select o;
+                            where o.ReceivedDate != null && o.OrderCategory.Sub == false
+                            select o;
 
             if (accountYearId > 0)
             {
                 allOrders = from o in allOrders
-                         where o.AccountYearID == accountYearId
-                         select o;
+                            where o.AccountYearID == accountYearId
+                            select o;
             }
             else
             {
                 allOrders = from o in allOrders
-                         where o.ReceivedDate >= startDate && o.ReceivedDate <= endDate
-                         select o;
+                            where o.ReceivedDate >= startDate && o.ReceivedDate <= endDate
+                            select o;
             }
 
             if (budgetCodeId != null)
@@ -1910,8 +1943,8 @@ namespace slls.Areas.LibraryAdmin
                 if (budgetCodeId != "0")
                 {
                     allOrders = from o in allOrders
-                             where budgetCodeId.Contains(o.BudgetCodeID.ToString())
-                             select o;
+                                where budgetCodeId.Contains(o.BudgetCodeID.ToString())
+                                select o;
                 }
             }
 
@@ -1922,9 +1955,9 @@ namespace slls.Areas.LibraryAdmin
             //}
 
             var allBudgetCodes = (from o in allOrders
-                               where o.BudgetCodeID != null
-                               select o.BudgetCode).Distinct();
-            
+                                  where o.BudgetCodeID != null
+                                  select o.BudgetCode).Distinct();
+
             var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
 
             var viewModel = new OrderReportsViewModel
@@ -2005,7 +2038,7 @@ namespace slls.Areas.LibraryAdmin
             var orders = from o in _db.OrderDetails
                          where o.ReceivedDate != null
                          select o;
-            
+
             if (accountYearId > 0)
             {
                 orders = from o in orders
@@ -2059,20 +2092,20 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult AccountByMedia(string caption, string budgetCodeIdString, int accountYearId, DateTime startDate, DateTime endDate)
         {
             var allOrders = from o in _db.OrderDetails
-                         where o.ReceivedDate != null
-                         select o;
+                            where o.ReceivedDate != null
+                            select o;
 
             if (accountYearId > 0)
             {
                 allOrders = from o in allOrders
-                         where o.AccountYearID == accountYearId
-                         select o;
+                            where o.AccountYearID == accountYearId
+                            select o;
             }
             else
             {
                 allOrders = from o in allOrders
-                         where o.ReceivedDate >= startDate && o.ReceivedDate <= endDate
-                         select o;
+                            where o.ReceivedDate >= startDate && o.ReceivedDate <= endDate
+                            select o;
             }
 
             if (budgetCodeIdString != null)
@@ -2080,8 +2113,8 @@ namespace slls.Areas.LibraryAdmin
                 if (budgetCodeIdString != "0")
                 {
                     allOrders = from o in allOrders
-                             where budgetCodeIdString.Contains(o.BudgetCodeID.ToString())
-                             select o;
+                                where budgetCodeIdString.Contains(o.BudgetCodeID.ToString())
+                                select o;
                 }
             }
 
@@ -2092,10 +2125,10 @@ namespace slls.Areas.LibraryAdmin
             //}
 
             var allTitles = (from o in allOrders
-                          select o.Title).Distinct();
+                             select o.Title).Distinct();
 
             var allMediaTypes = (from t in allTitles
-                              select t.MediaType).Distinct();
+                                 select t.MediaType).Distinct();
 
             var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
 
@@ -2326,7 +2359,7 @@ namespace slls.Areas.LibraryAdmin
             //    TempData["NoData"] = true;
             //    return RedirectToAction("ReportGenerator");
             //}
-            
+
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
@@ -2381,7 +2414,7 @@ namespace slls.Areas.LibraryAdmin
             //    TempData["NoData"] = true;
             //    return RedirectToAction("ReportGenerator");
             //}
-            
+
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
@@ -2436,7 +2469,7 @@ namespace slls.Areas.LibraryAdmin
             //    TempData["NoData"] = true;
             //    return RedirectToAction("ReportGenerator");
             //}
-            
+
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
@@ -2515,8 +2548,8 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult ItemsOnOrder_Report()
         {
             var allOrders = from o in _db.OrderDetails
-                where o.ReceivedDate == null && o.Cancelled == null
-                select o;
+                            where o.ReceivedDate == null && o.Cancelled == null
+                            select o;
 
             var suppliers = (from o in allOrders
                              select o.Supplier).Distinct();
@@ -2534,8 +2567,8 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult StandingOrders_Report()
         {
             var allOrders = from o in _db.OrderDetails
-                where o.OrderCategory.OrderCategory1.ToLower() == "standing order"
-                select o;
+                            where o.OrderCategory.OrderCategory1.ToLower() == "standing order"
+                            select o;
 
             var suppliers = (from o in allOrders
                              select o.Supplier).Distinct();
@@ -2554,9 +2587,9 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult OverdueItemsOnOrder_Report()
         {
             var allOrders = from o in _db.OrderDetails
-                where o.ReceivedDate == null && o.Cancelled == null && o.Expected < DateTime.Today
-                select o;
-            
+                            where o.ReceivedDate == null && o.Cancelled == null && o.Expected < DateTime.Today
+                            select o;
+
             var suppliers = (from o in allOrders
                              select o.Supplier).Distinct();
 
@@ -2623,8 +2656,8 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult ItemsOnApproval_Report()
         {
             var allOrders = from o in _db.OrderDetails
-                             where o.OnApproval && !o.Accepted && o.ReturnedDate == null
-                             select o;
+                            where o.OnApproval && !o.Accepted && o.ReturnedDate == null
+                            select o;
 
             var allUsers = UserManager.Users.AsEnumerable();
 
@@ -2694,8 +2727,8 @@ namespace slls.Areas.LibraryAdmin
             var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
 
             var allOrders = (from o in _db.OrderDetails
-                where o.AccountYearID == accountYearId && o.RequesterUser != null
-                select o).AsEnumerable();
+                             where o.AccountYearID == accountYearId && o.RequesterUser != null
+                             select o).AsEnumerable();
 
             var users = UserManager.Users.AsEnumerable();
 
@@ -2704,8 +2737,8 @@ namespace slls.Areas.LibraryAdmin
             //                   select u).Distinct();
 
             var requestors = (from o in allOrders
-                            select o.RequesterUser).Distinct();
-            
+                              select o.RequesterUser).Distinct();
+
             var viewModel = new OrderReportsViewModel()
             {
                 AccountYearId = accountYearId,
@@ -2727,13 +2760,13 @@ namespace slls.Areas.LibraryAdmin
             var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
 
             var allOrders = (from o in _db.OrderDetails
-                            where o.AccountYearID == accountYearId && o.AuthoriserUser != null
-                            select o).AsEnumerable();
-            
+                             where o.AccountYearID == accountYearId && o.AuthoriserUser != null
+                             select o).AsEnumerable();
+
             var users = UserManager.Users.AsEnumerable();
 
             var authorisers = (from o in allOrders
-                              select o.AuthoriserUser).Distinct();
+                               select o.AuthoriserUser).Distinct();
 
             var viewModel = new OrderReportsViewModel()
             {
@@ -2753,7 +2786,7 @@ namespace slls.Areas.LibraryAdmin
         public JsonResult GetOrderList(int orderId = 0, string filter = "")
         {
             var allOrders = SelectListHelper.OrdersList(id: orderId, filter: filter);
-            
+
             return Json(new
             {
                 success = true,
@@ -2761,7 +2794,7 @@ namespace slls.Areas.LibraryAdmin
             });
         }
 
-        
+
         // GET: LibraryAdmin/OrderDetails/Delete/5
         public ActionResult Delete(int? id, string callingController = "orderdetails")
         {
@@ -2812,7 +2845,7 @@ namespace slls.Areas.LibraryAdmin
             //}
             //return RedirectToAction("Edit", "Titles", new { id = viewModel.TitleID });
 
-            return Json(new {success = true});
+            return Json(new { success = true });
         }
 
         protected override void Dispose(bool disposing)

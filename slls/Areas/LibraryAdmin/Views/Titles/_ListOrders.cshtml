@@ -1,7 +1,44 @@
 ﻿@using slls.Utils.Helpers
 @model IEnumerable<slls.Models.OrderDetail>
 
-<table id="orderdetails" class="table table-condensed table-hover">
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#orderdetails').DataTable({
+            "dom": '<"inline"i><"clear"><"inline"l><"inline float-right"p>rt<"inline"i><"inline float-right"p><"clear"><"inline"l><"clear">',
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [[0, "desc"]],
+            "columnDefs": [
+                {
+                    "orderData": [7],
+                    "targets": [1]
+                },
+                {
+                    "orderData": [8],
+                    "targets": [5]
+                },
+                {
+                    "searchable": false,
+                    "sortable": false,
+                    "visible": false,
+                    "targets": [7, 8]
+                },
+                {
+                    "width": "10%",
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [9]
+                }
+            ]
+        });
+    });
+</script>
+
+<table id="orderdetails" class="table table-condensed table-hover" style="width: 100%;">
     <thead>
         <tr>
             <th>
@@ -17,11 +54,16 @@
                 @Html.DisplayNameFor(model => model.OrderCategoryID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Expected)
+                @Html.DisplayNameFor(model => model.PriceGross)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.ReceivedDate)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.InvoiceRef)
+            </th>
+            <th></th>
+            <th></th>
             <th></th>
         </tr>
     </thead>
@@ -49,19 +91,33 @@
                     @Html.DisplayFor(modelItem => item.OrderCategory.OrderCategory1)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Expected)
+                    @Html.DisplayFor(modelItem => item.PriceGross)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ReceivedDate)
                 </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InvoiceRef)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDateSortable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReceivedDateSortable)
+                </td>
 
                 <td class="just-right">
+                    @if (item.InvoiceDate == null && item.InvoiceRef == null)
+                    {
+                        <a href="@Url.Action("AddReceipt", "OrderDetails", new { id = item.OrderID, callingAction = @Html.CurrentViewName() })" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Add Invoice">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-tag"></span></a>
+                    }
                     @if (item.ReceivedDate == null)
                     {
-                        <a href="@Url.Action("AddReceipt", "OrderDetails", new { id = item.OrderID, callingAction = @Html.CurrentViewName() })" class="btn btn-link modal-link" title="Add Receipt">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-tag"></span></a>
+                        <a href="@Url.Action("QuickReceipt", "OrderDetails", new { id = item.OrderID })" class="btn btn-link modal-link" data-toggle="modal" data-target="#stdModal" title="Quick Receipt">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-calendar"></span></a>
                     }
-                    <a href="@Url.Action("Edit", "OrderDetails", new {id = item.OrderID, callingController = "titles"})" class="btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="@Url.Action("Delete", "OrderDetails", new { id = item.OrderID, callingController = "titles" })" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Delete", "OrderDetails", new { id = item.OrderID })" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", "OrderDetails", new { id = item.OrderID })" class="btn btn-link" title="Edit">&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+
                 </td>
             </tr>
         }

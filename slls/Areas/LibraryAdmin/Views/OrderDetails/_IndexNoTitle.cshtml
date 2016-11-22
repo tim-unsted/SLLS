@@ -22,30 +22,26 @@
                 "targets": [0],
                 "data": 0,
                 "render": function (data, type, row) {
-                    return '<a href="OrderDetails/Edit/' + row[12] + '" class="btn-link" title="Edit/Update Order">' + data + '</a>';
+                    return '<a href="OrderDetails/Edit/' + row[11] + '" class="btn-link" title="Edit/Update Order">' + data + '</a>';
                 }
             },
             {
                 "width": "10%",
-                "orderData": [8],
+                "orderData": [9],
                 "targets": [1]
             },
             {
-                "width": "25%",
-                "targets": [2],
-                "data": 2,
-                "render": function (data, type, row) {
-                    return '<a href="OrderDetails/EditTitle/' + row[11] + '" class="btn-link" title="View/Edit Title">' + data + '</a>';
-                }
-            },
-            
-            {
-                "width": "15%",
-                "targets": [3]
+                "width": "20%",
+                "targets": [2]
             },
             {
                 "width": "10%",
-                "targets": [4, 5, 7]
+                "targets": [3, 4]
+            },
+            {
+                "width": "10%",
+                "orderData": [9],
+                "targets": [5]
             },
             {
                 "width": "10%",
@@ -97,9 +93,6 @@
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderDate)
             </th>
             <th class="select-filter">
-                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().TitleID)
-            </th>
-            <th class="select-filter">
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().SupplierID)
             </th>
             <th class="select-filter">
@@ -107,6 +100,9 @@
             </th>
             <th class="select-filter">
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().PriceGross)
+            </th>
+            <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Expected)
             </th>
             <th class="select-filter">
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().ReceivedDate)
@@ -152,9 +148,6 @@
                     @Html.DisplayFor(modelItem => item.OrderDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Title.Title1)
-                </td>
-                <td>
                     @Html.DisplayFor(modelItem => item.Supplier.SupplierName)
                 </td>
                 <td>
@@ -162,6 +155,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.PriceGross)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Expected)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ReceivedDate)

@@ -47,7 +47,6 @@ namespace slls.ViewModels
         [Key]
         public int OrderID { get; set; }
         
-        [Required(ErrorMessage = "An Order Number is required!")]
         [StringLength(50)]
         [LocalDisplayName("Orders.Order_Number", "FieldDisplayName")]
         public string OrderNo { get; set; }

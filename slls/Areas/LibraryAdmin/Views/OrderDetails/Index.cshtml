@@ -8,16 +8,13 @@
 @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "OrdersTable" }))
 {
     <div class="alert alert-info">
-        <span class="help-block"><strong>Info: </strong>@ViewBag.InfoMsg</span>
+        <span class="help-block">@ViewBag.InfoMsg</span>
         <div class="row">
-            <div class="col-md-7">
-                @Html.DropDownList("ListSupplier", null, "Filter by Supplier", new {@class = "form-control", onchange = "this.form.submit();"})
-            </div>
-            <div class="col-md-2">
-                @Html.DropDownList("year", new SelectList(ViewBag.Years, "Key", "Value"), new {@class = "form-control", onchange = "this.form.submit();"})
-            </div>
             <div class="col-md-3">
-                @Html.DropDownList("month", new SelectList(ViewBag.Months, "Key", "Value"), new {@class = "form-control", onchange = "this.form.submit();"})
+                @Html.Label("Year Ordered:") @Html.DropDownList("year", new SelectList(ViewBag.Years, "Key", "Value"), "Filter by Year", new { @class = "form-control", onchange = "this.form.submit();" })
+            </div>
+            <div class="col-md-9">
+                @Html.Label("Supplier:") @Html.DropDownList("ListSupplier", null, "Filter by Supplier", new {@class = "form-control", onchange = "this.form.submit();"})
             </div>
         </div>
         <br/>

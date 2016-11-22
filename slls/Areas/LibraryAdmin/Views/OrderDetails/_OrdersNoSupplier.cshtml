@@ -13,17 +13,18 @@
             "language": {
                 "url": "/DataTables/lang.txt"
             },
-            "order": [[4, 'desc'], [0, 'asc']],
+            "order": [[3, 'desc'], [0, 'asc']],
             "columnDefs": [
                 { "width": "5%", "orderable": true, "targets": [0] },
                 { "width": "25%", "orderable": true, "targets": [1] },
-                { "width": "15%", "orderable": true, "targets": [2] },
-                { "width": "15%", "orderable": true, "targets": [3] },
-                { "width": "10%", "orderable": true, "orderData": [7], "targets": [4] },
-                { "width": "10%", "orderable": true, "orderData": [8], "targets": [5] },
-                { "width": "10%", "orderable": true, "orderData": [9], "targets": [6] },
-                { "visible": false, "targets": [7, 8, 9] },
-                { "width": "10%", "visible": true, "orderable": false, "targets": [10] }]
+                { "width": "10%", "orderable": true, "targets": [2] },
+                { "width": "10%", "orderable": true, "targets": [3] },
+                { "width": "10%", "orderable": true, "orderData": [8], "targets": [4] },
+                { "width": "10%", "orderable": true, "orderData": [9], "targets": [5] },
+                { "width": "10%", "orderable": true, "orderData": [10], "targets": [6] },
+                { "width": "10%", "orderable": true, "targets": [7] },
+                { "visible": false, "targets": [8, 9, 10] },
+                { "width": "10%", "visible": true, "orderable": false, "targets": [11] }]
         });
     });
 </script>
@@ -38,10 +39,10 @@
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().TitleID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Item)
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderCategoryID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderCategoryID)
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().PriceGross)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().OrderDate)
@@ -51,6 +52,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().ReceivedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().InvoiceRef)
             </th>
             <th></th>
             <th></th>
@@ -83,10 +87,10 @@
                     }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Item)
+                    @Html.DisplayFor(modelItem => item.OrderCategory.OrderCategory1)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderCategory.OrderCategory1)
+                    @Html.DisplayFor(modelItem => item.PriceGross)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.OrderDate)
@@ -96,6 +100,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ReceivedDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InvoiceRef)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.OrderDateSortable)
