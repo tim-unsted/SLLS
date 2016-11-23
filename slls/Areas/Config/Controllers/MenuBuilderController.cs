@@ -172,7 +172,10 @@ namespace slls.Areas.Config
 
             //Only provide access to certain areas, depending on the user's roles ...
             ViewData["ParentArea"] = new SelectList(_db.Menus.Where(m => m.ParentID == grandParentId && allowedAreas.Contains(m.MenuArea) && m.MenuArea == menuitem.MenuArea).OrderBy(m => m.Title), "ID", "Title", parentId);
-            ViewData["ParentID"] = new SelectList(_db.Menus.Where(m => m.ParentID == parentId && allowedAreas.Contains(m.MenuArea)).OrderBy(m => m.Title), "ID", "Title", menuitem.ParentID);
+            ViewData["ParentID"] = new SelectList(_db.Menus.Where(m => m.ParentID == parentId && allowedAreas.Contains(m.MenuArea)).OrderBy(m => m.Title), "ID", "Title", menuitem.ID);
+
+            var sortOrder = _db.Menus.Where(m => m.ParentID == menuitem.ID).Select(m => m.SortOrder).Max();
+            sortOrder = sortOrder + 10;
 
             //Create our view model of data to work with, based on the selected menu item ...
             var viewModel = new MenuViewModel
@@ -180,7 +183,7 @@ namespace slls.Areas.Config
                 ParentID = menuitem.ParentID,
                 MenuArea = menuitem.MenuArea,
                 LinkArea = menuitem.LinkArea,
-                SortOrder = menuitem.SortOrder + 5,
+                SortOrder = sortOrder,
                 IsSelectable = true,
                 IsEnabled = true,
                 IsVisible = true,

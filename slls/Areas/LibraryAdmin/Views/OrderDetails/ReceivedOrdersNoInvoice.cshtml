@@ -1,0 +1,11 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.OrderDetailsListViewModel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+@Html.Partial("_SupplierFilter")
+
+<div>
+    @Html.Partial("_Index", Model)
+</div>

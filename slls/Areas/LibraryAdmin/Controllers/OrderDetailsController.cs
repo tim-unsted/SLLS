@@ -298,7 +298,7 @@ namespace slls.Areas.LibraryAdmin
 
             ViewData["Years"] = years;;
             ViewBag.InfoMsg =
-                "To limit the list to just those " + _entityType.ToLower() + " you want to see, use the Year and Supplier drop-down lists below:";
+                "This page lists all " + _entityType.ToLower() + " that have been marked as received. To limit the list to just those " + _entityType.ToLower() + " you want to see, use the Year and Supplier drop-down lists below:";
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllReceived");
             ViewBag.Title = "Received " + DbRes.T("Orders", "EntityType");
             return View(viewModel);
@@ -311,7 +311,7 @@ namespace slls.Areas.LibraryAdmin
             var suppliers = (from x in _db.Suppliers
                              join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
                              where (o.BudgetCodeID == null || o.AccountYearID == null)
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count(y => y.BudgetCode == null || y.AccountYearID == null) })
+                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = string.IsNullOrEmpty(x.SupplierName) ? "[Blank Supplier]" : x.SupplierName, Count = x.OrderDetails.Count(y => y.BudgetCode == null || y.AccountYearID == null) })
                 .Distinct().OrderBy(x => x.SupplierName);
 
             var unallocatedOrders = _db.OrderDetails.Include(o => o.AccountYear).Include(o => o.BudgetCode).Include(o => o.OrderCategory).Include(o => o.Supplier).Include(o => o.Title)
@@ -328,7 +328,7 @@ namespace slls.Areas.LibraryAdmin
 
             ViewBag.InfoMsg =
                 "This page lists any " + _entityType.ToLower() + " that have no Budget Code or Account Year assigned to them. To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
-            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers, addDefault: false, showAll: false);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AlUnassigned");
             ViewBag.Title = "Unallocated " + DbRes.T("Orders", "EntityType");
             return View(viewModel);
@@ -341,7 +341,7 @@ namespace slls.Areas.LibraryAdmin
             var suppliers = (from x in _db.Suppliers
                              join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
                              where (o.ReceivedDate == null)
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count(y => y.ReceivedDate == null) })
+                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = string.IsNullOrEmpty(x.SupplierName) ? "[Blank Supplier]" : x.SupplierName, Count = x.OrderDetails.Count(y => y.ReceivedDate == null) })
                 .Distinct().OrderBy(x => x.SupplierName);
 
             var outstandingOrders = _db.OrderDetails.Include(o => o.AccountYear).Include(o => o.BudgetCode).Include(o => o.OrderCategory).Include(o => o.Supplier).Include(o => o.Title)
@@ -357,8 +357,8 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.InfoMsg =
-                "To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
-            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
+                "This page lists all " + _entityType.ToLower() + " that are still outstanding (i.e. have not yet been marked as received). To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers, addDefault: false, showAll: false);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOutstanding");
             ViewBag.Title = "Current (Outstanding) " + DbRes.T("Orders", "EntityType");
             return View(viewModel);
@@ -372,7 +372,7 @@ namespace slls.Areas.LibraryAdmin
             var suppliers = (from x in _db.Suppliers
                              join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
                              where (o.ReceivedDate == null && o.Expected <= today)
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count(y => y.ReceivedDate == null && y.Expected <= today) })
+                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = string.IsNullOrEmpty(x.SupplierName) ? "[Blank Supplier]" : x.SupplierName, Count = x.OrderDetails.Count(y => y.ReceivedDate == null && y.Expected <= today) })
                 .Distinct().OrderBy(x => x.SupplierName);
 
             var overdueOrders = _db.OrderDetails.Include(o => o.AccountYear).Include(o => o.BudgetCode).Include(o => o.OrderCategory).Include(o => o.Supplier).Include(o => o.Title)
@@ -388,8 +388,8 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.InfoMsg =
-                "To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
-            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
+                "This page lists all " + _entityType.ToLower() + " that are outstanding and overdue (i.e. the date expected has passed). To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers, addDefault: false, showAll: false);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOverdue");
             ViewBag.Title = "Overdue " + DbRes.T("Orders", "EntityType");
             return View(viewModel);
@@ -402,7 +402,7 @@ namespace slls.Areas.LibraryAdmin
             var suppliers = (from x in _db.Suppliers
                              join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
                              where (o.OnApproval)
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count(y => y.OnApproval) })
+                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = string.IsNullOrEmpty(x.SupplierName) ? "[Blank Supplier]" : x.SupplierName, Count = x.OrderDetails.Count(y => y.OnApproval) })
                 .Distinct().OrderBy(x => x.SupplierName);
 
             var onApprovalOrders = _db.OrderDetails.Include(o => o.AccountYear).Include(o => o.BudgetCode).Include(o => o.OrderCategory).Include(o => o.Supplier).Include(o => o.Title)
@@ -420,9 +420,69 @@ namespace slls.Areas.LibraryAdmin
 
             ViewBag.InfoMsg =
                 "To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
-            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers, addDefault: false, showAll: false);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOnApproval");
             ViewBag.Title = DbRes.T("Orders", "EntityType") + " On Approval";
+            return View(viewModel);
+        }
+
+        // GET: Admin/Orders/ReceivedOrdersNoInvoice
+        public ActionResult ReceivedOrdersNoInvoice(int listSupplier = 0)
+        {
+            //Get the list of suppliers with received orders but no invoice ...
+            var suppliers = (from x in _db.Suppliers
+                             join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
+                             where (o.ReceivedDate != null && o.InvoiceRef == null && o.InvoiceDate == null)
+                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = string.IsNullOrEmpty(x.SupplierName) ? "[Blank Supplier]" : x.SupplierName, Count = x.OrderDetails.Count(y => y.ReceivedDate == null) })
+                .Distinct().OrderBy(x => x.SupplierName);
+
+            var receivedOrders = _db.OrderDetails
+                .Where(o => o.ReceivedDate != null && o.InvoiceRef == null && o.InvoiceDate == null);
+            if (listSupplier > 0)
+            {
+                receivedOrders = receivedOrders.Where(o => o.SupplierID == listSupplier);
+            }
+
+            var viewModel = new OrderDetailsListViewModel()
+            {
+                Orders = receivedOrders
+            };
+
+            ViewBag.InfoMsg =
+                "This page lists all " + _entityType.ToLower() + " that have been marked as received but no invoice details have been logged. To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers, addDefault: false, showAll: false);
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOutstanding");
+            ViewBag.Title = "Received " + _entityType + " With No Invoice";
+            return View(viewModel);
+        }
+
+        // GET: Admin/Orders/ReceivedOrdersNoInvoice
+        public ActionResult OutstandingOrdersWithInvoice(int listSupplier = 0)
+        {
+            //Get the list of suppliers with received orders but no invoice ...
+            var suppliers = (from x in _db.Suppliers
+                             join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
+                             where (o.ReceivedDate == null && (o.InvoiceRef != null && o.InvoiceDate != null))
+                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = string.IsNullOrEmpty(x.SupplierName) ? "[Blank Supplier]" : x.SupplierName, Count = x.OrderDetails.Count(y => y.ReceivedDate == null) })
+                .Distinct().OrderBy(x => x.SupplierName);
+
+            var receivedOrders = _db.OrderDetails
+                .Where(o => o.ReceivedDate == null && (o.InvoiceRef != null || o.InvoiceDate != null));
+            if (listSupplier > 0)
+            {
+                receivedOrders = receivedOrders.Where(o => o.SupplierID == listSupplier);
+            }
+
+            var viewModel = new OrderDetailsListViewModel()
+            {
+                Orders = receivedOrders
+            };
+
+            ViewBag.InfoMsg =
+                "This page lists all outstanding " + _entityType.ToLower() + " (i.e. not yet marked as received) that have invoice details logged against them. To limit the list to just those " + _entityType.ToLower() + " from a particular Supplier, use the drop-down list below:";
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers, addDefault: false, showAll: false);
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "AllOutstanding");
+            ViewBag.Title = "Invoices With Outstanding " + _entityType;
             return View(viewModel);
         }
 
@@ -544,7 +604,7 @@ namespace slls.Areas.LibraryAdmin
             //Get the list of suppliers with orders ...
             var suppliers = (from x in _db.Suppliers
                              join o in _db.OrderDetails on x.SupplierID equals o.SupplierID
-                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = x.SupplierName, Count = x.OrderDetails.Count() })
+                             select new SupplierList { SupplierId = x.SupplierID, SupplierName = string.IsNullOrEmpty(x.SupplierName) ? "[Blank Supplier]" : x.SupplierName, Count = x.OrderDetails.Count() })
                 .Distinct().OrderBy(x => x.SupplierName);
 
             //Get the actual results if the user has selected anything ...
@@ -559,7 +619,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = supplierOrders
             };
 
-            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers);
+            ViewData["ListSupplier"] = SelectListHelper.SuppliersListCustom(suppliers, addDefault: true, showAll: false);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "OrdersBySupplier");
             ViewBag.Title = DbRes.T("Orders", "EntityType") + " By " +
                             DbRes.T("Suppliers.Supplier", "FieldDisplayName");
@@ -573,13 +633,13 @@ namespace slls.Areas.LibraryAdmin
             //Get the list of requesters with orders ...
             //Get the list of authorisers with orders ...
             IEnumerable<SelectListItem> requestersList =
-                UserManager.Users.Where(u => u.RequestedOrders.Count > 0)
+                UserManager.Users.Where(u => u.AuthorisedOrders.Count > 0).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname)
                     .Select(
                         x =>
                             new SelectListItem
                             {
                                 Value = x.Id,
-                                Text = x.Lastname + " (" + x.RequestedOrders.Count + ")"
+                                Text = x.Lastname + ", " + x.Firstname + " (" + x.RequestedOrders.Count + ")"
                             });
 
             //Get the actual results if the user has selected anything ...
@@ -606,13 +666,13 @@ namespace slls.Areas.LibraryAdmin
         {
             //Get the list of authorisers with orders ...
             IEnumerable<SelectListItem> authorisersList =
-                UserManager.Users.Where(u => u.AuthorisedOrders.Count > 0)
+                UserManager.Users.Where(u => u.AuthorisedOrders.Count > 0).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname)
                     .Select(
                         x =>
                             new SelectListItem
                             {
                                 Value = x.Id,
-                                Text = x.Lastname + " (" + x.AuthorisedOrders.Count + ")"
+                                Text = x.Lastname + ", " + x.Firstname + " (" + x.RequestedOrders.Count + ")"
                             });
 
             //Get the actual results if the user has selected anything ...
