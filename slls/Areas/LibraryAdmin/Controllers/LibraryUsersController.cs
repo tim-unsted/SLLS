@@ -317,6 +317,7 @@ namespace slls.Areas.LibraryAdmin
                 libraryUser.Lastname = viewModel.Lastname;
                 libraryUser.IsLive = viewModel.IsLive;
                 libraryUser.LocationID = viewModel.LocationId;
+                libraryUser.Position = viewModel.Position;
                 libraryUser.Notes = viewModel.Notes;
                 libraryUser.LastModified = DateTime.Now;
                 
