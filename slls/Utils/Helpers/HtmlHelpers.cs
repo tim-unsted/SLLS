@@ -208,5 +208,13 @@ namespace slls.Utils.Helpers
             return new MvcHtmlString(str);
         } 
 
+        //Standard 'Back' button for form footers
+        public static MvcHtmlString BackButton(this HtmlHelper helper, string buttonText = "Cancel")
+        {
+            string str =
+                "<input type=\"button\" value=\"" + buttonText + "\" class=\"btn-link\" onclick=\"window.history.back();\" />";
+            return new MvcHtmlString(str);
+        } 
+
     }
 }

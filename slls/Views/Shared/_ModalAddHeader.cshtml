@@ -22,6 +22,9 @@
                 if (response.error) {
                     alert(response.error);
                 }
+                else if (response.redirectTo) {
+                    window.location.href = response.redirectTo;
+                }
                 else {
                     $('#stdModal').modal('hide');
                     $('#lrgModal').modal('hide');

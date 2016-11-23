@@ -1036,6 +1036,8 @@
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_IndexNoTitle.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\ReceivedOrdersNoInvoice.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OutstandingOrdersWithInvoice.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\DuplicateTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\SelectDuplicate.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

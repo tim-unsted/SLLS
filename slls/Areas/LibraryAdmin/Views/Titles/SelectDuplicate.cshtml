@@ -1,0 +1,122 @@
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.SelectTitleViewmodel
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<div class="alert alert-info">
+
+    <span class="help-block">@Html.Raw(Model.HelpText)</span>
+
+    @using (Html.BeginForm("PostDuplicateTitle", "Titles", FormMethod.Post, new { id = "duplicateTitle", name = "duplicateTitle" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.HiddenFor(model => model.ReturnAction)
+        @Html.HiddenFor(model => model.Tab)
+
+        <div class="form-group" title="@Model.Message">
+            @Html.DropDownListFor(model => model.TitleID, Model.Titles, new {@class = "form-control" })
+            @Html.ValidationMessageFor(model => model.TitleID, "", new {@class = "text-danger"})
+        </div>
+
+        <p>
+            <button type="submit" id="btnSave" value="Save" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Titles.Title", "FieldDisplayName")</button>
+            &nbsp;&nbsp;or&nbsp;@Html.BackButton()
+        </p>
+    }
+
+</div>
+
+<div id="confirmDialog" title="Duplicate Title?">
+    <div class="alert alert-warning" role="alert">
+        <p>
+            <span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;You are about to create a duplicate copy of this @DbRes.T("Titles.Title", "FieldDisplayName"). Copy and Finance information will not be duplicated.
+        </p>
+        <p>Do you want to continue?</p>
+    </div>
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.Title", "FieldDisplayName")</dt>
+        <dd><span id="confirmTitle"></span></dd>
+        <dt>@DbRes.T("Titles.Edition", "FieldDisplayName")</dt>
+        <dd><span id="confirmEdition"></span></dd>
+        <dt>@DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName")</dt>
+        <dd><span id="confirmIsbn"></span></dd>
+        <dt>@DbRes.T("Titles.Published_Year", "FieldDisplayName")</dt>
+        <dd><span id="confirmYear"></span></dd>
+        <dt>@DbRes.T("Titles.Description", "FieldDisplayName")</dt>
+        <dd><span id="confirmDescription"></span></dd>
+    </dl>
+</div>
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('#confirmDialog').dialog({
+            dialogClass: "no-close",
+            autoOpen: false,
+            width: 700,
+            modal: true,
+            resizable: false,
+            buttons: [{
+                text: 'Continue',
+                "class": 'btn btn-success',
+                click: function () {
+                    document.duplicateTitle.submit();
+                }
+            },
+            {
+                text: 'Cancel',
+                "class": 'btn btn-default',
+                click: function () {
+                    $(this).dialog("close");
+                }
+            }]
+        });
+
+        $('#duplicateTitle').submit(function (e) {
+            e.preventDefault();
+            if ($(this).valid()) {
+                $('#confirmDialog').dialog("open");
+            }
+            return false;
+        });
+
+        function doTitleDetails() {
+            var confirmTitle = $("#confirmTitle");
+            var confirmEdition = $("#confirmEdition");
+            var confirmIsbn = $("#confirmIsbn");
+            var confirmYear = $("#confirmYear");
+            var confirmDescription = $("#confirmDescription");
+            var selectedTitle = { titleId: $("#TitleID option:selected").val() };
+
+            $.ajax({
+                url: '@Url.Action("GetTitleDetails", "Titles")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedTitle),
+                success: function (data) {
+                    if (data.success) {
+                        confirmTitle.text(data.Title);
+                        //alert(data.Title);
+                        confirmEdition.text(data.Edition);
+                        confirmIsbn.text(data.Isbn);
+                        confirmYear.text(data.Year);
+                        confirmDescription.text(data.Description);
+                    }
+                },
+                async: false
+            });
+        }
+
+        $("#TitleID").change(function () {
+            doTitleDetails();
+        });
+    });
+
+</script>
+
+
+

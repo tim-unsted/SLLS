@@ -450,6 +450,61 @@ namespace slls.ViewModels
         public string Library { get; set; }
     }
 
-    
+    public class DuplicateTitleViewModel
+    {
+        public DuplicateTitleViewModel()
+        {
+            Source = "";
+        }
+        
+        public int TitleId { get; set; }
+
+        [LocalDisplayName("Titles.Title", "FieldDisplayName")]
+        public string Title1 { get; set; }
+
+        [LocalDisplayName("Titles.Edition", "FieldDisplayName")]
+        public string Edition { get; set; }
+
+        [LocalDisplayName("Titles.Published_Year", "FieldDisplayName")]
+        public string Year { get; set; }
+
+        [LocalDisplayName("Titles.Description", "FieldDisplayName")]
+        public string Description { get; set; }
+
+        [LocalDisplayName("Titles.Notes", "FieldDisplayName")]
+        [DataType(DataType.MultilineText)]
+        public string Notes { get; set; }
+
+        [LocalDisplayName("Titles.ISBN_ISSN", "FieldDisplayName")]
+        public string Isbn { get; set; }
+
+        public string CurrentViewName { get; set; }
+
+        public string Source { get; set; }
+    }
+
+    public class SelectTitleViewmodel
+    {
+        public SelectTitleViewmodel()
+        {
+            
+        }
+
+        public string Title { get; set; }
+        public string Message { get; set; }
+        public string BtnText { get; set; }
+
+        [AllowHtml]
+        public string HelpText { get; set; }
+
+        public string ReturnAction { get; set; }
+        public IEnumerable<SelectListItem> Titles { get; set; }
+
+        [Range(1, Int32.MaxValue, ErrorMessage = "Please select an Title!")]
+        [Required(ErrorMessage = "Please select an Title!")]
+        public int TitleID { get; set; }
+
+        public string Tab { get; set; }
+    }
     
 }

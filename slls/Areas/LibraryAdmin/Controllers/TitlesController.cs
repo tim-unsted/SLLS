@@ -49,21 +49,82 @@ namespace slls.Areas.LibraryAdmin
 
 
         //GET: Select a title ...
-        public ActionResult Select()
+        public ActionResult Select(string callingAction = "edit", string filter = "")
         {
-            ViewData["TitleId"] = SelectListHelper.TitlesList();
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
-            ViewBag.Title = _entityName + " Details (View/Edit)";
-            ViewBag.Message = _entityName + " to edit:";
-            return View();
+
+            var viewModel = new SelectTitleViewmodel();
+
+            switch (callingAction)
+            {
+                case "edit":
+                {
+                    ViewBag.Title = "View/Edit " + _entityName;
+                    viewModel.BtnText = "View/Edit " + _entityName;
+                    viewModel.Message = "Select an " + _entityName.ToLower() + " to view/edit";
+                    viewModel.HelpText = "Select the " + _entityName.ToLower() +
+                                         " you wish to view/edit from the dropdown list of available " +
+                                         ViewBag.Title.ToLower() + " below.";
+                    viewModel.ReturnAction = "Edit";
+                    viewModel.Titles = SelectListHelper.TitlesList();
+                    break;
+                }
+
+                case "duplicate":
+                {
+                    ViewBag.Title = "Duplicate Existing " + _entityName;
+                    viewModel.BtnText = "Duplicate Existing " + _entityName;
+                    viewModel.Message = "Select an existing " + _entityName.ToLower() + " to duplicate";
+                    viewModel.HelpText = "Select the existing " + _entityName.ToLower() +
+                                         " you wish to duplicate from the dropdown list of available " +
+                                         ViewBag.Title.ToLower() + " below.";
+                    viewModel.ReturnAction = "DuplicateTitle";
+                    viewModel.Titles = SelectListHelper.TitlesList();
+                    return View("SelectDuplicate", viewModel);
+                    break;
+                }
+
+                case "printdetails":
+                {
+                    ViewBag.Title = "Print " + _entityName;
+                    viewModel.BtnText = "Print " + _entityName;
+                    viewModel.Message = "Select an " + _entityName.ToLower() + " to print";
+                    viewModel.HelpText = "Select the " + _entityName.ToLower() +
+                                         " you wish to print from the dropdown list of available " +
+                                         ViewBag.Title.ToLower() + " below.";
+                    viewModel.ReturnAction = "PrintDetails";
+                    viewModel.Titles = SelectListHelper.TitlesList();
+                    break;
+                }
+            }
+
+            return View(viewModel);
         }
 
         //POST: Select a title ...
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Select(int? id)
+        public ActionResult Select(SelectTitleViewmodel viewModel)
         {
-            return RedirectToAction("Edit", new {id });
+            if (viewModel.TitleID == 0)
+            {
+                return null;
+            }
+            //TempData["GoToTab"] = viewModel.Tab;
+            return RedirectToAction(viewModel.ReturnAction, new { id = viewModel.TitleID });
+        }
+
+        //POST: Select a title ...
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult PostSelectDuplicate(SelectTitleViewmodel viewModel)
+        {
+            if (viewModel.TitleID == 0)
+            {
+                return null;
+            }
+            //TempData["GoToTab"] = viewModel.Tab;
+            return RedirectToAction(viewModel.ReturnAction, new { id = viewModel.TitleID });
         }
 
         // GET: ALL Titles
@@ -179,10 +240,10 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel
             {
                 Titles = (from t in
-                             _db.Titles
-                         join ta in _db.TitleAuthors on t.TitleID equals ta.TitleId
-                         where ta.AuthorId == id
-                         select t).ToList()
+                              _db.Titles
+                          join ta in _db.TitleAuthors on t.TitleID equals ta.TitleId
+                          where ta.AuthorId == id
+                          select t).ToList()
             };
 
             if (viewModel.Titles.Count() == 1)
@@ -214,8 +275,8 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel
             {
                 Titles = (from t in
-                             _db.Titles
-                         where t.Classmark.ClassmarkID == id
+                              _db.Titles
+                          where t.Classmark.ClassmarkID == id
                           select t).ToList()
             };
 
@@ -244,8 +305,8 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel
             {
                 Titles = (from t in
-                             _db.Titles
-                         where t.MediaType.MediaID == id
+                              _db.Titles
+                          where t.MediaType.MediaID == id
                           select t).ToList()
             };
 
@@ -273,8 +334,8 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel
             {
                 Titles = (from t in
-                             _db.Titles
-                         where t.Publisher.PublisherID == id
+                              _db.Titles
+                          where t.Publisher.PublisherID == id
                           select t).ToList()
             };
 
@@ -302,8 +363,8 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel
             {
                 Titles = (from t in
-                             _db.Titles
-                         where t.LanguageID == id
+                              _db.Titles
+                          where t.LanguageID == id
                           select t).ToList()
             };
 
@@ -331,9 +392,9 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel
             {
                 Titles = (from t in
-                             _db.Titles
-                         join ta in _db.SubjectIndexes on t.TitleID equals ta.TitleID
-                         where ta.KeywordID == id
+                              _db.Titles
+                          join ta in _db.SubjectIndexes on t.TitleID equals ta.TitleID
+                          where ta.KeywordID == id
                           select t).ToList()
             };
 
@@ -368,12 +429,13 @@ namespace slls.Areas.LibraryAdmin
             //Get a list of all authors in use
             var authors = (from a in _db.Authors
                            join t in _db.TitleAuthors on a.AuthorID equals t.AuthorId
-                           select new {a.AuthorID, DisplayName = a.DisplayName.TrimStart() + " (" + a.TitleAuthors.Count + ")" }).Distinct().OrderBy(x => x.DisplayName);
+                           select new { a.AuthorID, DisplayName = a.DisplayName.TrimStart() + " (" + a.TitleAuthors.Count + ")" }).Distinct().OrderBy(x => x.DisplayName);
 
             //Start a new list selectlist items ...
             List<SelectListItem> authorList = authors.Select(item => new SelectListItem
             {
-                Text = item.DisplayName, Value = item.AuthorID.ToString()
+                Text = item.DisplayName,
+                Value = item.AuthorID.ToString()
             }).ToList();
 
             //Add the authors ...
@@ -386,9 +448,9 @@ namespace slls.Areas.LibraryAdmin
             //Get the actual results if the user has selected anything ...
             viewModel.Titles =
                 (from t in
-                    _db.Titles
-                join a in _db.TitleAuthors on t.TitleID equals a.TitleId
-                where a.AuthorId == listAuthors
+                     _db.Titles
+                 join a in _db.TitleAuthors on t.TitleID equals a.TitleId
+                 where a.AuthorId == listAuthors
                  select t).ToList();
             return View(viewModel);
         }
@@ -404,7 +466,7 @@ namespace slls.Areas.LibraryAdmin
                               where c.Titles.Count > 0
                               orderby c.Classmark1
                               select
-                                  new {c.ClassmarkID, Classmark = c.Classmark1 + " (" + c.Titles.Count + ")" })
+                                  new { c.ClassmarkID, Classmark = c.Classmark1 + " (" + c.Titles.Count + ")" })
                 .Distinct();
 
             //Start a new list selectlist items ...
@@ -436,9 +498,9 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel
             {
                 Titles = (from t in
-                    _db.Titles
-                    where t.Classmark.ClassmarkID == listClassmarks
-                    select t).ToList()
+                              _db.Titles
+                          where t.Classmark.ClassmarkID == listClassmarks
+                          select t).ToList()
             };
             return View(viewModel);
         }
@@ -453,7 +515,7 @@ namespace slls.Areas.LibraryAdmin
             var media = (from m in CacheProvider.GetAll<MediaType>("mediatypes")
                          where m.Titles.Count > 0
                          select
-                             new {m.MediaID, Media = m.Media + " (" + m.Titles.Count + ")" })
+                             new { m.MediaID, Media = m.Media + " (" + m.Titles.Count + ")" })
                 .Distinct().OrderBy(x => x.Media);
 
             //Start a new list selectlist items ...
@@ -487,8 +549,8 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel();
             viewModel.Titles =
                 (from t in
-                    _db.Titles
-                where t.MediaType.MediaID == listMedia
+                     _db.Titles
+                 where t.MediaType.MediaID == listMedia
                  select t).ToList();
             return View(viewModel);
         }
@@ -503,7 +565,7 @@ namespace slls.Areas.LibraryAdmin
             var publishers = (from c in CacheProvider.GetAll<Publisher>("publishers")
                               where c.Titles.Count > 0
                               select
-                                  new {c.PublisherID, PublisherName = c.PublisherName + " (" + c.Titles.Count + ")" })
+                                  new { c.PublisherID, PublisherName = c.PublisherName + " (" + c.Titles.Count + ")" })
                 .Distinct().OrderBy(x => x.PublisherName);
 
             //Start a new list selectlist items ...
@@ -534,8 +596,8 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel();
             viewModel.Titles =
                 (from t in
-                    _db.Titles
-                where t.Publisher.PublisherID == listPublishers
+                     _db.Titles
+                 where t.Publisher.PublisherID == listPublishers
                  select t).ToList();
             return View(viewModel);
         }
@@ -550,7 +612,7 @@ namespace slls.Areas.LibraryAdmin
             var language = (from l in CacheProvider.GetAll<Language>("languages")
                             where l.Titles.Count > 0
                             select
-                                new {l.LanguageID, Language = l.Language1 + " (" + l.Titles.Count + ")" })
+                                new { l.LanguageID, Language = l.Language1 + " (" + l.Titles.Count + ")" })
                 .Distinct().OrderBy(x => x.Language);
 
             //Start a new list selectlist items ...
@@ -584,8 +646,8 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel();
             viewModel.Titles =
                 (from t in
-                    _db.Titles
-                where t.LanguageID == listLanguage
+                     _db.Titles
+                 where t.LanguageID == listLanguage
                  select t).ToList();
             return View(viewModel);
         }
@@ -641,9 +703,9 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitlesListViewModel();
             viewModel.Titles =
                 (from t in
-                    _db.Titles
-                join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
-                where x.KeywordID == listSubjects
+                     _db.Titles
+                 join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
+                 where x.KeywordID == listSubjects
                  select t).ToList();
             return View(viewModel);
         }
@@ -694,7 +756,7 @@ namespace slls.Areas.LibraryAdmin
             ViewData["FrequencyID"] = SelectListHelper.FrequencyList(Utils.PublicFunctions.GetDefaultValue("Titles", "FrequencyID"));
             ViewData["LanguageID"] = SelectListHelper.LanguageList(Utils.PublicFunctions.GetDefaultValue("Titles", "LanguageID"));
             ViewData["MediaID"] = SelectListHelper.MediaTypeList(Utils.PublicFunctions.GetDefaultValue("Titles", "MediaID"));
-            ViewData["AuthorID"] = SelectListHelper.AuthorsList(addDefault:true, addNew:false);
+            ViewData["AuthorID"] = SelectListHelper.AuthorsList(addDefault: true, addNew: false);
             //ViewData["EditorID"] = SelectListHelper.SelectEditorsList(addDefault: true, addNew: false);
 
             var viewModel = new TitleAddViewModel()
@@ -723,7 +785,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 viewModel.Authors.RemoveAll(a => a.AuthorID == 0);
             }
-            
+
             if (ModelState.IsValid)
             {
                 var newTitle = new Title
@@ -743,7 +805,7 @@ namespace slls.Areas.LibraryAdmin
                     NonFilingChars = viewModel.NonFilingChars == 0 ? GetNonFilingChars(viewModel.Title1) : viewModel.NonFilingChars,
                     Edition = viewModel.Edition,
                     PlaceofPublication = viewModel.PlaceofPublication,
-                    Year = viewModel.Year, 
+                    Year = viewModel.Year,
                     Price = viewModel.Price,
                     Notes = viewModel.Notes,
                     DateCatalogued = DateTime.Now,
@@ -754,7 +816,6 @@ namespace slls.Areas.LibraryAdmin
                 var titleId = newTitle.TitleID;
 
                 //Do any Authors ...
-                //viewModel.Authors.RemoveAll(a => a.AuthorID <= 0);
                 if (viewModel.Authors.Any())
                 {
                     foreach (var author in viewModel.Authors.Where(a => a.AuthorID > 0))
@@ -782,7 +843,7 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.Title = viewModel.Step != 0 ? "Step " + viewModel.Step + ": Add New " + _entityName : "Add New " + _entityName;
             ViewBag.BtnText = "Next >";
             ViewBag.BtnTip = "Save new " + _entityName + " and add a " + DbRes.T("Copies.Copy", "EntityType");
-            return View("Create",viewModel);
+            return View("Create", viewModel);
         }
 
         //Create a default copy and volume ...
@@ -869,7 +930,7 @@ namespace slls.Areas.LibraryAdmin
             return View(title);
         }
 
-        
+
         //Simple function to remove hyphens and spaces from passed ISBNs ...
         public string CleanIsbn(string isbn)
         {
@@ -921,7 +982,7 @@ namespace slls.Areas.LibraryAdmin
             }
 
             //Take the user to the appropriate page ...
-            return errorList.Count > 0 ? RedirectToAction("Create", new {isbn, notFound = true }) : RedirectToAction("Edit", new { id = titleId });
+            return errorList.Count > 0 ? RedirectToAction("Create", new { isbn, notFound = true }) : RedirectToAction("Edit", new { id = titleId });
         }
 
 
@@ -985,7 +1046,7 @@ namespace slls.Areas.LibraryAdmin
 
             //Do authors ...
             if (newTitle.Author != null)
-            { 
+            {
                 if (newTitle.Author.Any())
                 {
                     foreach (var author in newTitle.Author.ToList())
@@ -1162,12 +1223,13 @@ namespace slls.Areas.LibraryAdmin
             var countResults = searchResults.ResultsCount;
 
             if (notSelected == false)
-            { 
+            {
                 if (searchResults.HasErrors)
                 {
                     ModelState.AddModelError("SearchError", "COPAC encountered an error whist running your search. The most likely cause is because your search is too broad and timed-out. Try to be more specific or use more fields to improve your search.");
                 }
-                else {
+                else
+                {
                     if (countResults == 0)
                     {
                         ModelState.AddModelError("SearchError", "COPAC doesn't have any information about your search criteria. To improve your search results, try any of the following:"
@@ -1183,7 +1245,7 @@ namespace slls.Areas.LibraryAdmin
                     }
                 }
             }
-            
+
             return PartialView(viewModel);
         }
 
@@ -1245,7 +1307,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult _CopacResults(bool notSelected = false)
         {
             var viewModel = (CopacSearchResults)TempData["SearchResults"];
-            
+
             //Try to keep the temp data alive ...
             TempData["SearchCriteria"] = TempData["SearchCriteria"];
 
@@ -1263,7 +1325,7 @@ namespace slls.Areas.LibraryAdmin
             var titleId = 0;
             var count = 0;
             TempData["SearchResults"] = viewModel;
-            
+
             foreach (var copacRecord in viewModel.CopacRecords.Where(r => r.AddTitle))
             {
                 var newTitle = new AutoCatNewTitle
@@ -1419,7 +1481,7 @@ namespace slls.Areas.LibraryAdmin
                 ViewData["publisherID"] = SelectListHelper.PublisherList(title.PublisherID, null, false);
                 ViewData["LanguageID"] = SelectListHelper.LanguageList(title.LanguageID, null, false);
                 ViewData["MediaID"] = SelectListHelper.MediaTypeList(title.MediaID, null, false);
-                
+
                 var viewModel = new TitleEditViewModel(title)
                 {
                     TitleAuthors = title.TitleAuthors,
@@ -1457,7 +1519,7 @@ namespace slls.Areas.LibraryAdmin
                 item.LastModified = DateTime.Now;
 
                 _repository.Update(item);
-                return RedirectToAction("Edit", new {id });
+                return RedirectToAction("Edit", new { id });
             }
             //In case things go wrong ...
             ViewData["ClassmarkID"] = new SelectList(CacheProvider.GetAll<Classmark>("classmarks").Where(c => c.Deleted == false), "ClassmarkID", "Classmark1", editedTitle.ClassmarkID);
@@ -1559,7 +1621,7 @@ namespace slls.Areas.LibraryAdmin
             var title = _db.Titles.Find(titleId);
             if (title == null)
             {
-                return Json( new {success = true});
+                return Json(new { success = true });
             }
 
             var copies = new SelectList(_db.Copies.Where(x => x.TitleID == titleId).ToList(), "CopyID", "CopyNumber");
@@ -1571,7 +1633,7 @@ namespace slls.Areas.LibraryAdmin
                 DefaultloanType = Utils.PublicFunctions.GetDefaultLoanType(title.MediaID)
             });
         }
-        
+
         [HttpGet]
         public ActionResult DeleteItem(int id = 0)
         {
@@ -1616,7 +1678,7 @@ namespace slls.Areas.LibraryAdmin
             }
             return PartialView("_DeleteConfirmation", dcvm);
         }
-        
+
         [Route("TitlesNoCopies")]
         [Route("TitlesWithoutCopies")]
         [Route("~/LibraryAdmin/Titles/TitlesNoCopies")]
@@ -1717,7 +1779,7 @@ namespace slls.Areas.LibraryAdmin
                 newTitlesList.Add(newTitle);
             }
 
-            ViewBag.Title = DbRes.T("NewTitlesList", "EntityType");;
+            ViewBag.Title = DbRes.T("NewTitlesList", "EntityType"); ;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
             return View(newTitlesList);
         }
@@ -1768,8 +1830,8 @@ namespace slls.Areas.LibraryAdmin
         public JsonResult GetListRows(string listType = "a2z")
         {
             IEnumerable<SelectListItem> availableItems;
-            
-            if(listType == "a2z")
+
+            if (listType == "a2z")
             {
                 availableItems = _db.Copies.Where(c => c.AcquisitionsList == false)
                   .OrderBy(c => c.Title.Title1.Substring(c.Title.NonFilingChars))
@@ -1951,7 +2013,7 @@ namespace slls.Areas.LibraryAdmin
         {
             return RedirectToAction("SimpleSearch", "Home", new { q = searchTerm });
         }
-        
+
         [Route("ReportGenerator")]
         [Route("~/LibraryAdmin/Titles/ReportGenerator")]
         public ActionResult ReportGenerator()
@@ -2587,9 +2649,9 @@ namespace slls.Areas.LibraryAdmin
         {
             int[] statusTypes = statusIdString.Split(',').Select(n => Convert.ToInt32(n)).ToArray();
             var titles = from t in _db.Titles
-                join c in _db.Copies on t.TitleID equals c.TitleID
-                where statusTypes.Contains(c.StatusID.Value) && c.AcquisitionsList
-                select t;
+                         join c in _db.Copies on t.TitleID equals c.TitleID
+                         where statusTypes.Contains(c.StatusID.Value) && c.AcquisitionsList
+                         select t;
 
             var classmarks = (from t in titles
                               select t.Classmark).Distinct();
@@ -2874,7 +2936,7 @@ namespace slls.Areas.LibraryAdmin
         {
             var keywords = from k in _db.Keywords
                            where k.SubjectIndexes.Any() && k.Deleted == false
-                            select k;
+                           select k;
             var viewModel = new TitlesReportsViewModel
             {
                 Keywords = keywords,
@@ -3188,7 +3250,7 @@ namespace slls.Areas.LibraryAdmin
 
                     if (newTitle != null && newTitle.ErrorMessage == null)
                     {
-                       titleId = AddNewAutoCatTitle(newTitle);
+                        titleId = AddNewAutoCatTitle(newTitle);
 
                         successCount++;
 
@@ -3241,7 +3303,276 @@ namespace slls.Areas.LibraryAdmin
             var nonFilingWords = param.Split(',').ToList();
             return (from word in nonFilingWords where title.IndexOf(word + " ", StringComparison.Ordinal) == 0 select word.Length + 1).FirstOrDefault();
         }
-        
+
+        public ActionResult DuplicateTitle(int id = 0)
+        {
+            if (id == 0)
+            {
+                return RedirectToAction("Select", new { callingAction = "duplicate" });
+            }
+            var title = _repository.GetById<Title>(id);
+            if (title == null)
+            {
+                return RedirectToAction("Select", new { callingAction = "duplicate" });
+            }
+
+            var viewModel = new DuplicateTitleViewModel
+            {
+                TitleId = title.TitleID,
+                Title1 = title.Title1,
+                Edition = title.Edition,
+                Isbn = title.ISBN13 ?? title.ISBN10,
+                Year = title.Year,
+                Description = title.Description,
+                Source = "EditTitle"
+            };
+
+            ViewBag.Title = "Duplicate " + _entityName;
+            return PartialView(viewModel);
+
+        }
+
+        public ActionResult PostDuplicateTitle(DuplicateTitleViewModel viewModel)
+        {
+            if (viewModel.TitleId == 0)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+
+            //Get the exisiting title details that we want to duplicate ...
+            var existingTitle = _repository.GetById<Title>(viewModel.TitleId);
+
+            var duplicateTitle = new Title
+            {
+                Title1 = existingTitle.Title1 + " (Duplicate)",
+                Description = existingTitle.Description,
+                Edition = existingTitle.Edition,
+                ISBN10 = existingTitle.ISBN10,
+                ISBN13 = existingTitle.ISBN13,
+                Series = existingTitle.Series,
+                Citation = existingTitle.Citation,
+                Source = existingTitle.Source,
+                PlaceofPublication = existingTitle.PlaceofPublication,
+                Year = existingTitle.Year,
+                MediaID = existingTitle.MediaID,
+                ClassmarkID = existingTitle.ClassmarkID,
+                LanguageID = existingTitle.LanguageID,
+                PublisherID = existingTitle.PublisherID,
+                FrequencyID = existingTitle.FrequencyID,
+                NonFilingChars = GetNonFilingChars(existingTitle.Title1),
+                DateCatalogued = DateTime.Now,
+                CataloguedBy = Utils.PublicFunctions.GetCurrentUserName()
+            };
+
+            //Save the main title details as a new Title ...
+            _db.Titles.Add(duplicateTitle);
+            _db.SaveChanges();
+
+            //Establish the new Title ID ...
+            var newTitleId = duplicateTitle.TitleID;
+
+            //Do authors ...
+            if (existingTitle.TitleAuthors.Any())
+            {
+                foreach (var author in existingTitle.TitleAuthors)
+                {
+                    //get the author id ...
+                    var authorId = author.AuthorId;
+
+                    if (authorId != 0)
+                    {
+                        //insert into TitleAuthors ...
+                        var ta = new TitleAuthor
+                        {
+                            TitleId = newTitleId,
+                            AuthorId = authorId,
+                            InputDate = DateTime.Now
+                        };
+                        _db.TitleAuthors.Add(ta);
+                        _db.SaveChanges();
+                    }
+                }
+            }
+
+            //Do editors ...
+            if (existingTitle.TitleEditors.Any())
+            {
+                foreach (var editor in existingTitle.TitleEditors)
+                {
+                    //get the editor id ...
+                    var editorId = editor.AuthorID;
+
+                    if (editorId != 0)
+                    {
+                        //insert into TitleEditors ...
+                        var ta = new TitleEditor()
+                        {
+                            TitleID = newTitleId,
+                            AuthorID = editorId,
+                            InputDate = DateTime.Now
+                        };
+                        _db.TitleEditors.Add(ta);
+                        _db.SaveChanges();
+                    }
+                }
+            }
+
+            //Do keywords ...
+            if (existingTitle.SubjectIndexes.Any())
+            {
+                foreach (var keyword in existingTitle.SubjectIndexes)
+                {
+                    var keywordId = keyword.KeywordID;
+
+                    if (keywordId != 0)
+                    {
+                        var subjectIndex = new SubjectIndex
+                        {
+                            KeywordID = keywordId,
+                            TitleID = newTitleId,
+                            InputDate = DateTime.Now
+                        };
+                        _db.SubjectIndexes.Add(subjectIndex);
+                        _db.SaveChanges();
+                    }
+                }
+            }
+
+            //Do title texts (e.g. Long Description, content, reviews, etc.)
+            if (existingTitle.TitleAdditionalFieldDatas.Any())
+            {
+                foreach (var text in existingTitle.TitleAdditionalFieldDatas)
+                {
+                    var fieldId = text.FieldID;
+                    var textString = text.FieldData;
+
+                    if (fieldId != 0)
+                    {
+                        var titleText = new TitleAdditionalFieldData()
+                        {
+                            TitleID = newTitleId,
+                            FieldID = fieldId,
+                            FieldData = textString
+                        };
+                        _db.TitleAdditionalFieldDatas.Add(titleText);
+                        _db.SaveChanges();
+                    }
+                }
+            }
+
+
+            //Do links ...
+            if (existingTitle.TitleLinks.Any())
+            {
+                foreach (var link in existingTitle.TitleLinks)
+                {
+                    var existingTitleLink = new TitleLink()
+                    {
+                        TitleID = newTitleId,
+                        URL = link.URL,
+                        DisplayText = link.DisplayText,
+                        HoverTip = link.HoverTip,
+                        LinkStatus = link.LinkStatus,
+                        Password = link.Password,
+                        Login = link.Login,
+                        InputDate = DateTime.Now,
+                        IsValid = true
+                    };
+                    _db.TitleLinks.Add(existingTitleLink);
+                    _db.SaveChanges();
+                }
+            }
+
+            //Do image ...
+            if (existingTitle.TitleImages.Any())
+            {
+                foreach (var image in existingTitle.TitleImages)
+                {
+                    var imageId = image.ImageId;
+
+                    var titleImage = new TitleImage
+                        {
+                            ImageId = imageId,
+                            TitleId = newTitleId,
+                            Alt = image.Alt,
+                            HoverText = image.HoverText,
+                            IsPrimary = image.IsPrimary,
+                            InputDate = DateTime.Now
+                        };
+                    _db.TitleImages.Add(titleImage);
+                    _db.SaveChanges();
+                }
+            }
+
+            //Add a default copy and volume ...
+            AddUnmannedCopy(newTitleId);
+
+            if (viewModel.Source == "EditTitle")
+            {
+                if (newTitleId > 0)
+                {
+                    UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                    string actionUrl = urlHelper.Action("Edit", "Titles", new {id = newTitleId});
+                    TempData["SuccessMsg"] = "The title '" + existingTitle.Title1 +
+                                             "' has been successfully duplicated.";
+                    return Json(new {success = true, redirectTo = actionUrl});
+                }
+                return Json(new {success = false});
+            }
+            if (newTitleId > 0)
+            {
+                TempData["SuccessMsg"] = "The title '" + existingTitle.Title1 +
+                                         "' has been successfully duplicated.";
+                return RedirectToAction("Edit", "Titles", new {id = newTitleId});
+            }
+
+            return RedirectToAction("Select", "Titles", new { callingAction = "duplicate" });
+        }
+
+        public JsonResult GetTitleDetails(int titleId = 0)
+        {
+            var selectedTitle = _db.Titles.Find(titleId);
+            if (selectedTitle == null)
+            {
+                return Json(new
+                {
+                    success = false,
+                    Title = "The item you have selected does not exist. Please check and try again."
+                });
+            }
+
+            var title = selectedTitle.Title1;
+            var edition = selectedTitle.Edition;
+            var isbn = selectedTitle.Isbn;
+            var year = selectedTitle.Year;
+            var description = selectedTitle.Description;
+
+            return Json(new
+            {
+                success = true,
+                Title = title,
+                Edition = edition,
+                Isbn = isbn,
+                Year = year,
+                Description = description
+            });
+        }
+
+        public ActionResult PrintDetails(int id = 0)
+        {
+            if (id == 0)
+            {
+                return RedirectToAction("Select", new { callingAction = "printdetails" });
+            }
+            var title = _repository.GetById<Title>(id);
+            if (title == null)
+            {
+                return RedirectToAction("Select", new { callingAction = "printdetails" });
+            }
+
+            return RedirectToAction("NotFound", "Home");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)

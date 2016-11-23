@@ -6,8 +6,20 @@
 {
     @Html.AntiForgeryToken()
 
-        <div class="row" style="margin-right: 0">
-            <div class="col-md-10">@Html.DropDownList("TitleId", null, new {onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control"})</div>
-            <div class="col-md-pull"><div class="pull-right"> <a href="@Url.Action("Create", "Titles")" title="Add new @DbRes.T("Titles.Title", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Titles.Title", "FieldDisplayName")</a>  <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a></div></div>
+    <div class="row" style="margin-right: 0">
+        <div class="col-md-9">@Html.DropDownList("TitleId", null, new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control" })</div>
+        <div class="pull-right">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Add &bull; Print &bull; Duplicate <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("Create", "Titles")" title="Add new @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;Add New @DbRes.T("Titles.Title", "FieldDisplayName")</a></li>
+                    <li><a href="@Url.Action("DuplicateTitle", "Titles", new {id = Model.TitleID})" title="Duplicate @DbRes.T("Titles.Title", "FieldDisplayName")" class="modal-link"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span>&nbsp;&nbsp;Duplicate @DbRes.T("Titles.Title", "FieldDisplayName")</a></li>
+                    <li><a href="@Url.Action("PrintDetails", "Titles", new { id = Model.TitleID })" title="Print @DbRes.T("Titles.Title", "FieldDisplayName") details"><span aria-hidden="true" class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;Print @DbRes.T("Titles.Title", "FieldDisplayName") details</a></li>
+                </ul>
+            </div>
+            <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
         </div>
+    </div>
 }

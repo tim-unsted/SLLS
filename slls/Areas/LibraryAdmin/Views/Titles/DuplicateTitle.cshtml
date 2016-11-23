@@ -1,0 +1,96 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.DuplicateTitleViewModel
+
+@Html.Partial("_ModalAddHeader")
+
+@using (Html.BeginForm("PostDuplicateTitle","Titles"))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+    @Html.HiddenFor(x => Model.TitleId)
+    @Html.HiddenFor(x => Model.Source)
+
+    <div class="modal-body">
+
+        <div class="alert alert-warning" role="alert">
+            <p><span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;You are about to create a duplicate copy of this @DbRes.T("Titles.Title", "FieldDisplayName"). Copy and Finance information will not be duplicated.
+            </p>
+            <p>Do you want to continue?</p>
+        </div>
+
+        <div>
+            <dl class="dl-horizontal">
+                <dt>
+                    @Html.DisplayNameFor(model => model.Title1)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Title1)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Edition)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Edition)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Isbn)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Isbn)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Year)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Year)
+                </dd>
+
+                <dt>
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+                
+            </dl>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" id="btnDelete" value="Duplicate" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Duplicate @DbRes.T("Titles.Title", "FieldDisplayName")</button>
+        &nbsp;&nbsp;or&nbsp;<button class="btn-link" data-dismiss="modal" aria-hidden="true">Cancel</button>
+    </div>
+}
+
+@*<script type="text/javascript">
+    $(function () {
+        $('#btnCancel').click(function () {
+            $('#lrgModal').modal('hide');
+            $('#stdModal').modal('hide');
+        });
+
+        $('form').submit(function (e) {
+            e.preventDefault();
+            $.post(this.action, $(this).serialize(), function (response) {
+                if (response.error) {
+                    alert(response.error);
+                }
+                else {
+                    $('#stdModal').modal('hide');
+                    $('#lrgModal').modal('hide');
+                    location.reload();
+                }
+            }, 'json');
+        });
+    });
+</script>*@
+
+

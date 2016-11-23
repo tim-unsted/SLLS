@@ -43,15 +43,13 @@
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
-<div class="well well-default">
+<div class="alert alert-info">
     <div class="form-group" title="@ViewBag.Message">
         @Html.Partial("_Select")
     </div>
 </div>
 
-
-
-@*<br />*@
+@Html.Partial("_PostAlert")
 
 @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
 {
@@ -209,6 +207,14 @@
 }
 
 <script type="text/javascript">
+    
+    $(document).ready(function () {
+        // show the alert
+        setTimeout(function () {
+            $(".alert-dismissable").alert('close');
+        }, 6000);
+    });
+
     $(function () {
         $('a[data-toggle="tab"]').on('click', function (e) {
             //save the latest tab:
