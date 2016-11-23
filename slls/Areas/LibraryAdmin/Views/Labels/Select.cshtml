@@ -1,7 +1,7 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.PrintLabelsViewModel
 
-@Html.Partial("_ModalEditHeader")
+@Html.Partial("_ModalDefaultHeader")
 
 @using (Html.BeginForm(Model.PostSelectAction, "Labels", FormMethod.Post, new { target = "_blank" }))
 {
@@ -119,3 +119,11 @@
     </div>
 
 }
+
+<script type="text/javascript">
+    $(function () {
+        $('#btnSave').click(function () {
+            $('#stdModal').modal('hide');
+        });
+    })
+ </Script>
