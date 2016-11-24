@@ -1,0 +1,19 @@
+﻿<html>
+<body style="color:#000000; font-size:15px;">
+<font face="Helvetica, Arial, sans-serif">
+
+<div style="width:600px; padding:30px; margin-top:30px;">
+<p>This message has been sent to you from {0} via your Simple Little Library System.  Please reply to <a href="mailto:{2}?subject=RE: {3}">{2}</a>. Please <strong>do not</strong> reply to this email.<p>
+<p>The message is as follows:</p>
+</div>
+
+<div style="background-color: #f9f8f3;
+width:600px; height:200px; padding:30px; margin-top:30px;">
+<p>{1}</p>
+</div>
+
+<div style="color:grey; font-size:11px; padding:30px; margin-top:30px;">
+<p>Please <strong>do not</strong> reply to this email. Only reply to the <a href="mailto:{2}?subject=RE: {3}">sender</a>.<br/>For all other enquiries regarding this email, please contact {4}.</p>
+</div>
+</body>
+</html>

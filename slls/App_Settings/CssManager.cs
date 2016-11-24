@@ -12,6 +12,7 @@ namespace slls.App_Settings
     {
         private static string _bodyBackgroundColour = "BodyBackgroundColour";
         private static string _bodyTextColour = "BodyTextColour";
+        private static string _bodyFontSize = "BodyFontSize";
         private static string _logoSectionBackgroundColour = "LogoSectionBackgroundColour";
         private static string _logoSectionHeight = "LogoSectionHeight";
         private static string _logoFileName = "LogoFileName";
@@ -64,6 +65,26 @@ namespace slls.App_Settings
             {
                 HttpContext.Current.Application.Lock();
                 HttpContext.Current.Application[CssManager._bodyTextColour] = value;
+                HttpContext.Current.Application.UnLock();
+            }
+        }
+
+        public static string BodyFontSize
+        {
+            get
+            {
+                if (HttpContext.Current.Application[CssManager._bodyFontSize] == null)
+                {
+                    HttpContext.Current.Application.Lock();
+                    HttpContext.Current.Application[CssManager._bodyFontSize] = Settings.GetParameterValue("Styling.BodyFontSize", "14px", "The default standard font size used throughout the site. The default is 14px.");
+                    HttpContext.Current.Application.UnLock();
+                }
+                return HttpContext.Current.Application[CssManager._bodyFontSize].ToString();
+            }
+            set
+            {
+                HttpContext.Current.Application.Lock();
+                HttpContext.Current.Application[CssManager._bodyFontSize] = value;
                 HttpContext.Current.Application.UnLock();
             }
         }
