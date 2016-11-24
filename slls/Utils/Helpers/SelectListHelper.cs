@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web.Mvc;
 using System.Web.UI.WebControls.Expressions;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using slls.DAO;
 using slls.Models;
 using Westwind.Globalization;
@@ -337,7 +338,7 @@ namespace slls.Utils.Helpers
             {
                 titlesList.Add(new SelectListItem
                 {
-                    Text = string.IsNullOrEmpty(item.Title1) ? "<empty title>" : item.Title1,
+                    Text = string.IsNullOrEmpty(item.Title1) ? "<empty title>" : StringHelper.Truncate(item.Title1, 100),
                     Value = item.TitleID.ToString()
                 });
             }
@@ -366,7 +367,7 @@ namespace slls.Utils.Helpers
             {
                 titlesList.Add(new SelectListItem
                 {
-                    Text = string.IsNullOrEmpty(item.Title1) ? "<empty title>" : item.Title1,
+                    Text = string.IsNullOrEmpty(item.Title1) ? "<empty title>" : StringHelper.Truncate(item.Title1, 100),
                     Value = item.TitleID.ToString()
                 });
             }
@@ -404,7 +405,7 @@ namespace slls.Utils.Helpers
             {
                 copiesList.Add(new SelectListItem
                 {
-                    Text = string.IsNullOrEmpty(item.Title.Title1) ? "<empty title>" : item.Title.Title1 + " - Copy: " + item.CopyNumber,
+                    Text = string.IsNullOrEmpty(item.Title.Title1) ? "<empty title>" : StringHelper.Truncate(item.Title.Title1, 100) + " - Copy: " + item.CopyNumber,
                     Value = item.CopyID.ToString()
                 });
             }

@@ -136,7 +136,7 @@ namespace slls.Areas.LibraryAdmin
 
         public ActionResult _PartsReceivedSubForm(int id = 0)
         {
-            var partsReceived = _db.PartsReceiveds.Where(p => p.CopyID == id);
+            var partsReceived = _db.PartsReceiveds.Where(p => p.CopyID == id).Distinct();
 
             return PartialView(partsReceived);
         }

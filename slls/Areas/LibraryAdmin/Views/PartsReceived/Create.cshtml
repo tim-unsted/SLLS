@@ -1,14 +1,6 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.PartsReceivedAddViewModel
 
-@*<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/Scripts/DatePickerReady.js"></script>*@
-
-@*<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h3 class="modal-title" id="titleLabel">@ViewBag.Title</h3>
-</div>*@
 @Html.Partial("_ModalAddHeader")
 
 @using (Html.BeginForm())
@@ -63,7 +55,7 @@
     @*@Html.Partial("_ModalAddFooter")*@
 }
 
-<script type="text/javascript">
+@*<script type="text/javascript">
     $(function () {
         $('#btnSave').click(function () {
             $('#stdModal').modal('hide');
@@ -87,4 +79,4 @@
 
     $(".validation-summary-errors").removeClass("validation-summary-errors");
     $(".input-validation-error").removeClass("input-validation-error").parent().addClass("has-error");
-</script>
+</script>*@
