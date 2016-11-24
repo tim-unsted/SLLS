@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -127,8 +128,35 @@ namespace slls.Controllers
             }
 
             //Attempt to send the message ...
-            var success = Messaging.EmailService.SendDbMail(destination: viewModel.To, from: viewModel.From, cc: viewModel.Cc, bcc: viewModel.Bcc, subject: viewModel.Subject, body: viewModel.Message);
+            bool success;
 
+            if (viewModel.InternalMsg)
+            {
+                string body;
+                var msgBody = viewModel.Message.Replace(System.Environment.NewLine, "<br/>");
+                var msgFrom = viewModel.From;
+                var defaultFrom = Settings.GetParameterValue("EmailSettings.NoReplyAddress", "no-reply@slls.online", "The default 'from' address that is used when generating email notifications. This is the actual address that the email will appear to come from. Use something generic, rather than an internal email address, to avoid emails being rejected by your incoming mail server because of relaying blocks and spam filtering.");
+                var replyAddress = Settings.GetParameterValue("EmailSettings.EmailFromAddress", "library@mycompany.com", "The 'from' address that will be quoted in system-generated emails. This should be a valid email address that users can reply to.");
+                var userId = Utils.PublicFunctions.GetUserId();
+                var userFullName = _db.Users.Find(userId).Fullname;
+                
+                //Read template file from the App_Data folder. This is the 'default message' template
+                using (var sr = new StreamReader(Server.MapPath("\\App_Data\\Templates\\DefaultEmail.txt")))
+                {
+                    body = sr.ReadToEnd();
+                }
+
+                //Insert our variables into the body text ...
+                string messageBody = string.Format(body, userFullName, msgBody, msgFrom, viewModel.Subject, replyAddress);
+
+                //Attempt to send the message ...
+                success = Messaging.EmailService.SendDbMail(from: defaultFrom, destination: viewModel.To, cc: viewModel.Cc, bcc: viewModel.Bcc, subject: viewModel.Subject, body: messageBody);
+            }
+            else
+            {
+                success = Messaging.EmailService.SendDbMail(from: viewModel.From, destination: viewModel.To, cc: viewModel.Cc, bcc: viewModel.Bcc, subject: viewModel.Subject, body: viewModel.Message);
+            }
+            
             if (success == false)
             {
                 TempData["ErrorDialogMsg"] = "Sorry, your message has not been sent. Please try again.";

@@ -52,6 +52,8 @@
                         @Html.AntiForgeryToken()
                         @Html.HiddenFor(model => model.RedirectAction)
                         @Html.HiddenFor(model => model.RedirectController)
+                        <input type="hidden" name="InternalMsg" value="false">
+
 
                         <div class="form-horizontal">
                             @Html.ValidationSummary(true, "", new { @class = "text-danger" })

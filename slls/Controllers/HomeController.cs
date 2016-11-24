@@ -174,7 +174,8 @@ namespace slls.Controllers
                         From = emailFrom,
                         RedirectAction = "Index",
                         RedirectController = "Home",
-                        Title = "Ask a Question"
+                        Title = "Ask a Question",
+                        InternalMsg = true
                     };
 
                     var enquiryTypes = new Dictionary<string, string>

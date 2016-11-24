@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace slls.ViewModels
 {
@@ -15,6 +16,7 @@ namespace slls.ViewModels
             Important = false;
             ShowImportant = false;
             Title = "Ask a Question";
+            InternalMsg = true;
         }
         
         [Key]
@@ -36,6 +38,7 @@ namespace slls.ViewModels
         public bool Important { get; set; }
 
         [Required]
+        [AllowHtml]
         [DataType(DataType.MultilineText)]
         public string Message { get; set; }
 
@@ -50,6 +53,8 @@ namespace slls.ViewModels
         public bool ShowBcc { get; set; }
 
         public bool ShowImportant { get; set; }
+
+        public bool InternalMsg { get; set; }
 
     }
 }

@@ -525,6 +525,7 @@
     <Compile Include="App_Start\AppBuilderExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Templates\DefaultEmail.txt" />
     <Content Include="Logs\logErrors.txt" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersBySupplier.cshtml">
       <SubType>Code</SubType>
@@ -1457,7 +1458,6 @@
     <Content Include="Views\Shared\_PostAlert.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="App_Data\" />
     <Folder Include="Areas\Config\Models\" />
     <Folder Include="Areas\Config\Views\Cache\" />
     <Folder Include="Areas\LibraryAdmin\Models\" />

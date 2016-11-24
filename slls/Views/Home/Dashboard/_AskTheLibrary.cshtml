@@ -26,6 +26,7 @@
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.To)
             @Html.HiddenFor(model => model.From)
+            @Html.HiddenFor(model => model.InternalMsg)
             @Html.HiddenFor(model => model.RedirectAction)
             @Html.HiddenFor(model => model.RedirectController)
 
