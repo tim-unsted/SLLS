@@ -20,6 +20,7 @@ namespace slls.App_Settings
         private static string _logoPadding = "LogoPadding";
         private static string _logoPosition = "LogoPosition";
         private static string _mainMenuBackgroundColour = "MainMenuBackgroundColour";
+        private static string _mainMenuBorderColour = "MainMenuBorderColour";
         private static string _mainMenuFontColour = "MainMenuFontColour";
         private static string _mainMenuHoverFontColour = "MainMenuHoverFontColour";
         private static string _adminMenuHoverFontColour = "AdminMenuHoverFontColour";
@@ -229,6 +230,26 @@ namespace slls.App_Settings
             }
         }
 
+        public static string MainMenuBorderColour
+        {
+            get
+            {
+                if (HttpContext.Current.Application[CssManager._mainMenuBorderColour] == null)
+                {
+                    HttpContext.Current.Application.Lock();
+                    HttpContext.Current.Application[CssManager._mainMenuBorderColour] = Settings.GetParameterValue("Styling.MainMenuBorderColour", "#222222", "The colour of the border above and below the main menu and login links. The default is #222222 (very dark grey).");
+                    HttpContext.Current.Application.UnLock();
+                }
+                return HttpContext.Current.Application[CssManager._mainMenuBorderColour].ToString();
+            }
+            set
+            {
+                HttpContext.Current.Application.Lock();
+                HttpContext.Current.Application[CssManager._mainMenuBorderColour] = value;
+                HttpContext.Current.Application.UnLock();
+            }
+        }
+
         public static string MainMenuFontColour
         {
             get
@@ -408,6 +429,11 @@ namespace slls.App_Settings
                         BodyTextColour = parm.ParameterValue;
                         break;
                     }
+                    case "Styling.BodyFontSize":
+                    {
+                        BodyFontSize = parm.ParameterValue;
+                        break;
+                    }
                     case "Styling.LogoSectionBackgroundColor":
                     {
                         LogoSectionBackgroundColour = parm.ParameterValue;
@@ -441,6 +467,11 @@ namespace slls.App_Settings
                     case "Styling.MainMenuBackgroundColor":
                     {
                         MainMenuBackgroundColour = parm.ParameterValue;
+                        break;
+                    }
+                    case "Styling.MainMenuBorderColour":
+                    {
+                        MainMenuBorderColour = parm.ParameterValue;
                         break;
                     }
                     case "Styling.MainMenuFontColor":
