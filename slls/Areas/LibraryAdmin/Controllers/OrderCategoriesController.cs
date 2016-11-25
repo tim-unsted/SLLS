@@ -14,7 +14,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class OrderCategoriesController : AdminBaseController
+    public class OrderCategoriesController : FinanceBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("OrderCategories.Order_Category", "FieldDisplayName");

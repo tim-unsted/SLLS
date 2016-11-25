@@ -10,7 +10,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class SupplierPeopleCommsController : AdminBaseController
+    public class SupplierPeopleCommsController : FinanceBaseController
     {
         private readonly DbEntities _db = new DbEntities();
 

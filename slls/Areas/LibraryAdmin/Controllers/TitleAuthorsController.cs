@@ -11,7 +11,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class TitleAuthorsController : AdminBaseController
+    public class TitleAuthorsController : CatalogueBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly GenericRepository _repository;

@@ -8,7 +8,7 @@ using slls.Models;
 
 namespace slls.Areas.LibraryAdmin.Controllers
 {
-    public class InvoicesController : Controller
+    public class InvoicesController : FinanceBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private ApplicationUserManager _userManager;

@@ -54,7 +54,7 @@ namespace slls.Areas.LibraryAdmin
         }
         
         // GET: LibraryAdmin/Parameters/Create
-        [AuthorizeRoles(Roles.BsAdmin)]
+        [AuthorizeRoles(Roles.BaileyAdmin)]
         public ActionResult Create()
         {
             var viewModel = new ParametersAddEditViewModel();
@@ -65,7 +65,7 @@ namespace slls.Areas.LibraryAdmin
         // POST: LibraryAdmin/Parameters/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeRoles(Roles.BsAdmin)]
+        [AuthorizeRoles(Roles.BaileyAdmin)]
         public ActionResult Create([Bind(Include = "ParameterID,ParameterValue,ParamUsage")] ParametersAddEditViewModel viewmodel)
         {
             if (ModelState.IsValid)

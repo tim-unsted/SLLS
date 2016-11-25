@@ -10,7 +10,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class CirculationMessagesController : AdminBaseController
+    public class CirculationMessagesController : SerialsBaseController
     {
         private readonly DbEntities _db = new DbEntities();
 

@@ -12,7 +12,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class PartsReceivedController : AdminBaseController
+    public class PartsReceivedController : SerialsBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly GenericRepository _repository;

@@ -3,8 +3,8 @@ using slls.Utils.Helpers;
 
 namespace slls.Areas.LibraryAdmin
 {
-    //Only allow admin role to access this functionality ...
-    [AuthorizeRoles(Roles.Administrator, Roles.Staff, Roles.BsAdmin)]
+    //Only allow library admin roles to access this functionality ...
+    [AuthorizeRoles(Roles.CatalogueAdmin, Roles.UsersAdmin, Roles.FinanceAdmin, Roles.LoansAdmin, Roles.SerialsAdmin, Roles.OpacAdmin, Roles.BaileyAdmin)]
     public class AdminBaseController : sllsBaseController
     {
     }

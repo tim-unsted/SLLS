@@ -15,7 +15,7 @@ namespace slls.Areas.LibraryAdmin
 {
     ////[RouteArea("LibraryAdmin", AreaPrefix = "Admin")]
     ////[Route("{action=index}")]
-    public class VolumesController : AdminBaseController
+    public class VolumesController : CatalogueBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("CopyItems.Copy_Item", "FieldDisplayName");

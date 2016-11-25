@@ -15,7 +15,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class LoansController : AdminBaseController
+    public class LoansController : LoansBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private ApplicationUserManager _userManager;

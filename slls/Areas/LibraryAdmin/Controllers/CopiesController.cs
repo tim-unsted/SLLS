@@ -14,7 +14,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class CopiesController : AdminBaseController
+    public class CopiesController : CatalogueBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("Copies.Copy", "FieldDisplayName");

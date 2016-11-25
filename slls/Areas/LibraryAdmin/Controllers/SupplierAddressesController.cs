@@ -8,7 +8,7 @@ using slls.ViewModels;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class SupplierAddressesController : AdminBaseController
+    public class SupplierAddressesController : FinanceBaseController
     {
         private readonly DbEntities _db = new DbEntities();
 

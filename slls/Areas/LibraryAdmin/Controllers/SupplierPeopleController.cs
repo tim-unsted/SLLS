@@ -14,7 +14,7 @@ namespace slls.Areas.LibraryAdmin
     [RouteArea("LibraryAdmin", AreaPrefix = "Admin")]
     [RoutePrefix("Contacts")]
     //[Route("{action=index}")]
-    public class SupplierPeopleController : AdminBaseController
+    public class SupplierPeopleController : FinanceBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("SupplierPeople.Contact", "FieldDisplayName");

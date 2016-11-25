@@ -1,0 +1,198 @@
+﻿@using VortexSoft.Bootstrap
+@using Westwind.Globalization
+@model slls.ViewModels.LibraryUserEditViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
+            {
+                <div class="alert alert-danger">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <h4>Oops!</h4>
+                    @Html.ValidationSummary()
+                </div>
+            }
+            @Html.HiddenFor(model => model.Id)
+
+            @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
+            {
+                tabs.Tab("User Details", "details");
+                tabs.Tab("Roles & Permissions", "roles");
+                tabs.Tab("Notes", "notes");
+
+                using (tabs.BeginPanel())
+                {
+                    <div style="padding: 15px 0;">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Firstname, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Firstname, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Firstname, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Lastname, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Lastname, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.UserName, htmlAttributes: new {@class = "control-label col-md-3"})
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.UserName, new {htmlAttributes = new {@class = "form-control"}})
+                                <span class="help-inline">For in-house systems (i.e. not hosted), this should be the user's normal windows login name.</span>
+                                @Html.ValidationMessageFor(model => model.UserName, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.Label(DbRes.T("Users.Password","FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                <a href="@Url.Action("ResetUserPassword", new { id = Model.Id })" title="Reset Password" class="btn btn-primary modal-link" id="cmdResetPwd">Reset Password</a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.UserBarcode, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.UserBarcode, new { htmlAttributes = new { @class = "form-control" } })
+                                <span class="help-inline">Barcodes might be used on, for example, a user's ID card.</span>
+                                @Html.ValidationMessageFor(model => model.UserBarcode, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Email, htmlAttributes: new {@class = "control-label col-md-3"})
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Email, new {htmlAttributes = new {@class = "form-control"}})
+                                <span class="help-inline">A valid email address is required for interacting with the user, sending notification emails, and using the 'forgot password' feature.</span>
+                                @Html.ValidationMessageFor(model => model.Email, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.LocationId, htmlAttributes: new {@class = "control-label col-md-3"})
+                            <div class="col-md-8">
+                                @Html.DropDownList("LocationID", null, htmlAttributes: new {@class = "form-control"})
+                                @Html.ValidationMessageFor(model => model.LocationId, "", new {@class = "text-danger"})
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.DepartmentId, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                @Html.DropDownList("DepartmentID", null, htmlAttributes: new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.DepartmentId, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Position, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                @Html.EditorFor(model => model.Position, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Position, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                }
+                using (tabs.BeginPanel())
+                {
+                    <div style="padding: 15px 0;">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.IsLive, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                <div class="checkbox">
+                                    @Html.EditorFor(model => model.IsLive)
+                                    @Html.ValidationMessageFor(model => model.IsLive, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.SelfLoansAllowed, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <div class="col-md-8">
+                                <div class="checkbox">
+                                    @Html.EditorFor(model => model.SelfLoansAllowed)
+                                    @Html.ValidationMessageFor(model => model.SelfLoansAllowed, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.IgnoreAd, htmlAttributes: new {@class = "control-label col-md-3"})
+                            <div class="col-md-8">
+                                <div class="checkbox">
+                                    @Html.EditorFor(model => model.IgnoreAd)
+                                    @Html.ValidationMessageFor(model => model.IgnoreAd, "", new {@class = "text-danger"})
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Roles, htmlAttributes: new { @class = "control-label col-md-3" })
+                            <span class=" col-md-8">
+                                <ul class="list-unstyled">
+                                    @foreach (var item in Model.RolesList)
+                                    {
+                                        <li>
+                                            <input type="checkbox" name="selectedRoles" value="@item.Value" checked="@item.Selected" />
+                                            @Html.Label(item.Value, new { @class = "control-label" })
+                                        </li>
+                                    }
+                                </ul>
+                            </span>
+                        </div>
+
+                    </div>
+                }
+                using (tabs.BeginPanel())
+                {
+                    <div style="padding: 15px 0;">
+                        <div class="form-group">
+                            @Html.LabelFor(model => model.Notes, htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.Notes, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    @Html.Partial("_ModalEditFooter")
+}
+
+<script type="text/javascript">
+    $('#cmdResetPwd').click(function () {
+        $('#lrgModal').modal('hide');
+    });
+    //$(function () {
+    //    $('form').submit(function (e) {
+    //        e.preventDefault();
+    //        $.post(this.action, $(this).serialize(), function (response) {
+    //            if (response.error) {
+    //                alert(response.error);
+    //            }
+    //            else {
+    //                $('#stdModal').modal('hide');
+    //                $('#lrgModal').modal('hide');
+    //            }
+    //        }, 'json');
+    //    });
+    //});
+</script>
+
+

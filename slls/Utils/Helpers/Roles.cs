@@ -15,16 +15,22 @@ namespace slls.Utils.Helpers
 {
     public static class Roles
     {
-        public const string Administrator = "Admin";
-        public const string Staff = "Library Staff";
-        public const string User = "OPAC User";
+        
         public const string Anon = "Anonymous";
-        public const string BsAdmin = "Bailey Admin";
-        //public const string BsDeveloper = "Bailey Developer";
+        public const string User = "OPAC User";
+        public const string CatalogueAdmin = "Catalogue Admin";
+        public const string LoansAdmin = "Loans Admin";
+        public const string FinanceAdmin = "Finance Admin";
+        public const string SerialsAdmin = "Serials Admin";
+        public const string UsersAdmin = "Users Admin";
+        public const string OpacAdmin = "OPAC Admin";
+        //public const string AllLibraryAdmin = "All Library Admin";
+        public const string SystemAdmin = "System Admin";
+        public const string BaileyAdmin = "Bailey Admin";
 
         public static IList<string> GetUserRoles()
         {
-            var userId = Utils.PublicFunctions.GetUserId(); //HttpContext.Current.User.Identity.GetUserId();
+            var userId = Utils.PublicFunctions.GetUserId();
             var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             if (userId == null)
             {
@@ -44,19 +50,19 @@ namespace slls.Utils.Helpers
         public static bool IsLibraryStaff()
         {
             var userRoles = GetUserRoles();
-            return userRoles != null && userRoles.Contains(Staff);
+            return userRoles != null && (userRoles.Contains(CatalogueAdmin) || userRoles.Contains(FinanceAdmin) || userRoles.Contains(LoansAdmin) || userRoles.Contains(SerialsAdmin) || userRoles.Contains(UsersAdmin));
         }
 
         public static bool IsAdmin()
         {
             var userRoles = GetUserRoles();
-            return userRoles.Contains(Administrator);
+            return userRoles.Contains(SystemAdmin);
         }
 
         public static bool IsBaileyAdmin()
         {
             var userRoles = GetUserRoles();
-            return userRoles.Contains(BsAdmin);
+            return userRoles.Contains(BaileyAdmin);
         }
     }
 

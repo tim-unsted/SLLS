@@ -14,7 +14,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class TitleImagesController : Controller
+    public class TitleImagesController : CatalogueBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly GenericRepository _repository;

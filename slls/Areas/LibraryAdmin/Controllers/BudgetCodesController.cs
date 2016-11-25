@@ -10,7 +10,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class BudgetCodesController : AdminBaseController
+    public class BudgetCodesController : FinanceBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("BudgetCode.Budget_Code", "FieldDisplayName");

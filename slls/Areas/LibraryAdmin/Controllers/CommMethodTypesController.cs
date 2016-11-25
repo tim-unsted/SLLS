@@ -10,7 +10,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class CommMethodTypesController : AdminBaseController
+    public class CommMethodTypesController : FinanceBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("CommunicationTypes.Method", "FieldDisplayName");

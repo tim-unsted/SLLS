@@ -10,7 +10,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class PublishersController : AdminBaseController
+    public class PublishersController : CatalogueBaseController
     {
         private DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("Publishers.Publisher", "FieldDisplayName");

@@ -10,7 +10,7 @@ using slls.ViewModels;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class TitleAdditionalFieldDefsController : AdminBaseController
+    public class TitleAdditionalFieldDefsController : CatalogueBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly GenericRepository _repository;

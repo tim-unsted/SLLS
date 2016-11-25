@@ -19,7 +19,7 @@ using Westwind.Globalization;
 namespace slls.Areas.LibraryAdmin
 {
     //[RouteArea("LibraryAdmin", AreaPrefix = "Admin")]
-    public class OrderDetailsController : AdminBaseController
+    public class OrderDetailsController : FinanceBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private ApplicationUserManager _userManager;

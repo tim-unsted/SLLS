@@ -19,7 +19,7 @@ namespace slls.Areas.LibraryAdmin
     [RouteArea("LibraryAdmin", AreaPrefix = "Admin")]
     [RoutePrefix("Titles")]
     [Route("{action=index}")]
-    public class TitlesController : AdminBaseController
+    public class TitlesController : CatalogueBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly GenericRepository _repository;

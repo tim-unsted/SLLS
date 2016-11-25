@@ -15,7 +15,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class NotificationsController : Controller
+    public class NotificationsController : OpacAdminBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("Notifications.Notification", "FieldDisplayName");

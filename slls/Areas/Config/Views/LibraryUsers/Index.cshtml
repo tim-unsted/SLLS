@@ -1,0 +1,122 @@
+﻿@using slls.Models
+@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.LibraryUsersIndexViewModel
+
+<script type="text/javascript">
+    //var baseUrl = window.location.href;
+    $(document).ready(function() {
+        $('#users').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "order": [[0, 'asc'], [1, 'asc']],
+            "columnDefs": [
+                {
+                    "width": "10%",
+                    "searchable": false,
+                    "sortable": false,
+                    "targets": [7]
+                }
+            ]
+        });
+        $(function() {
+            $('#ShowAll').change(function() {
+                // the value of the checkbox changed => refresh the page:
+                var currentLocation = window.location.href;
+                var baseUrl = currentLocation.replace(/&?showAll=([^&]$|[^&]*)/i, "");
+                //var showAll = this.checked;
+                var s = window.location.search;
+                if (this.checked === true) {
+                    window.location.href = baseUrl + ((s.substring(0, 1) === "?") ? "&showAll=true" : "?showAll=true");
+                } else {
+                    window.location.href = baseUrl;
+                }
+            });
+        });
+    });
+</script>
+
+@{
+    var db = new DbEntities();
+}
+
+@Html.Partial("_HeaderSeeAlso")
+@*<h2>@ViewBag.Title</h2>*@
+@Html.CheckBoxFor(model => model.ShowAll, new { @title = "Show ALL users, including those no longer 'Live'" }) Show All
+@Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x, showAll = Model.ShowAll }))
+<p>
+    <a href="@Url.Action("Create", "LibraryUsers")" title="Add new @DbRes.T("Users.LibraryUser", "FieldDisplayName")" class="btn btn-primary" ><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<table id="users" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().FullnameRev)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().UserBarcode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().Department.Department1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().Location.Location1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().Position)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().IsLive)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model.LibraryUsers)
+        {
+            string location = "";
+            if (user.LocationID != null)
+            {
+                location = db.Locations.Find(user.LocationID).LocationString;
+            }
+            <tr>
+                <td>
+                    @(String.IsNullOrEmpty(user.FullnameRev) ? Html.ActionLink(" ", "Edit", "LibraryUsers", new { id = user.Id }, new { @class = "btn-link" }) : Html.ActionLink(user.FullnameRev, "Edit", "LibraryUsers", new { id = user.Id }, new { @class = "btn-link", data_toggle = "modal", data_target = "#lrgModal" }))
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.UserBarcode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Department.Department1)
+                </td>
+                <td>
+                    @Html.Raw(location)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.Position)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => user.IsLive)
+                </td>
+
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new { id = user.Id })" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new { id = user.Id })" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

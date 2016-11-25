@@ -11,7 +11,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class ActivityTypesController : AdminBaseController
+    public class ActivityTypesController : FinanceBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("Activities.Activity_Type", "FieldDisplayName");

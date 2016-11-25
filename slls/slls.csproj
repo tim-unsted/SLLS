@@ -266,11 +266,18 @@
     <Compile Include="Areas\Config\Controllers\ConfigBaseController.cs" />
     <Compile Include="Areas\Config\Controllers\ConnectionController.cs" />
     <Compile Include="Areas\Config\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Config\Controllers\LibraryUsersController.cs" />
     <Compile Include="Areas\Config\Controllers\LocalizationController.cs" />
     <Compile Include="Areas\Config\Controllers\MenuBuilderController.cs" />
     <Compile Include="Areas\Config\Controllers\ParametersController.cs" />
     <Compile Include="Areas\Config\Controllers\PartialMenuController.cs" />
     <Compile Include="Areas\Config\Controllers\SearchConfigController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\LoansBaseController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\OpacAdminBaseController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\UsersBaseController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\SerialsBaseController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\CatalogueBaseController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\FinanceBaseController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\AdminToolsController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\CirculationController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\CirculationMessagesController.cs" />
@@ -1039,6 +1046,11 @@
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OutstandingOrdersWithInvoice.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\DuplicateTitle.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\SelectDuplicate.cshtml" />
+    <Content Include="Areas\Config\Views\LibraryUsers\Create.cshtml" />
+    <Content Include="Areas\Config\Views\LibraryUsers\Edit.cshtml" />
+    <Content Include="Areas\Config\Views\LibraryUsers\EncryptPasswords.cshtml" />
+    <Content Include="Areas\Config\Views\LibraryUsers\Index.cshtml" />
+    <Content Include="Areas\Config\Views\LibraryUsers\ResetUserPassword.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

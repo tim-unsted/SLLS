@@ -1,11 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Validation;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -13,16 +9,14 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using slls.App_Settings;
-using slls.DAO;
-using slls.Hubs;
 using slls.Models;
 using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
 
-namespace slls.Areas.LibraryAdmin
+namespace slls.Areas.Config
 {
-    public class LibraryUsersController : UsersBaseController
+    public class LibraryUsersController : ConfigBaseController
     {
         private ApplicationRoleManager _roleManager;
         private ApplicationUserManager _userManager;
@@ -137,7 +131,7 @@ namespace slls.Areas.LibraryAdmin
                 IsLive = true,
                 SelfLoansAllowed = true,
                 IgnoreAd = false,
-                RolesList = RoleManager.Roles.Where(r => userRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
+                RolesList = RoleManager.Roles.Where(r => r.Name != "Bailey Admin").ToList().Select(x => new SelectListItem
                 {
                     Selected = defaultMenuRoles.Contains(x.Name),
                     Text = x.Name,
@@ -273,7 +267,7 @@ namespace slls.Areas.LibraryAdmin
                 SelfLoansAllowed = libraryUser.SelfLoansAllowed,
                 Email = libraryUser.Email,
                 Notes = libraryUser.Notes,
-                RolesList = RoleManager.Roles.Where(r => userRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
+                RolesList = RoleManager.Roles.Where(r => r.Name != "Bailey Admin").ToList().Select(x => new SelectListItem
                 {
                     Selected = libraryUserRoles.Contains(x.Name),
                     Text = x.Name,
@@ -404,9 +398,9 @@ namespace slls.Areas.LibraryAdmin
 
             var code = await UserManager.GeneratePasswordResetTokenAsync(libraryUser.Id);
             var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = libraryUser.Id, code = code }, protocol: Request.Url.Scheme);
-            var msgSubject = App_Settings.Settings.GetParameterValue("Security.Passwords.ChangePasswordConfirmationSubject",
+            var msgSubject = Settings.GetParameterValue("Security.Passwords.ChangePasswordConfirmationSubject",
                 "Your password for Simple Little Library System has changed", "The email 'Subject' when generating an 'Changed Password' confirmation email.");
-            var msgBody = App_Settings.Settings.GetParameterValue("Security.Passwords.ChangePasswordConfirmationBody",
+            var msgBody = Settings.GetParameterValue("Security.Passwords.ChangePasswordConfirmationBody",
                 "Your password for Simple Little Library System has recently been changed. If you did not request or authorise this change, click the link below to reset it now. Otherwise, you can ignore this message.", "The email 'Body' when generating an 'Changed Password' confirmation email.");
             await UserManager.SendEmailAsync(libraryUser.Id, msgSubject, msgBody + "<br><br><a href=\"" + callbackUrl + "\">Follow this link to reset your password now</a>");
 
@@ -524,6 +518,11 @@ namespace slls.Areas.LibraryAdmin
                 passwordRequirements.Add(string.Format("Passwords must contain at least one UPPER-case character"));
             }
             return string.Join("<br>", passwordRequirements) + "<br>";
+        }
+
+        public ActionResult ImportUsers()
+        {
+            return RedirectToAction("ImportUsers", "DataImport", new {area = "LibraryAdmin"});
         }
 
         [HttpGet]

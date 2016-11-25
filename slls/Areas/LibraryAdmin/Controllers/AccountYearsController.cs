@@ -12,7 +12,7 @@ namespace slls.Areas.LibraryAdmin
 {
     //Only allow admin role to access this functionality ...
     [Authorize(Roles = "Admin")]
-    public class AccountYearsController : AdminBaseController
+    public class AccountYearsController : FinanceBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("AccountYears.Account_Year", "FieldDisplayName");

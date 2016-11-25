@@ -88,26 +88,26 @@ namespace slls.Areas.Config
             });
         }
 
-        [AuthorizeRoles(Roles.BsAdmin)]
+        [AuthorizeRoles(Roles.BaileyAdmin)]
         public ActionResult LibraryAdmin()
         {
             return RedirectToAction("Index", new {id = "LibraryAdmin"});
         }
         
-        [AuthorizeRoles(Roles.Administrator)]
+        [AuthorizeRoles(Roles.SystemAdmin)]
         public ActionResult OPAC()
         {
             return RedirectToAction("Index", new { id = "OPAC" });
         }
 
-        [AuthorizeRoles(Roles.BsAdmin)]
+        [AuthorizeRoles(Roles.BaileyAdmin)]
         public ActionResult Config()
         {
             return RedirectToAction("Index", new { id = "Config" });
         }
 
         
-        [AuthorizeRoles(Roles.Administrator)]
+        [AuthorizeRoles(Roles.SystemAdmin)]
         public ActionResult Index(string id = "OPAC")
         {
             var topLevelItem = _db.Menus.FirstOrDefault(m => m.ParentID == null); // should be ID = -999
@@ -174,7 +174,7 @@ namespace slls.Areas.Config
             ViewData["ParentArea"] = new SelectList(_db.Menus.Where(m => m.ParentID == grandParentId && allowedAreas.Contains(m.MenuArea) && m.MenuArea == menuitem.MenuArea).OrderBy(m => m.Title), "ID", "Title", parentId);
             ViewData["ParentID"] = new SelectList(_db.Menus.Where(m => m.ParentID == parentId && allowedAreas.Contains(m.MenuArea)).OrderBy(m => m.Title), "ID", "Title", menuitem.ID);
 
-            var sortOrder = _db.Menus.Where(m => m.ParentID == menuitem.ID).Select(m => m.SortOrder).Max();
+            var sortOrder = _db.Menus.Where(m => m.ParentID == menuitem.ID).Select(m => m.SortOrder).Max() ?? 0;
             sortOrder = sortOrder + 10;
 
             //Create our view model of data to work with, based on the selected menu item ...

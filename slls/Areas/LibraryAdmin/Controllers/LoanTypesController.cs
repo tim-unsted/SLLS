@@ -14,7 +14,7 @@ using slls.ViewModels;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class LoanTypesController : AdminBaseController
+    public class LoanTypesController : LoansBaseController
     {
         private readonly DbEntities _db = new DbEntities();
 

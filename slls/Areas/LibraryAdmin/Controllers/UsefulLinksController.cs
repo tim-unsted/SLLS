@@ -15,7 +15,7 @@ using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class UsefulLinksController : Controller
+    public class UsefulLinksController : OpacAdminBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("Useful_Links.Useful_Link", "FieldDisplayName");
