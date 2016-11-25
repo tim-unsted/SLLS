@@ -362,7 +362,7 @@ namespace slls.Areas.Config
                 {
                     Text = "Anonymous",
                     Value = "Anonymous",
-                    Selected = true
+                    Selected = allMenuRoles.Contains("Anonymous"),
                 });
             }
 
