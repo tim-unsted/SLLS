@@ -17,6 +17,12 @@ namespace slls.ViewModels
     
     public class VolumesAddViewModel
     {
+        public VolumesAddViewModel()
+        {
+            ReturnAction = "Edit";
+            ReturnController = "Copies";
+        }
+        
         [Required(ErrorMessage = "Please select a Title")]
         public int TitleId { get; set; }
         
@@ -49,6 +55,10 @@ namespace slls.ViewModels
         public int LoanTypeId { get; set; }
 
         public int Step { get; set; }
+
+        public string ReturnAction { get; set; }
+
+        public string ReturnController { get; set; }
 
         public bool AddMore { get; set; }
 

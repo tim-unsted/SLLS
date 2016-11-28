@@ -1,5 +1,5 @@
 ﻿@using Westwind.Globalization
-@model slls.ViewModels.TitleEditViewModel
+@model slls.ViewModels.TitleDetailsViewModel
 
 @Html.Label(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/MediaTypes/_add")" class="button" id="addMediaLink" title="Media not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 @Html.DropDownList("MediaID", null, new { @class = "form-control" })

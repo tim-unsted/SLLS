@@ -2,6 +2,7 @@
 @using slls.Models
 @using slls.Utils
 @using Westwind.Globalization
+@using Roles = slls.Utils.Helpers.Roles
 @model slls.Models.Title
 
 @{
@@ -22,6 +23,10 @@
             @if (User.Identity.IsAuthenticated)
             {
                 <a href="@Url.Action("Add", "LibraryUserBookmarks", new {id = Model.TitleID})" class="btn btn-link modal-link" title="Bookmark @DbRes.T("Titles.Title", "FieldDisplayName")">Bookmark <span aria-hidden="true" class="glyphicon glyphicon-bookmark"></span></a>
+            }
+            @if (Roles.IsUserInRole("Catalogue Admin"))
+            {
+                <a href="@Url.Action("Edit", "Titles", new { id = Model.TitleID, area = "LibraryAdmin" })" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
             }
         </span>
         @{var title = string.IsNullOrEmpty(Model.Title1) ? Html.Raw("[No Title]") : Html.DisplayFor(modelItem => Model.Title1); }
@@ -240,7 +245,7 @@
                                         <td>@Html.DisplayFor(x => volume.Borrowings.LastOrDefault(b => b.Returned == null).ReturnDue)</td>
 
                                         @*//Display a link to borrow the item if allowed ...*@
-                                        @if (selfLoansAllowed)
+                                        @if (selfLoansAllowed && User.Identity.IsAuthenticated)
                                         {
                                             if ((!volume.OnLoan && !volume.LoanType.RefOnly && volume.LoanType.LengthDays > 0))
                                             {

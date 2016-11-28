@@ -5,9 +5,11 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using slls.Localization;
 using slls.Models;
 using Westwind.Globalization;
+using Roles = slls.Utils.Helpers.Roles;
 
 namespace slls.ViewModels
 {
@@ -17,7 +19,7 @@ namespace slls.ViewModels
         public string Classmark { get; set; }
         public int TitleCount { get; set; }
     }
-    
+
     public class TitlesListViewModel
     {
         public List<Title> Titles { get; set; }
@@ -48,7 +50,7 @@ namespace slls.ViewModels
         public string CurrentView { get; set; }
 
     }
-    
+
     public class NewTitlesListViewModel
     {
         //[Key]
@@ -104,9 +106,9 @@ namespace slls.ViewModels
         public int TitleId { get; set; }
         public string Title { get; set; }
         public int NonFilingChars { get; set; }
-        public DateTime? Commenced { get; set; }   
+        public DateTime? Commenced { get; set; }
     }
-    
+
     public class TitleAddViewModel
     {
         public TitleAddViewModel()
@@ -115,7 +117,7 @@ namespace slls.ViewModels
             this.Editors = new List<Author>();
             this.Step = 1;
         }
-        
+
         [Column("Title")]
         [StringLength(450)]
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
@@ -196,10 +198,126 @@ namespace slls.ViewModels
         public List<Author> Editors { get; set; }
 
         public int Step { get; set; }
-        
+
     }
-    
+
     public sealed class TitleEditViewModel
+    {
+        //public Models.Title _title { get; set; }
+
+        public int TitleID { get; set; }
+
+        [Column("Title")]
+        [StringLength(450)]
+        [LocalDisplayName("Titles.Title", "FieldDisplayName")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "A blank title is not allowed. Please enter a valid title.")
+        ]
+        public string Title1 { get; set; }
+
+        //[LocalDisplayName("MediaTypes.Media_Type", "FieldDisplayName")]
+        //public int MediaID { get; set; }
+
+        //[LocalDisplayName("Classmarks.Classmark", "FieldDisplayName")]
+        //public int ClassmarkID { get; set; }
+
+        //[LocalDisplayName("Titles.Publisher", "FieldDisplayName")]
+        //public int PublisherID { get; set; }
+
+        //[LocalDisplayName("Frequency.Frequency", "FieldDisplayName")]
+        //public int FrequencyID { get; set; }
+
+        //[LocalDisplayName("Languages.Language", "FieldDisplayName")]
+        //public int LanguageID { get; set; }
+
+        //[StringLength(255)]
+        //[LocalDisplayName("Titles.Series", "FieldDisplayName")]
+        //public string Series { get; set; }
+
+        //[StringLength(255)]
+        //[LocalDisplayName("Titles.Edition", "FieldDisplayName")]
+        //public string Edition { get; set; }
+
+        //[StringLength(50)]
+        //[LocalDisplayName("Titles.Place_of_Publication", "FieldDisplayName")]
+        //public string PlaceofPublication { get; set; }
+
+        //[StringLength(50)]
+        //[LocalDisplayName("Titles.Published_Year", "FieldDisplayName")]
+        //public string Year { get; set; }
+
+        //[StringLength(50)]
+        //[LocalDisplayName("Titles.ISBN_10", "FieldDisplayName")]
+        //public string ISBN10 { get; set; }
+
+        //[StringLength(50)]
+        //[LocalDisplayName("Titles.ISBN_13", "FieldDisplayName")]
+        //public string ISBN13 { get; set; }
+
+        //[StringLength(255)]
+        //[LocalDisplayName("Titles.Source", "FieldDisplayName")]
+        //public string Source { get; set; }
+
+        //[StringLength(255)]
+        //[LocalDisplayName("Titles.Description", "FieldDisplayName")]
+        //public string Description { get; set; }
+
+        //[StringLength(255)]
+        //[LocalDisplayName("Titles.Citation", "FieldDisplayName")]
+        //public string Citation { get; set; }
+
+        //[LocalDisplayName("Titles.Non_Filing_Characters", "FieldDisplayName")]
+        //public int NonFilingChars { get; set; }
+
+        //[LocalDisplayName("Titles.Notes", "FieldDisplayName")]
+        //[DataType(DataType.MultilineText)]
+        //public string Notes { get; set; }
+
+        //public Classmark Classmark { get; set; }
+        //public Supplier Supplier { get; set; }
+        //public Frequency Frequency { get; set; }
+        //public Language Language { get; set; }
+        //public MediaType MediaType { get; set; }
+
+        //[LocalDisplayName("Titles.Authors", "FieldDisplayName")]
+        //public ICollection<TitleAuthor> TitleAuthors { get; set; }
+
+        //[LocalDisplayName("Titles.Editors", "FieldDisplayName")]
+        //public ICollection<TitleEditor> TitleEditors { get; set; }
+
+        //[Editable(false)]
+        //[LocalDisplayName("Titles.Authors", "FieldDisplayName")]
+        //public string authors { get; set; }
+
+        //[Editable(false)]
+        //[LocalDisplayName("Titles.Editors", "FieldDisplayName")]
+        //public string editors { get; set; }
+
+        public ICollection<TitleAdditionalFieldData> TitleAdditionalFieldDatas { get; set; }
+
+        [LocalDisplayName("Titles.Keywords", "FieldDisplayName")]
+        public ICollection<SubjectIndex> SubjectIndexes { get; set; }
+
+        [LocalDisplayName("Titles.Copies", "FieldDisplayName")]
+        public ICollection<Copy> Copies { get; set; }
+
+        [LocalDisplayName("Titles.Order_Details", "FieldDisplayName")]
+        public ICollection<OrderDetail> OrderDetails { get; set; }
+
+        [LocalDisplayName("Titles.Links", "FieldDisplayName")]
+        public ICollection<TitleLink> TitleLinks { get; set; }
+
+        [LocalDisplayName("Titles.Cover_Images", "FieldDisplayName")]
+        public ICollection<TitleImage> TitleImages { get; set; }
+
+        public bool IsFinanceAdmin { get; set; }
+
+        public TitleEditViewModel()
+        {
+            IsFinanceAdmin = Roles.IsUserInRole("Finance Admin");
+        }
+    }
+
+    public class TitleDetailsViewModel
     {
         public Models.Title _title { get; set; }
 
@@ -241,7 +359,7 @@ namespace slls.ViewModels
         [StringLength(50)]
         [LocalDisplayName("Titles.Published_Year", "FieldDisplayName")]
         public string Year { get; set; }
-        
+
         [StringLength(50)]
         [LocalDisplayName("Titles.ISBN_10", "FieldDisplayName")]
         public string ISBN10 { get; set; }
@@ -249,7 +367,7 @@ namespace slls.ViewModels
         [StringLength(50)]
         [LocalDisplayName("Titles.ISBN_13", "FieldDisplayName")]
         public string ISBN13 { get; set; }
-        
+
         [StringLength(255)]
         [LocalDisplayName("Titles.Source", "FieldDisplayName")]
         public string Source { get; set; }
@@ -268,7 +386,7 @@ namespace slls.ViewModels
         [LocalDisplayName("Titles.Notes", "FieldDisplayName")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
-        
+
         public Classmark Classmark { get; set; }
         public Supplier Supplier { get; set; }
         public Frequency Frequency { get; set; }
@@ -289,58 +407,6 @@ namespace slls.ViewModels
         [LocalDisplayName("Titles.Editors", "FieldDisplayName")]
         public string editors { get; set; }
 
-        public ICollection<TitleAdditionalFieldData> TitleAdditionalFieldDatas { get; set; }
-
-        [LocalDisplayName("Titles.Keywords", "FieldDisplayName")]
-        public ICollection<SubjectIndex> SubjectIndexes { get; set; }
-
-        [LocalDisplayName("Titles.Copies", "FieldDisplayName")]
-        public ICollection<Copy> Copies { get; set; }
-
-        [LocalDisplayName("Titles.Order_Details", "FieldDisplayName")]
-        public ICollection<OrderDetail> OrderDetails { get; set; }
-
-        [LocalDisplayName("Titles.Links", "FieldDisplayName")]
-        public ICollection<TitleLink> TitleLinks { get; set; }
-
-        [LocalDisplayName("Titles.Cover_Images", "FieldDisplayName")]
-        public ICollection<TitleImage> TitleImages { get; set; }
-
-        public TitleEditViewModel()
-        {
-            
-        }
-
-        public TitleEditViewModel(Models.Title title)
-        {
-            //_title = title;
-            TitleID = title.TitleID;
-            Title1 = title.Title1;
-            ClassmarkID = title.ClassmarkID;
-            PublisherID = title.PublisherID;
-            Description = title.Description;
-            Edition = title.Edition;
-            FrequencyID = title.FrequencyID;
-            ISBN10 = title.ISBN10;
-            ISBN13 = title.ISBN13;
-            MediaID = title.MediaID;
-            Source = title.Source;
-            Series = title.Series;
-            Source = title.Source;
-            NonFilingChars = title.NonFilingChars;
-            LanguageID = title.LanguageID;
-            PlaceofPublication = title.PlaceofPublication;
-            Notes = title.Notes;
-            Year = title.Year;
-            TitleAuthors = title.TitleAuthors; //new HashSet<TitleAuthor>();
-            TitleEditors = title.TitleEditors; //new HashSet<TitleEditor>();
-            TitleAdditionalFieldDatas = title.TitleAdditionalFieldDatas; // new HashSet<TitleAdditionalFieldData>();
-            SubjectIndexes = title.SubjectIndexes; //new HashSet<SubjectIndex>();
-            Copies = title.Copies; //new HashSet<Copy>();
-            OrderDetails = title.OrderDetails; //new HashSet<OrderDetail>();
-            TitleImages = title.TitleImages;  //new HashSet<TitleImage>();
-            TitleLinks = title.TitleLinks; //new HashSet<TitleLink>();
-        }
     }
 
     public class TitleDeleteViewModel
@@ -358,7 +424,7 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Titles.Description", "FieldDisplayName")]
         public string Description { get; set; }
-        
+
         [LocalDisplayName("Titles.Notes", "FieldDisplayName")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
@@ -403,7 +469,7 @@ namespace slls.ViewModels
         public int TitleID { get; set; }
 
         public string Who { get; set; }
-        
+
         [DataType(DataType.MultilineText)]
         [LocalDisplayName("Titles.ISBN_ISSN", "FieldDisplayName")]
         public string IsbnInput { get; set; }
@@ -421,7 +487,7 @@ namespace slls.ViewModels
 
         //public string ErrorMessage { get; set; }
 
-        public string EntityName { get; set; }  
+        public string EntityName { get; set; }
     }
 
     public class CopacSearchCriteria
@@ -456,7 +522,7 @@ namespace slls.ViewModels
         {
             Source = "";
         }
-        
+
         public int TitleId { get; set; }
 
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
@@ -487,7 +553,7 @@ namespace slls.ViewModels
     {
         public SelectTitleViewmodel()
         {
-            
+
         }
 
         public string Title { get; set; }
@@ -506,5 +572,5 @@ namespace slls.ViewModels
 
         public string Tab { get; set; }
     }
-    
+
 }

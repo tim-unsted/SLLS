@@ -737,8 +737,8 @@ namespace slls.Controllers
         {
             var viewModel = new SimpleSearchingViewModel()
             {
-                LibraryStaff = Roles.IsLibraryStaff(),
-                Area = "admin",
+                //LibraryStaff = Roles.IsUserInRole("Catalogue Admin"),
+                Area = "opac",
                 OrderBy = "title",
                 IsActualSearch = true
             };

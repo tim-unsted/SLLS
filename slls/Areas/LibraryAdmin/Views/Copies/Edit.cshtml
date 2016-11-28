@@ -33,16 +33,19 @@
             </div>
         }
 
-        <a href="@Url.Action("Add", "Copies", new {id = @Model.TitleId}, null)" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
+        <a href="@Url.Action("Add", "Copies", new {id = @Model.TitleId, returnAction = "Edit" , returnController = "Copies" })" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
 
     </div>
 </div>
 
 @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
 {
-    tabs.Tab(DbRes.T("Copies.Copy","FieldDisplayName") + " Details", "tab1");
+    tabs.Tab(DbRes.T("Copies.Copy", "FieldDisplayName") + " Details", "tab1");
     tabs.Tab(DbRes.T("CopyItems", "EntityType") + ViewBag.VolumesBadge, "tab2");
-    tabs.Tab("Cancellations (Serials)", "tab3");
+    if (Model.IsSerialsAdmin)
+    {
+        tabs.Tab("Cancellations (Serials)", "tab3");
+    }
 
     using (tabs.BeginPanel())
     {
@@ -52,26 +55,34 @@
     }
     using (tabs.BeginPanel())
     {
-        <div id="Volumes">
-            @Html.Action("_ThumbnailDetails", "Volumes", new { id = Model.CopyId })
-        </div>
-        <div class="form-footer">
-            @if (ViewBag.RecordCount > 1)
-            {
-                <span class="pull-left">@Html.Partial("_PaginateDetails", Model)</span>
-            }
-
-            <a href="@Url.Action("Add", "Volumes", new {id = Model.CopyId})" class="btn btn-primary" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")</a>
-            <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
-            &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+        <br />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <p>
+                        <a href="@Url.Action("Add", "Volumes", new {id = Model.CopyId})" class="btn btn-primary" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")</a>
+                    </p>
+                    @Html.Action("_ThumbnailDetails", "Volumes", new { id = Model.CopyId })
+                    <div class="form-footer">
+                        @if (ViewBag.RecordCount > 1)
+                        {
+                            <span class="pull-left">@Html.Partial("_PaginateDetails", Model)</span>
+                        }
+                        <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
+                        &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+                    </div>
+                </div>
+            </div>
         </div>
     }
 
-    using (tabs.BeginPanel())
+    if (Model.IsSerialsAdmin)
     {
-        <div id="Cancellations">
-            @Html.Partial("_Cancellations", Model)
-        </div>
+        using (tabs.BeginPanel())
+        {
+            <div id="Cancellations">
+                @Html.Partial("_Cancellations", Model)
+            </div>
+        }
     }
-    
 }

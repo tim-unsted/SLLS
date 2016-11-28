@@ -22,6 +22,8 @@
     @Html.HiddenFor(model => model.TitleId)
     @Html.HiddenFor(model => model.AddMore)
     @Html.HiddenFor(model => model.Step)
+    @Html.HiddenFor(model => model.ReturnController)
+    @Html.HiddenFor(model => model.ReturnAction)
 
     <div class="form-horizontal">
         <div class="form-group">
@@ -79,9 +81,9 @@
     </div>
 
     <div class="form-footer">
+        <button type="submit" id="btnAddMore" value="Add" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save & Add More ></button>
         <button type="submit" id="btnOk" value="Add" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @ViewBag.BtnText</button>
-        <button type="submit" id="btnAddMore" value="Add" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save & Add More</button>
-        &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+        &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();"/>
     </div>
 }
 

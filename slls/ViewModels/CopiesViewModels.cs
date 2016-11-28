@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using slls.Localization;
 using slls.Models;
+using slls.Utils.Helpers;
 
 namespace slls.ViewModels
 {
@@ -24,6 +25,13 @@ namespace slls.ViewModels
     
     public class CopiesAddViewModel
     {
+        public CopiesAddViewModel()
+        {
+            ReturnAction = "Edit";
+            ReturnController = "Titles";
+            Step = 1;
+        }
+        
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
         [Required(ErrorMessage = "Please select a Title!")]
         [Range(1, int.MaxValue, ErrorMessage = "Please select a Title!")]
@@ -34,7 +42,6 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Copies.Copy_Number", "FieldDisplayName")]
         [Required(ErrorMessage = "Please provide a Copy Number")]
-        //[Remote("CopyNumberExists", "Copies", HttpMethod = "POST", ErrorMessage = "This copy number is already in use for this title!")]
         public int CopyNumber { get; set; }
 
         [StringLength(50)]
@@ -63,23 +70,18 @@ namespace slls.ViewModels
 
         public int Step { get; set; }
 
-        //[StringLength(255)]
-        ////[Required]
-        //[LocalDisplayName("CopyItems.Label_Text", "FieldDisplayName")]
-        //public string LabelText { get; set; }
-
-        //[StringLength(50)]
-        ////[Required]
-        //[LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
-        //public string Barcode { get; set; }
-        
-        //[LocalDisplayName("CopyItems.Is_Ref_Only", "FieldDisplayName")]
-        //public bool RefOnly { get; set; }
+        public string ReturnController { get; set; }
+        public string ReturnAction { get; set; }
 
     }
 
     public class CopyDetailsEditViewModel
     {
+        public CopyDetailsEditViewModel()
+        {
+            IsSerialsAdmin = Roles.IsUserInRole("Serials Admin");
+        }
+        
         public int CopyId { get; set; }
         
         public int TitleId { get; set; }
@@ -148,6 +150,8 @@ namespace slls.ViewModels
         public virtual ICollection<Circulation> Circulations { get; set; }
 
         public virtual CirculationMessage CirculationMessage { get; set; }
+
+        public bool IsSerialsAdmin { get; set; }
         
     }
 

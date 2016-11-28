@@ -18,7 +18,6 @@ namespace slls
                 CdnFallbackExpression = "window.jquery"
             };
             jqueryBundle.Include("~/Scripts/jquery-2.2.3.min.js");
-            //var jqueryBundle = new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-2.2.3.min.js");
             bundles.Add(jqueryBundle);
 
 
@@ -37,19 +36,18 @@ namespace slls
                 CdnFallbackExpression = "window.jquery"
             };
             modernizrBundle.Include("~/Scripts/modernizr-2.8.3.js");
-            //var modernizrBundle = new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-2.8.3.js");
             bundles.Add(modernizrBundle);
 
 
-            // Bootstrap JS ...
-            //var bootstrapJsBundle = new ScriptBundle("~/bundles/bootstrapjs",
-            //    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
-            //{
-            //    CdnFallbackExpression = "window.jquery"
-            //};
-            //bootstrapJsBundle.Include("~/Scripts/bootstrap.min.js");
-            var bootstrapJsBundle = new ScriptBundle("~/bundles/bootstrapjs").Include("~/Scripts/bootstrap.min.js");
-            bundles.Add(bootstrapJsBundle);
+            //// Bootstrap JS ...
+            ////var bootstrapJsBundle = new ScriptBundle("~/bundles/bootstrapjs",
+            ////    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+            ////{
+            ////    CdnFallbackExpression = "window.jquery"
+            ////};
+            ////bootstrapJsBundle.Include("~/Scripts/bootstrap.min.js");
+            //var bootstrapJsBundle = new ScriptBundle("~/bundles/bootstrapjs").Include("~/Scripts/bootstrap.min.js");
+            //bundles.Add(bootstrapJsBundle);
 
 
             // Other Bootstrap and local JS stuff ...
@@ -74,15 +72,15 @@ namespace slls
             bundles.Add(jqueryUiBundle);
 
 
-            // Boostrap CSS ...
+            //// Boostrap CSS ...
             //var bootstrapCssBundle = new StyleBundle("~/Content/bootstrap",
             //    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
             //{
             //    CdnFallbackExpression = "window.jquery"
             //};
             //bootstrapCssBundle.Include("~/Content/bootstrap.min.css");
-            var bootstrapCssBundle = new StyleBundle("~/Content/bootstrap").Include("~/Content/bootstrap.min.css");
-            bundles.Add(bootstrapCssBundle);
+            ////var bootstrapCssBundle = new StyleBundle("~/Content/bootstrap").Include("~/Content/bootstrap.min.css");
+            //bundles.Add(bootstrapCssBundle);
 
 
             // Other local CSS stuff ...

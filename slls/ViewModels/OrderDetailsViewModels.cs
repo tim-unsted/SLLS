@@ -40,6 +40,7 @@ namespace slls.ViewModels
     {
         public OrderDetailsAddViewModel()
         {
+            CallingController = "OrderDetails";
             CallingAction = "Create";
             DateWarningMsg = "<p><strong>Note: </strong>The dates highlighted in <span style=\"color: #3c763d;\"><strong>green</strong></span> have been auto-filled for you.  Please check to ensure that the dates are correct for your order.</p>"; ;
         }
@@ -131,7 +132,8 @@ namespace slls.ViewModels
         public IEnumerable<SelectListItem> AuthorityUsers { get; set; }
         public IEnumerable<SelectListItem> BudgetCodes { get; set; }
         public IEnumerable<SelectListItem> OrderCategories { get; set; }
-        
+
+        public string CallingController { get; set; }
         public string CallingAction { get; set; }
 
         public string DateWarningMsg { get; set; }

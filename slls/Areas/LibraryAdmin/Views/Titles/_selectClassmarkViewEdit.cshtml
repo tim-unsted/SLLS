@@ -1,5 +1,5 @@
 ﻿@using Westwind.Globalization
-@model slls.ViewModels.TitleEditViewModel
+@model slls.ViewModels.TitleDetailsViewModel
 
 @Html.Label(DbRes.T("Classmarks.Classmark", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/Classmarks/_add")" class="button" id="addClassmarkLink" title="Classmark not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 @Html.DropDownList("ClassmarkID", null, new { @class = "form-control" })

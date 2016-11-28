@@ -890,7 +890,8 @@ namespace slls.Areas.LibraryAdmin
                 BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a ", true, false),
                 RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
-                CallingAction = "add"
+                CallingAction = "Edit",
+                CallingController = "Titles"
             };
 
             ViewBag.Title = "Add " + DbRes.T("Orders.New_Order", "FieldDisplayName");
@@ -913,8 +914,7 @@ namespace slls.Areas.LibraryAdmin
                 OrderCategories = SelectListHelper.OrderCategoryList(PublicFunctions.GetDefaultValue("OrderDetails", "OrderCategoryID")),
                 BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a ", true, false),
                 RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
-                AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
-                CallingAction = "create"
+                AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev")
             };
 
             ViewBag.Title = "Add " + DbRes.T("Orders.New_Order", "FieldDisplayName");
@@ -952,6 +952,7 @@ namespace slls.Areas.LibraryAdmin
                 _db.OrderDetails.Add(newOrder);
                 _db.SaveChanges();
 
+                //Check that we have an Order Number; if not, add noe now based on the OrderID ...
                 if(string.IsNullOrEmpty(viewModel.OrderNo))
                 {
                     newOrder.OrderNo = newOrder.OrderID.ToString();
@@ -959,9 +960,12 @@ namespace slls.Areas.LibraryAdmin
                     _db.SaveChanges();
                 }
 
+                if (viewModel.CallingController == "Titles")
+                {
+                    return RedirectToAction(viewModel.CallingAction, "Titles", new { id = viewModel.TitleID });
+                }
                 return RedirectToAction("Edit", new { id = newOrder.OrderID });
             }
-
             return RedirectToAction("Add");
         }
 

@@ -26,6 +26,8 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.Hidden("TitleID", Model.TitleID)
         @Html.HiddenFor(model => model.Step)
+        @Html.HiddenFor(model => model.ReturnController)
+        @Html.HiddenFor(model => model.ReturnAction)
 
         <div class="form-group">
             @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-2" })

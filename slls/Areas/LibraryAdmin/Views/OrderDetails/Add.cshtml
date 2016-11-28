@@ -14,6 +14,8 @@
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.CallingAction)
+            @Html.HiddenFor(model => model.CallingController)
+            @Html.HiddenFor(model => model.TitleID)
 
             <div class="alert alert-info">
                 <p>Use this form to add a new order. You may record receipt of the item and / or add the invoice details in the ‘Invoice’ tab.</p>

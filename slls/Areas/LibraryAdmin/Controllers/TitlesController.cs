@@ -1376,65 +1376,35 @@ namespace slls.Areas.LibraryAdmin
                 return RedirectToAction("Select");
             }
 
-            var viewModel = new TitleEditViewModel(title);
+            var viewModel = new TitleEditViewModel
+            {
+                TitleID = title.TitleID,
+                Copies = title.Copies,
+                OrderDetails = title.OrderDetails,
+                TitleImages = title.TitleImages,
+                TitleLinks = title.TitleLinks,
+                TitleAdditionalFieldDatas = title.TitleAdditionalFieldDatas, 
+                SubjectIndexes = title.SubjectIndexes
+            };
+            
             ViewData["TitleId"] = SelectListHelper.TitlesList(id);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
-            ViewBag.SubjectCount = title.SubjectIndexes.Count();
-            ViewBag.CopiesCount = title.Copies.Count();
-            ViewBag.ImagesCount = title.TitleImages.Count();
-            ViewBag.LinksCount = title.TitleLinks.Count();
-            ViewBag.LongTextsCount = viewModel.TitleAdditionalFieldDatas.Count(x => x.TitleAdditionalFieldDef.IsLongText); //title.TitleAdditionalFieldDatas.Count(x => x.TitleAdditionalFieldDef.IsLongText);
-            ViewBag.OrdersCount = title.OrderDetails.Count();
+            ViewBag.SubjectCount = viewModel.SubjectIndexes.Count();
+            ViewBag.CopiesCount = viewModel.Copies.Count();
+            ViewBag.ImagesCount = viewModel.TitleImages.Count();
+            ViewBag.LinksCount = viewModel.TitleLinks.Count();
+            ViewBag.LongTextsCount = viewModel.TitleAdditionalFieldDatas.Count;
+            ViewBag.OrdersCount = viewModel.OrderDetails.Count();
             ViewBag.Message = _entityName + " to edit:";
             ViewBag.Title = _entityName + " Details (View/Edit)";
             return View(viewModel);
         }
 
-        // POST: Titles/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(TitleEditViewModel editedtitle)
-        {
-            if (ModelState.IsValid)
-            {
-                var title = _repository.GetById<Title>(editedtitle.TitleID);
-                if (title == null)
-                {
-                    return HttpNotFound();
-                }
-
-                title.Title1 = editedtitle.Title1;
-                title.MediaID = editedtitle.MediaID;
-                title.ClassmarkID = editedtitle.ClassmarkID;
-                title.Citation = editedtitle.Citation;
-                title.Description = editedtitle.Description;
-                title.Edition = editedtitle.Description;
-                title.FrequencyID = editedtitle.FrequencyID;
-                title.ISBN13 = editedtitle.ISBN13;
-                title.ISBN10 = editedtitle.ISBN10;
-                title.LanguageID = editedtitle.LanguageID;
-                title.LastModified = DateTime.Now;
-                title.NonFilingChars = editedtitle.NonFilingChars == 0
-                    ? GetNonFilingChars(editedtitle.Title1)
-                    : editedtitle.NonFilingChars;
-                title.Notes = editedtitle.Notes;
-                title.Series = editedtitle.Series;
-                title.Source = editedtitle.Source;
-                title.PlaceofPublication = editedtitle.PlaceofPublication;
-                title.Year = editedtitle.Year;
-                title.ModifiedBy = Utils.PublicFunctions.GetCurrentUserName();
-                _repository.Update(title);
-
-                return RedirectToAction("Index");
-            }
-            ViewBag.Title = "Edit " + _entityName;
-            return View(editedtitle);
-        }
-
+        
         // POST: Titles/Update/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Update(TitleEditViewModel editedtitle)
+        public ActionResult Update(TitleDetailsViewModel editedtitle)
         {
             var titleId = editedtitle.TitleID;
             var title = _repository.GetById<Title>(titleId);
@@ -1470,7 +1440,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult _Details(int id = 0)
         {
             {
-                Title title = _repository.GetById<Title>(id);
+                var title = _repository.GetById<Title>(id);
                 if (title == null)
                 {
                     return RedirectToAction("Select");
@@ -1482,9 +1452,26 @@ namespace slls.Areas.LibraryAdmin
                 ViewData["LanguageID"] = SelectListHelper.LanguageList(title.LanguageID, null, false);
                 ViewData["MediaID"] = SelectListHelper.MediaTypeList(title.MediaID, null, false);
 
-                var viewModel = new TitleEditViewModel(title)
+                var viewModel = new TitleDetailsViewModel()
                 {
-                    TitleAuthors = title.TitleAuthors,
+                    TitleID = title.TitleID,
+                    Title1 = title.Title1,
+                    ClassmarkID = title.ClassmarkID,
+                    PublisherID = title.PublisherID,
+                    Description = title.Description,
+                    Edition = title.Edition,
+                    FrequencyID = title.FrequencyID,
+                    ISBN10 = title.ISBN10,
+                    ISBN13 = title.ISBN13,
+                    MediaID = title.MediaID,
+                    Series = title.Series,
+                    Source = title.Source,
+                    NonFilingChars = title.NonFilingChars,
+                    LanguageID = title.LanguageID,
+                    PlaceofPublication = title.PlaceofPublication,
+                    Notes = title.Notes,
+                    Year = title.Year,
+                    TitleAuthors = title.TitleAuthors, 
                     TitleEditors = title.TitleEditors
                 };
                 return PartialView(viewModel);
@@ -1494,7 +1481,7 @@ namespace slls.Areas.LibraryAdmin
         // POST: Titles/_Details/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult _Details(int id, TitleEditViewModel editedTitle)
+        public ActionResult _Details(int id, TitleDetailsViewModel editedTitle)
         {
             if (ModelState.IsValid)
             {

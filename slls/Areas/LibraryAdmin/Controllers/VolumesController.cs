@@ -209,7 +209,7 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Volumes/Add -- passed a CopyID from the Copies view
-        public ActionResult Add(int? id, int step = 1)
+        public ActionResult Add(int? id, int step = 1, string returnAction = "Edit", string returnController = "Copies")
         {
             if (id == null)
             {
@@ -218,6 +218,7 @@ namespace slls.Areas.LibraryAdmin
             var titleid = _db.Copies.Find(id).TitleID;
             var copynumber = _db.Copies.Find(id).CopyNumber;
             var title = _db.Titles.Find(titleid);
+
             var viewModel = new VolumesAddViewModel
             {
                 CopyId = id.Value,
@@ -229,7 +230,9 @@ namespace slls.Areas.LibraryAdmin
                 PrintLabel = true,
                 UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true") == "true",
                 Step = step,
-                AddMore = false
+                AddMore = false,
+                ReturnController = returnController,
+                ReturnAction = returnAction
             };
             ViewData["LoanTypeId"] = new SelectList(_db.LoanTypes, "LoanTypeID", "LoanTypeName", Utils.PublicFunctions.GetDefaultLoanType(title.MediaID));
             ViewBag.Title = step > 1 ? "Step " + step + ": Add New " + _entityName : "Add New " + _entityName;
@@ -240,11 +243,7 @@ namespace slls.Areas.LibraryAdmin
         // POST: Volumes/Add
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(
-            [Bind(
-                Include =
-                    "CopyId,TitleId,LabelText,Barcode,PrintLabel,LoanTypeID,AddMore,Step"
-                )] VolumesAddViewModel viewModel)
+        public ActionResult Add(VolumesAddViewModel viewModel)
         {
             var title = _db.Titles.Find(viewModel.TitleId);
             var newVolume = new Volume
@@ -271,15 +270,15 @@ namespace slls.Areas.LibraryAdmin
 
                 if (viewModel.AddMore)
                 {
-                    return RedirectToAction("Add", new {id = viewModel.CopyId, step = viewModel.Step});
+                    return RedirectToAction("Add","Volumes", new {id = viewModel.CopyId, step = viewModel.Step});
                 }
-                if (viewModel.Step == 2)
+                if(viewModel.ReturnController == "Titles")
                 {
-                    return RedirectToAction("Edit", "Copies", new { id = viewModel.CopyId });
+                    return RedirectToAction(viewModel.ReturnAction, "Titles", new { id = viewModel.TitleId });
                 }
-                if (viewModel.Step == 3)
+                if (viewModel.ReturnController == "Copies")
                 {
-                    return RedirectToAction("Edit", "Titles", new { id = viewModel.TitleId });
+                    return RedirectToAction(viewModel.ReturnAction, "Copies", new { id = viewModel.CopyId });
                 }
                 return RedirectToAction("Index", "Home", new { area = "LibraryAdmin" });
             }

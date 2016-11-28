@@ -43,12 +43,16 @@ namespace slls.Areas.LibraryAdmin
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var title = _db.Titles.Find(id);
+            if (title == null)
+            {
+                return HttpNotFound();
+            }
 
             var tlvm = new TitleLinksAddViewModel
             {
-                TitleId = id.Value,
-                Title = (from t in _db.Titles.Where(t => t.TitleID == id)
-                         select t.Title1).FirstOrDefault()
+                TitleId = title.TitleID,
+                Title = title.Title1
             };
             ViewBag.Title = "Add New " + DbRes.T("TitleLinks.Link", "FieldDisplayName");
             return PartialView(tlvm);

@@ -31,11 +31,8 @@ namespace slls.Utils.Helpers
         public static IList<string> GetUserRoles()
         {
             var userId = Utils.PublicFunctions.GetUserId();
+            if (userId == null) return null;
             var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
-            if (userId == null)
-            {
-                return null; 
-            }
             var userRoles = userManager.GetRoles(userId);
             return userRoles;
         }
@@ -63,6 +60,16 @@ namespace slls.Utils.Helpers
         {
             var userRoles = GetUserRoles();
             return userRoles.Contains(BaileyAdmin);
+        }
+
+        public static bool IsUserInRole(string roleName)
+        {
+            var userRoles = GetUserRoles();
+            if (userRoles == null)
+            {
+                return false;
+            }
+            return userRoles.Contains(roleName);
         }
     }
 

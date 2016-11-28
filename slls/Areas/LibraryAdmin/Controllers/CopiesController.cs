@@ -251,7 +251,7 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Copies/Add/5  -- Add a copy to a given title
-        public ActionResult Add(int? id, int step = 1)
+        public ActionResult Add(int? id, int step = 1, string returnAction = "Edit", string returnController = "Copies")
         {
             if (id == null)
             {
@@ -275,7 +275,9 @@ namespace slls.Areas.LibraryAdmin
                 Title = title.Title1,
                 CopyNumber = title.Copies == null ? 1 : title.Copies.Count + 1,
                 AcquisitionsList = true,
-                Step = step
+                Step = step,
+                ReturnController = returnController,
+                ReturnAction = returnAction
             };
 
             ViewData["LocationID"] = SelectListHelper.OfficeLocationList(Utils.PublicFunctions.GetDefaultValue("Copies", "LocationID"));
@@ -313,7 +315,7 @@ namespace slls.Areas.LibraryAdmin
 
                 //Add a volume ...
                 var step = viewModel.Step != 0 ? viewModel.Step + 1 : 0;
-                return RedirectToAction("Add", "Volumes", new { id = copyId, step = step });
+                return RedirectToAction("Add", "Volumes", new { id = copyId, step = step, returnAction = viewModel.ReturnAction, returnController = viewModel.ReturnController });
             }
 
             ViewData["LocationID"] = SelectListHelper.OfficeLocationList(Utils.PublicFunctions.GetDefaultValue("Copies", "LocationID"));
@@ -334,8 +336,9 @@ namespace slls.Areas.LibraryAdmin
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var copy = _db.Copies
-                .FirstOrDefault(c => c.CopyID == id);
+            //var copy = _db.Copies
+            //    .FirstOrDefault(c => c.CopyID == id);
+            var copy = _db.Copies.Find(id);
             if (copy == null)
             {
                 return HttpNotFound();

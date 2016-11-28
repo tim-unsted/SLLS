@@ -1,5 +1,5 @@
 ﻿@using Westwind.Globalization
-@model slls.ViewModels.TitleEditViewModel
+@model slls.ViewModels.TitleDetailsViewModel
 
 @Html.Label(DbRes.T("Languages.Language", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/Languages/_add")" class="button" id="addLanguageLink" title="Language not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 @Html.DropDownList("LanguageID", null, new { @class = "form-control" })

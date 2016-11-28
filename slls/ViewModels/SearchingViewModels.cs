@@ -9,6 +9,7 @@ using slls.App_Settings;
 using slls.DAO;
 using slls.Localization;
 using slls.Models;
+using slls.Utils.Helpers;
 
 namespace slls.ViewModels
 {
@@ -67,6 +68,7 @@ namespace slls.ViewModels
             this.SearchResultSize = int.Parse(Settings.GetParameterValue("Searching.SearchResultSize", "10"));
             this.SearchStyle = "prefix";
             this.OrderBy = "title";
+            this.LibraryStaff = Roles.IsUserInRole("Catalogue Admin");
         }
 
         public IEnumerable<int> GetSelectedClassmarkIds()

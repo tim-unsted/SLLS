@@ -60,8 +60,11 @@
     tabs.Tab(DbRes.T("Titles.Long_Texts", "FieldDisplayName") + ViewBag.LongTextsBadge, "texts");
     tabs.Tab(DbRes.T("Titles.Cover_Images", "FieldDisplayName") + ViewBag.ImagesBadge, "images");
     tabs.Tab(DbRes.T("Titles.Copies", "FieldDisplayName") + ViewBag.CopiesBadge, "copies");
-    tabs.Tab(DbRes.T("Titles.Order_Details", "FieldDisplayName") + ViewBag.OrdersBadge, "finance");
-
+    if (Model.IsFinanceAdmin)
+    {
+        tabs.Tab(DbRes.T("Titles.Order_Details", "FieldDisplayName") + ViewBag.OrdersBadge, "finance");
+    }
+    
     using (tabs.BeginPanel())
     {
         <div>
@@ -182,27 +185,29 @@
         </div>
 
     }
-    using (tabs.BeginPanel())
+    if (Model.IsFinanceAdmin)
     {
-        <br />
-        <div class="form-horizontal">
-            <div class="form-group">
-                <div class="col-md-12">
-                    <p>
-                        <a href="@Url.Action("Add", "OrderDetails", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Orders.New_Order", "FieldDisplayName")</a>
-                    </p>
-                    @if (ViewBag.OrdersCount > 0)
-                    {
-                        @Html.Partial("_ListOrders", Model.OrderDetails)
-                    }
-                    else
-                    {
-                        <span class="form-control">There are currenty no @DbRes.T("Orders", "EntityType").</span>
-                    }
+        using (tabs.BeginPanel())
+        {
+            <br />
+            <div class="form-horizontal">
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <p>
+                            <a href="@Url.Action("Add", "OrderDetails", new {id = Model.TitleID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Orders.New_Order", "FieldDisplayName")</a>
+                        </p>
+                        @if (ViewBag.OrdersCount > 0)
+                        {
+                            @Html.Partial("_ListOrders", Model.OrderDetails)
+                        }
+                        else
+                        {
+                            <span class="form-control">There are currenty no @DbRes.T("Orders", "EntityType").</span>
+                        }
+                    </div>
                 </div>
             </div>
-        </div>
-
+        }
     }
 }
 

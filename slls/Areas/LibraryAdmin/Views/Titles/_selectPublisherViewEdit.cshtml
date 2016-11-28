@@ -1,5 +1,5 @@
 ﻿@using Westwind.Globalization
-@model slls.ViewModels.TitleEditViewModel
+@model slls.ViewModels.TitleDetailsViewModel
 
 @Html.Label(DbRes.T("Titles.Publisher", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/Publishers/_add")" class="button" id="addPublisherLink" title="Publisher not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 @Html.DropDownList("PublisherID", null, new { @class = "form-control" })
