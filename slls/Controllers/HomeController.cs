@@ -849,21 +849,23 @@ namespace slls.Controllers
 
                 q = q.ToLower();
 
-                if (TempData["OpacTitles"] == null)
-                {
-                    opacTitles = (from titles in _db.Titles
-                                  join copies in _db.Copies on titles.TitleID equals copies.TitleID
-                                  where !titles.Deleted && !copies.Deleted && copies.StatusType.Opac && copies.Volumes.Any()
-                                  select titles).Distinct().ToList();
+                //if (TempData["OpacTitles"] == null)
+                //{
+                //    opacTitles = (from titles in _db.Titles
+                //                  join copies in _db.Copies on titles.TitleID equals copies.TitleID
+                //                  where !titles.Deleted && !copies.Deleted && copies.StatusType.Opac && copies.Volumes.Any()
+                //                  select titles).Distinct().ToList();
 
-                    TempData["OpacTitles"] = opacTitles;
-                }
-                else
-                {
-                    opacTitles = (List<Title>)TempData["OpacTitles"];
-                    TempData["OpacTitles"] = opacTitles;
-                }
+                //    TempData["OpacTitles"] = opacTitles;
+                //}
+                //else
+                //{
+                //    opacTitles = (List<Title>)TempData["OpacTitles"];
+                //    TempData["OpacTitles"] = opacTitles;
+                //}
 
+                opacTitles = CacheProvider.OpacTitles();
+                
                 //Initialize our results ...
                 if (orSearch)
                 {

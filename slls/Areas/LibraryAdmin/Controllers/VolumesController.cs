@@ -262,6 +262,12 @@ namespace slls.Areas.LibraryAdmin
                 {
                     _db.Volumes.Add(newVolume);
                     _db.SaveChanges();
+
+                    //Clear the cache of opac titles if neccessary ...
+                    if (newVolume.Copy.StatusType.Opac)
+                    {
+                        CacheProvider.RemoveCache("opactitles");
+                    }
                 }
                 catch (Exception e)
                 {
@@ -419,8 +425,20 @@ namespace slls.Areas.LibraryAdmin
         {
             var volumeid = viewModel.VolumeId;
             var volume = _db.Volumes.Find(volumeid);
+            if (volume == null)
+            {
+                return HttpNotFound();
+            }
+
+            //Clear the cache of opac titles if neccessary ...
+            if (volume.Copy.StatusType.Opac)
+            {
+                CacheProvider.RemoveCache("opactitles");
+            }
+
             _db.Volumes.Remove(volume);
             _db.SaveChanges();
+            
             return RedirectToAction("Edit", "Copies", new { id = viewModel.CopyId });
         }
 
@@ -454,6 +472,13 @@ namespace slls.Areas.LibraryAdmin
             {
                 return HttpNotFound();
             }
+
+            //Clear the cache of opac titles if neccessary ...
+            if (volume.Copy.StatusType.Opac)
+            {
+                CacheProvider.RemoveCache("opactitles");
+            }
+
             if (ModelState.IsValid)
             {
                 try

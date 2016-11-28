@@ -1656,6 +1656,8 @@ namespace slls.Areas.LibraryAdmin
                 try
                 {
                     _repository.Delete(title);
+                    //Clear the "Opac Titles" cache ...
+                    CacheProvider.RemoveCache("opactitles");
                     return Json(new { success = true });
                 }
                 catch (Exception e)

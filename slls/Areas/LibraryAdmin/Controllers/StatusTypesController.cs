@@ -156,14 +156,23 @@ namespace slls.Areas.LibraryAdmin
             {
                 return HttpNotFound();
             }
+            //Catch the current (i.e. before updated) status of the 'Copy.Status.Opac' boolean;
+            var opacStatus = statusType.Opac;
+
             statusType.StatusID = viewModel.StatusID;
             statusType.Status = viewModel.Status;
             statusType.Opac = viewModel.Opac;
             statusType.LastModified = DateTime.Now;
             _repository.Update(statusType);
             CacheProvider.RemoveCache("statustypes");
+
+            // Refresh cached 'Opac titles' if neccessary
+            if (statusType.Opac != opacStatus)
+            {
+                CacheProvider.RemoveCache("opactitles");
+            }
+
             return Json(new { success = true });
-            //return RedirectToAction("Index");
         }
         
         [HttpGet]

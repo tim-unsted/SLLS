@@ -312,7 +312,7 @@ namespace slls.Areas.LibraryAdmin
                 _db.Copies.Add(copy);
                 _db.SaveChanges();
                 var copyId = copy.CopyID;
-
+                
                 //Add a volume ...
                 var step = viewModel.Step != 0 ? viewModel.Step + 1 : 0;
                 return RedirectToAction("Add", "Volumes", new { id = copyId, step = step, returnAction = viewModel.ReturnAction, returnController = viewModel.ReturnController });
@@ -430,8 +430,11 @@ namespace slls.Areas.LibraryAdmin
                     return HttpNotFound();
                 }
 
-                //Catch the current (i.e. before updated) status f the 'New Title' boolean;
+                //Catch the current (i.e. before updated) status of the 'New Title' boolean;
                 var newTitleList = copy.AcquisitionsList;
+
+                //Catch the current (i.e. before updated) status of the 'Copy.Status.Opac' boolean;
+                var opacCopy = copy.StatusType.Opac;
 
                 copy.CopyID = viewModel.CopyId;
                 copy.AccountYearID = viewModel.AccountYearId;
@@ -459,6 +462,12 @@ namespace slls.Areas.LibraryAdmin
                 if (viewModel.AcquisitionsList != newTitleList)
                 {
                     CacheProvider.RemoveCache("newtitles");
+                }
+
+                //refresh cached 'Opac titles' if neccessary
+                if (copy.StatusType.Opac != opacCopy)
+                {
+                    CacheProvider.RemoveCache("opactitles");
                 }
 
                 return RedirectToAction("Edit", "Copies", new { id = copy.CopyID });
@@ -499,6 +508,13 @@ namespace slls.Areas.LibraryAdmin
             {
                 return HttpNotFound();
             }
+
+            //Clear the cache of opac titles if neccessary ...
+            if (copy.StatusType.Opac)
+            {
+                CacheProvider.RemoveCache("opactitles");
+            }
+
             if (ModelState.IsValid)
             {
                 try
