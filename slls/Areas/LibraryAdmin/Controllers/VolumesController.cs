@@ -246,6 +246,8 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult Add(VolumesAddViewModel viewModel)
         {
             var title = _db.Titles.Find(viewModel.TitleId);
+            var copy = _db.Copies.Find(viewModel.CopyId);
+            var opac = copy.StatusType.Opac;
             var newVolume = new Volume
             {
                 CopyID = viewModel.CopyId,
@@ -264,7 +266,7 @@ namespace slls.Areas.LibraryAdmin
                     _db.SaveChanges();
 
                     //Clear the cache of opac titles if neccessary ...
-                    if (newVolume.Copy.StatusType.Opac)
+                    if (opac)
                     {
                         CacheProvider.RemoveCache("opactitles");
                     }

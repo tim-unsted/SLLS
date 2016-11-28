@@ -60,7 +60,7 @@
                     @Html.DisplayFor(modelItem => item.FieldName)
                 </td>
                 <td>
-                    @Html.ActionLink(item.DefaultValue, "Edit", "DefaultValues", new {id = item.DefaultId}, new {@class = "modal-link", title = "Edit Default Value"})
+                    @Html.ActionLink(string.IsNullOrEmpty(item.DefaultValue) ? " " : item.DefaultValue, "Edit", "DefaultValues", new { id = item.DefaultId }, new { @class = "modal-link", title = "Edit Default Value" })
                 </td>
                 <td>
                     <a href="@Url.Action("Index", item.ChildTableName)" title="View/Edit Authority List">@item.ChildTableName</a>

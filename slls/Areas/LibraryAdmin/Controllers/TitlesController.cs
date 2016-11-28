@@ -831,7 +831,7 @@ namespace slls.Areas.LibraryAdmin
                 }
 
                 var step = viewModel.Step != 0 ? viewModel.Step + 1 : 0;
-                return RedirectToAction("Add", "Copies", new { id = titleId, step = step });
+                return RedirectToAction("Add", "Copies", new { id = titleId, step = step, returnAction = "Edit", returnController = "Titles" });
             }
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", "Add");
             ViewData["ClassmarkID"] = SelectListHelper.ClassmarkList(viewModel.ClassmarkID);

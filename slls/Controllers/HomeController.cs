@@ -844,37 +844,14 @@ namespace slls.Controllers
 
             if (!string.IsNullOrEmpty(q))
             {
-                List<Title> opacTitles;
                 List<Title> results;
 
                 q = q.ToLower();
 
-                //if (TempData["OpacTitles"] == null)
-                //{
-                //    opacTitles = (from titles in _db.Titles
-                //                  join copies in _db.Copies on titles.TitleID equals copies.TitleID
-                //                  where !titles.Deleted && !copies.Deleted && copies.StatusType.Opac && copies.Volumes.Any()
-                //                  select titles).Distinct().ToList();
-
-                //    TempData["OpacTitles"] = opacTitles;
-                //}
-                //else
-                //{
-                //    opacTitles = (List<Title>)TempData["OpacTitles"];
-                //    TempData["OpacTitles"] = opacTitles;
-                //}
-
-                opacTitles = CacheProvider.OpacTitles();
+                var opacTitles = CacheProvider.OpacTitles();
                 
                 //Initialize our results ...
-                if (orSearch)
-                {
-                    results = _db.Titles.Where(x => 1 == 2).ToList();
-                }
-                else
-                {
-                    results = opacTitles;
-                }
+                results = orSearch ? _db.Titles.Where(x => 1 == 2).ToList() : opacTitles;
 
                 switch (viewModel.SearchField) // i.e. field to search in
                 {
