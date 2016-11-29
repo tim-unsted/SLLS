@@ -14,7 +14,11 @@
                            select b.AllocationSubs).Sum();
     var spentTotal = (from o in Model.Orders
                       select o.Price).Sum();
-    var percentTotal = spentTotal / allocationTotal;
+    decimal? percentTotal = 0;
+    if (allocationTotal > 0)
+    {
+        percentTotal = spentTotal / allocationTotal;
+    }
     var varianceTotal = allocationTotal - spentTotal;
 }
 
@@ -52,7 +56,11 @@
                              where o.BudgetCode == budgetCode
                              select o.Price).Sum();
 
-                var percent = spent / allocation;
+                decimal? percent = 0;
+                if (allocation > 0)
+                {
+                    percent = spent / allocation;
+                }
 
                 var variance = allocation - spent;
 

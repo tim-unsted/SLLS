@@ -82,7 +82,11 @@
                     var spent = (from o in budgetCode.OrderDetails
                                  where o.OrderCategoryID == orderCategoryId && o.ReceivedDate != null && o.AccountYearID == Model.AccountYearId
                                  select o.Price).Sum();
-                    var percent = spent / allocation;
+                    decimal? percent = 0;
+                    if (allocation > 0)
+                    {
+                        percent = spent / allocation;
+                    }
                     var variance = allocation - spent;
                     <tr>
                         <td>
