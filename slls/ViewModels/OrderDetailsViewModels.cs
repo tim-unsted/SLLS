@@ -58,15 +58,20 @@ namespace slls.ViewModels
         public DateTime? OrderDate { get; set; }
 
         [Required(ErrorMessage = "Please select a Supplier!")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a Supplier!")]
         [LocalDisplayName("Orders.Supplier", "FieldDisplayName")]
         public int? SupplierID { get; set; }
-        
-        [Required(ErrorMessage = "Please select a Title to order!")]
+
+        [Required(ErrorMessage = "Please select an item to order!")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select an item to order!")]
         [LocalDisplayName("Orders.Title", "FieldDisplayName")]
         public int? TitleID { get; set; }
 
         [LocalDisplayName("Orders.Budget_Code", "FieldDisplayName")]
         public int? BudgetCodeID { get; set; }
+
+        [LocalDisplayName("AccountYears.Account_Year", "FieldDisplayName")]
+        public int? AccountYearID { get; set; }
 
         [StringLength(450)]
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
@@ -132,6 +137,7 @@ namespace slls.ViewModels
         public IEnumerable<SelectListItem> AuthorityUsers { get; set; }
         public IEnumerable<SelectListItem> BudgetCodes { get; set; }
         public IEnumerable<SelectListItem> OrderCategories { get; set; }
+        public IEnumerable<SelectListItem> AccountYears { get; set; }
 
         public string CallingController { get; set; }
         public string CallingAction { get; set; }

@@ -92,7 +92,7 @@
     {
         <span class="pull-right">Sort Results: @Html.DropDownList("OrderBy", null, new { @class = "form-control", id = "OrderResults" })</span>
     }
-    @if (Model.IsActualSearch && Model.Results.Any())
+    @if (Model.IsActualSearch && Model.Results.Any() && User.Identity.IsAuthenticated)
     {
         //Only show the 'Save Search' button for actual searches ...
         <a href="@Url.Action("SaveSearch", "Home")" title="Save Search" class="btn btn-success modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save</a>

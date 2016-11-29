@@ -10,6 +10,7 @@
     var showBorrower = Settings.GetParameterValue("Borrowing.DisplayBorrowerEmail", "false", "Sets whether OPAC will display borrower's Email address") == "true";
     var selfLoansAllowed = Settings.GetParameterValue("Borrowing.SelfLoansEnabled", "false", "Tells whether OPAC users can do self-borrowing") == "true";
     var selfReturnsAllowed = Settings.GetParameterValue("Borrowing.Borrowing.SelfReturnsEnabled", "false", "Tells whether OPAC users can do self-returns") == "true";
+    var isCatalogueAdmin = Roles.IsUserInRole("Catalogue Admin");
 }
 
 <div class="page-header">
@@ -24,13 +25,20 @@
             {
                 <a href="@Url.Action("Add", "LibraryUserBookmarks", new {id = Model.TitleID})" class="btn btn-link modal-link" title="Bookmark @DbRes.T("Titles.Title", "FieldDisplayName")">Bookmark <span aria-hidden="true" class="glyphicon glyphicon-bookmark"></span></a>
             }
-            @if (Roles.IsUserInRole("Catalogue Admin"))
+            @if (isCatalogueAdmin)
             {
                 <a href="@Url.Action("Edit", "Titles", new { id = Model.TitleID, area = "LibraryAdmin" })" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
             }
         </span>
         @{var title = string.IsNullOrEmpty(Model.Title1) ? Html.Raw("[No Title]") : Html.DisplayFor(modelItem => Model.Title1); }
-        <h3 style="margin-top: 8px;">@Model.Title1</h3>
+        @if (isCatalogueAdmin)
+        {
+            <h3 style="margin-top: 8px;"><a href="@Url.Action("Edit", "Titles", new { id = Model.TitleID, area = "LibraryAdmin" })" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")">@Model.Title1</a></h3>
+        }
+        else
+        {
+            <h3 style="margin-top: 8px;">@Model.Title1</h3>
+        }
     </div>
     <div class="row" style="margin-left: 2px;">
         @if (Model.TitleImages.Any())

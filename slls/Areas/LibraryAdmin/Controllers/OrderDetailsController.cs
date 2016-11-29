@@ -888,6 +888,7 @@ namespace slls.Areas.LibraryAdmin
                 Suppliers = SelectListHelper.SupplierList(PublicFunctions.GetDefaultValue("OrderDetails", "SupplierID")),
                 OrderCategories = SelectListHelper.OrderCategoryList(PublicFunctions.GetDefaultValue("OrderDetails", "OrderCategoryID")),
                 BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a ", true, false),
+                AccountYears = SelectListHelper.AccountYearsList(id: GetCurrentAccountYearId(), addNew: false),
                 RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 CallingAction = "Edit",
@@ -912,6 +913,7 @@ namespace slls.Areas.LibraryAdmin
                 Titles = SelectListHelper.TitlesList(titleid),
                 Suppliers = SelectListHelper.SupplierList(PublicFunctions.GetDefaultValue("OrderDetails", "SupplierID")),
                 OrderCategories = SelectListHelper.OrderCategoryList(PublicFunctions.GetDefaultValue("OrderDetails", "OrderCategoryID")),
+                AccountYears = SelectListHelper.AccountYearsList(id:GetCurrentAccountYearId(), addNew:false),
                 BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a ", true, false),
                 RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev")
@@ -930,6 +932,8 @@ namespace slls.Areas.LibraryAdmin
             {
                 TitleID = viewModel.TitleID ?? 0,
                 OrderCategoryID = viewModel.OrderCategoryID == 0 ? 1 : viewModel.OrderCategoryID,
+                BudgetCodeID = viewModel.BudgetCodeID,
+                AccountYearID = viewModel.AccountYearID,
                 OrderDate = viewModel.OrderDate ?? DateTime.Now,
                 OrderNo = viewModel.OrderNo ?? "",
                 Expected = viewModel.Expected ?? DateTime.Now.AddDays(28),
@@ -2902,6 +2906,19 @@ namespace slls.Areas.LibraryAdmin
 
             ViewBag.Title = "Orders Grouped By Authoriser";
             return View("Reports/OrdersByAuthoriser", viewModel);
+        }
+
+        public int GetCurrentAccountYearId()
+        {
+            var accountYear =
+                (from y in _db.AccountYears
+                where y.YearStartDate >= DateTime.Today && y.YearEndDate <= DateTime.Today
+                select y).FirstOrDefault();
+            if (accountYear == null)
+            {
+                return _db.AccountYears.Max(y => y.AccountYearID);
+            }
+            return accountYear.AccountYearID;
         }
 
 
