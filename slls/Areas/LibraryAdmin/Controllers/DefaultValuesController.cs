@@ -10,6 +10,7 @@ using Microsoft.Ajax.Utilities;
 using slls.Controllers;
 using slls.DAO;
 using slls.Models;
+using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
 
@@ -22,7 +23,16 @@ namespace slls.Areas.LibraryAdmin
         // GET: LibraryAdmin/DefaultValues
         public ActionResult Index(string tableName)
         {
-            var defaultValues = _db.DefaultValues.ToList();
+            //Get only the default items that match the user's roles
+            //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
+            var userRoles = Roles.GetUserRoles();
+
+            var defaultValues = (from m in _db.DefaultValues
+                            where userRoles.Contains(m.Role)
+                            select m).ToList();
+            
+            //var defaultValues = _db.DefaultValues.ToList();
+            
             if (!string.IsNullOrEmpty(tableName))
             {
                 defaultValues = defaultValues.Where(v => v.TableName == tableName).ToList();

@@ -23,6 +23,9 @@ namespace slls.Models
          [DisplayName("Affected data")]
          public string ChildTableName { get; set; }
 
+         [DisplayName("Role")]
+         public string Role { get; set; }
+
          [DisplayName("Default Value")]
          public int DefaultValueId { get; set; }
 
