@@ -24,7 +24,6 @@ namespace slls.Utils.Helpers
         public const string SerialsAdmin = "Serials Admin";
         public const string UsersAdmin = "Users Admin";
         public const string OpacAdmin = "OPAC Admin";
-        //public const string AllLibraryAdmin = "All Library Admin";
         public const string SystemAdmin = "System Admin";
         public const string BaileyAdmin = "Bailey Admin";
 
@@ -44,13 +43,13 @@ namespace slls.Utils.Helpers
             return userRoles;
         }
 
-        public static bool IsLibraryStaff()
+        public static bool IsLibraryStaff() // Various roles included ...
         {
             var userRoles = GetUserRoles();
             return userRoles != null && (userRoles.Contains(CatalogueAdmin) || userRoles.Contains(FinanceAdmin) || userRoles.Contains(LoansAdmin) || userRoles.Contains(SerialsAdmin) || userRoles.Contains(UsersAdmin));
         }
 
-        public static bool IsAdmin()
+        public static bool IsAdmin() // System Admin ...
         {
             var userRoles = GetUserRoles();
             return userRoles.Contains(SystemAdmin);
@@ -64,6 +63,10 @@ namespace slls.Utils.Helpers
 
         public static bool IsUserInRole(string roleName)
         {
+            if (IsBaileyAdmin())
+            {
+                return true;
+            }
             var userRoles = GetUserRoles();
             if (userRoles == null)
             {

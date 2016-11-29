@@ -19,27 +19,45 @@ namespace slls.Areas.LibraryAdmin
         
         public ActionResult UpdateMergeAuthorityList(string list = "")
         {
-            var authorityLists = new Dictionary<string, string>()
-            {
-                {"AccountYears", DbRes.T("AccountYears","EntityType")},
-                {"ActivityTypes", DbRes.T("ActivityTypes","EntityType")},
-                {"Authors", DbRes.T("Authors","EntityType")},
-                {"BudgetCodes", DbRes.T("BudgetCodes","EntityType")},
-                {"Classmarks", DbRes.T("Classmarks","EntityType")},
-                {"CommMethodTypes", DbRes.T("CommMethodTypes","EntityType")},
-                {"Departments", DbRes.T("Departments","EntityType")},
-                {"Frequencies", DbRes.T("Frequencies","EntityType")},
-                {"Keywords", DbRes.T("Keywords","EntityType")},
-                {"Languages", DbRes.T("Languages","EntityType")},
-                {"LoanTypes", DbRes.T("LoanTypes","EntityType")},
-                {"Locations", DbRes.T("Locations","EntityType")},
-                {"MediaTypes", DbRes.T("MediaTypes","EntityType")},
-                {"OrderCategories", DbRes.T("OrderCategories","EntityType")},
-                {"Publishers", DbRes.T("Publishers","EntityType")},
-                {"StatusTypes", DbRes.T("StatusTypes","EntityType")},
-                {"Suppliers", DbRes.T("Suppliers","EntityType")}
-            };
+            var authorityLists = new Dictionary<string, string>();
 
+            if (Roles.IsUserInRole("Catalogue Admin") || Roles.IsUserInRole("Bailey Admin"))
+            {
+                authorityLists.Add("Authors", DbRes.T("Authors","EntityType"));
+                authorityLists.Add("Classmarks", DbRes.T("Classmarks","EntityType"));
+                authorityLists.Add("Frequencies", DbRes.T("Frequencies","EntityType"));
+                authorityLists.Add("Keywords", DbRes.T("Keywords","EntityType"));
+                authorityLists.Add("Languages", DbRes.T("Languages","EntityType"));
+                authorityLists.Add("MediaTypes", DbRes.T("MediaTypes","EntityType"));
+                authorityLists.Add("Publishers", DbRes.T("Publishers","EntityType"));
+                authorityLists.Add("StatusTypes", DbRes.T("StatusTypes","EntityType"));
+            }
+
+            if (Roles.IsUserInRole("Finance Admin") || Roles.IsUserInRole("Bailey Admin"))
+            {
+                authorityLists.Add("AccountYears", DbRes.T("AccountYears", "EntityType"));
+                authorityLists.Add("ActivityTypes", DbRes.T("ActivityTypes", "EntityType"));
+                authorityLists.Add("BudgetCodes", DbRes.T("BudgetCodes", "EntityType"));
+                authorityLists.Add("CommMethodTypes", DbRes.T("CommMethodTypes", "EntityType"));
+                authorityLists.Add("OrderCategories", DbRes.T("OrderCategories", "EntityType"));
+                authorityLists.Add("Suppliers", DbRes.T("Suppliers", "EntityType"));
+            }
+
+            if (Roles.IsUserInRole("Loans Admin") || Roles.IsUserInRole("Bailey Admin"))
+            {
+                authorityLists.Add("LoanTypes", DbRes.T("LoanTypes","EntityType"));
+            }
+
+            if (Roles.IsUserInRole("Users Admin") || Roles.IsUserInRole("Bailey Admin"))
+            {
+                authorityLists.Add("Departments", DbRes.T("Departments", "EntityType"));
+            }
+
+            if (Roles.IsUserInRole("Users Admin") || Roles.IsUserInRole("Catalogue Admin") || Roles.IsUserInRole("Bailey Admin"))
+            {
+                authorityLists.Add("Locations", DbRes.T("Locations","EntityType"));
+            }
+            
             var listValues = new List<SelectListItem>
             {
                 new SelectListItem
@@ -53,7 +71,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 AvailableItems = listValues
             };
-            ViewData["AuthorityLists"] = authorityLists;
+            ViewData["AuthorityLists"] = authorityLists.OrderBy(pair => pair.Value);
             ViewBag.Title = "Update/Merge Authority List Values";
             return View(viewModel);
         }

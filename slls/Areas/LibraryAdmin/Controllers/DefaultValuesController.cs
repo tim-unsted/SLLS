@@ -26,12 +26,18 @@ namespace slls.Areas.LibraryAdmin
             //Get only the default items that match the user's roles
             //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
             var userRoles = Roles.GetUserRoles();
+            List<DefaultValue> defaultValues;
 
-            var defaultValues = (from m in _db.DefaultValues
-                            where userRoles.Contains(m.Role)
-                            select m).ToList();
-            
-            //var defaultValues = _db.DefaultValues.ToList();
+            if (Roles.IsBaileyAdmin())
+            {
+                defaultValues = _db.DefaultValues.ToList();
+            }
+            else
+            {
+                defaultValues = (from m in _db.DefaultValues
+                                 where userRoles.Contains(m.Role)
+                                 select m).ToList();
+            }
             
             if (!string.IsNullOrEmpty(tableName))
             {

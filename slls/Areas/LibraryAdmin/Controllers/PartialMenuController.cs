@@ -28,10 +28,7 @@ namespace slls.Areas.LibraryAdmin
 
             //Must get the entire menu at this stage ...
             var allItems = (from m in _menuItems.Where(m => m.IsVisible && m.IsEnabled).OrderBy(x => x.SortOrder) select m).ToList();
-
-            //Get the current user's ID ...
-            //var id = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
-
+            
             //If the user is a Bailey Admin then grant them access to everything!
             if (User.IsInRole("Bailey Admin"))
             {
