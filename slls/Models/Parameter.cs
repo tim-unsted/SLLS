@@ -45,9 +45,11 @@ namespace slls.Models
         [DisplayName("Deleted?")]
         public bool Deleted { get; set; }
 
+        public string Packages { get; set; }
+
         [NotMapped]
         public int ListPos { get; set; }
-
+        
         [Column(TypeName = "timestamp")]
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         [MaxLength(8)]

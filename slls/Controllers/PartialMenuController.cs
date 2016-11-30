@@ -12,6 +12,7 @@ namespace slls.Controllers
     public class PartialMenuController : sllsBaseController
     {
         private readonly DbEntities _db = new DbEntities();
+        private readonly string _customerPackage = App_Settings.GlobalVariables.Package;
 
         public PartialMenuController()
         {
@@ -35,16 +36,19 @@ namespace slls.Controllers
 
             var allItems = (from m in menuItems.Where(m => m.IsVisible).OrderBy(x => x.SortOrder) select m).ToList();
             
-            //If the user is not logged in, only the menu items with the role "All" or "Anonymous"
+            //If the user is not logged in, only show the menu items with the role "Anonymous"
             if(!User.Identity.IsAuthenticated)
             {
-                var someItems = from someitems in allItems.Where(y => y.Roles.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                            .Any(x => new String[] { "All", "Anonymous" }.Contains(x)))
-                                select someitems;
+                var someItems = from m in allItems 
+                                where 
+                                    m.MenuArea == "OPAC" &&
+                                    m.IsVisible &&
+                                    m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(role => role == "Anonymous") &&
+                                    m.Packages.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(package => package == _customerPackage)
+                                select m;
                 ViewData["ParentMenuID"] = parentMenuId;
                 return View(someItems.ToList());
             }
-
             //If the user is a Bailey Admin then grant them access to everything!
             if (User.IsInRole("Bailey Admin"))
             {
@@ -55,16 +59,16 @@ namespace slls.Controllers
                 ViewData["ParentMenuID"] = parentMenuId;
                 return View(baileyAdminItems);
             }
-            //Get the menu items that match the user's roles
+            //Otherwise, get the menu items that match the user's roles and package ...
             //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
             var userRoles = Roles.GetUserRoles();
             var userItems = from m in allItems
-                where 
-                    m.MenuArea == "OPAC"
-                    && m.IsVisible
-                    && m.Roles.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                        .Any(x => userRoles.Contains(x) || x == "All" || x == "Anonymous")
-                select m;
+                            where 
+                                m.MenuArea == "OPAC" &&
+                                m.IsVisible &&
+                                m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(x => userRoles.Contains(x) || x == "Anonymous") &&
+                                m.Packages.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(package => package == _customerPackage)
+                            select m;
 
             ViewData["ParentMenuID"] = parentMenuId;
             return View(userItems);

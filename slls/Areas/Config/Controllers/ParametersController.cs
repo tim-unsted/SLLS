@@ -16,6 +16,7 @@ namespace slls.Areas.Config
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly GenericRepository _repository;
+        private readonly string _customerPackage = GlobalVariables.Package;
 
         public ParametersController()
         {
@@ -25,16 +26,24 @@ namespace slls.Areas.Config
         // GET: LibraryAdmin/Parameters
         public ActionResult Index(string parameterArea = "")
         {
-            var userRoles = Roles.GetUserRoles();
             var allParameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
+            List<Parameter> userParameters;
 
-            //Only show options that match the logged-in user's roles ...
-            var userParameters = (from p in allParameters
-                                  where p.Roles.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                                      .Any(x => userRoles.Contains(x))
+            //If the user is a Bailey Admin then grant them access to everything!
+            if (User.IsInRole("Bailey Admin"))
+            {
+                userParameters = allParameters;
+            }
+            else
+            {
+                //This area is for a System Admins only, so they should see all parameters matching their package ...
+                userParameters = (from p in allParameters
+                                  where p.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(role => role == "System Admin") &&
+                                        p.Packages.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(package => package == _customerPackage)
                                   select p).ToList();
+            }
 
-            var areas = userParameters.Select(x => x.ParameterArea).ToList();
+            var areas = userParameters.Select(x => x.ParameterArea).Distinct().ToList();
 
             var viewModel = new ParameterIndexViewModel
             {
@@ -45,12 +54,13 @@ namespace slls.Areas.Config
             };
 
             ViewBag.Message = "Parameters";
-            ViewData["Areas"] = new SelectList(areas.Distinct(), "");
+            ViewData["Areas"] = new SelectList(areas, "");
             ViewBag.Title = "System Parameters (Settings)";
             return View(viewModel);
         }
         
         // GET: LibraryAdmin/Parameters/Create
+        [AuthorizeRoles(Roles.BaileyAdmin)]
         public ActionResult Create()
         {
             var viewModel = new ParametersAddEditViewModel();
@@ -61,23 +71,55 @@ namespace slls.Areas.Config
         // POST: LibraryAdmin/Parameters/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRoles(Roles.BaileyAdmin)]
         public ActionResult Create([Bind(Include = "ParameterID,ParameterValue,ParamUsage")] ParametersAddEditViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
+                var packages = "";
+                var customerPackage = GlobalVariables.Package;
+                switch (customerPackage)
+                {
+                    case "collectors" :
+                    {
+                        packages = "collectors;";
+                        break;
+                    }
+                    case "sharing":
+                    {
+                        packages = "collectors;sharing;";
+                        break;
+                    }
+                    case "expert":
+                    {
+                        packages = "collectors;sharing;expert;";
+                        break;
+                    }
+                    case "super":
+                    {
+                        packages = "collectors;sharing;expert;super;";
+                        break;
+                    }
+                    default:
+                    {
+                        packages = "collectors;sharing;expert;";
+                        break;
+                    }
+                }
+                
                 var parameter = new Parameter()
                 {
                     ParameterID = viewmodel.ParameterID,
                     ParameterValue = viewmodel.ParameterValue,
-                    InputDate = DateTime.Now,
                     ParamUsage = viewmodel.ParamUsage,
-                    Roles = Roles.IsLibraryStaff() ? "Admin;Bailey Admin;Library Staff" : "Admin;Bailey Admin"
+                    Roles = "System Admin;Bailey Admin;",
+                    Packages = packages,
+                    InputDate = DateTime.Now
                 };
                 _db.Parameters.Add(parameter);
                 _db.SaveChanges();
                 CacheProvider.RemoveCache("parameters");
                 return Json(new { success = true });
-                //return RedirectToAction("Index");
             }
 
             ViewBag.Title = "Add New System Parameter";

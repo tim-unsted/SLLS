@@ -24,11 +24,12 @@ namespace slls.Areas.LibraryAdmin
 {
     public class LibraryUsersController : UsersBaseController
     {
-        private ApplicationRoleManager _roleManager;
+        private RoleManager<ApplicationRole> _roleManager;
         private ApplicationUserManager _userManager;
         private const int RecordsPerPage = 50;
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("Users.LibraryUser", "FieldDisplayName");
+        private readonly string _customerPackage = App_Settings.GlobalVariables.Package;
 
         public LibraryUsersController()
         {
@@ -42,9 +43,14 @@ namespace slls.Areas.LibraryAdmin
             set { _userManager = value; }
         }
 
-        public ApplicationRoleManager RoleManager
+        public RoleManager<ApplicationRole> RoleManager
         {
-            get { return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>(); }
+            get
+            {
+                return _roleManager ?? new RoleManager<ApplicationRole>(
+                    new RoleStore<ApplicationRole>(new ApplicationDbContext()));
+
+            }
             private set { _roleManager = value; }
         }
 
@@ -137,7 +143,7 @@ namespace slls.Areas.LibraryAdmin
                 IsLive = true,
                 SelfLoansAllowed = true,
                 IgnoreAd = false,
-                RolesList = RoleManager.Roles.Where(r => userRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
+                RolesList = RoleManager.Roles.Where(r => userRoles.Contains(r.Name) && r.Packages.Contains(_customerPackage)).ToList().Select(x => new SelectListItem
                 {
                     Selected = defaultMenuRoles.Contains(x.Name),
                     Text = x.Name,
@@ -249,8 +255,6 @@ namespace slls.Areas.LibraryAdmin
                 return HttpNotFound();
             }
 
-            //var userRoles = await UserManager.GetRolesAsync(user.Id);
-
             //Establish what roles the current user has. A user may not grant another user greater permissions than they have themselves ...
             var userRoles = Roles.GetUserRoles();
 
@@ -273,7 +277,7 @@ namespace slls.Areas.LibraryAdmin
                 SelfLoansAllowed = libraryUser.SelfLoansAllowed,
                 Email = libraryUser.Email,
                 Notes = libraryUser.Notes,
-                RolesList = RoleManager.Roles.Where(r => userRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
+                RolesList = RoleManager.Roles.Where(r => userRoles.Contains(r.Name) && r.Packages.Contains(_customerPackage)).ToList().Select(x => new SelectListItem
                 {
                     Selected = libraryUserRoles.Contains(x.Name),
                     Text = x.Name,

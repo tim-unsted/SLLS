@@ -12,6 +12,7 @@ namespace slls.App_Settings
         private static string _opacName = "OpacName";
         private static string _dateFormat = "DateFormat";
         private static string _popupTimeout = "PopupTimeout";
+        private static string _package = "Package";
 
         public static string SiteName
         {
@@ -94,6 +95,26 @@ namespace slls.App_Settings
             {
                 HttpContext.Current.Application.Lock();
                 HttpContext.Current.Application[_popupTimeout] = value;
+                HttpContext.Current.Application.UnLock();
+            }
+        }
+
+        public static string Package
+        {
+            get
+            {
+                if (HttpContext.Current.Application[_package] == null)
+                {
+                    HttpContext.Current.Application.Lock();
+                    HttpContext.Current.Application[_package] = Settings.GetParameterValue("System.Package", "expert", "What package does the customer have?", "Bailey Admin"); ;
+                    HttpContext.Current.Application.UnLock();
+                }
+                return HttpContext.Current.Application[_package].ToString();
+            }
+            set
+            {
+                HttpContext.Current.Application.Lock();
+                HttpContext.Current.Application[_package] = value;
                 HttpContext.Current.Application.UnLock();
             }
         }

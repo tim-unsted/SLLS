@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using slls.App_Settings;
 using slls.DAO;
 using slls.ViewModels;
 using Westwind.Globalization;
@@ -71,8 +72,15 @@ namespace slls.Areas.Config
         public ActionResult DoRemoveAll()
         {
             CacheProvider.RemoveAll();
+            GlobalVariables.Package = null;
+            GlobalVariables.DateFormat = null;
+            GlobalVariables.OpacName = null;
+            GlobalVariables.PopupTimeout = null;
+            GlobalVariables.SiteName = null;
+            CssManager.LoadCss();
+            TempData["SuccessDialogMsg"] = "All data caches have been successfully cleared.";
             return Json(new { success = true });
-            //return RedirectToAction("Index", "Home");
+
         }
     }
 }

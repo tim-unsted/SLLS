@@ -14,13 +14,13 @@ namespace slls.App_Settings
         public string ParameterID { get; set; }
         public string ParameterValue { get; set; }
 
-        public static string GetParameterValue(string id, string value = "", string usage = "")
+        public static string GetParameterValue(string id, string value = "", string usage = "", string roles = "System Admin")
         {
             var parameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
             var parameter = parameters.FirstOrDefault(p => p.ParameterID == id);
             if (parameter == null)
             {
-                if (AddParameter(id, value, usage))
+                if (AddParameter(id, value, usage, roles))
                 {
                     return value;
                 }
@@ -29,16 +29,15 @@ namespace slls.App_Settings
             return parameter.ParameterValue;
         }
 
-        public static bool UpdateParameter(string id, string value, string usage = "")
+        public static bool UpdateParameter(string id, string value, string usage = "", string roles = "System Admin")
         {
             var repository = new GenericRepository(typeof(Models.Parameter));
-            //var db = new DbEntities();
             var parameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
             var parameter = parameters.FirstOrDefault(p => p.ParameterID == id);
 
             if (parameter == null)
             {
-                return AddParameter(id, value, usage);
+                return AddParameter(id, value, usage, roles);
             }
 
             try
@@ -56,7 +55,7 @@ namespace slls.App_Settings
             }
         }
 
-        public static bool AddParameter(string id, string value, string usage = "")
+        public static bool AddParameter(string id, string value, string usage = "", string roles = "System Admin")
         {
             if (id == null) return false;
             if (value == null) return false;
@@ -68,13 +67,48 @@ namespace slls.App_Settings
             {
                 try
                 {
+                    if (roles != "Bailey Admin") roles = roles + ";Bailey Admin";
+
+                    var packages = "";
+                    var customerPackage = GlobalVariables.Package;
+                    switch (customerPackage)
+                    {
+                        case "collectors" :
+                        {
+                            packages = "collectors;";
+                            break;
+                        }
+                        case "sharing":
+                        {
+                            packages = "collectors;sharing;";
+                            break;
+                        }
+                        case "expert":
+                        {
+                            packages = "collectors;sharing;expert;";
+                            break;
+                        }
+                        case "super":
+                        {
+                            packages = "collectors;sharing;expert;super;";
+                            break;
+                        }
+                        default:
+                        {
+                            packages = "collectors;sharing;expert;";
+                            break;
+                        }
+                    }
+
                     parameter = new Parameter
                     {
                         ParameterID = id,
                         ParameterValue = value,
                         ParamUsage = usage,
-                        InputDate = DateTime.Now,
-                        Roles = "Admin;Bailey Admin"
+                        Roles = roles,
+                        Packages = packages,
+                        InputDate = DateTime.Now
+                        
                     };
 
                     var repository = new GenericRepository(typeof(Models.Parameter));

@@ -12,7 +12,7 @@ using slls.Models;
 namespace slls.Controllers
 {
     //Only allow admin role to access this functionality ...
-    [Authorize(Roles = "Admin")]
+    [Authorize(Roles = "System Admin")]
     public class RolesAdminController : sllsBaseController
     {
         public RolesAdminController()
@@ -100,7 +100,7 @@ namespace slls.Controllers
         {
             if (ModelState.IsValid)
             {
-                var role = new IdentityRole(roleViewModel.Name);
+                var role = new ApplicationRole(roleViewModel.Name);
                 var roleresult = await RoleManager.CreateAsync(role);
                 if (!roleresult.Succeeded)
                 {

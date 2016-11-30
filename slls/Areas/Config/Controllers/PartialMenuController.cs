@@ -14,6 +14,7 @@ namespace slls.Areas.Config
     public class PartialMenuController : ConfigBaseController
     {
         private readonly DbEntities _db = new DbEntities();
+        private readonly string _customerPackage = App_Settings.GlobalVariables.Package;
 
         //Get the menu items from the database or cache ...
         private readonly IEnumerable<Menu> _menuItems = CacheProvider.GetAll<Menu>("menuitems");
@@ -26,7 +27,7 @@ namespace slls.Areas.Config
             var opacTopItem = _menuItems.FirstOrDefault(m => m.ParentID == topLevelItem.ID && m.Title == "OPAC");
             int parentMenuId = opacTopItem.ID;
 
-            var allItems = (from m in _menuItems.Where(m => m.IsEnabled && m.IsVisible).OrderBy(x => x.SortOrder) select m).ToList();
+            var allItems = (from m in _menuItems.Where(m => m.IsVisible).OrderBy(x => x.SortOrder) select m).ToList();
             
             //If the user is a Bailey Admin then grant them access to everything!
             if (User.IsInRole("Bailey Admin"))
@@ -38,23 +39,19 @@ namespace slls.Areas.Config
                 ViewData["ParentMenuID"] = parentMenuId;
                 return View(baileyAdminItems);
             }
-            else
-            {
-                //Get the menu items that match the user's roles
-                //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
-                var userRoles = Roles.GetUserRoles();
+            //Get the menu items that match the user's roles and package ...
+            //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
+            var userRoles = Roles.GetUserRoles();
 
-                var userItems = from m in allItems
-                                where 
-                                m.MenuArea == "OPAC"
-                                && m.Roles.Split(new String[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                                    .Any(x => userRoles.Contains(x) || x == "All" || x == "Anonymous")
-                                select m;
+            var userItems = from m in allItems
+                            where 
+                                m.MenuArea == "OPAC" &&
+                                m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(x => userRoles.Contains(x) || x == "Anonymous") &&
+                                m.Packages.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(package => package == _customerPackage)
+                            select m;
 
-                ViewData["ParentMenuID"] = parentMenuId;
-                return View(userItems);
-
-            }
+            ViewData["ParentMenuID"] = parentMenuId;
+            return View(userItems);
         }
 
         [AllowAnonymous]
@@ -76,21 +73,17 @@ namespace slls.Areas.Config
                 ViewData["ParentMenuID"] = parentMenuId;
                 return View(baileyAdminItems);
             }
-            else
-            {
-                //Get the config menu items that match the user's roles
-                //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
-                var userRoles = Roles.GetUserRoles();
-                var userItems = from m in allItems
-                                where
-                                    m.MenuArea == "Config" &&
-                                    m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries)
-                                        .Any(x => userRoles.Contains(x) || x == "All" || x == "Anonymous")
-                                select m;
+            // Get the config menu items that match the user's roles ...
+            // To access this menu, the user must already be a 'System Admin' (or 'Bailey Admin'), so that's the only role to look for
+            var userItems = from m in allItems
+                            where 
+                                m.MenuArea == "Config" &&
+                                m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(role => role == "System Admin") &&
+                                m.Packages.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(package => package == _customerPackage)
+                            select m;
 
-                ViewData["ParentMenuID"] = parentMenuId;
-                return View(userItems);
-            }
+            ViewData["ParentMenuID"] = parentMenuId;
+            return View(userItems);
         }
     }
 }

@@ -18,17 +18,28 @@ namespace slls.Areas.Config
 {
     public class LibraryUsersController : ConfigBaseController
     {
-        private ApplicationRoleManager _roleManager;
+        private RoleManager<ApplicationRole> _roleManager;
         private ApplicationUserManager _userManager;
         private const int RecordsPerPage = 50;
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = DbRes.T("Users.LibraryUser", "FieldDisplayName");
+        private readonly string _customerPackage = App_Settings.GlobalVariables.Package;
 
         public LibraryUsersController()
         {
             ViewBag.Title = DbRes.T("LibraryUsers", "EntityType");
             ViewBag.RecordsPerPage = RecordsPerPage;
         }
+        
+        //private UserManager<ApplicationUser> UserManager
+        //{
+        //    get
+        //    {
+        //        return _userManager ?? new UserManager<ApplicationUser>(
+        //            new UserStore<ApplicationUser>(new ApplicationDbContext()));
+
+        //    }
+        //}
 
         private ApplicationUserManager UserManager
         {
@@ -36,11 +47,17 @@ namespace slls.Areas.Config
             set { _userManager = value; }
         }
 
-        public ApplicationRoleManager RoleManager
+        public RoleManager<ApplicationRole> RoleManager
         {
-            get { return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>(); }
+            get
+            {
+                return _roleManager ?? new RoleManager<ApplicationRole>(
+                    new RoleStore<ApplicationRole>(new ApplicationDbContext()));
+
+            }
             private set { _roleManager = value; }
         }
+        
 
         // GET: LibraryUsers
         public ActionResult Index(string selectedLetter = "A", bool showAll = false)
@@ -130,15 +147,29 @@ namespace slls.Areas.Config
             {
                 IsLive = true,
                 SelfLoansAllowed = true,
-                IgnoreAd = false,
-                RolesList = RoleManager.Roles.Where(r => r.Name != "Bailey Admin").ToList().Select(x => new SelectListItem
+                IgnoreAd = false
+            };
+
+            try
+            {
+                var rolesList = (from r in RoleManager.Roles
+                                 where
+                                    r.Name != "Bailey Admin"
+                                    && r.Packages.Contains(_customerPackage)
+                                 select r).ToList();
+                viewModel.RolesList = rolesList.Select(x => new SelectListItem
                 {
                     Selected = defaultMenuRoles.Contains(x.Name),
                     Text = x.Name,
                     Value = x.Name
-                })
-            };
-            
+                });
+
+            }
+            catch (Exception e)
+            {
+
+            }
+
             viewModel.PasswordTip = GetPasswordTips();
             ViewBag.Title = "Add New " + _entityName;
             ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1");
@@ -242,16 +273,14 @@ namespace slls.Areas.Config
             {
                 return HttpNotFound();
             }
-
-            //var userRoles = await UserManager.GetRolesAsync(user.Id);
-
+            
             //Establish what roles the current user has. A user may not grant another user greater permissions than they have themselves ...
-            var userRoles = Roles.GetUserRoles();
+            //var userRoles = Roles.GetUserRoles();
 
             //Only Admin users can get this far, so ensure that any lower user type is included by default ...
-            userRoles.Add("OPAC User");
+            //userRoles.Add("OPAC User");
 
-            //Get a list of all roles that the library user (the one being edited) has ...
+            //Get a list of all roles that the library user (the one being edited) vurrently has ...
             var libraryUserRoles = Roles.GetUserRoles(id); ;
 
             var viewModel = new LibraryUserEditViewModel()
@@ -266,14 +295,28 @@ namespace slls.Areas.Config
                 IgnoreAd = libraryUser.IgnoreAd,
                 SelfLoansAllowed = libraryUser.SelfLoansAllowed,
                 Email = libraryUser.Email,
-                Notes = libraryUser.Notes,
-                RolesList = RoleManager.Roles.Where(r => r.Name != "Bailey Admin").ToList().Select(x => new SelectListItem
+                Notes = libraryUser.Notes
+            };
+
+            try
+            {
+                var rolesList = (from r in RoleManager.Roles 
+                                 where 
+                                    r.Name != "Bailey Admin"
+                                    && r.Packages.Contains(_customerPackage)
+                                 select r).ToList();
+                viewModel.RolesList = rolesList.Select(x => new SelectListItem
                 {
                     Selected = libraryUserRoles.Contains(x.Name),
                     Text = x.Name,
                     Value = x.Name
-                })
-            };
+                });
+
+            }
+            catch (Exception e)
+            {
+                
+            }
 
             ViewBag.Title = "Edit " + _entityName;
             ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1",

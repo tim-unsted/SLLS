@@ -326,6 +326,7 @@
       <DependentUpon>201607071603580_circulation.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ApplicationRole.cs" />
     <Compile Include="Models\CopacLibrary.cs" />
     <Compile Include="Models\CopacLanguage.cs" />
     <Compile Include="Models\DashboardGadget.cs" />

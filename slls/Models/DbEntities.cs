@@ -106,7 +106,7 @@ namespace slls.Models
             //modelBuilder.Entity<IdentityUserLogin>()
             //    .HasKey<string>(l => l.UserId);
 
-            //modelBuilder.Entity<IdentityRole>()
+            //modelBuilder.Entity<ApplicationRole>()
             //    .HasKey<string>(r => r.Id);
 
             //modelBuilder.Entity<IdentityUserRole>()

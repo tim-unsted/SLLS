@@ -4,7 +4,7 @@
 
 @Html.Partial("_ModalEditHeader")
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "LibraryUsers", FormMethod.Post, new { area = "Config" }))
 {
     @Html.AntiForgeryToken()
 

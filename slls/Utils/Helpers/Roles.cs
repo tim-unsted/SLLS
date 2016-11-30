@@ -52,12 +52,20 @@ namespace slls.Utils.Helpers
         public static bool IsAdmin() // System Admin ...
         {
             var userRoles = GetUserRoles();
+            if (userRoles == null)
+            {
+                return false;
+            }
             return userRoles.Contains(SystemAdmin);
         }
 
-        public static bool IsBaileyAdmin()
+        public static bool IsBaileyAdmin() // Bailey Admin ...
         {
             var userRoles = GetUserRoles();
+            if (userRoles == null)
+            {
+                return false;
+            }
             return userRoles.Contains(BaileyAdmin);
         }
 

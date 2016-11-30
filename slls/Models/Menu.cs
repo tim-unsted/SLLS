@@ -76,6 +76,8 @@ namespace slls.Models
 
         public string Description { get; set; }
 
+        public string Packages { get; set; }
+
         public string HoverTip
         {
             get { return string.Format("{0}", string.IsNullOrEmpty(ToolTip) ? Title: ToolTip); }
