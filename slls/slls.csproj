@@ -1469,6 +1469,7 @@
     <Content Include="Views\Borrowing\ReturnLoan.cshtml" />
     <Content Include="Views\Borrowing\RenewLoan.cshtml" />
     <Content Include="Views\Shared\_PostAlert.cshtml" />
+    <Content Include="Views\LIbraryUserLoans\MyLoansHistory.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Config\Models\" />

@@ -10,8 +10,10 @@ using slls.Models;
 using slls.ViewModels;
 using Westwind.Globalization;
 
+
 namespace slls.Controllers
 {
+    [Authorize]
     public class LibraryUserLoansController : sllsBaseController
     {
         private readonly DbEntities _db = new DbEntities();
@@ -38,6 +40,22 @@ namespace slls.Controllers
 
             ViewBag.OverDueLoans = myOverdueLoans ? 1 : 0;
             return View(myCurrentLoans.ToList());
+        }
+
+        public ActionResult MyLoansHistory()
+        {
+            var userId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
+            var myLoans = _db.Borrowings.Where(b => b.BorrowerUser.Id == userId);
+            var myOverdueLoans = myLoans.Any(l => l.ReturnDue < DateTime.Today);
+
+            if (!myLoans.Any())
+            {
+                TempData["NoData"] = "You have no " + _entityName + " history!";
+            }
+
+            ViewBag.OverDueLoans = myOverdueLoans ? 1 : 0;
+            ViewBag.Title = "My Loans History";
+            return View(myLoans.ToList());
         }
 
         public ActionResult ConfirmReturnLoan(int id = 0)

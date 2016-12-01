@@ -14,7 +14,7 @@ using Westwind.Globalization;
 namespace slls.Controllers
 {
     //Only allow logged in users to access this functionality ...
-    [AuthorizeRoles(Roles.User)]
+    [Authorize]
     public class LibraryUserBookmarksController : sllsBaseController
     {
         private readonly DbEntities _db = new DbEntities();

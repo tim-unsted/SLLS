@@ -14,7 +14,7 @@ using Westwind.Globalization;
 
 namespace slls.Controllers
 {
-    [AuthorizeRoles(Roles.User)]
+    [Authorize]
     public class LibraryUserSavedSearchesController : sllsBaseController
     {
         private readonly DbEntities _db = new DbEntities();
