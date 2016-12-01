@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Resources;
 using System.Web;
 using System.Web.Mvc;
 using slls.DAO;
@@ -83,7 +84,7 @@ namespace slls.Areas.Config
 
                 _repository.Update(item);
                 DbResourceConfiguration.ClearResourceCache();
-
+                
                 return Json(new { success = true });
                 //return RedirectToAction("Index");
             }
