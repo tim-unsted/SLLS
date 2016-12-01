@@ -108,7 +108,7 @@ namespace slls.Areas.Config
             return RedirectToAction("Index", new {id = "LibraryAdmin"});
         }
         
-        [AuthorizeRoles(Roles.SystemAdmin)]
+        [AuthorizeRoles(Roles.SystemAdmin, Roles.BaileyAdmin)]
         public ActionResult OPAC()
         {
             return RedirectToAction("Index", new { id = "OPAC" });
@@ -121,7 +121,7 @@ namespace slls.Areas.Config
         }
 
         
-        [AuthorizeRoles(Roles.SystemAdmin)]
+        [AuthorizeRoles(Roles.SystemAdmin, Roles.BaileyAdmin)]
         public ActionResult Index(string id = "OPAC")
         {
             var topLevelItem = _db.Menus.FirstOrDefault(m => m.ParentID == null); // should be ID = -999
