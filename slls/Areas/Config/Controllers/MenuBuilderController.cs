@@ -6,6 +6,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using slls.DAO;
 using slls.Models;
@@ -17,11 +18,24 @@ namespace slls.Areas.Config
     public class MenuBuilderController : ConfigBaseController
     {
         private readonly DbEntities _db = new DbEntities();
-        private ApplicationRoleManager _roleManager;
+        //private ApplicationRoleManager _roleManager;
+        private RoleManager<ApplicationRole> _roleManager;
+        private readonly string _customerPackage = App_Settings.GlobalVariables.Package;
 
-        public ApplicationRoleManager RoleManager
+        //public ApplicationRoleManager RoleManager
+        //{
+        //    get { return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>(); }
+        //    private set { _roleManager = value; }
+        //}
+
+        public RoleManager<ApplicationRole> RoleManager
         {
-            get { return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>(); }
+            get
+            {
+                return _roleManager ?? new RoleManager<ApplicationRole>(
+                    new RoleStore<ApplicationRole>(new ApplicationDbContext()));
+
+            }
             private set { _roleManager = value; }
         }
 
@@ -116,7 +130,7 @@ namespace slls.Areas.Config
             {
                 int parentMenuId = areaTopItem.ID;
             
-                var allItems = (from m in _db.Menus where m.MenuArea == id orderby m.SortOrder select m).ToList();
+                var allItems = (from m in _db.Menus where m.MenuArea == id && m.Packages.Contains(_customerPackage) orderby m.SortOrder select m).ToList();
 
                 ViewData["MenuType"] = SelectListHelper.MenuList();
                 ViewBag.Title = "Menu Editor - " + id;
@@ -140,19 +154,17 @@ namespace slls.Areas.Config
             var allMenuRoles = menuitem.Roles;
 
             //Create a list of all roles the current use has access to ...
-            var includedMenuRoles = new List<string> { "Admin", "All", "Anonymous", "Library Staff", "OPAC User" };
+            var includedMenuRoles = new List<string> { "System Admin", "Anonymous", "OPAC User" };
 
             //Create a list of menu areas the current use has access to ...
             var allowedAreas = new List<string> { "Menu", "", "OPAC", "MyLibrary", "Home" };
 
             //Add extra roles and menu area if allowed ...
-            if (userRoles.Contains("Bailey Admin") || userRoles.Contains("Bailey Developer"))
+            if (userRoles.Contains("Bailey Admin"))
             {
-                includedMenuRoles.Add("Bailey Developer");
                 includedMenuRoles.Add("Bailey Admin");
                 allowedAreas.Add("LibraryAdmin");
                 allowedAreas.Add("Config");
-                allowedAreas.Add("BS");
             }
 
             int? parentId = menuitem.ParentID;
@@ -195,7 +207,7 @@ namespace slls.Areas.Config
             };
 
             //Get a list of roles that the current user is allowed to assign ...
-            viewModel.RolesList.AddRange(RoleManager.Roles.Where(r => includedMenuRoles.Contains(r.Name)).ToList().Select(x => new SelectListItem
+            viewModel.RolesList.AddRange(RoleManager.Roles.Where(r => includedMenuRoles.Contains(r.Name) && r.Packages.Contains(_customerPackage)).ToList().Select(x => new SelectListItem
                 {
                     Selected = allMenuRoles.Contains(x.Name),
                     Text = x.Name,
@@ -304,19 +316,17 @@ namespace slls.Areas.Config
             var allMenuRoles = menuitem.Roles;
 
             //Create a list of all roles the current use has access to ...
-            var includedMenuRoles = new List<string> {"Admin", "All", "Anonymous", "Library Staff", "OPAC User"};
+            var includedMenuRoles = new List<string> {"System Admin", "Anonymous", "OPAC User"};
 
             //Create a list of menu areas the current use has access to ...
             var allowedAreas = new List<string> { "Menu", "", "OPAC", "MyLibrary", "Home" };
             
             //Add extra roles and menu area if allowed ...
-            if (userRoles.Contains("Bailey Admin") || userRoles.Contains("Bailey Developer"))
+            if (userRoles.Contains("Bailey Admin"))
             {
-                includedMenuRoles.Add("Bailey Developer");
                 includedMenuRoles.Add("Bailey Admin");
                 allowedAreas.Add("LibraryAdmin");
                 allowedAreas.Add("Config");
-                allowedAreas.Add("BS");
             }
 
             //Create our view model of data to work with ...

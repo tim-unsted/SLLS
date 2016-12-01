@@ -24,6 +24,9 @@ namespace slls.Controllers
         private readonly DbEntities _db = new DbEntities();
         private readonly GenericRepository _repository;
 
+        //Get the available gadgets from the database or cache ...
+        private readonly IEnumerable<DashboardGadget> _allGadgets = CacheProvider.DashboardGadgets().Where(x => x.Area == "Home");
+
         public HomeController()
         {
             _repository = new GenericRepository(typeof (Title));
@@ -132,9 +135,8 @@ namespace slls.Controllers
         {
             //Get the current user's ID ...
             var userId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
-            var allGadgets = CacheProvider.GetAll<DashboardGadget>("dashboardgadgets").ToList();
             var gadgetAction =
-                allGadgets.Where(x => x.Row == row && x.Column == col && x.Area == "Home").Select(g => g.Name).FirstOrDefault();
+                _allGadgets.Where(x => x.Row == row && x.Column == col).Select(g => g.Name).FirstOrDefault();
 
             if (gadgetAction == null)
             {

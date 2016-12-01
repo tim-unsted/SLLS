@@ -10,9 +10,13 @@
         @{
             if (Model.HasTitles)
             {
-                <h5>Titles:</h5>
+                @*<h5>Titles:</h5>*@
                 <ul class="list-unstyled">
-                    <li><strong>@Model.TitlesNoCopies</strong> <a href="@Url.Action("TitlesNoCopies", "Titles")">Titles Without Copies</a></li>
+                    @if(Model.TitlesNoCopies > 0)
+                    {
+                        <li><strong>@Model.TitlesNoCopies</strong> <a href="@Url.Action("TitlesNoCopies", "Titles")">Titles Without Copies</a></li>
+                    }
+                    
                     @if (Model.CopiesNoVolumes > 0)
                     {
                         <li><strong>@Model.CopiesNoVolumes</strong> <a href="@Url.Action("CopiesNoVolumes", "Copies")">Copies Without Volumes/Barcodes</a></li>
@@ -20,9 +24,9 @@
                 </ul>
             }
 
-            if (Model.HasOrders)
+            if (Model.HasOrders && Model.Package.Contains("expert;super;"))
             {
-                <h5>Orders:</h5>
+                @*<h5>Orders:</h5>*@
                 <ul class="list-unstyled">
                     <li><strong>@Model.OutstandingOrders</strong> <a href="@Url.Action("AllOutstanding", "OrderDetails")">Outstanding Orders</a></li>
                     <li><strong>@Model.OverdueOrders</strong> <a href="@Url.Action("AllOverdue", "OrderDetails")">Overdue Orders</a></li>
@@ -35,23 +39,31 @@
                 </ul>
             }
 
-            if (Model.HasLoans)
+            if (Model.HasLoans && Model.Package.Contains("sharing;expert;super;"))
             {
-                <h5>Loans:</h5>
+                @*<h5>Loans:</h5>*@
                 <ul class="list-unstyled">
                     <li><strong>@Model.ReservationRequests</strong> <a href="@Url.Action("NotFound", "Home")">Reservation Requests</a></li>
                     <li><strong>@Model.OverdueLoans</strong> <a href="@Url.Action("OverdueLoans", "Loans")">Overdue Loans</a></li>
                 </ul>
             }
 
-            <h5>Authority Lists:</h5>
+            @*<h5>Authority Lists:</h5>*@
             <ul class="list-unstyled">
                 @{
-                    if (Model.HasAccountYears == false)
+                    if (Model.HasAccountYears == false && Model.Package.Contains("expert;super;"))
                     {
                         <li><strong>There are 0 Account Years</strong> <a href="@Url.Action("Create", "AccountYears")" class="btn btn-link modal-link"  title="Add Account Years">Add</a></li>
                     }
-                    if (Model.HasBudgetCodes == false)
+                    if (Model.HasActivityTypes == false && Model.Package.Contains("expert;super;"))
+                    {
+                        <li><strong>There are 0 Activity Types</strong> <a href="@Url.Action("Create", "ActivityTypes")" class="btn btn-link modal-link" title="Add Activity Types">Add</a></li>
+                    }
+                    if (Model.HasAuthors == false)
+                    {
+                        <li><strong>There are 0 Authors</strong> <a href="@Url.Action("Create", "Authors")" class="btn btn-link modal-link" title="Add Authors">Add</a></li>
+                    }
+                    if (Model.HasBudgetCodes == false && Model.Package.Contains("expert;super;"))
                     {
                         <li><strong>There are 0 Budget Codes</strong> <a href="@Url.Action("Create", "BudgetCodes")" class="btn btn-link modal-link" title="Add Budget Codes">Add</a></li>
                     }
@@ -79,18 +91,11 @@
                     {
                         <li><strong>There are 0 Publishers</strong> <a href="@Url.Action("Create", "Publishers")" class="btn btn-link modal-link" title="Add Publishers">Add</a></li>
                     }
-                    if (Model.HasSuppliers == false)
+                    if (Model.HasSuppliers == false && Model.Package.Contains("expert;super;"))
                     {
                         <li><strong>There are 0 Suppliers</strong> <a href="@Url.Action("Create", "Suppliers")" class="btn btn-link modal-link" title="Add Suppliers">Add</a></li>
                     }
-                    if (Model.HasAuthors == false)
-                    {
-                        <li><strong>There are 0 Authors</strong> <a href="@Url.Action("Create", "Authors")" class="btn btn-link modal-link" title="Add Authors">Add</a></li>
-                    }
-                    if (Model.HasActivityTypes == false)
-                    {
-                        <li><strong>There are 0 Activity Types</strong> <a href="@Url.Action("Create", "ActivityTypes")" class="btn btn-link modal-link" title="Add Activity Types">Add</a></li>
-                    }
+                    
                 }
 
             </ul>

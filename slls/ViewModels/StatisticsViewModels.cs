@@ -58,6 +58,7 @@ namespace slls.ViewModels
         public bool HasLoans { get; set; }
         public bool HasReservations { get; set; }
         public bool HasLoanTypes { get; set; }
+        public string Package { get; set; }
 
     }
 }

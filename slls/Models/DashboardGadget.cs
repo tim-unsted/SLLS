@@ -23,5 +23,7 @@ namespace slls.Models
         public int Row { get; set; }
 
         public bool Visible { get; set; }
+
+        public string Packages { get; set; }
     }
 }

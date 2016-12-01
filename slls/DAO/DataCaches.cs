@@ -66,7 +66,33 @@ namespace slls.DAO
             Cache["opactitles"] = opacTitles;
             return opacTitles;
         }
-        
+
+        public static List<DashboardGadget> DashboardGadgets()
+        {
+            string customerPackage = App_Settings.GlobalVariables.Package;
+            var dashboardGadgets = Cache["dashboardgadgets"] as List<DashboardGadget>;
+            if (dashboardGadgets != null) return dashboardGadgets;
+            var db = new DbEntities();
+            dashboardGadgets = (from g in db.DashboardGadgets
+                                where g.Packages != null && g.Packages.Contains(customerPackage)
+                            select g).ToList();
+            Cache["dashboardgadgets"] = dashboardGadgets;
+            return dashboardGadgets;
+        }
+
+        public static List<Menu> MenuItems()
+        {
+            string customerPackage = App_Settings.GlobalVariables.Package;
+            var menuItems = Cache["menuitems"] as List<Menu>;
+            if (menuItems != null) return menuItems;
+            var db = new DbEntities();
+            menuItems = (from m in db.Menus
+                                where m.Packages != null && m.Packages.Contains(customerPackage)
+                                select m).ToList();
+            Cache["menuitems"] = menuItems;
+            return menuItems;
+        }
+
         public static void RemoveCache(string key)
         {
             Cache.Remove(key);

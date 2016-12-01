@@ -22,7 +22,7 @@
     </div>
 }
 
-@* After the Jumbotron, re-open the Container dix that was originally opened in the _Layout.cshtml file ... *@
+@* After the Jumbotron, re-open the Container div that was originally opened in the _Layout.cshtml file ... *@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
@@ -33,7 +33,7 @@
             @Html.Action("RenderGadget", "Home", new { col = 1, row = 5, hasTitles = Model.HasTitles, area = "LibraryAdmin" })
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-5">
             @Html.Action("RenderGadget", "Home", new { col = 2, row = 1, hasTitles = Model.HasTitles, area = "LibraryAdmin" })
             @Html.Action("RenderGadget", "Home", new { col = 2, row = 2, hasTitles = Model.HasTitles, area = "LibraryAdmin" })
             @Html.Action("RenderGadget", "Home", new { col = 2, row = 3, hasTitles = Model.HasTitles, area = "LibraryAdmin" })
@@ -41,7 +41,7 @@
             @Html.Action("RenderGadget", "Home", new { col = 2, row = 5, hasTitles = Model.HasTitles, area = "LibraryAdmin" })
         </div>
 
-        <div class="col-md-5">
+        <div class="col-md-4">
             @Html.Action("RenderGadget", "Home", new { col = 3, row = 1, hasTitles = Model.HasTitles, area = "LibraryAdmin" })
             @Html.Action("RenderGadget", "Home", new { col = 3, row = 2, hasTitles = Model.HasTitles, area = "LibraryAdmin" })
             @Html.Action("RenderGadget", "Home", new { col = 3, row = 3, hasTitles = Model.HasTitles, area = "LibraryAdmin" })

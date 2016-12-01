@@ -28,23 +28,20 @@ namespace slls.Controllers
         [AllowAnonymous]
         public ActionResult TopMenu()
         {
-            var menuItems = CacheProvider.GetAll<Menu>("menuitems").ToList();
+            var menuItems = CacheProvider.MenuItems();
             //Get the very top term ...
             var topLevelItem = menuItems.FirstOrDefault(m => m.ParentID == null); // should be ID = -999
             var opacTopItem = menuItems.FirstOrDefault(m => m.ParentID == topLevelItem.ID && m.Title == "OPAC");
             int parentMenuId = opacTopItem.ID;
 
-            var allItems = (from m in menuItems.Where(m => m.IsVisible).OrderBy(x => x.SortOrder) select m).ToList();
+            var allItems = (from m in menuItems.Where(m => m.MenuArea == "OPAC" && m.IsVisible && m.Packages != null && m.Packages.Contains(_customerPackage)).OrderBy(x => x.SortOrder) select m).ToList();
             
             //If the user is not logged in, only show the menu items with the role "Anonymous"
             if(!User.Identity.IsAuthenticated)
             {
                 var someItems = from m in allItems 
-                                where 
-                                    m.MenuArea == "OPAC" &&
-                                    m.IsVisible &&
-                                    m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(role => role == "Anonymous") &&
-                                    m.Packages.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(package => package == _customerPackage)
+                                where
+                                    m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(role => role == "Anonymous")
                                 select m;
                 ViewData["ParentMenuID"] = parentMenuId;
                 return View(someItems.ToList());
@@ -53,9 +50,7 @@ namespace slls.Controllers
             if (User.IsInRole("Bailey Admin"))
             {
                 var baileyAdminItems = from m in allItems
-                                       where m.MenuArea == "OPAC"
                                        select m;
-
                 ViewData["ParentMenuID"] = parentMenuId;
                 return View(baileyAdminItems);
             }
@@ -63,11 +58,8 @@ namespace slls.Controllers
             //Note: GetRoles() returns the Role.Name, not the Role.ID as expected!
             var userRoles = Roles.GetUserRoles();
             var userItems = from m in allItems
-                            where 
-                                m.MenuArea == "OPAC" &&
-                                m.IsVisible &&
-                                m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(x => userRoles.Contains(x) || x == "Anonymous") &&
-                                m.Packages.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(package => package == _customerPackage)
+                            where
+                                m.Roles.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries).Any(x => userRoles.Contains(x) || x == "Anonymous")
                             select m;
 
             ViewData["ParentMenuID"] = parentMenuId;

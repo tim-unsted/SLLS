@@ -21,7 +21,11 @@ namespace slls.Areas.LibraryAdmin
     public class HomeController : AdminBaseController
     {
         private readonly DbEntities _db = new DbEntities();
+        private readonly string _customerPackage = App_Settings.GlobalVariables.Package;
 
+        //Get the available gadgets from the database or cache ...
+        private readonly IEnumerable<DashboardGadget> _allGadgets = CacheProvider.DashboardGadgets().Where(x => x.Area == "Admin");
+        
         public HomeController()
         {
             ViewBag.Title = "Library Admin Dashboard";
@@ -61,36 +65,13 @@ namespace slls.Areas.LibraryAdmin
             return View();
         }
 
-
-        //public ActionResult _AutoCat(string isbn = "", bool notFound = false)
-        //{
-        //    //Get a list of all data soures (i.e. Amazon;Hammick;Wildys; etc.)
-        //    var allSources = ConfigurationManager.AppSettings["AutoCatDataSources"];
-        //    var sources = allSources.Split(',').ToList();
-
-        //    var viewModel = new AddTitleWithAutoCatViewModel
-        //    {
-        //        Sources = sources,
-        //        Isbn = isbn
-        //    };
-
-        //    if (notFound)
-        //    {
-        //        ModelState.AddModelError("NotFound", "This ISBN could not be found at the selected source. Please check or try an alternative source.");
-        //    }
-
-        //    ViewBag.Title = "AutoCat";
-        //    return PartialView(viewModel);
-        //}
-
         [ActionOutputCache(300)] // Caches for n seconds
         public ActionResult RenderGadget(int col = 0, int row = 0, bool hasTitles = false)
         {
             //Get the current user's ID ...
-            var userId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
-            var allGadgets = CacheProvider.GetAll<DashboardGadget>("dashboardgadgets").ToList();
+            var userId = Utils.PublicFunctions.GetUserId();
             var gadgetAction =
-                allGadgets.Where(x => x.Row == row && x.Column == col && x.Area == "Admin").Select(g => g.Name).FirstOrDefault();
+                _allGadgets.Where(x => x.Row == row && x.Column == col).Select(g => g.Name).FirstOrDefault();
 
             if (gadgetAction == null)
             {
@@ -116,30 +97,41 @@ namespace slls.Areas.LibraryAdmin
                     }
                 case "alerts":
                     {
-                        var viewModel = new AdminAlertsViewModel();
+                        var viewModel = new AdminAlertsViewModel()
+                        {
+                            Package = _customerPackage
+                        };
 
+                        //All packages have titles ...
                         viewModel.HasTitles = _db.Titles.Any(x => x.Deleted == false);
-                        viewModel.HasOrders = _db.OrderDetails.Any(x => x.Deleted == false);
-                        viewModel.HasLoans = _db.Borrowings.Any(x => x.Deleted == false);
-                        //viewModel.HasReservations = _db.Resevations.Any(x => x.Deleted == false);
-
-                        viewModel.HasAccountYears = _db.AccountYears.Any(x => x.Deleted == false && x.CanDelete);
-                        viewModel.HasActivityTypes = _db.ActivityTypes.Any(x => x.Deleted == false && x.CanDelete);
                         viewModel.HasAuthors = _db.Authors.Any(x => x.Deleted == false);
-                        viewModel.HasBudgetCodes = _db.BudgetCodes.Any(x => x.Deleted == false && x.CanDelete);
                         viewModel.HasClassmarks = _db.Classmarks.Any(x => x.Deleted == false && x.CanDelete);
-                        viewModel.HasDepartments = _db.Departments.Any(x => x.Deleted == false && x.CanDelete);
                         viewModel.HasFrequencies = _db.Frequencies.Any(x => x.Deleted == false && x.CanDelete);
                         viewModel.HasKeywords = _db.Keywords.Any(x => x.Deleted == false && x.CanDelete);
                         viewModel.HasLanguages = _db.Languages.Any(x => x.Deleted == false && x.CanDelete);
                         viewModel.HasLocations = _db.Locations.Any(x => x.Deleted == false && x.CanDelete);
                         viewModel.HasMediaTypes = _db.MediaTypes.Any(x => x.Deleted == false && x.CanDelete);
-                        viewModel.HasActivityTypes = _db.ActivityTypes.Any(x => x.Deleted == false && x.CanDelete);
                         viewModel.HasPublishers = _db.Publishers.Any(x => x.Deleted == false && x.CanDelete);
                         viewModel.HasStatusTypes = _db.StatusTypes.Any(x => x.Deleted == false && x.CanDelete);
-                        viewModel.HasSuppliers = _db.Suppliers.Any(x => x.Deleted == false && x.CanDelete);
-                        viewModel.HasOrderCategories = _db.OrderCategories.Any(x => x.Deleted == false && x.CanDelete);
-                        viewModel.HasLoanTypes = _db.LoanTypes.Any(x => x.CanDelete);
+
+                        //All packages except sharing has loans and users
+                        if (_customerPackage != "collectors")
+                        {
+                            viewModel.HasLoans = _db.Borrowings.Any(x => x.Deleted == false);
+                            viewModel.HasDepartments = _db.Departments.Any(x => x.Deleted == false && x.CanDelete);
+                            viewModel.HasLoanTypes = _db.LoanTypes.Any(x => x.CanDelete);
+                        }
+                        
+                        //Only expert and super packages have serials and finance
+                        if (_customerPackage != "collectors" && _customerPackage != "sharing")
+                        {
+                            viewModel.HasOrders = _db.OrderDetails.Any(x => x.Deleted == false);
+                            viewModel.HasAccountYears = _db.AccountYears.Any(x => x.Deleted == false && x.CanDelete);
+                            viewModel.HasActivityTypes = _db.ActivityTypes.Any(x => x.Deleted == false && x.CanDelete);
+                            viewModel.HasBudgetCodes = _db.BudgetCodes.Any(x => x.Deleted == false && x.CanDelete);
+                            viewModel.HasSuppliers = _db.Suppliers.Any(x => x.Deleted == false && x.CanDelete);
+                            viewModel.HasOrderCategories = _db.OrderCategories.Any(x => x.Deleted == false && x.CanDelete);
+                        }
 
                         if (hasTitles)
                         {
