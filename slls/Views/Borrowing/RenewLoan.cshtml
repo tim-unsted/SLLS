@@ -10,18 +10,14 @@
     <div class="form-horizontal">
 
         @Html.ValidationSummary(true, "", new {@class = "text-danger"})
-
-        @*@if (TempData["SuccessMsg"] != null)
-        {
-            @Html.Partial("_PostSuccess", TempData["SuccessMsg"])
-        }*@
+        
         @Html.Partial("_PostAlert")
         
         <div class="well">
             <div class="form-group has-feedback" id="barcodeGroup">
                 @Html.Label(DbRes.T("Borrowing.Item_To_Renew", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-4">
-                    @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode) } })
+                    @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode), title = "Enter or scan the " + Html.DisplayNameFor(x => x.Barcode) + " of the item you wish to renew." } })
                     @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
                     <i class="glyphicon glyphicon-barcode form-control-feedback"></i>
                 </div>
@@ -64,9 +60,9 @@
         <br/>
 
         <div class="form-group">
-            @Html.Label(DbRes.T("Borrowing.Current_Loans", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
+            @Html.Label("My " + DbRes.T("Borrowing.Current_Loans", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-9">
-                @Html.DropDownList("VolumeID", Model.Volumes.OrderBy(v => v.Text), "Select an " + DbRes.T("Borrowing.Item_To_Renew", "FieldDisplayName"), htmlAttributes: new {@class = "form-control"})
+                @Html.DropDownList("CurrentLoans", Model.Volumes.OrderBy(v => v.Text), "Select an " + DbRes.T("Borrowing.Item_To_Renew", "FieldDisplayName"), htmlAttributes: new { @class = "form-control", title = "This is a list of all items that you currently have on loan." })
             </div>
         </div>
     </div>
@@ -79,6 +75,8 @@
         <dd><span id="confirmTitle"></span></dd>
         <dt>@DbRes.T("CopyItems.Barcode", "FieldDisplayName")&nbsp;&nbsp;<span class="glyphicon glyphicon-barcode"></span></dt>
         <dd><span id="confirmBarcode"></span></dd>
+        <dt>@DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName")</dt>
+        <dd><span id="confirmBorrowedBy"></span></dd>
         <dt>@DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName")</dt>
         <dd><span id="confirmReturnDue"></span></dd>
     </dl>
@@ -126,13 +124,15 @@
             var confirmBarcode = $("#confirmBarcode");
             var barcode = $("#Barcode");
             var borrowedby = $("#borrowedby");
+            var confirmBorrowedby = $("#confirmBorrowedBy");
             var returndue = $("#returndue");
             var confirmReturnDue = $("#confirmReturnDue");
             var errorDiv = $("#_barcodeInvalid");
             var errorMsg = $("#errMsg");
+            var validationError = $(".field-validation-error");
             var barcodeGroup = $("#barcodeGroup");
             var button = $("#cmdReturn");
-            var selectedBarcode = { volumeId: $("#VolumeID option:selected").val() };
+            var selectedBarcode = { barcode: $("#Barcode").val() };
 
             $.ajax({
                 url: '@Url.Action("GetBorrowedItemDetails", "Borrowing")',
@@ -148,9 +148,11 @@
                         confirmTitle.text(data.BarcodeDetails);
                         confirmBarcode.text(barcode.val());
                         borrowedby.text(data.BorrowedBy);
+                        confirmBorrowedby.text(data.BorrowedBy);
                         returndue.text(data.origReturnDue);
                         confirmReturnDue.text(data.origReturnDue);
                         errorDiv.hide();
+                        validationError.hide();
                         barcodeGroup.removeClass("has-error");
                         button.prop('disabled', false);
 
@@ -166,8 +168,10 @@
             });
         }
     
-        //Do something to display the title and copy details of the selected volume (currnelt loans) ...
-        $("#VolumeID").change(function () {
+        ///Do something to display the title and copy details of the selected volume (currnelt loans) ...
+        $("#CurrentLoans").change(function () {
+            var barcode = $("#CurrentLoans option:selected").val();
+            $("#Barcode").val(barcode);
             doTitleCopyDetails();
         });
 

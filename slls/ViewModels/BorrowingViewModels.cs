@@ -23,8 +23,8 @@ namespace slls.ViewModels
     {
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
         public int? VolumeId { get; set; }
-        
-        [Required]
+
+        [Required(ErrorMessage = "Please tell us which item you wish to borrow!")]
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
         public string Barcode { get; set; }
 
@@ -52,7 +52,7 @@ namespace slls.ViewModels
 
     public class ReturnLoanViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Please tell us which item you wish to return!")]
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
         public string Barcode { get; set; }
 
@@ -75,7 +75,7 @@ namespace slls.ViewModels
 
     public class RenewLoanViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Please tell us which item you wish to renew!")]
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
         public string Barcode { get; set; }
 

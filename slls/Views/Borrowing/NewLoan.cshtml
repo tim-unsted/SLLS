@@ -26,7 +26,7 @@
             <div class="form-group has-feedback" id="barcodeGroup">
                 @Html.Label(DbRes.T("Borrowing.Item_To_Loan", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-4">
-                    @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode) } })
+                    @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode), title = "Enter or scan the " + Html.DisplayNameFor(x => x.Barcode) + " of the item you wish to borrow." } })
                     @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
                     <i class="glyphicon glyphicon-barcode form-control-feedback"></i>
                 </div>
@@ -229,6 +229,7 @@
             var confirmReturnDue = $("#confirmReturnDue");
             var errorDiv = $("#_barcodeInvalid");
             var errorMsg = $("#errMsg");
+            var validationError = $(".field-validation-error");
             var barcodeGroup = $("#barcodeGroup");
             var button = $("#cmdOk");
             var selectedBarcode = { barcode: $("#Barcode").val() };
@@ -248,6 +249,7 @@
                         returnDue.val(data.ReturnDue);
                         confirmReturnDue.text(data.ReturnDue);
                         errorDiv.hide();
+                        validationError.hide();
                         barcodeGroup.removeClass("has-error");
                         button.prop('disabled', false);
 

@@ -136,18 +136,18 @@ namespace slls.Controllers
             var userId = Utils.PublicFunctions.GetUserId();
             var currentLoans = _db.Borrowings.Where(b => b.BorrowerUser.Id == userId && b.Returned == null).Select(b => b.VolumeID).Distinct();
             
-            var borrowedVolumes = from t in _db.Titles join c in _db.Copies on t.TitleID equals c.TitleID join v in _db.Volumes on c.CopyID equals v.CopyID where currentLoans.Contains(v.VolumeID) select new {volumeId = v.VolumeID, title = t.Title1};
+            var borrowedVolumes = from t in _db.Titles join c in _db.Copies on t.TitleID equals c.TitleID join v in _db.Volumes on c.CopyID equals v.CopyID where currentLoans.Contains(v.VolumeID) select new {barcode = v.Barcode, title = t.Title1};
             var volumes = borrowedVolumes
                .ToList()
                .Select(v => new
                {
-                   v.volumeId,
+                   v.barcode,
                    v.title
                });
             
             var viewModel = new ReturnLoanViewModel()
             {
-                Volumes = new SelectList(volumes, "volumeId", "title"),
+                Volumes = new SelectList(volumes, "barcode", "title"),
                 SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
@@ -155,11 +155,11 @@ namespace slls.Controllers
             {
                 if (currentLoans.Any())
                 {
-                    TempData["SuccessMsg"] = "Item renewed successfully. Renew another?";
+                    TempData["SuccessMsg"] = "Item returned successfully. Return another?";
                 }
                 else
                 {
-                    TempData["SuccessMsg"] = "Item renewed successfully. You have no more " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + ".";
+                    TempData["SuccessMsg"] = "Item returned successfully. You have no more " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + " to return.";
                 }
 
             }
@@ -426,18 +426,18 @@ namespace slls.Controllers
         {
             var userId = Utils.PublicFunctions.GetUserId();
             var currentLoans = _db.Borrowings.Where(b => b.BorrowerUser.Id == userId && b.Returned == null).Select(b => b.VolumeID).Distinct();
-            var borrowedVolumes = from t in _db.Titles join c in _db.Copies on t.TitleID equals c.TitleID join v in _db.Volumes on c.CopyID equals v.CopyID where currentLoans.Contains(v.VolumeID) select new { volumeId = v.VolumeID, title = t.Title1 };
+            var borrowedVolumes = from t in _db.Titles join c in _db.Copies on t.TitleID equals c.TitleID join v in _db.Volumes on c.CopyID equals v.CopyID where currentLoans.Contains(v.VolumeID) select new { barcode = v.Barcode, title = t.Title1 };
             var volumes = borrowedVolumes
                .ToList()
                .Select(v => new
                {
-                   v.volumeId,
+                   v.barcode,
                    v.title
                });
 
             var viewModel = new RenewLoanViewModel()
             {
-                Volumes = new SelectList(volumes, "volumeId", "title"),
+                Volumes = new SelectList(volumes, "barcode", "title"),
                 ReturnDue = DateTime.Today.AddDays(21),
                 SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
@@ -450,7 +450,7 @@ namespace slls.Controllers
                 }
                 else
                 {
-                    TempData["SuccessMsg"] = "Item renewed successfully. You have no more " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "."; 
+                    TempData["SuccessMsg"] = "Item renewed successfully. You have no more " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + " to renew."; 
                 }
 
             }
@@ -725,11 +725,11 @@ namespace slls.Controllers
             });
         }
 
-        //Return a JSON object containing details for the selected volumeId ...
-        public JsonResult GetBorrowedItemDetails(int volumeId = 0)
+        //Return a JSON object containing details for the selected selected or entered barcode ...
+        public JsonResult GetBorrowedItemDetails(string barcode = "")
         {
-            //barcode = barcode.Trim();
-            var volume = _db.Volumes.Find(volumeId);
+            barcode = barcode.Trim();
+            var volume = _db.Volumes.FirstOrDefault(v => v.Barcode == barcode);
             if (volume == null)
             {
                 return Json(new
@@ -747,16 +747,15 @@ namespace slls.Controllers
                 });
             }
 
-            var barcode = volume.Barcode;
             var title = volume.Copy.Title.Title1;
             var copy = volume.Copy.CopyNumber;
-            var origReturnDue = DateTime.Today;
+            DateTime? origReturnDue = DateTime.Today;
             var newReturnDue = DateTime.Today.AddDays(21);
             var borrowedBy = "";
             var borrowing = _db.Borrowings.FirstOrDefault(b => b.VolumeID == volume.VolumeID && b.Returned == null);
             if (borrowing != null)
             {
-                origReturnDue = borrowing.ReturnDue.Value;
+                origReturnDue = borrowing.ReturnDue;
                 borrowedBy = borrowing.BorrowerUser.Fullname;
             }
 
@@ -771,7 +770,7 @@ namespace slls.Controllers
                 Barcode = barcode,
                 BarcodeDetails = title + " - Copy " + copy,
                 BorrowedBy = borrowedBy,
-                origReturnDue = origReturnDue.ToShortDateString(),
+                origReturnDue = origReturnDue == null ? "" : origReturnDue.Value.ToShortDateString(),
                 newReturnDue = newReturnDue.ToShortDateString()
             });
 

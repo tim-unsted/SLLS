@@ -84,6 +84,7 @@ namespace slls.Areas.Config
 
                 _repository.Update(item);
                 DbResourceConfiguration.ClearResourceCache();
+                DbRes.ClearResources();
                 
                 return Json(new { success = true });
                 //return RedirectToAction("Index");
