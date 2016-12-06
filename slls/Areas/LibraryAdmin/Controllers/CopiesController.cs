@@ -443,7 +443,7 @@ namespace slls.Areas.LibraryAdmin
                 copy.Bind = viewModel.Bind;
                 copy.Cancellation = viewModel.Cancellation;
                 copy.Circulated = viewModel.Circulated;
-                copy.CirculationMsgID = viewModel.CirculationMsgId;
+                copy.CirculationMsgID = viewModel.CirculationMsgId ?? Utils.PublicFunctions.GetDefaultValue("Copies", "CirculationMsgID");
                 copy.Commenced = viewModel.Commenced;
                 copy.CopyNumber = viewModel.CopyNumber;
                 copy.Holdings = viewModel.Holdings;
