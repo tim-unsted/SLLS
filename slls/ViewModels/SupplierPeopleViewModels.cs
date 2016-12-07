@@ -124,6 +124,10 @@ namespace slls.ViewModels
         [LocalDisplayName("SupplierPeople.Email", "FieldDisplayName")]
         public string Email { get; set; }
 
+        [StringLength(255)]
+        [LocalDisplayName("SupplierPeople.Phone", "FieldDisplayName")]
+        public string Phone { get; set; }
+
         public string CallingController { get; set; }
 
         public string CallingAction { get; set; }

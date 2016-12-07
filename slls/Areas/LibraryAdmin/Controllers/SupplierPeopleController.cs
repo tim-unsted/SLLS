@@ -72,19 +72,27 @@ namespace slls.Areas.LibraryAdmin
         [Route("~/LibraryAdmin/SupplierPeople")]
         [Route("~/LibraryAdmin/Contacts/Index")]
         [Route("~/LibraryAdmin/SupplierPeople/Index")]
-        public ActionResult Index(string selectedLetter = "A")
+        public ActionResult Index(string selectedLetter = "")
         {
             ViewBag.Title = DbRes.T("Suppliers.Contacts", "FieldDisplayName");
             
-            var model = new SupplierPeopleListViewModel { SelectedLetter = selectedLetter };
+            var model = new SupplierPeopleListViewModel();
 
             //Fill a list with the first letters of all user's surnames ...
             model.FirstLetters = _db.SupplierPeoples
+                .Where(p => !string.IsNullOrEmpty(p.Surname.Substring(0, 1)))
                 .GroupBy(p => p.Surname.Substring(0, 1))
                 .Select(x => x.Key.ToUpper())
                 .ToList();
 
-            if (string.IsNullOrEmpty(selectedLetter) || selectedLetter == "All")
+            if (string.IsNullOrEmpty(selectedLetter))
+            {
+                selectedLetter = model.FirstLetters.FirstOrDefault();
+            }
+
+            model.SelectedLetter = selectedLetter;
+
+            if (selectedLetter == "All")
             {
                 model.Contacts = _db.SupplierPeoples.ToList();
             }
@@ -116,7 +124,6 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
             
-            //ViewData["SelectContact"] = SelectListHelper.SelectContactsList();
             return View(model);
         }
 
@@ -163,7 +170,7 @@ namespace slls.Areas.LibraryAdmin
         [Route("Create")]
         [Route("~/LibraryAdmin/SupplierPeople/Create")]
         [Route("~/LibraryAdmin/Contacts/Create")]
-        public ActionResult Create(int supplierId = 0, int addressId = 0, string callingAction = "")
+        public ActionResult Create(int supplierId = 0, int addressId = 0, string callingAction = "Add")
         {
             ViewData["SupplierID"] = new SelectList(_db.Suppliers.Where(s => s.SupplierAddresses.Any()).OrderBy(s => s.SupplierName), "SupplierID", "SupplierName", supplierId);
 
@@ -200,17 +207,115 @@ namespace slls.Areas.LibraryAdmin
                     Initials = viewModel.Initials,
                     Firstname = viewModel.Firstname,
                     Surname = viewModel.Surname,
-                    Email = viewModel.Email,
                     Position = viewModel.Position,
                     InputDate = DateTime.Now
                 };
 
                 _db.SupplierPeoples.Add(newContact);
                 _db.SaveChanges();
-                //if (viewModel.CallingAction == "index")
-                //{
-                //    return RedirectToAction("Edit", new { id = newContact.ContactID, callingController = "SupplierPeople", callingAction = "index" });
-                //}
+
+                // Add an email address if one has been supplied ...
+                if (newContact.ContactID != null && !string.IsNullOrEmpty(viewModel.Email))
+                {
+                    var commMethodType = _db.CommMethodTypes.FirstOrDefault(m => m.Method == "Work email");
+                    if (commMethodType == null)
+                    {
+                        commMethodType = _db.CommMethodTypes.FirstOrDefault(m => m.Method == "Home Email");
+                    }
+                    if (commMethodType == null)
+                    {
+                        commMethodType = _db.CommMethodTypes.FirstOrDefault(m => m.Method == "Email");
+                    }
+                    if (commMethodType == null)
+                    {
+                        commMethodType = new CommMethodType()
+                        {
+                            Method = "Email",
+                            CanDelete = true,
+                            CanUpdate = true,
+                            InputDate = DateTime.Now
+                        };
+                        _db.CommMethodTypes.Add(commMethodType);
+                        _db.SaveChanges();
+                    }
+
+                    var newContactMethod = new SupplierPeopleComm()
+                    {
+                        MethodID = commMethodType.MethodID,
+                        ContactID = newContact.ContactID,
+                        Detail = viewModel.Email
+                    };
+                    _db.SupplierPeopleComms.Add(newContactMethod);
+                    _db.SaveChanges();
+                }
+
+                // Add a phone number of one has been supplied ...
+                if (newContact.ContactID != null && !string.IsNullOrEmpty(viewModel.Phone))
+                {
+                    CommMethodType commMethodType;
+                    if (viewModel.Phone.StartsWith("07"))
+                    {
+                        commMethodType = _db.CommMethodTypes.FirstOrDefault(m => m.Method == "Mobile");
+                        if (commMethodType == null)
+                        {
+                            commMethodType = new CommMethodType()
+                            {
+                                Method = "Mobile",
+                                CanDelete = true,
+                                CanUpdate = true,
+                                InputDate = DateTime.Now
+                            };
+                            _db.CommMethodTypes.Add(commMethodType);
+                            _db.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        commMethodType = _db.CommMethodTypes.FirstOrDefault(m => m.Method == "Work tel");
+                        if (commMethodType == null)
+                        {
+                            commMethodType = _db.CommMethodTypes.FirstOrDefault(m => m.Method == "Home tel");
+                        }
+                        if (commMethodType == null)
+                        {
+                            commMethodType = _db.CommMethodTypes.FirstOrDefault(m => m.Method == "Mobile");
+                        }
+                        if (commMethodType == null)
+                        {
+                            commMethodType = new CommMethodType()
+                            {
+                                Method = "Phone",
+                                CanDelete = true,
+                                CanUpdate = true,
+                                InputDate = DateTime.Now
+                            };
+                            _db.CommMethodTypes.Add(commMethodType);
+                            _db.SaveChanges();
+                        }
+                    }
+
+                    var newContactMethod = new SupplierPeopleComm()
+                    {
+                        MethodID = commMethodType.MethodID,
+                        ContactID = newContact.ContactID,
+                        Detail = viewModel.Phone
+                    };
+                    _db.SupplierPeopleComms.Add(newContactMethod);
+                    _db.SaveChanges();
+                }
+
+                if (viewModel.CallingAction == "Create")
+                {
+                    UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                    string actionUrl = urlHelper.Action("Edit", "Suppliers", new { id = newContact.SupplierID });
+                    return Json(new { success = true, redirectTo = actionUrl });
+                }
+                if (viewModel.CallingAction == "Add")
+                {
+                    UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                    string actionUrl = urlHelper.Action("Edit", "SupplierPeople", new { id = newContact.ContactID });
+                    return Json(new { success = true, redirectTo = actionUrl });
+                }
                 return Json(new { success = true });
             }
 

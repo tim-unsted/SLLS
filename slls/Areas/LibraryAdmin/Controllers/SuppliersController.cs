@@ -41,17 +41,25 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Suppliers
-        public ActionResult Index(string selectedLetter = "A")
+        public ActionResult Index(string selectedLetter = "")
         {
-            var viewModel = new SuppliersListViewModel { SelectedLetter = selectedLetter };
+            var viewModel = new SuppliersListViewModel();
             
             //Fill a list with the first letters of all suppliers names ...
             viewModel.FirstLetters = _db.Suppliers
+                .Where(s => !string.IsNullOrEmpty(s.SupplierName.Substring(0, 1)))
                 .GroupBy(s => s.SupplierName.Substring(0, 1))
                 .Select(x => x.Key.ToUpper())
                 .ToList();
 
-            if (string.IsNullOrEmpty(selectedLetter) || selectedLetter == "All")
+            if (string.IsNullOrEmpty(selectedLetter))
+            {
+                selectedLetter = viewModel.FirstLetters.FirstOrDefault();
+            }
+
+            viewModel.SelectedLetter = selectedLetter;
+
+            if (selectedLetter == "All")
             {
                 viewModel.Suppliers = _db.Suppliers.ToList();
             }

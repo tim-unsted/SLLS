@@ -3,7 +3,7 @@
 
 <h2>@ViewBag.Title</h2>
 
-<div class="well">
+<div class="alert alert-info">
     @Html.Partial("_Select")
     <a href="@Url.Action("Create", "Suppliers")" title="Add new @DbRes.T("Suppliers.Supplier", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Suppliers.Supplier", "FieldDisplayName")</a>
 
@@ -28,7 +28,7 @@
         <div class="form-group">
             <div class="col-md-12">
                 <span class="pull-right">
-                    <a href="@Url.Action("Add", "SupplierAddresses", new {id = Model.SupplierID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("SupplierAddress.Address", "FieldDisplayName")</a>
+                    <a href="@Url.Action("Add", "SupplierAddresses", new {id = Model.SupplierID})" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal" title="Add new @DbRes.T("SupplierAddress.Address", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("SupplierAddress.Address", "FieldDisplayName")</a>
                 </span><h3>@DbRes.T("SupplierAddress.Address", "FieldDisplayName")</h3>
                 @if (ViewBag.AddressCount > 0)
                 {
@@ -44,7 +44,7 @@
         <div class="form-group">
             <div class="col-md-12">
                 <span class="pull-right">
-                    <a href="@Url.Action("Create", "SupplierPeople", new {supplierId = Model.SupplierID})" class="btn btn-primary" data-toggle="modal" data-target="#stdModal" title="Add new">Add New @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")&nbsp;<span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
+                    <a href="@Url.Action("Create", "SupplierPeople", new {supplierId = Model.SupplierID, callingAction = "Create" })" class="btn btn-primary" data-toggle="modal" data-target="#stdModal" title="Add new @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")</a>
                 </span><h3>@DbRes.T("Suppliers.Contacts", "FieldDisplayName")</h3>
                 @if (ViewBag.ContactsCount > 0)
                 {

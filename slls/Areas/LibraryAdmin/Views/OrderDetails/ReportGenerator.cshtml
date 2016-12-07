@@ -20,7 +20,7 @@
 
 @using (Html.BeginForm("PostReportGenerator", "OrderDetails", FormMethod.Post, new { id = "form1" }))
 {
-    <div class="well">
+    <div class="alert alert-info">
         <span class="pull-right" style="padding-left:10px;"><input type="submit" value="View Report" class="btn btn-success" />&nbsp;&nbsp;</span>
         <span class="help-inline">Use this tool to create the expenditure report you require. Select the basic report from the main list on the left. Then select the appropriate filters/parameters from the boxes displayed on the right.  Once you are happy with your selection, press the 'View Report' button.</span><br />
         @Html.ValidationMessage("NoData", new { @class = "text-danger" })

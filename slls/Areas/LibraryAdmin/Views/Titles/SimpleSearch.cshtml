@@ -1,7 +1,7 @@
 ﻿@model slls.ViewModels.TitlesListViewModel
 <h2>@ViewBag.Title</h2>
 
-<div class="well">
+<div class="alert alert-info">
     <form class="navbar-form form-search" role="search">
         <div class="form-group">
             @using (Html.BeginForm("AdminSearch", "Searching", FormMethod.Get, new { id = "searchForm" }))

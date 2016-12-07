@@ -15,13 +15,6 @@
             },
             "columnDefs": [
                 {
-                    "targets": [1],
-                    "data": [1],
-                    "render": function(data, type, row) {
-                        return '<a href="EditSupplier/' + row[4] + '" class="btn-link">' + data + '</a>';
-                    }
-                },
-                {
                     "visible": false,
                     "targets": [4]
                 },
@@ -37,10 +30,12 @@
 
 <h2>@ViewBag.Title</h2>
 
-@Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))
-<p>
-    <a href="@Url.Action("Create", "SupplierPeople", new {callingAction = "index"})" title="Add new @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#stdModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>    
-</p>
+<div class="alert alert-info">
+    <div>@Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x }))</div>
+    <p>
+        <a href="@Url.Action("Create", "SupplierPeople", new {callingAction = "index"})" title="Add new @DbRes.T("SupplierPeople.Contact", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#stdModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    </p>
+</div>
 
 <table id="contacts" class="table table-hover">
     <thead>
@@ -76,7 +71,14 @@
                     }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.SupplierName)
+                    @if (String.IsNullOrEmpty(item.SupplierName))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Suppliers", new { id = item.SupplierID }, new { @Class = "btn-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.SupplierName, "Edit", "Suppliers", new { id = item.SupplierID }, new { @Class = "btn-link" })
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Position)
