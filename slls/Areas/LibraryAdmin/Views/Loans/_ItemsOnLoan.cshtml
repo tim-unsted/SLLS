@@ -82,7 +82,8 @@
                     }
                 </td>
                 <td>
-                    @Html.ActionLink(item.Volume.Copy.CopyNumber.ToString(), "Edit", "Copies", new {id = item.Volume.CopyID})
+                    @*@Html.ActionLink(item.Volume.Copy.CopyNumber.ToString(), "Edit", "Copies", new {id = item.Volume.CopyID})*@
+                    <a href="@Url.Action("Edit", "Copies", new { id = item.Volume.Copy.CopyID })">@item.Volume.Copy.CopyNumber</a>
                 </td>
 
                 <td>

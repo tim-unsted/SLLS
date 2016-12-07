@@ -14,7 +14,7 @@
                             <a href="@Url.Action("Create", "PartsReceived", new {id = Model.CopyID})" class="btn btn-success modal-link" style="margin-bottom: 5px;" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
                             <a href="@Url.Action("PrintCirculationSlip", "Circulation", new {id = Model.CopyID})" class="btn btn-primary" style="margin-bottom: 5px;" target="_blank" title="Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")</a>
                         </span>
-                        <h4>@DbRes.T("CheckIn.Parts_Received", "FieldDisplayName") (Copy: @Model.CopyNumber)</h4>
+                        <h5>@DbRes.T("CheckIn.Parts_Received", "FieldDisplayName") (Copy: @Model.CopyNumber)</h5>
                     </span>
                 </div>
                 <div class="panel-body">
@@ -31,7 +31,7 @@
                         <span class="pull-right">
                             <a href="@Url.Action("EditHoldings", "Copies", new { id = Model.CopyID })" class="btn btn-primary modal-link" style="margin-bottom: 5px;" title="Add more @DbRes.T("Copies.Holdings", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Edit</a>
                         </span>
-                        <h4>@DbRes.T("Copies.Holdings", "FieldDisplayName") (Copy: @Model.CopyNumber)</h4>
+                        <h5>@DbRes.T("Copies.Holdings", "FieldDisplayName") (Copy: @Model.CopyNumber)</h5>
                     </span>
                 </div>
                 <div class="panel-body">
@@ -47,7 +47,7 @@
                             <a href="@Url.Action("AddRecipient", "Circulation", new {id = Model.CopyID})" class="btn btn-primary modal-link" style="margin-bottom: 5px;" title="Add more @DbRes.T("Circulation.Recipients", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add</a>
                             <a href="@Url.Action("CirculationList", "Circulation", new {copy = Model.CopyID})" class="btn btn-primary" style="margin-bottom: 5px;" title="Edit @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Edit</a>
                         </span>
-                        <h4>@DbRes.T("Circulation.Circulation_List", "FieldDisplayName") (Copy: @Model.CopyNumber)</h4>
+                        <h5>@DbRes.T("Circulation.Circulation_List", "FieldDisplayName") (Copy: @Model.CopyNumber)</h5>
                     </span>
                 </div>
                 <div class="panel-body">

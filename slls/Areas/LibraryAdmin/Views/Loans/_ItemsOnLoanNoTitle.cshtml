@@ -1,0 +1,98 @@
+﻿@model IEnumerable<slls.Models.Borrowing>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#itemsonloan').DataTable({
+            "dom": '<"inline"i><"clear"><"inline"l><"inline float-right"p>rt<"inline"i><"inline float-right"p><"clear"><"inline"l><"clear">',
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs":
+            [
+            {
+                "width": "10%",
+                "targets": [0]
+            },
+            {
+                "visible": false,
+                "targets": [5, 6]
+            },
+            {
+                "orderData": [5],
+                "targets": [3]
+            },
+            {
+                "orderData": [6],
+                "targets": [4]
+            },
+            {
+                "width": "10%",
+                "searchable": false,
+                "sortable": false,
+                "targets": [7]
+            }]
+        });
+    });
+</script>
+
+<table id="itemsonloan" class="table table-condensed table-hover" style="width: 100%;">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume.Barcode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volume.LabelText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.BorrowerUser.Fullname)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Borrowed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ReturnDue)
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Volume.Barcode)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Volume.LabelText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Borrowed)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReturnDue)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BorrowedDateSortable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReturnDueDateSortable)
+                </td>
+                <td style="text-align: right;">
+                    <a href="@Url.Action("ConfirmReturnLoan", "Loans", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span aria-hidden="true" class="glyphicon glyphicon-share-alt"></span></a>
+                    <a href="@Url.Action("ConfirmRenewLoan", "Loans", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Renew loan"><span aria-hidden="true" class="glyphicon glyphicon-repeat"></span></a>
+                    <a href="@Url.Action("Edit", "Loans", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", "Loans", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

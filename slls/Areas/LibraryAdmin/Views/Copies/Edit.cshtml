@@ -57,7 +57,7 @@
     }
     if (Model.IsLoansAdmin)
     {
-        tabs.Tab(DbRes.T("Loans", "EntityType") + " (Read Only)" + ViewBag.LoansBadge, "tab5");
+        tabs.Tab(DbRes.T("Loans", "EntityType") + ViewBag.LoansBadge, "tab5");
     }
 
     using (tabs.BeginPanel())
@@ -114,8 +114,9 @@
     {
         using (tabs.BeginPanel())
         {
+            <br />
             <div id="Loans">
-                @*@Html.Partial("_Cancellations", Model)*@
+                @Html.Action("_ItemsOnLoanByCopy", "Loans", new { id = Model.CopyId })
             </div>
         }
     }

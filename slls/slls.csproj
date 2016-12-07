@@ -1052,6 +1052,7 @@
     <Content Include="Areas\Config\Views\LibraryUsers\EncryptPasswords.cshtml" />
     <Content Include="Areas\Config\Views\LibraryUsers\Index.cshtml" />
     <Content Include="Areas\Config\Views\LibraryUsers\ResetUserPassword.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\_ItemsOnLoanNoTitle.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

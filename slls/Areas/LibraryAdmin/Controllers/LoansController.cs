@@ -83,6 +83,17 @@ namespace slls.Areas.LibraryAdmin
             return View(borrowings.ToList());
         }
 
+        public ActionResult _ItemsOnLoanByCopy(int id = 0)
+        {
+            var copy = _db.Copies.Find(id);
+            if (copy == null)
+            {
+                return HttpNotFound();
+            }
+            var borrowings = _db.Borrowings.Where(b => b.Volume.CopyID == copy.CopyID && b.Returned == null).ToList();
+            return PartialView("_ItemsOnLoanNoTitle", borrowings);
+        }
+
         // Overdue loand (i.e. Returned IS NULL and ReturnDue has passed ...
         public ActionResult OverdueLoans()
         {
@@ -157,7 +168,8 @@ namespace slls.Areas.LibraryAdmin
             _db.Entry(loanDetails).State = EntityState.Modified;
             _db.SaveChanges();
 
-            return RedirectToAction("ItemsOnLoan");
+            //return RedirectToAction("ItemsOnLoan");
+            return Json(new { success = true });
         }
 
         // GET: Loans/New
