@@ -170,7 +170,9 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <p>
-                        <a href="@Url.Action("Add", "Copies", new {id = Model.TitleID, returnController = "Titles", returnAction = "Edit" })" class="btn btn-primary" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
+                        <a href="@Url.Action("Add", "Copies", new {id = Model.TitleID, returnController = "Titles", returnAction = "Edit"})" class="btn btn-primary" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
+                        <a href="@Url.Action("Edit", "Copies", new {id = Model.Copies.FirstOrDefault().CopyID})" class="btn btn-primary" title="View/Edit All @DbRes.T("Titles.Copies", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> View/Edit All @DbRes.T("Titles.Copies", "FieldDisplayName")</a>
+                        
                     </p>
                     @if (ViewBag.CopiesCount > 0)
                     {

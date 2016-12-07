@@ -80,6 +80,7 @@ namespace slls.ViewModels
         public CopyDetailsEditViewModel()
         {
             IsSerialsAdmin = Roles.IsUserInRole("Serials Admin");
+            IsLoansAdmin = Roles.IsUserInRole("Loans Admin");
         }
         
         public int CopyId { get; set; }
@@ -152,6 +153,8 @@ namespace slls.ViewModels
         public virtual CirculationMessage CirculationMessage { get; set; }
 
         public bool IsSerialsAdmin { get; set; }
+
+        public bool IsLoansAdmin { get; set; }
         
     }
 

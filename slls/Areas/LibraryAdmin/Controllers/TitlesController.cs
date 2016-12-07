@@ -64,7 +64,7 @@ namespace slls.Areas.LibraryAdmin
                     viewModel.Message = "Select an " + _entityName.ToLower() + " to view/edit";
                     viewModel.HelpText = "Select the " + _entityName.ToLower() +
                                          " you wish to view/edit from the dropdown list of available " +
-                                         ViewBag.Title.ToLower() + " below.";
+                                         DbRes.T("Titles", "EntityType").ToLower() + " below.";
                     viewModel.ReturnAction = "Edit";
                     viewModel.Titles = SelectListHelper.TitlesList();
                     break;
@@ -77,7 +77,7 @@ namespace slls.Areas.LibraryAdmin
                     viewModel.Message = "Select an existing " + _entityName.ToLower() + " to duplicate";
                     viewModel.HelpText = "Select the existing " + _entityName.ToLower() +
                                          " you wish to duplicate from the dropdown list of available " +
-                                         ViewBag.Title.ToLower() + " below.";
+                                         DbRes.T("Titles", "EntityType").ToLower() + " below.";
                     viewModel.ReturnAction = "DuplicateTitle";
                     viewModel.Titles = SelectListHelper.TitlesList();
                     return View("SelectDuplicate", viewModel);
@@ -91,7 +91,7 @@ namespace slls.Areas.LibraryAdmin
                     viewModel.Message = "Select an " + _entityName.ToLower() + " to print";
                     viewModel.HelpText = "Select the " + _entityName.ToLower() +
                                          " you wish to print from the dropdown list of available " +
-                                         ViewBag.Title.ToLower() + " below.";
+                                         DbRes.T("Titles", "EntityType").ToLower() + " below.";
                     viewModel.ReturnAction = "PrintDetails";
                     viewModel.Titles = SelectListHelper.TitlesList();
                     break;
@@ -1773,7 +1773,7 @@ namespace slls.Areas.LibraryAdmin
             return View(newTitlesList);
         }
 
-        // Create a simple disctionary that we can used to fill a dropdown list in views
+        // Create a simple dictionary that we can used to fill a dropdown list in views
         public Dictionary<string, string> GetAvailableItemsTypes()
         {
             return new Dictionary<string, string>
@@ -1812,6 +1812,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.AvailableItemsTypes = GetAvailableItemsTypes();
+            ViewBag.Title = "Add items to '" + newTitlesList + "'";
             return PartialView("_MultiSelectListBox", viewModel);
         }
 
@@ -1879,7 +1880,8 @@ namespace slls.Areas.LibraryAdmin
                     }
                 }
             }
-            return RedirectToAction("NewTitles");
+            //return RedirectToAction("NewTitles");
+            return Json(new { success = true }); 
         }
 
 

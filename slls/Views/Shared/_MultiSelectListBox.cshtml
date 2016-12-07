@@ -1,10 +1,11 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.ListBoxViewModel
 
-<div class="modal-header">
+@*<div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h3 class="modal-title">@Html.DisplayFor(model => model.HeaderText)</h3>
-</div>
+</div>*@
+@Html.Partial("_ModalAddHeader")
 
 @using (Html.BeginForm(Model.PostSelectAction, Model.PostSelectController, FormMethod.Post, new { @class = "form-horizontal", id="MultiSelect" }))
 {
@@ -76,7 +77,7 @@
                         }
                         );
                     } else {
-                        alert('Opps!' + data.success);
+                        alert('Oops!' + data.success);
                     }
                 },
                 async: false

@@ -328,16 +328,12 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Copies/Edit/5
-        //[Route("Edit/{id}")]
-        //[Route("~/LibraryAdmin/Copies/Edit/{id}")]
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id = 0)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            //var copy = _db.Copies
-            //    .FirstOrDefault(c => c.CopyID == id);
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
             var copy = _db.Copies.Find(id);
             if (copy == null)
             {
@@ -407,12 +403,14 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.RecordType = "Copy";
 
             ViewData["CirculationMsgID"] = SelectListHelper.CirculationMessageList(copy.CirculationMsgID ?? 0, null, false);
-            ViewData["LocationID"] = SelectListHelper.OfficeLocationList(copy.LocationID ?? 0, null, false);  //new SelectList(_db.Locations, "LocationID", "Location1", copy.LocationID);
+            ViewData["LocationID"] = SelectListHelper.OfficeLocationList(copy.LocationID ?? 0, null, false); 
             ViewData["StatusID"] = SelectListHelper.StatusList(copy.StatusID ?? 0, null, false, true); 
             ViewData["CancelledYear"] = new SelectList(_db.AccountYears.OrderBy(y => y.AccountYear1), "AccountYearID", "AccountYear1", copy.AccountYearID);
-            ViewData["CancelledBy"] = new SelectList(_db.Users.Where(u => u.IsLive).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname), "Id", "FullnameRev"); //, copy.CancelledByUser.Id);
-            ViewData["CopyId"] = SelectListHelper.AllCopiesList(id.Value);
+            ViewData["CancelledBy"] = new SelectList(_db.Users.Where(u => u.IsLive).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname), "Id", "FullnameRev");
+            ViewData["CopyId"] = SelectListHelper.AllCopiesList(id);
             ViewBag.VolumesCount = copy.Volumes.Count();
+            ViewBag.PartsCount = copy.PartsReceived.Count();
+            ViewBag.LoansCount = copy.Volumes.Count(v => v.OnLoan);
             ViewBag.Title = "Copy Details";
             return View(viewModel);
         }
@@ -571,8 +569,9 @@ namespace slls.Areas.LibraryAdmin
             {
                 {"a2z", "A-Z By Title"},
                 {"dateadded", "Recently Added"}
-            }; 
+            };
 
+            ViewBag.Title = "Add Copies to Binding List";
             return PartialView("_MultiSelectListBox", viewModel);
         }
 
@@ -638,7 +637,8 @@ namespace slls.Areas.LibraryAdmin
                     }
                 }
            }
-            return RedirectToAction("BoundItems");
+           //return RedirectToAction("BoundItems");
+           return Json(new { success = true }); 
         }
 
 
@@ -721,6 +721,18 @@ namespace slls.Areas.LibraryAdmin
             return PartialView(viewModel);
         }
 
+        public ActionResult _Holdings(int id = 0)
+        {
+            var copy = _db.Copies.Find(id);
+            if (copy == null)
+            {
+                return HttpNotFound();
+            }
+
+            //ViewData["CirculationMsgID"] = new SelectList(_db.CirculationMessages, "CirculationMsgID", "CirculationMsg", copy.CirculationMsgID);
+            return PartialView(copy);
+        }
+
 
         public ActionResult EditHoldings(int? id)
         {
@@ -769,6 +781,29 @@ namespace slls.Areas.LibraryAdmin
             }
             ViewBag.Title = "Edit " + DbRes.T("Copies.Holdings", "FieldDisplayName");
             return PartialView(viewModel);
+        }
+
+        [HttpPost]
+        public ActionResult EditHoldingsSimple(Copy copy)
+        {
+            copy.Holdings = copy.Holdings;
+            copy.LastModified = DateTime.Now;
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _db.Entry(copy).State = EntityState.Modified;
+                    _db.SaveChanges();
+                    //return Json(new { success = true });
+                    return RedirectToAction("Edit", new { id = copy.CopyID });
+                }
+                catch (Exception e)
+                {
+                    ModelState.AddModelError("", e.Message);
+                }
+            }
+            ViewBag.Title = "Edit " + DbRes.T("Copies.Holdings", "FieldDisplayName");
+            return RedirectToAction("Edit", new {id = copy.CopyID});
         }
 
 

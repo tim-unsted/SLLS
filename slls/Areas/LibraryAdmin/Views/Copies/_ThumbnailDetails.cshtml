@@ -9,10 +9,10 @@
             <div class="thumbnail">
                 <div class="caption" style="border-bottom: 1px solid #ddd; margin-bottom: 15px;">
                     <span class="pull-right">
-                        <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="Edit" role="button"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="@Url.Action("Delete", "Copies", new {id = item.CopyID}, null)" class="btn btn-link modal-link" title="Delete" role="button"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                        <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="View/Edit @DbRes.T("Copies.Copy", "FieldDisplayName")" role="button"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="@Url.Action("Delete", "Copies", new {id = item.CopyID}, null)" class="btn btn-link modal-link" title="Delete @DbRes.T("Copies.copy", "FieldDisplayName" )" role="button"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     </span>
-                    <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="Edit" role="button"><strong>@Html.DisplayNameFor(model => model.CopyNumber):&nbsp;@Html.Raw(item.CopyNumber)</strong></a>
+                    <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="View/Edit @DbRes.T("Copies.Copy", "FieldDisplayName")" role="button"><strong>@Html.DisplayNameFor(model => model.CopyNumber):&nbsp;@Html.Raw(item.CopyNumber)</strong></a>
                 </div>
                 <div class="row">
                     <div class="col-sm-5">
@@ -31,12 +31,6 @@
                     <div class="col-sm-7">
                         <dl>
                             <dt>@DbRes.T("CopyItems", "EntityType"):</dt>
-                            @*@foreach (var barcode in item.Volumes)
-                            {
-                                <dd>
-                                    <a href="@Url.Action("Edit", "Volumes", new {id = barcode.VolumeID}, null)" class="modal-link" title="View/Edit Volume">@barcode.Barcode</a>&nbsp;&nbsp;@barcode.LabelText
-                                </dd>
-                            }*@
                             <dd>
                                 <table class="table table-compact table-no-border">
                                     <thead>

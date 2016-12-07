@@ -566,8 +566,8 @@ namespace slls.ViewModels
         public string ReturnAction { get; set; }
         public IEnumerable<SelectListItem> Titles { get; set; }
 
-        [Range(1, Int32.MaxValue, ErrorMessage = "Please select an Title!")]
-        [Required(ErrorMessage = "Please select an Title!")]
+        [Range(1, Int32.MaxValue, ErrorMessage = "Please select a Title!")]
+        [Required(ErrorMessage = "Please select a Title!")]
         public int TitleID { get; set; }
 
         public string Tab { get; set; }

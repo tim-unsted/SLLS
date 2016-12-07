@@ -25,6 +25,7 @@
         @Html.HiddenFor(model => model.Circulated)
         @Html.HiddenFor(model => model.AddedToAcquisitions)
 
+        <div class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> Enter cancellation details for serial subscriptions and standing orders that have been cancelled. Each cancellation is for a specific copy. Run the 'Savings from Cancellations' report to total your savings for the assigned account year.</div>
         <div class="form-group">
             <div class="col-md-3">
                 @Html.LabelFor(model => model.Cancellation)

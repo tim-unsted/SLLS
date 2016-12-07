@@ -56,15 +56,7 @@
                 @Html.Partial("_selectStatusTypeViewEdit")
             </div>
         </div>
-
-        <div class="form-group">
-            <div class="col-md-12">
-                @Html.LabelFor(model => model.Holdings)
-                @Html.TextAreaFor(model => model.Holdings, new { rows = "", cols = "", @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.Holdings, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
+        
         <div class="form-group">
             @Html.LabelFor(model => model.PrintLabel, htmlAttributes: new { @class = "control-label-left col-md-2" })
             <div class="col-md-10">
@@ -101,11 +93,11 @@
         @if (Model.IsSerialsAdmin)
         {
             <div class="form-group">
-                @Html.LabelFor(model => model.Circulated, htmlAttributes: new { @class = "control-label-left col-md-2" })
+                @Html.LabelFor(model => model.Circulated, htmlAttributes: new {@class = "control-label-left col-md-2"})
                 <div class="col-md-10">
                     <div class="checkbox">
                         @Html.EditorFor(model => model.Circulated)
-                        @Html.ValidationMessageFor(model => model.Circulated, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.Circulated, "", new {@class = "text-danger"})
                         <span class="help-inline">Is this item circulated?</span>
                     </div>
                 </div>
@@ -113,18 +105,28 @@
 
             <div id="circulationFields" style="display: @(Model.Circulated ? "block" : "none")">
                 <div class="form-group">
-                    @Html.Label(DbRes.T("Circulation.Circulation_List","FieldDisplayName"), htmlAttributes: new { @class = "control-label-left col-md-2" })
+                    @Html.Label(DbRes.T("Circulation.Circulation_List", "FieldDisplayName"), htmlAttributes: new {@class = "control-label-left col-md-2"})
                     <div class="col-md-10">
-                        @Html.ActionLink(Model.Circulations.Any() ? "No recipients" : Model.Circulations.Count().ToString() + " recipient(s)", "CirculationList", "Circulation", new { copy = Model.CopyId }, new { @class = "form-control btn-link" })
+                        @Html.ActionLink(Model.Circulations.Any() ? "No recipients" : Model.Circulations.Count().ToString() + " recipient(s)", "CirculationList", "Circulation", new {copy = Model.CopyId}, new {@class = "form-control btn-link"})
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-12">
                         @Html.LabelFor(model => model.CirculationMessage.CirculationMsg)
-                        @Html.DropDownList("CirculationMsgID", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.CirculationMsgId, "", new { @class = "text-danger" })
+                        @Html.DropDownList("CirculationMsgID", null, htmlAttributes: new {@class = "form-control"})
+                        @Html.ValidationMessageFor(model => model.CirculationMsgId, "", new {@class = "text-danger"})
                     </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="form-group">
+                <div class="col-md-12">
+                    @Html.LabelFor(model => model.Holdings)
+                    @Html.TextAreaFor(model => model.Holdings, new { rows = "", cols = "", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Holdings, "", new { @class = "text-danger" })
                 </div>
             </div>
         }

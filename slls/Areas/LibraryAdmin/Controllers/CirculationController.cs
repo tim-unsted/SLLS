@@ -163,6 +163,8 @@ namespace slls.Areas.LibraryAdmin
                 }).OrderBy(c => c.Text)
                 .ToList();
 
+            ViewBag.Title = "Add " + recipient.Firstname + " to more " +
+                            DbRes.T("Circulation.Circulation_Lists", "FieldDisplayName");
             return PartialView("_MultiSelectListBox", lbvm);
         }
 
@@ -195,7 +197,8 @@ namespace slls.Areas.LibraryAdmin
                     _db.SaveChanges();
                 }
             }
-            return RedirectToAction("CirculationByUser", new { SelectedUser = recipient.Id });
+            //return RedirectToAction("CirculationByUser", new { SelectedUser = recipient.Id });
+            return Json(new { success = true }); 
         }
 
 
@@ -333,6 +336,8 @@ namespace slls.Areas.LibraryAdmin
                 }).OrderBy(u => u.Text)
                 .ToList();
 
+            ViewBag.Title = "Add " + DbRes.T("Circulation.Recipient", "FieldDisplayName") + " to " +
+                            DbRes.T("Circulation.Circulation_List", "FieldDisplayName");
             return PartialView("_MultiSelectListBox", lbvm);
         }
 
@@ -345,12 +350,7 @@ namespace slls.Areas.LibraryAdmin
                 return RedirectToAction("Index");
             }
 
-            var maxSortOrder = _db.Circulations.Where(c => c.CopyID == copy.CopyID).Max(x => x.SortOrder);
-
-            if (maxSortOrder == null)
-            {
-                maxSortOrder = 0;
-            }
+            var maxSortOrder = _db.Circulations.Where(c => c.CopyID == copy.CopyID).Max(x => x.SortOrder) ?? 0;
 
             foreach (var userid in lbvm.SelectedItems.ToList())
             {
@@ -361,18 +361,17 @@ namespace slls.Areas.LibraryAdmin
                     var newCirculation = new Circulation
                     {
                         CopyID = copy.CopyID,
-                        //Id = recipient.Id,
                         RecipientUser = recipient,
                         SortOrder = maxSortOrder,
                         InputDate = DateTime.Now
                     };
-                    //_repository.Insert(newCirculation);
                     _db.Circulations.Add(newCirculation);
                     _db.SaveChanges();
                 }
 
             }
-            return RedirectToAction("CirculationList", new { Copy = copy.CopyID });
+            //return RedirectToAction("CirculationList", new { Copy = copy.CopyID });
+            return Json(new { success = true }); 
         }
 
 
@@ -730,6 +729,7 @@ namespace slls.Areas.LibraryAdmin
 
             lbvm.AvailableItems = availableItems.Select(l => new SelectListItem { Text = l.Text, Value = l.Value });
 
+            ViewBag.Title = "Add Copies to " + DbRes.T("Circulation.Circulated_Items", "FieldDisplayName") + " List";
             return PartialView("_MultiSelectListBox", lbvm);
         }
 
@@ -757,7 +757,8 @@ namespace slls.Areas.LibraryAdmin
                     }
                 }
             }
-            return RedirectToAction("Index");
+            //return RedirectToAction("Index");
+            return Json(new { success = true }); 
         }
 
         //Remove from Circulation
