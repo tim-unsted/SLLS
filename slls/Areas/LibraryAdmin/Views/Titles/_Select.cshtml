@@ -11,15 +11,16 @@
         <div class="pull-right">
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    Add &bull; Print &bull; Duplicate <span class="caret"></span>
+                    Add &bull; Print &bull; Duplicate &bull; Delete <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu">
                     <li><a href="@Url.Action("Create", "Titles")" title="Add new @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span>&nbsp;&nbsp;Add New @DbRes.T("Titles.Title", "FieldDisplayName")</a></li>
                     <li><a href="@Url.Action("DuplicateTitle", "Titles", new {id = Model.TitleID})" title="Duplicate @DbRes.T("Titles.Title", "FieldDisplayName")" class="modal-link"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span>&nbsp;&nbsp;Duplicate @DbRes.T("Titles.Title", "FieldDisplayName")</a></li>
-                    <li><a href="@Url.Action("PrintDetails", "Titles", new { id = Model.TitleID })" title="Print @DbRes.T("Titles.Title", "FieldDisplayName") details"><span aria-hidden="true" class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;Print @DbRes.T("Titles.Title", "FieldDisplayName") details</a></li>
+                    <li><a href="@Url.Action("PrintDetails", "Titles", new {id = Model.TitleID})" title="Print @DbRes.T("Titles.Title", "FieldDisplayName") details"><span aria-hidden="true" class="glyphicon glyphicon-print"></span>&nbsp;&nbsp;Print @DbRes.T("Titles.Title", "FieldDisplayName") details</a></li>
+                    <li><a href="@Url.Action("Delete", "Titles", new {id = Model.TitleID})" class="modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;Delete @DbRes.T("Titles.Title", "FieldDisplayName")</a></li>
                 </ul>
             </div>
-            <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+            @*<a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>*@
         </div>
     </div>
 }

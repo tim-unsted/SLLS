@@ -9,12 +9,13 @@
     @Html.Partial("_Select")
     <div class="btn-group">
         <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Add &bull; Print &bull; Duplicate <span class="caret"></span>
+            Add &bull; Print &bull; Duplicate &bull; Delete <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
             <li><a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
             <li><a href="@Url.Action("PrintOrder", "OrderDetails", new {id = Model.OrderID})" title="Print @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
             <li><a href="@Url.Action("DuplicateOrder", "OrderDetails", new {id = Model.OrderID})" title="Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+            <li><a href="@Url.Action("Delete", "OrderDetails", new {id = Model.OrderID, callingAction= "edit"})" title="Delete @DbRes.T("Orders.Order", "FieldDisplayName")" class="modal-link"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
         </ul>
     </div>
 </div>
@@ -42,7 +43,7 @@
 
     <div class="form-footer">
         <span class="pull-left">
-            <a href="@Url.Action("Delete", new {id = Model.OrderID})" class="btn btn-danger modal-link" title="Delete Order"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Order</a>
+            <a href="@Url.Action("Delete", new {id = Model.OrderID, callingAction = "edit"})" class="btn btn-danger modal-link" title="Delete Order"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Order</a>
         </span>
         <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
         &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />

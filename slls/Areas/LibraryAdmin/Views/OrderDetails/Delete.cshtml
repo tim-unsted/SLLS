@@ -1,10 +1,11 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.OrderDetailsDeleteViewModel
 
-<div class="modal-header">
+@*<div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title" id="deleteLabel">@ViewBag.Title</h4>
-</div>
+</div>*@
+@Html.Partial("_ModalEditHeader")
 
 <div>
     <div class="modal-body">
@@ -67,6 +68,7 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(model => model.OrderID)
+        @Html.HiddenFor(model => model.CallingAction)
         @Html.HiddenFor(model => model.CallingController)
 
         <div class="modal-footer">

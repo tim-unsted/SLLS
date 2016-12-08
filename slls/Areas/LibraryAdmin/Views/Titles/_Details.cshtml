@@ -147,9 +147,11 @@
         </div>
 
         <div class="form-footer">
-            <button type="submit" value="Save Details" class="btn btn-success" ><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Details</button>
-            <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Title</a>
-            &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+            <span class="pull-left">
+                <a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Title</a>
+            </span>
+            <button type="submit" value="Save Details" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Details</button>
+            &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();"/>
         </div>
     </div>
 }

@@ -353,6 +353,7 @@ namespace slls.ViewModels
         public OrderDetailsDeleteViewModel()
         {
             CallingController = "";
+            CallingAction = "index";
         }
 
         [Key]
@@ -379,6 +380,8 @@ namespace slls.ViewModels
         public DateTime? ReceivedDate { get; set; }
 
         public string CallingController { get; set; }
+
+        public string CallingAction { get; set; }
         
     }
 

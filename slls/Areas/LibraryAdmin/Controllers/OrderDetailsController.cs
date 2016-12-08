@@ -2936,7 +2936,7 @@ namespace slls.Areas.LibraryAdmin
 
 
         // GET: LibraryAdmin/OrderDetails/Delete/5
-        public ActionResult Delete(int? id, string callingController = "orderdetails")
+        public ActionResult Delete(int? id, string callingAction = "")
         {
             if (id == null)
             {
@@ -2962,7 +2962,7 @@ namespace slls.Areas.LibraryAdmin
                 Title = orderDetail.Title.Title1,
                 Expected = orderDetail.Expected,
                 ReceivedDate = orderDetail.ReceivedDate,
-                CallingController = callingController
+                CallingAction = callingAction
             };
 
             ViewBag.Title = "Delete " + _entityName + "?";
@@ -2978,13 +2978,12 @@ namespace slls.Areas.LibraryAdmin
             _db.OrderDetails.Remove(orderDetail);
             _db.SaveChanges();
 
-            ////return RedirectToAction("Index");
-            //if (viewModel.CallingController == "orderdetails")
-            //{
-            //    return RedirectToAction("Index");
-            //}
-            //return RedirectToAction("Edit", "Titles", new { id = viewModel.TitleID });
-
+            if (viewModel.CallingAction == "edit")
+            {
+                UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                string actionUrl = urlHelper.Action("AllOutstanding", "OrderDetails");
+                return Json(new {success = true, redirectTo = actionUrl});
+            }
             return Json(new { success = true });
         }
 
