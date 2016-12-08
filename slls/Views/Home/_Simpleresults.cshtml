@@ -159,7 +159,7 @@
                             <div class="col-md-2">
                                 <div class="coverthumbnail">
                                     <a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")">
-                                        <img src="@Url.Action("ViewImage", "TitleImages", new {id = item.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@item.TitleImages.FirstOrDefault(i => i.IsPrimary).Alt" style="width: 100%;">
+                                        <img src="@Url.Action("ViewImage", "Home", new {id = item.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@item.TitleImages.FirstOrDefault(i => i.IsPrimary).Alt" style="width: 100%;">
                                     </a>
                                 </div>
                             </div>

@@ -46,7 +46,7 @@
             colClass = "col-md-10";
             <div class="col-md-2">
                 <div class="thumbnail">
-                    <img src="@Url.Action("ViewImage", "TitleImages", new {id = Model.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@Model.TitleImages.FirstOrDefault().Alt">
+                    <img src="@Url.Action("ViewImage", "Home", new {id = Model.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@Model.TitleImages.FirstOrDefault().Alt">
                 </div>
             </div>
         }

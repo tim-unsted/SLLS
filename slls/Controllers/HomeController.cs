@@ -2988,5 +2988,12 @@ namespace slls.Controllers
             TempData["simpleSearchingViewModel"] = viewModel;
             return PartialView("SaveSearch", viewModel);
         }
+
+        public ActionResult ViewImage(int? id)
+        {
+            var coverImage = _db.Images.Find(id);
+            var buffer = coverImage.Image;
+            return File(buffer, "image/jpg", string.Format("{0}.jpg", id));
+        }
     }
 }

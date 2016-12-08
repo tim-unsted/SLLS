@@ -484,10 +484,8 @@ namespace slls.Areas.LibraryAdmin
         }
 
 
-        public ActionResult ViewImage(int? id) // id = TitleImageId
+        public ActionResult ViewImage(int? id)
         {
-            //var titleImage = _db.TitleImages.Find(id);
-            //var imageId = titleImage.ImageId;
             var coverImage = _db.Images.Find(id);
             var buffer = coverImage.Image;
             return File(buffer, "image/jpg", string.Format("{0}.jpg", id));
