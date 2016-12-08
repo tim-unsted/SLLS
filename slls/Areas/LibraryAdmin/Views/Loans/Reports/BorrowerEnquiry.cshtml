@@ -1,0 +1,59 @@
+﻿@using System.Web.Http.Results
+@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.LoansReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<h3>@Model.BorrowerName</h3>
+
+@if (Model.Titles.Any())
+{
+    foreach (var title in Model.Titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <h4>@Html.DisplayFor(modelItem => title.Title1)</h4>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-10 col-md-push-1">
+                <table class="table table-striped table-no-border">
+                    <thead>
+                        <tr>
+                            <th>@DbRes.T("CopyItems.Label_Text", "FieldDisplayName")</th>
+                            <th>@DbRes.T("CopyItems.Barcode", "FieldDisplayName")</th>
+                            <th>@DbRes.T("Borrowing.Borrowed", "FieldDisplayName")</th>
+                            <th>@DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName")</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var copy in title.Copies)
+                        {
+                            foreach (var volume in copy.Volumes.Where(v => v.Borrowings.Any()))
+                            {
+                                foreach (var loan in volume.Borrowings.Where(b => b.Returned == null && b.BorrowerUser == Model.Borrower))
+                                {
+
+                                    <tr>
+                                        <td style="width: 30%;">@Html.DisplayFor(modelItem => loan.Volume.LabelText)</td>
+                                        <td style="width: 30%;">@Html.DisplayFor(modelItem => loan.Volume.Barcode)</td>
+                                        <td style="width: 20%;">@Html.DisplayFor(modelItem => loan.Borrowed)</td>
+                                        <td style="width: 20%;">@Html.DisplayFor(modelItem => loan.ReturnDue)</td>
+                                    </tr>
+
+                                }
+                            }
+                        }
+                    </tbody>
+                </table>
+                <div style="margin-bottom: 5px;">&nbsp;</div>
+            </div>
+        </div>
+
+    }
+}

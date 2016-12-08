@@ -46,12 +46,16 @@
 }
 
 @Html.Partial("_HeaderSeeAlso")
-@*<h2>@ViewBag.Title</h2>*@
-@Html.CheckBoxFor(model => model.ShowAll, new { @title = "Show ALL users, including those no longer 'Live'" }) Show All
-@Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x, showAll = Model.ShowAll }))
-<p>
-    <a href="@Url.Action("Create", "LibraryUsers")" title="Add new @DbRes.T("Users.LibraryUser", "FieldDisplayName")" class="btn btn-primary" ><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
-</p>
+
+<div class="alert alert-info">
+    @Html.CheckBoxFor(model => model.ShowAll, new { @title = "Show ALL users, including those no longer 'Live'" }) Show All
+    <div>
+        @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new { selectedLetter = x, showAll = Model.ShowAll }))
+    </div>
+    <p>
+        <a href="@Url.Action("Create", "LibraryUsers")" title="Add new @DbRes.T("Users.LibraryUser", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    </p>
+</div>
 
 <table id="users" class="table table-hover">
     <thead>

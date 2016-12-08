@@ -13,13 +13,16 @@
     <div class="modal-body">
         @if (!Model.DetailsHeader.IsEmpty())
         {
-            <h4 class="text-info">
+            <div class="alert alert-info">
                 @Html.DisplayFor(model => model.DetailsHeader)
-            </h4>
+            </div>
         }
-        <p class="help-block">
-            @Html.DisplayFor(model => model.DetailsText).
-        </p>
+        @if (!Model.DetailsText.IsEmpty())
+        { 
+            <p>
+                @Html.DisplayFor(model => model.DetailsText).
+            </p>
+        }
         <div class="form-group">
             <div class="col-md-12">
                 @Html.Label(Model.SelectLabel, htmlAttributes: new { @class = "control-label" })

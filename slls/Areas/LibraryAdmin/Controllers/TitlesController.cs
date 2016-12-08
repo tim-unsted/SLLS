@@ -1380,6 +1380,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 TitleID = title.TitleID,
                 Copies = title.Copies,
+                HasCopies = title.Copies.Any(),
                 OrderDetails = title.OrderDetails,
                 TitleImages = title.TitleImages,
                 TitleLinks = title.TitleLinks,
@@ -1416,7 +1417,7 @@ namespace slls.Areas.LibraryAdmin
                 title.ClassmarkID = editedtitle.ClassmarkID;
                 title.Citation = editedtitle.Citation;
                 title.Description = editedtitle.Description;
-                title.Edition = editedtitle.Description;
+                title.Edition = editedtitle.Edition;
                 title.FrequencyID = editedtitle.FrequencyID;
                 title.ISBN13 = editedtitle.ISBN13;
                 title.ISBN10 = editedtitle.ISBN10;

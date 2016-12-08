@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Mvc;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
+using Microsoft.Ajax.Utilities;
 using slls.App_Settings;
 using slls.DAO;
 using slls.Models;
@@ -175,14 +177,14 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult PostBookLabelsSelectedCopiesPdf(PrintLabelsViewModel viewModel)
         {
             // Open a new PDF document - uses Avery L7162 as default label
-            
+            ViewBag.Title = "Book Labels for Selected Copies";
             float fltPageMarginLeft = viewModel.leftMargin;
             float fltPageMarginRight = viewModel.rightMargin;
             float fltPageMarginTop = viewModel.topMargin;
             float fltPageMarginBottom = viewModel.bottomMargin;
             int intPageRows = viewModel.labelsDown;
             int intPageColumns = viewModel.labelsAcross;
-            int lablesUsed = ((viewModel.StartPositionRow - 1) * viewModel.labelsAcross) + (viewModel.StartPositioncolumn - 1);
+            int labelsUsed = ((viewModel.StartPositionRow - 1) * viewModel.labelsAcross) + (viewModel.StartPositioncolumn - 1);
 
             var doc = new Document();
             doc.SetMargins(fltPageMarginLeft, fltPageMarginRight, fltPageMarginTop, fltPageMarginBottom);
@@ -231,7 +233,7 @@ namespace slls.Areas.LibraryAdmin
             }
 
             //Leave any blanks if specified ...
-            for (int i = 0; i < lablesUsed; i++)
+            for (int i = 0; i < labelsUsed; i++)
             {
                 #region Label Construction
 
@@ -263,12 +265,61 @@ namespace slls.Areas.LibraryAdmin
                 var contents = new Paragraph();
                 contents.Alignment = Element.ALIGN_LEFT;
 
-                contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Title.Title1.Trim()), new Font(baseFont, 8f, Font.BOLD)));
-                contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Title.AuthorString), new Font(baseFont, 8f)));
-                contents.Add(new Chunk(string.Format("{0} : {1}\n", volume.Copy.Title.Edition, volume.LabelText), new Font(baseFont, 8f)));
-                contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Title.Classmark.Classmark1), new Font(baseFont, 8f)));
-                contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Location.LocationString), new Font(baseFont, 8f)));
-                contents.Add(new Chunk(string.Format("Copy: {0}\n", volume.Copy.CopyNumber), new Font(baseFont, 8f)));
+                // Title : Edition
+                if (!string.IsNullOrEmpty(volume.Copy.Title.Title1) && string.IsNullOrEmpty(volume.Copy.Title.Edition))
+                {
+                    contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Title.Title1.Trim()), new Font(baseFont, 8f, Font.BOLD)));
+                }
+                if (!string.IsNullOrEmpty(volume.Copy.Title.Title1) && !string.IsNullOrEmpty(volume.Copy.Title.Edition))
+                {
+                    contents.Add(new Chunk(string.Format("{0}: {1}\n", volume.Copy.Title.Title1.Trim(), volume.Copy.Title.Edition.Trim()), new Font(baseFont, 8f, Font.BOLD)));
+                }
+                
+                //Author (miss line if empty)
+                if (!string.IsNullOrEmpty(volume.Copy.Title.AuthorString))
+                {
+                    contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Title.AuthorString), new Font(baseFont, 8f)));
+                }
+               
+                // Classmark (miss line if empty)
+                if (!string.IsNullOrEmpty(volume.Copy.Title.Classmark.Classmark1))
+                {
+                    contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("Classmarks.Classmark", "FieldDisplayName"), volume.Copy.Title.Classmark.Classmark1),
+                        new Font(baseFont, 8f)));
+                }
+
+                // Office - Location (miss line if empty)
+                if (!string.IsNullOrEmpty(volume.Copy.Location.LocationString))
+                {
+                    contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Location.LocationString),
+                        new Font(baseFont, 8f)));
+                }
+
+                // Copy Number (miss line if empty)
+                if (volume.Copy.CopyNumber > 0)
+                {
+                    contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("Copies.Copy_Number", "FieldDisplayName"), volume.Copy.CopyNumber), 
+                        new Font(baseFont, 8f)));
+                }
+
+                // Label Text : Barcode (miss line if empty)
+                if (!string.IsNullOrEmpty(volume.LabelText) && !string.IsNullOrEmpty(volume.Barcode))
+                {
+                    StringBuilder s = new StringBuilder().Append(volume.LabelText).Append(' ', 15).Append(string.Format("{0}: ", DbRes.T("CopyItems.Barcode", "FieldDisplayName"))).Append(volume.Barcode).AppendLine("");
+                    contents.Add(new Chunk(s.ToString(),
+                        new Font(baseFont, 8f)));
+                }
+                else if (string.IsNullOrEmpty(volume.LabelText) && !string.IsNullOrEmpty(volume.Barcode))
+                {
+                    contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("CopyItems.Barcode", "FieldDisplayName"), volume.Barcode),
+                        new Font(baseFont, 8f)));
+                }
+                else if (!string.IsNullOrEmpty(volume.LabelText) && string.IsNullOrEmpty(volume.Barcode))
+                {
+                    contents.Add(new Chunk(string.Format("{0}\n", volume.LabelText),
+                        new Font(baseFont, 8f)));
+                }
+
                 cell.AddElement(contents);
                 table.AddCell(cell);
 
@@ -416,12 +467,61 @@ namespace slls.Areas.LibraryAdmin
                 var contents = new Paragraph();
                 contents.Alignment = Element.ALIGN_LEFT;
 
-                contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Title.Title1.Trim()), new Font(baseFont, 8f, Font.BOLD)));
-                contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Title.AuthorString), new Font(baseFont, 8f)));
-                contents.Add(new Chunk(string.Format("{0} : {1}\n", volume.Copy.Title.Edition, volume.LabelText), new Font(baseFont, 8f)));
-                contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Title.Classmark.Classmark1), new Font(baseFont, 8f)));
-                contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Location.LocationString), new Font(baseFont, 8f)));
-                contents.Add(new Chunk(string.Format("Copy: {0}\n", volume.Copy.CopyNumber), new Font(baseFont, 8f)));
+                // Title : Edition
+                if (!string.IsNullOrEmpty(volume.Copy.Title.Title1) && string.IsNullOrEmpty(volume.Copy.Title.Edition))
+                {
+                    contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Title.Title1.Trim()), new Font(baseFont, 8f, Font.BOLD)));
+                }
+                if (!string.IsNullOrEmpty(volume.Copy.Title.Title1) && !string.IsNullOrEmpty(volume.Copy.Title.Edition))
+                {
+                    contents.Add(new Chunk(string.Format("{0}: {1}\n", volume.Copy.Title.Title1.Trim(), volume.Copy.Title.Edition.Trim()), new Font(baseFont, 8f, Font.BOLD)));
+                }
+
+                //Author (miss line if empty)
+                if (!string.IsNullOrEmpty(volume.Copy.Title.AuthorString))
+                {
+                    contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Title.AuthorString), new Font(baseFont, 8f)));
+                }
+
+                // Classmark (miss line if empty)
+                if (!string.IsNullOrEmpty(volume.Copy.Title.Classmark.Classmark1))
+                {
+                    contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("Classmarks.Classmark", "FieldDisplayName"), volume.Copy.Title.Classmark.Classmark1),
+                        new Font(baseFont, 8f)));
+                }
+
+                // Office - Location (miss line if empty)
+                if (!string.IsNullOrEmpty(volume.Copy.Location.LocationString))
+                {
+                    contents.Add(new Chunk(string.Format("{0}\n", volume.Copy.Location.LocationString),
+                        new Font(baseFont, 8f)));
+                }
+
+                // Copy Number (miss line if empty)
+                if (volume.Copy.CopyNumber > 0)
+                {
+                    contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("Copies.Copy_Number", "FieldDisplayName"), volume.Copy.CopyNumber),
+                        new Font(baseFont, 8f)));
+                }
+
+                // Label Text : Barcode (miss line if empty)
+                if (!string.IsNullOrEmpty(volume.LabelText) && !string.IsNullOrEmpty(volume.Barcode))
+                {
+                    StringBuilder s = new StringBuilder().Append(volume.LabelText).Append(' ', 15).Append(string.Format("{0}: ", DbRes.T("CopyItems.Barcode", "FieldDisplayName"))).Append(volume.Barcode).AppendLine("");
+                    contents.Add(new Chunk(s.ToString(),
+                        new Font(baseFont, 8f)));
+                }
+                else if (string.IsNullOrEmpty(volume.LabelText) && !string.IsNullOrEmpty(volume.Barcode))
+                {
+                    contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("CopyItems.Barcode", "FieldDisplayName"), volume.Barcode),
+                        new Font(baseFont, 8f)));
+                }
+                else if (!string.IsNullOrEmpty(volume.LabelText) && string.IsNullOrEmpty(volume.Barcode))
+                {
+                    contents.Add(new Chunk(string.Format("{0}\n", volume.LabelText),
+                        new Font(baseFont, 8f)));
+                }
+
                 cell.AddElement(contents);
                 table.AddCell(cell);
 

@@ -48,7 +48,7 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
-    <span class="help-block"><strong>Info: </strong>This page list all items (@DbRes.T("Copies","EntityType") that have been marked as being circulated. Circulated items are distributed or 'routed' around a list of @DbRes.T("Circulation.Recipients", "FieldDisplayName") (Circulation List).</span>
+    <span class="help-block"><strong>Info: </strong>This page list all items (@DbRes.T("Copies","EntityType")) that have been marked as being circulated. Circulated items are distributed or 'routed' around a list of @DbRes.T("Circulation.Recipients", "FieldDisplayName") (Circulation List).</span>
     <span class="help-block"><strong>Tip: </strong>To quickly remove an item from circulation, simply click on the <span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> to the right of the listed item.</span>
     <a href="@Url.Action("AddCopyToCirculation", "Circulation")" title="Add item to @DbRes.T("Circulation", "EntityType")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add item to @DbRes.T("Circulation", "EntityType")</a>
 </div>

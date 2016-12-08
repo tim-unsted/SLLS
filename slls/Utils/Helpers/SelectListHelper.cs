@@ -376,7 +376,7 @@ namespace slls.Utils.Helpers
         }
 
         [OutputCache(Duration = 7200, VaryByParam = "*")]
-        public static IEnumerable<SelectListItem> AllCopiesList(int id = 0, bool addDefault = true, bool addAll = false, string msg = "Select a ")
+        public static IEnumerable<SelectListItem> AllCopiesList(int id = 0, bool addDefault = true, bool addAll = false, string msg = "Select a Copy")
         {
             DbEntities db = new DbEntities();
             var copiesList = new List<SelectListItem>();
@@ -386,7 +386,7 @@ namespace slls.Utils.Helpers
             {
                 copiesList.Add(new SelectListItem
                 {
-                    Text = msg + DbRes.T("Copies.Copy", "FieldDisplayName"),
+                    Text = msg,
                     Value = "0"
                 });
             }

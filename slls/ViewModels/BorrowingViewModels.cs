@@ -147,4 +147,25 @@ namespace slls.ViewModels
         public string Borrowed { get; set; }
         public string ReturnDue { get; set; }
     }
+
+    public class LoansReportsViewModel
+    {
+        public LoansReportsViewModel()
+        {
+            NoDataTitle = "No Data!";
+            NoDataMsg = "There is no data available for this report.";
+        }
+
+        public IEnumerable<Borrowing> Loans { get; set; }
+        public IEnumerable<Title> Titles { get; set; }
+        public IEnumerable<Copy> Copies { get; set; }
+        public IEnumerable<Volume> Volumes { get; set; }
+        public IEnumerable<ApplicationUser> Borrowers { get; set; }
+        public ApplicationUser Borrower { get; set; }
+        public string BorrowerName { get; set; }
+        public bool HasData { get; set; }
+        public string NoDataTitle { get; set; }
+        public string NoDataMsg { get; set; }
+        public string NoDataOk { get; set; }
+    }
 }

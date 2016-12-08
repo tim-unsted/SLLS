@@ -818,7 +818,6 @@ namespace slls.Areas.LibraryAdmin
                 origReturnDue = origReturnDue,
                 newReturnDue = newReturnDue.Date.ToString("dd/MM/yyyy")
             });
-
         }
         
         [HttpPost]
@@ -828,6 +827,85 @@ namespace slls.Areas.LibraryAdmin
             var volume = _db.Volumes.FirstOrDefault(v => v.Barcode == barcode);
             return Json(volume != null);
         }
+
+
+        public ActionResult BorrowerEnquiryReport()
+        {
+            var viewModel = new SelectPopupViewModel
+            {
+                PostSelectController = "Loans",
+                PostSelectAction = "Post_BorrowerEnquiry",
+                SelectedItem = "0",
+                HeaderText = DbRes.T("Loans", "EntityType") + "Reports: " + DbRes.T("Borrowing.Borrower", "FieldDisplayName") + " Enquiry",
+                DetailsHeader = "To generate a report of current loans for a given " + DbRes.T("Borrowing.Borrower", "FieldDisplayName").ToLower() + ", select the " + DbRes.T("Borrowing.Borrower", "FieldDisplayName").ToLower() + " from the drop-down list below. Note: This list only contains the name of those people with current, outstanding, loans.",
+                SelectLabel = "",
+                SelectText = "Select a " + DbRes.T("Borrowing.Borrower", "FieldDisplayName"),
+                OkButtonText = "View Report",
+                PostSelectId = 0
+            };
+
+            viewModel.AvailableItems =
+                _db.Users.Where(u => u.Borrowings.Any(b => b.Returned == null))
+                    .Select(x => new SelectListItem
+                    {
+                        Value = x.Id.ToString(),
+                        Text = x.Lastname + ", " + x.Firstname
+                    }).OrderBy(c => c.Text)
+                    .ToList();
+
+            ViewBag.Title = DbRes.T("Borrowing.Borrower", "FieldDisplayName") + " Enquiry";
+            return PartialView("_SelectPopup", viewModel);
+        }
+
+        public ActionResult Post_BorrowerEnquiry(SelectPopupViewModel selectedBorrower)
+        {
+            var borrower = _db.Users.Find(selectedBorrower.SelectedItem);
+            if (borrower == null)
+            {
+                return null;
+            }
+            if (borrower != null)
+            {
+                UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                string actionUrl = urlHelper.Action("Report_BorrowerEnquiry", "Loans", new { userId = borrower.Id });
+                return Json(new { success = true, redirectTo = actionUrl });
+            }
+            return Json(new { success = false });
+            
+        }
+
+        public ActionResult Report_BorrowerEnquiry(string UserId = "")
+        {
+            var borrower = _db.Users.Find(UserId);
+            if (borrower == null)
+            {
+                return null;
+            }
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                Borrower = borrower,
+                BorrowerName = borrower.Fullname
+            };
+
+            var currentLoans = borrower.Borrowings.Where(b => b.Returned == null);
+            if (currentLoans.Any())
+            {
+                viewModel.HasData = true;
+            }
+
+            var titles = (from t in _db.Titles
+                join c in _db.Copies on t.TitleID equals c.TitleID
+                join v in _db.Volumes on c.CopyID equals v.CopyID
+                join b in _db.Borrowings on v.VolumeID equals b.VolumeID
+                where b.Returned == null && b.BorrowerUser.Id == borrower.Id
+                select t).Distinct();
+
+            viewModel.Titles = titles;
+            ViewBag.Title = DbRes.T("Borrowing.Borrower", "FieldDisplayName") + " Enquiry";
+            return View("Reports/BorrowerEnquiry", viewModel);
+        }
+
 
         [HttpGet]
         public ActionResult Delete(int id = 0)

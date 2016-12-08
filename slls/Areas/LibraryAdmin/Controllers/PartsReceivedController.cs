@@ -33,9 +33,9 @@ namespace slls.Areas.LibraryAdmin
             var partsReceivedList = selectedCopy == -1
                 ? _db.PartsReceiveds
                 : _db.PartsReceiveds.Where(p => p.CopyID == selectedCopy);
-            
 
-            ViewData["SelectedCopy"] = SelectListHelper.AllCopiesList(addAll:true);
+
+            ViewData["SelectedCopy"] = SelectListHelper.AllCopiesList(addAll: true, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
             ViewData["CopyID"] = selectedCopy;
             ViewBag.Title = _entityName;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("checkInSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "sortOrder");
@@ -127,7 +127,7 @@ namespace slls.Areas.LibraryAdmin
             listOrder.Add(new SelectListItem { Text = "Date last part received", Value = "r" });
 
             ViewData["SortOrder"] = listOrder;
-            ViewData["SelectedCopy"] = SelectListHelper.AllCopiesList(addAll: false);
+            ViewData["SelectedCopy"] = SelectListHelper.AllCopiesList(addAll: false, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("checkInSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "sortOrder");
             ViewBag.Title = "Quick Check-In";
             ViewData["CopyID"] = selectedCopy;
@@ -151,7 +151,7 @@ namespace slls.Areas.LibraryAdmin
             };
             
             ViewBag.Title = "Check-In New " + DbRes.T("CheckIn.Part","FieldDisplayName");
-            ViewData["CopyID"] = SelectListHelper.AllCopiesList(id);
+            ViewData["CopyID"] = SelectListHelper.AllCopiesList(id: id, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
             return PartialView(viewModel);
         }
 
@@ -176,7 +176,7 @@ namespace slls.Areas.LibraryAdmin
                 return Json( new {success = true});
             }
             ViewBag.Title = "Check-In new " + DbRes.T("CheckIn.Part", "FieldDisplayName");
-            ViewData["CopyID"] = SelectListHelper.AllCopiesList(viewModel.CopyID);
+            ViewData["CopyID"] = SelectListHelper.AllCopiesList(id:viewModel.CopyID, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
             return PartialView(viewModel);
         }
 

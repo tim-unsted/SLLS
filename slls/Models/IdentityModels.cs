@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
+using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -92,6 +93,12 @@ namespace slls.Models
                 }
                 
             }
+        }
+
+        [NotMapped]
+        public bool HasLoans
+        {
+            get { return Borrowings.Any(b => b.Returned == null); }
         }
 
         public virtual ICollection<Borrowing> Borrowings { get; set; }

@@ -213,85 +213,7 @@ namespace slls.ViewModels
         [Required(AllowEmptyStrings = false, ErrorMessage = "A blank title is not allowed. Please enter a valid title.")
         ]
         public string Title1 { get; set; }
-
-        //[LocalDisplayName("MediaTypes.Media_Type", "FieldDisplayName")]
-        //public int MediaID { get; set; }
-
-        //[LocalDisplayName("Classmarks.Classmark", "FieldDisplayName")]
-        //public int ClassmarkID { get; set; }
-
-        //[LocalDisplayName("Titles.Publisher", "FieldDisplayName")]
-        //public int PublisherID { get; set; }
-
-        //[LocalDisplayName("Frequency.Frequency", "FieldDisplayName")]
-        //public int FrequencyID { get; set; }
-
-        //[LocalDisplayName("Languages.Language", "FieldDisplayName")]
-        //public int LanguageID { get; set; }
-
-        //[StringLength(255)]
-        //[LocalDisplayName("Titles.Series", "FieldDisplayName")]
-        //public string Series { get; set; }
-
-        //[StringLength(255)]
-        //[LocalDisplayName("Titles.Edition", "FieldDisplayName")]
-        //public string Edition { get; set; }
-
-        //[StringLength(50)]
-        //[LocalDisplayName("Titles.Place_of_Publication", "FieldDisplayName")]
-        //public string PlaceofPublication { get; set; }
-
-        //[StringLength(50)]
-        //[LocalDisplayName("Titles.Published_Year", "FieldDisplayName")]
-        //public string Year { get; set; }
-
-        //[StringLength(50)]
-        //[LocalDisplayName("Titles.ISBN_10", "FieldDisplayName")]
-        //public string ISBN10 { get; set; }
-
-        //[StringLength(50)]
-        //[LocalDisplayName("Titles.ISBN_13", "FieldDisplayName")]
-        //public string ISBN13 { get; set; }
-
-        //[StringLength(255)]
-        //[LocalDisplayName("Titles.Source", "FieldDisplayName")]
-        //public string Source { get; set; }
-
-        //[StringLength(255)]
-        //[LocalDisplayName("Titles.Description", "FieldDisplayName")]
-        //public string Description { get; set; }
-
-        //[StringLength(255)]
-        //[LocalDisplayName("Titles.Citation", "FieldDisplayName")]
-        //public string Citation { get; set; }
-
-        //[LocalDisplayName("Titles.Non_Filing_Characters", "FieldDisplayName")]
-        //public int NonFilingChars { get; set; }
-
-        //[LocalDisplayName("Titles.Notes", "FieldDisplayName")]
-        //[DataType(DataType.MultilineText)]
-        //public string Notes { get; set; }
-
-        //public Classmark Classmark { get; set; }
-        //public Supplier Supplier { get; set; }
-        //public Frequency Frequency { get; set; }
-        //public Language Language { get; set; }
-        //public MediaType MediaType { get; set; }
-
-        //[LocalDisplayName("Titles.Authors", "FieldDisplayName")]
-        //public ICollection<TitleAuthor> TitleAuthors { get; set; }
-
-        //[LocalDisplayName("Titles.Editors", "FieldDisplayName")]
-        //public ICollection<TitleEditor> TitleEditors { get; set; }
-
-        //[Editable(false)]
-        //[LocalDisplayName("Titles.Authors", "FieldDisplayName")]
-        //public string authors { get; set; }
-
-        //[Editable(false)]
-        //[LocalDisplayName("Titles.Editors", "FieldDisplayName")]
-        //public string editors { get; set; }
-
+        
         public ICollection<TitleAdditionalFieldData> TitleAdditionalFieldDatas { get; set; }
 
         [LocalDisplayName("Titles.Keywords", "FieldDisplayName")]
@@ -299,6 +221,8 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Titles.Copies", "FieldDisplayName")]
         public ICollection<Copy> Copies { get; set; }
+
+        public bool HasCopies { get; set; }
 
         [LocalDisplayName("Titles.Order_Details", "FieldDisplayName")]
         public ICollection<OrderDetail> OrderDetails { get; set; }
@@ -308,7 +232,7 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Titles.Cover_Images", "FieldDisplayName")]
         public ICollection<TitleImage> TitleImages { get; set; }
-
+        
         public bool IsFinanceAdmin { get; set; }
 
         public TitleEditViewModel()
