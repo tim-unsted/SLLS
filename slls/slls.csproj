@@ -1054,11 +1054,12 @@
     <Content Include="Areas\Config\Views\LibraryUsers\ResetUserPassword.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Loans\_ItemsOnLoanNoTitle.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\BorrowerEnquiry.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\ItemsOnLoanByTitle.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\LoansOverdue.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\ItemsOnLoanByBorrower.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\ItemsNeverLoaned.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\BorrowerHistory.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\LoansHistory.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\ItemsOnLoanByTitle.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -1478,6 +1479,8 @@
     <Content Include="Views\Shared\_PostAlert.cshtml" />
     <Content Include="Views\LIbraryUserLoans\MyLoansHistory.cshtml" />
     <Content Include="Views\Shared\_SelectBetweenDates.cshtml" />
+    <Content Include="Views\Shared\_EnterTextValuePopUp.cshtml" />
+    <Content Include="Views\Shared\_EnterNumericValuePopUp.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Config\Models\" />

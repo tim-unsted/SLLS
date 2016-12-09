@@ -218,4 +218,58 @@ namespace slls.ViewModels
         public int PostSelectId { get; set; }
 
     }
+
+    public class EnterTextValuePopupViewModel
+    {
+        public EnterTextValuePopupViewModel()
+        {
+            OkButtonText = DbRes.T("Buttons.Ok", "Terminology");
+        }
+
+        public string PostSelectController { get; set; }
+
+        public string PostSelectAction { get; set; }
+
+        public string HeaderText { get; set; }
+
+        public string DetailsHeader { get; set; }
+
+        public string DetailsText { get; set; }
+
+        public String EnteredValueLabel { get; set; }
+
+        [Required(ErrorMessage = "Please enter a value!")]
+        [DisplayName("Value")]
+        public String EnteredValue { get; set; }
+
+        public string OkButtonText { get; set; }
+        
+    }
+
+    public class EnterNumericValuePopupViewModel
+    {
+        public EnterNumericValuePopupViewModel()
+        {
+            OkButtonText = DbRes.T("Buttons.Ok", "Terminology");
+        }
+
+        public string PostSelectController { get; set; }
+
+        public string PostSelectAction { get; set; }
+
+        public string HeaderText { get; set; }
+
+        public string DetailsHeader { get; set; }
+
+        public string DetailsText { get; set; }
+
+        public String EnteredValueLabel { get; set; }
+
+        [Required(ErrorMessage = "Please enter a numeric value!")]
+        [DisplayName("Value")]
+        public int EnteredValue { get; set; }
+
+        public string OkButtonText { get; set; }
+
+    }
 }

@@ -828,6 +828,56 @@ namespace slls.Areas.LibraryAdmin
             return Json(volume != null);
         }
 
+        public ActionResult OverdueLoansReport()
+        {
+            var viewModel = new EnterNumericValuePopupViewModel()
+            {
+                PostSelectController = "Loans",
+                PostSelectAction = "Post_OverdueLoansReport",
+                DetailsText = "To generate a report of all overdue loans, please specify a loan period (in days) in the box below. This period will be used to check any items that do not have a 'Return Due' date specified.",
+                OkButtonText = "View Report",
+                EnteredValue = 21,
+                EnteredValueLabel = "Loan Period (Days)"
+            };
+
+            ViewBag.Title = "Loans Overdue";
+            return PartialView("_EnterNumericValuePopUp", viewModel);
+        }
+
+        public ActionResult Post_OverdueLoansReport(EnterNumericValuePopupViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                string actionUrl = urlHelper.Action("Report_LoansOverdue", "Loans", new { loanPeriod = viewModel.EnteredValue == 0 ? 21 : viewModel.EnteredValue });
+                return Json(new { success = true, redirectTo = actionUrl });
+            }
+            return null;
+        }
+
+        public ActionResult Report_LoansOverdue(int loanPeriod = 21)
+        {
+            double addDays = loanPeriod;
+            DateTime returnDue = DateTime.Today.AddDays(-addDays);
+
+            var titles = (from t in _db.Titles
+                          join c in _db.Copies on t.TitleID equals c.TitleID
+                          join v in _db.Volumes on c.CopyID equals v.CopyID
+                          join b in _db.Borrowings on v.VolumeID equals b.VolumeID
+                          where b.Returned == null && b.ReturnDue == null ? b.Borrowed < returnDue : b.ReturnDue < DateTime.Today
+                          select t).Distinct();
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                Titles = titles,
+                HasData = titles.Any()
+            };
+
+            ViewBag.Title = "Loans Overdue";
+            return View("Reports/LoansOverdue", viewModel);
+        }
+
+
         public ActionResult LoansHistoryReport()
         {
             var viewModel = new SelectTwoDatesViewModel()
@@ -867,7 +917,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             ViewBag.Title = "Loans History Between " + startDate.ToString("dd MMM yyyy") + " and " + endDate.ToString("dd MMM yyyy");
-            return View("Reports/loansHistory", viewModel);
+            return View("Reports/LoansHistory", viewModel);
         }
 
         public ActionResult BorrowerHistoryReport()
