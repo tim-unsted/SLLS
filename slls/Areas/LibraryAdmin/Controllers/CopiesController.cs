@@ -402,7 +402,7 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.RecordCount = query.Count();
             ViewBag.RecordType = "Copy";
 
-            ViewData["CirculationMsgID"] = SelectListHelper.CirculationMessageList(copy.CirculationMsgID ?? 0, null, false);
+            ViewData["CirculationMsgID"] = SelectListHelper.CirculationMessageList(id: copy.CirculationMsgID ?? 0, msg: null, addDefault: false, addNew: false);
             ViewData["LocationID"] = SelectListHelper.OfficeLocationList(copy.LocationID ?? 0, null, false); 
             ViewData["StatusID"] = SelectListHelper.StatusList(copy.StatusID ?? 0, null, false, true); 
             ViewData["CancelledYear"] = new SelectList(_db.AccountYears.OrderBy(y => y.AccountYear1), "AccountYearID", "AccountYear1", copy.AccountYearID);

@@ -1429,6 +1429,7 @@ namespace slls.Areas.LibraryAdmin
                 title.Source = editedtitle.Source;
                 title.PlaceofPublication = editedtitle.PlaceofPublication;
                 title.Year = editedtitle.Year;
+                title.PublisherID = editedtitle.PublisherID;
                 title.ModifiedBy = Utils.PublicFunctions.GetCurrentUserName();
                 _repository.Update(title);
 

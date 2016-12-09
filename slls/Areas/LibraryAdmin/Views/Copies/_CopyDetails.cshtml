@@ -21,7 +21,7 @@
 
         <div class="form-group">
             <div class="col-md-12">
-                @Html.LabelFor(model => model.Title)              
+                @Html.LabelFor(model => model.Title)
             </div>
             <div class="col-md-12">
                 <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
@@ -56,7 +56,7 @@
                 @Html.Partial("_selectStatusTypeViewEdit")
             </div>
         </div>
-        
+
         <div class="form-group">
             @Html.LabelFor(model => model.PrintLabel, htmlAttributes: new { @class = "control-label-left col-md-2" })
             <div class="col-md-10">
@@ -93,11 +93,11 @@
         @if (Model.IsSerialsAdmin)
         {
             <div class="form-group">
-                @Html.LabelFor(model => model.Circulated, htmlAttributes: new {@class = "control-label-left col-md-2"})
+                @Html.LabelFor(model => model.Circulated, htmlAttributes: new { @class = "control-label-left col-md-2" })
                 <div class="col-md-10">
                     <div class="checkbox">
                         @Html.EditorFor(model => model.Circulated)
-                        @Html.ValidationMessageFor(model => model.Circulated, "", new {@class = "text-danger"})
+                        @Html.ValidationMessageFor(model => model.Circulated, "", new { @class = "text-danger" })
                         <span class="help-inline">Is this item circulated?</span>
                     </div>
                 </div>
@@ -105,17 +105,17 @@
 
             <div id="circulationFields" style="display: @(Model.Circulated ? "block" : "none")">
                 <div class="form-group">
-                    @Html.Label(DbRes.T("Circulation.Circulation_List", "FieldDisplayName"), htmlAttributes: new {@class = "control-label-left col-md-2"})
+                    @Html.Label(DbRes.T("Circulation.Circulation_List", "FieldDisplayName"), htmlAttributes: new { @class = "control-label-left col-md-2" })
                     <div class="col-md-10">
-                        @Html.ActionLink(Model.Circulations.Any() ? "No recipients" : Model.Circulations.Count().ToString() + " recipient(s)", "CirculationList", "Circulation", new {copy = Model.CopyId}, new {@class = "form-control btn-link"})
+                        @Html.ActionLink(Model.Circulations.Any() ? "No recipients" : Model.Circulations.Count().ToString() + " recipient(s)", "CirculationList", "Circulation", new { copy = Model.CopyId }, new { @class = "form-control btn-link" })
                     </div>
                 </div>
 
                 <div class="form-group">
                     <div class="col-md-12">
                         @Html.LabelFor(model => model.CirculationMessage.CirculationMsg)
-                        @Html.DropDownList("CirculationMsgID", null, htmlAttributes: new {@class = "form-control"})
-                        @Html.ValidationMessageFor(model => model.CirculationMsgId, "", new {@class = "text-danger"})
+                        @Html.DropDownList("CirculationMsgID", null, htmlAttributes: new { @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.CirculationMsgId, "", new { @class = "text-danger" })
                     </div>
                 </div>
             </div>
@@ -130,7 +130,7 @@
                 </div>
             </div>
         }
-        
+
         <div class="form-group">
             <div class="col-md-12">
                 @Html.LabelFor(model => model.Notes)
@@ -142,10 +142,14 @@
         <div class="form-footer">
             @if (ViewBag.RecordCount > 1)
             {
-                <span class="pull-left">@Html.Partial("_PaginateDetails", Model)</span>
+                <span class="pull-left" style="padding-right: 15px;">@Html.Partial("_PaginateDetails", Model)</span>
+                
             }
+            <span class="pull-left">
+                <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
+            </span>
+
             <button type="submit" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Copy Details</button>
-            <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
             &nbsp;&nbsp;or&nbsp;@Html.BackButton("Cancel")
         </div>
     </div>
@@ -153,8 +157,12 @@
 }
 
 
-<script type="javascript/text">
-    $(document).ready(function() {
+<script type="text/javascript">
+    $(document).ready(function () {
         $(".cssselector").datepicker({ dateFormat: 'dd/mm/yy' });
+
+        $("#Circulated").change(function () {
+            $("#circulationFields").toggle();
+        });
     });
 </script>
