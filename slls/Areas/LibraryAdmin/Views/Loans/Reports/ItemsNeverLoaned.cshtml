@@ -1,0 +1,61 @@
+﻿@using System.Web.Http.Results
+@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.LoansReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@if (Model.Titles.Any())
+{
+
+    <div class="row">
+        <div class="col-md-12">
+            <table class="table table-no-border">
+                <thead>
+                    <tr>
+                        <th style="width: 30%;">@DbRes.T("Titles.Title", "FieldDisplayName")</th>
+                        <th style="width: 10%;">@DbRes.T("Copies.Copy", "FieldDisplayName")</th>
+                        <th style="width: 30%;">@DbRes.T("CopyItems.Label_Text", "FieldDisplayName")</th>
+                        <th style="width: 10%;">@DbRes.T("CopyItems.Barcode", "FieldDisplayName")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var title in Model.Titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+                    {
+                        <tr>
+                            <td colspan="4">
+                                <h4 class="report_h4">@Html.DisplayFor(modelItem => title.Title1)</h4>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="4">
+                                <table class="table table-striped table-no-border">
+                                    <tbody>
+                                        @foreach (var copy in title.Copies.Where(c => c.Volumes.Any()))
+                                        {
+                                            foreach (var volume in copy.Volumes.Where(v => v.Borrowings.Count == 0))
+                                            {
+
+                                                <tr>
+                                                    <td style="width: 30%;">&nbsp;</td>
+                                                    <td style="width: 10%;">@DbRes.T("Copies.Copy", "FieldDisplayName"): @Html.DisplayFor(modelItem => volume.Copy.CopyNumber)</td>
+                                                    <td style="width: 30%;">@Html.DisplayFor(modelItem => volume.LabelText)</td>
+                                                    <td style="width: 10%;">@Html.DisplayFor(modelItem => volume.Barcode)</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div style="margin-bottom: 5px;">&nbsp;</div>
+        </div>
+    </div>
+
+}

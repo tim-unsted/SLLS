@@ -167,5 +167,7 @@ namespace slls.ViewModels
         public string NoDataTitle { get; set; }
         public string NoDataMsg { get; set; }
         public string NoDataOk { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
     }
 }

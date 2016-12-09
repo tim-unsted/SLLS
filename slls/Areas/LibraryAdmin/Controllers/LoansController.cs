@@ -828,6 +828,123 @@ namespace slls.Areas.LibraryAdmin
             return Json(volume != null);
         }
 
+        public ActionResult LoansHistoryReport()
+        {
+            var viewModel = new SelectTwoDatesViewModel()
+            {
+                PostSelectController = "Loans",
+                PostSelectAction = "Post_LoansHistoryReport",
+                DetailsText = "To generate a report of all borrowing activity (history) over a given date range, please enter a start and end date in the boxes below:",
+                OkButtonText = "View Report",
+            };
+
+            ViewBag.Title = "Borrowing History - Between Dates";
+            return PartialView("_SelectBetweenDates", viewModel);
+        }
+
+        public ActionResult Post_LoansHistoryReport(SelectTwoDatesViewModel viewModel)
+        {
+            UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+            string actionUrl = urlHelper.Action("Report_LoansHistory", "Loans", new { startDate = viewModel.SelectedStartDate, endDate = viewModel.SelectedEndDate });
+            return Json(new { success = true, redirectTo = actionUrl });
+        }
+
+        public ActionResult Report_LoansHistory(DateTime startDate, DateTime endDate)
+        {
+            var titles = (from t in _db.Titles
+                          join c in _db.Copies on t.TitleID equals c.TitleID
+                          join v in _db.Volumes on c.CopyID equals v.CopyID
+                          join b in _db.Borrowings on v.VolumeID equals b.VolumeID
+                          where b.Borrowed >= startDate && b.Borrowed <= endDate
+                          select t).Distinct();
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                Titles = titles,
+                HasData = titles.Any(),
+                StartDate = startDate,
+                EndDate = endDate
+            };
+
+            ViewBag.Title = "Loans History Between " + startDate.ToString("dd MMM yyyy") + " and " + endDate.ToString("dd MMM yyyy");
+            return View("Reports/loansHistory", viewModel);
+        }
+
+        public ActionResult BorrowerHistoryReport()
+        {
+            var viewModel = new SelectPopupViewModel
+            {
+                PostSelectController = "Loans",
+                PostSelectAction = "Post_BorrowerHistory",
+                SelectedItem = "0",
+                HeaderText = DbRes.T("Loans", "EntityType") + "Reports: " + DbRes.T("Borrowing.Borrower", "FieldDisplayName") + " History - All Loans & Returns",
+                DetailsHeader = "To generate a report of all borrowing activity (history) for a given " + DbRes.T("Borrowing.Borrower", "FieldDisplayName").ToLower() + ", select the " + DbRes.T("Borrowing.Borrower", "FieldDisplayName").ToLower() + " from the drop-down list below. Note: This list only contains the name of those people with borrowing history.",
+                SelectLabel = "",
+                SelectText = "Select a " + DbRes.T("Borrowing.Borrower", "FieldDisplayName"),
+                OkButtonText = "View Report",
+                PostSelectId = 0
+            };
+
+            viewModel.AvailableItems =
+                _db.Users.Where(u => u.Borrowings.Any())
+                    .Select(x => new SelectListItem
+                    {
+                        Value = x.Id.ToString(),
+                        Text = x.Lastname + ", " + x.Firstname
+                    }).OrderBy(c => c.Text)
+                    .ToList();
+
+            ViewBag.Title = DbRes.T("Borrowing.Borrower", "FieldDisplayName") + " History - All Loans & Returns";
+            return PartialView("_SelectPopup", viewModel);
+        }
+
+        public ActionResult Post_BorrowerHistory(SelectPopupViewModel selectedBorrower)
+        {
+            var borrower = _db.Users.Find(selectedBorrower.SelectedItem);
+            if (borrower == null)
+            {
+                return null;
+            }
+            if (borrower != null)
+            {
+                UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                string actionUrl = urlHelper.Action("Report_BorrowerHistory", "Loans", new { userId = borrower.Id });
+                return Json(new { success = true, redirectTo = actionUrl });
+            }
+            return Json(new { success = false });
+        }
+
+        public ActionResult Report_BorrowerHistory(string UserId = "")
+        {
+            var borrower = _db.Users.Find(UserId);
+            if (borrower == null)
+            {
+                return null;
+            }
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                Borrower = borrower,
+                BorrowerName = borrower.Fullname
+            };
+
+            var currentLoans = borrower.Borrowings.Where(b => b.Returned == null);
+            if (currentLoans.Any())
+            {
+                viewModel.HasData = true;
+            }
+
+            var titles = (from t in _db.Titles
+                          join c in _db.Copies on t.TitleID equals c.TitleID
+                          join v in _db.Volumes on c.CopyID equals v.CopyID
+                          join b in _db.Borrowings on v.VolumeID equals b.VolumeID
+                          where b.Returned == null && b.BorrowerUser.Id == borrower.Id
+                          select t).Distinct();
+
+            viewModel.Titles = titles;
+            ViewBag.Title = DbRes.T("Borrowing.Borrower", "FieldDisplayName") + " Enquiry";
+            return View("Reports/BorrowerHistory", viewModel);
+        }
 
         public ActionResult BorrowerEnquiryReport()
         {
@@ -906,6 +1023,57 @@ namespace slls.Areas.LibraryAdmin
             return View("Reports/BorrowerEnquiry", viewModel);
         }
 
+        public ActionResult Report_ItemsOnLoanByTitle()
+        {
+            var titles = (from t in _db.Titles
+                          join c in _db.Copies on t.TitleID equals c.TitleID
+                          join v in _db.Volumes on c.CopyID equals v.CopyID
+                          join b in _db.Borrowings on v.VolumeID equals b.VolumeID
+                          where b.Returned == null
+                          select t).Distinct();
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                Titles = titles,
+                HasData = titles.Any()
+            };
+
+            ViewBag.Title = "Items Currently On Loan - By Title";
+            return View("Reports/ItemsOnLoanByTitle", viewModel);
+        }
+
+        public ActionResult Report_ItemsOnLoanByBorrower()
+        {
+            var borrowers = _db.Users.Where(u => u.Borrowings.Any(b => b.Returned == null));
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                Borrowers = borrowers,
+                HasData = borrowers.Any()
+            };
+
+            ViewBag.Title = "Items Currently On Loan - By Borrower";
+            return View("Reports/ItemsOnLoanByBorrower", viewModel);
+        }
+
+        public ActionResult Report_ItemsNeverLoaned()
+        {
+
+            var titles = (from t in _db.Titles
+                          join c in _db.Copies on t.TitleID equals c.TitleID
+                          join v in _db.Volumes on c.CopyID equals v.CopyID
+                          where !v.LoanType.RefOnly && !v.Borrowings.Any()
+                          select t).Distinct();
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                Titles = titles,
+                HasData = titles.Any()
+            };
+
+            ViewBag.Title = "Items Never Loaned";
+            return View("Reports/ItemsNeverLoaned", viewModel);
+        }
 
         [HttpGet]
         public ActionResult Delete(int id = 0)

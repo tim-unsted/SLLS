@@ -1,4 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using Westwind.Globalization;
 
@@ -172,6 +175,47 @@ namespace slls.ViewModels
         public string PostSelectIdString { get; set; }
 
         public string AvailableItemsType { get; set; }
+
+    }
+
+    public class SelectTwoDatesViewModel
+    {
+        public SelectTwoDatesViewModel()
+        {
+            OkButtonText = DbRes.T("Buttons.Ok", "Terminology");
+            SelectedStartDate = DateTime.Today.AddYears(-1);
+            SelectedEndDate = DateTime.Today;
+            StartDateLabel = "From";
+            EndDateLabel = "To";
+        }
+        
+        //This controller that has implementation of Post Select action
+        public string PostSelectController { get; set; }
+
+        // Action to perform after user confirms "Select".
+        public string PostSelectAction { get; set; }
+
+        public string HeaderText { get; set; }
+
+        public string DetailsHeader { get; set; }
+
+        public string DetailsText { get; set; }
+
+        public string StartDateLabel { get; set; }
+
+        public string EndDateLabel { get; set; }
+
+        [Required]
+        [DisplayName("Start date")]
+        public DateTime SelectedStartDate { get; set; }
+
+        [Required]
+        [DisplayName("End date")]
+        public DateTime SelectedEndDate { get; set; }
+
+        public string OkButtonText { get; set; }
+
+        public int PostSelectId { get; set; }
 
     }
 }

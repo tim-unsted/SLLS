@@ -1,0 +1,48 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.SelectTwoDatesViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm(Model.PostSelectAction, Model.PostSelectController, FormMethod.Post, new { @class = "form-horizontal", id="frmSelect" }))
+{
+    @Html.ValidationSummary()
+    @Html.HiddenFor(x => x.PostSelectAction)
+    @Html.HiddenFor(x => x.PostSelectController)
+    
+    <div class="modal-body">
+        @if (!Model.DetailsHeader.IsEmpty())
+        {
+            <h4>
+                @Html.DisplayFor(model => model.DetailsHeader)
+            </h4>
+        }
+
+        @if (!Model.DetailsText.IsEmpty())
+        {
+            <div class="alert alert-info">
+                <span class="help-block"><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> @Html.DisplayFor(model => model.DetailsText).</span>
+            </div>
+        }
+
+        <div class="form-group">
+            @Html.Label(Model.StartDateLabel, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.SelectedStartDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SelectedStartDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        
+        <div class="form-group">
+            @Html.Label(Model.EndDateLabel, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.SelectedEndDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.SelectedEndDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @Html.DisplayFor(model => model.OkButtonText)</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}

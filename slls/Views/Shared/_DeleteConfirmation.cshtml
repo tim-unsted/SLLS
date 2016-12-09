@@ -9,13 +9,13 @@
 @using (Html.BeginForm(Model.PostDeleteAction, Model.PostDeleteController, FormMethod.Post, new { @class = "modal-form form-horizontal" }))
 {
     @Html.ValidationSummary()
-            <!-- Added hidden field so that these values persist when calling POST Action. Otherwise POST action will have all these properties as null -->
+    <!-- Added hidden fields so that these values persist when calling POST Action. Otherwise POST action will have all these properties as null -->
     @Html.HiddenFor(x => x.DeleteEntityId)
     @Html.HiddenFor(x => x.DeleteEntityIdString)
     @Html.HiddenFor(x => x.PostDeleteAction)
     @Html.HiddenFor(x => x.PostDeleteController)
     @Html.HiddenFor(x => x.HeaderText)
-            <!-- Though not required in post action but may be in case of error useful-->
+    
     <div class="modal-body">
         <div class="control-group">
             <p>@Html.DisplayFor(model => model.ConfirmationText) @Html.DisplayFor(model => model.HeaderText)?</p>
