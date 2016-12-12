@@ -3,6 +3,21 @@
 
 <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 
+<style type="text/css">
+    .bootstrap-select .dropdown-toggle .filter-option {
+        font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;
+    }
+     .bootstrap-select .dropdown-toggle .filter-option:before {
+         font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;
+     }
+     .bootstrap-select.btn-group .dropdown-menu.inner {
+        font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;
+
+     }
+
+</style>
+
+
 @Html.Partial("_HeaderSeeAlso")
 
 <div class="alert alert-info">
@@ -17,7 +32,7 @@
         @Html.HiddenFor(model => model.Tab)
 
         <div class="form-group" title="@Model.Message">
-            @Html.DropDownListFor(model => model.OrderID, Model.Orders, new { @class = "form-control", style = "font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;", onchange = "this.form.submit();" })
+            @Html.DropDownListFor(model => model.OrderID, Model.Orders, new { @class = "form-control selectpicker", style = "font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;", onchange = "this.form.submit();" })
             <span class="pull-right"><button type="button" id="showOrders" name="showOrders" class="btn btn-link" value="showAll" title="Click to list all orders">[Show All]</button></span>
             @Html.ValidationMessageFor(model => model.OrderID, "", new { @class = "text-danger" })
         </div>
@@ -27,6 +42,11 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
 
         //Get a list of orders ...
         $("#showOrders").click(function () {

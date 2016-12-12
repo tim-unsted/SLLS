@@ -705,6 +705,47 @@ namespace slls.Areas.LibraryAdmin
             });
         }
 
+        //Method used to supply a JSON list of Copies selecting a Title (Ajax stuf)
+        public JsonResult GetCopies(int titleId = 0)
+        {
+            var borrowedCopies = (from c in _db.Copies
+                                  join v in _db.Volumes on c.CopyID equals v.CopyID
+                                  where c.TitleID == titleId && v.Borrowings.Any()
+                                  select c).Distinct();
+
+            var borrowedVolumes = from v in _db.Volumes
+                                  join c in _db.Copies on v.CopyID equals c.CopyID
+                                  where c.TitleID == titleId && v.Borrowings.Any()
+                                  select v;
+
+            var copies = new SelectList(borrowedCopies.ToList(), "CopyID", "CopyNumber");
+            var volumes = new SelectList(borrowedVolumes.ToList(), "VolumeID", "Barcode");
+
+            return Json(new
+            {
+                success = true,
+                BorrowedCopies = copies,
+                BorrowedVolumes = volumes
+            });
+        }
+
+        //Method used to supply a JSON list of Volumes/Barcodes selecting a Title (Ajax stuf)
+        public JsonResult GetVolumes(int copyId = 0)
+        {
+            var borrowedVolumes = from v in _db.Volumes
+                                  where v.CopyID == copyId
+                                  where v.Borrowings.Any()
+                                  select v;
+
+            var volumes = new SelectList(borrowedVolumes.ToList(), "VolumeID", "Barcode");
+
+            return Json(new
+            {
+                success = true,
+                BorrowedVolumes = volumes
+            });
+        }
+
         //Method used to supply a JSON list of Volumes on loan when selecting a Copy (Ajax stuf)
         public JsonResult GetBorrowedVolumes(int copyId = 0)
         {
@@ -827,6 +868,143 @@ namespace slls.Areas.LibraryAdmin
             var volume = _db.Volumes.FirstOrDefault(v => v.Barcode == barcode);
             return Json(volume != null);
         }
+
+
+
+        public ActionResult ItemBorrowingHistoryReport()
+        {
+            var titlesList = new List<SelectListItem>();
+            var copiesList = new List<SelectListItem>();
+            var volumesList = new List<SelectListItem>();
+
+            var titles = (from t in _db.Titles
+                          join c in _db.Copies on t.TitleID equals c.TitleID
+                          join v in _db.Volumes on c.CopyID equals v.CopyID
+                          join b in _db.Borrowings on v.VolumeID equals b.VolumeID
+                          select t).Distinct();
+
+            titlesList.Add(new SelectListItem
+            {
+                Text = "Select a borrowed " + DbRes.T("Titles.Title", "FieldDisplayName"),
+                Value = "0"
+            });    
+
+            foreach (var item in titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+            {
+                titlesList.Add(new SelectListItem
+                {
+                    Text = string.IsNullOrEmpty(item.Title1) ? "<empty title>" : StringHelper.Truncate(item.Title1, 100),
+                    Value = item.TitleID.ToString()
+                });
+            }
+
+            copiesList.Add(new SelectListItem
+            {
+                Text = "All " + DbRes.T("Titles.Copies", "FieldDisplayName"),
+                Value = "0"
+            });
+
+            volumesList.Add(new SelectListItem
+            {
+                Text = "All " + DbRes.T("Copies.Copy_Items", "FieldDisplayName"),
+                Value = "0"
+            });
+
+            var viewModel = new LoansSelectorViewModel()
+            {
+                SelectTitles = titlesList,
+                SelectCopies = copiesList,
+                SelectVolumes = volumesList,
+                //StartDate = _db.Borrowings.FirstOrDefault().Borrowed ?? DateTime.Parse("01-Jan-1990"),
+                //EndDate = DateTime.Today
+            };
+
+            ViewBag.DetailsText =
+                "To generate a report of borrowing history for a particular item, enter or scan the item's barcode or select the item from the drop-down list below. Optionally, select a time period or enter any relevant dates to filter the results further.";
+            ViewBag.Title = "Item Borrowing History";
+            return PartialView("ItemBorrowingHistory", viewModel);
+        }
+
+        public ActionResult Post_ItemBorrowingHistoryReport(LoansSelectorViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (viewModel.StartDate != null || viewModel.EndDate != null)
+                {
+                    viewModel.DatesProvided = true;
+                }
+                UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                string actionUrl = urlHelper.Action("Report_ItemBorrowingHistory", "Loans", new { startDate = viewModel.StartDate ?? DateTime.Parse("01-Jan-1970"), endDate = viewModel.EndDate ?? DateTime.Now, datesProvided = viewModel.DatesProvided, barcode = viewModel.Barcode ?? "", titleId = viewModel.TitleId, copyId = viewModel.CopyId });
+                return Json(new { success = true, redirectTo = actionUrl });
+            }
+            return null;
+        }
+
+        public ActionResult Report_ItemBorrowingHistory(DateTime startDate, DateTime endDate, Boolean datesProvided, string barcode = "", int titleId = 0, int copyId = 0)
+        {
+            IEnumerable<Title> titles = from t in _db.Titles where t.TitleID == 0 select t;
+            IEnumerable<Borrowing> borrowings; // = from b in _db.Borrowings where b.VolumeID == 0 select b;
+
+            if (datesProvided)
+            {
+                borrowings = from b in _db.Borrowings
+                    where b.Borrowed >= startDate && b.Borrowed <= endDate
+                    select b;
+            }
+            else
+            {
+                borrowings = from b in _db.Borrowings
+                             select b;
+            }
+
+            if (!string.IsNullOrEmpty(barcode))
+            {
+                titles = (from t in _db.Titles
+                         join c in _db.Copies on t.TitleID equals c.TitleID
+                         join v in _db.Volumes on c.CopyID equals v.CopyID
+                         join b in borrowings on v.VolumeID equals b.VolumeID
+                         where v.Barcode == barcode
+                         select t).Distinct();
+            }
+            else if (copyId > 0)
+            {
+                titles = (from t in _db.Titles
+                         join c in _db.Copies on t.TitleID equals c.TitleID
+                         join v in _db.Volumes on c.CopyID equals v.CopyID
+                         join b in borrowings on v.VolumeID equals b.VolumeID
+                         where c.CopyID == copyId
+                         select t).Distinct();
+            }
+            else if (titleId > 0)
+            {
+                titles = (from t in _db.Titles
+                         join c in _db.Copies on t.TitleID equals c.TitleID
+                         join v in _db.Volumes on c.CopyID equals v.CopyID
+                         join b in borrowings on v.VolumeID equals b.VolumeID
+                         where t.TitleID == titleId
+                         select t).Distinct();
+            }
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                Titles = titles,
+                StartDate = startDate,
+                EndDate = endDate,
+                HasData = titles.Any()
+            };
+
+            if (datesProvided)
+            {
+                ViewBag.Title = "Item Borrowing History Between " + startDate.ToString("dd MMM yyyy") + " and " + endDate.ToString("dd MMM yyyy");
+            }
+            else
+            {
+                ViewBag.Title = "Item Borrowing History";
+            }
+            
+            return View("Reports/LoansHistory", viewModel);
+        }
+
 
         public ActionResult OverdueLoansReport()
         {

@@ -917,6 +917,11 @@ h5 {
     margin-left: 15px;
 }
 
+.close-strike {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
 .dl-horizontal dd {
     margin-left: 190px;
 }

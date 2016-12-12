@@ -16,7 +16,7 @@
         @Html.HiddenFor(model => model.Tab)
 
         <div class="form-group" title="@Model.Message">
-            @Html.DropDownListFor(model => model.TitleID, Model.Titles, new { @class = "form-control", onchange = "this.form.submit();" })
+            @Html.DropDownListFor(model => model.TitleID, Model.Titles, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
             @Html.ValidationMessageFor(model => model.TitleID, "", new { @class = "text-danger" })
         </div>
 
@@ -37,6 +37,12 @@
 </div>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
     $(function () {
         sessionStorage.removeItem('lastTab');
     });

@@ -1,0 +1,198 @@
+﻿@using System.Web.UI.WebControls
+@using Westwind.Globalization
+@model slls.ViewModels.LoansSelectorViewModel
+
+
+
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm("Post_ItemBorrowingHistoryReport", "Loans", FormMethod.Post, new { @class = "form-horizontal", id = "frmSelect" }))
+{
+    @Html.ValidationSummary()
+
+    <div class="modal-body">
+        @if (ViewBag.DetailsText != "")
+        {
+            <div class="alert alert-info">
+                <p><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> @ViewBag.DetailsText</p>
+            </div>
+        }
+
+        <div class="strike close-strike">
+            <span>Enter or scan a @DbRes.T("CopyItems.Barcode", "FieldDisplayName")</span>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.Label(DbRes.T("CopyItems.Barcode", "FieldDisplayName"))
+                @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or scan a " + DbRes.T("CopyItems.Barcode", "FieldDisplayName") } })
+                @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="strike close-strike">
+            <span>Or, select an item below</span>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label("Borrowed " + DbRes.T("Titles", "EntityType"))
+                @Html.DropDownListFor(model => model.TitleId, Model.SelectTitles, new { @class = "form-control selectpicker" })
+                @Html.ValidationMessageFor(model => model.TitleId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.Label("Borrowed " + DbRes.T("Titles.Copies", "FieldDisplayName"))
+                @Html.DropDownListFor(model => model.CopyId, Model.SelectCopies, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.CopyId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.Label("Borrowed " + DbRes.T("Copies.Copy_Items", "FieldDisplayName"))
+                @Html.DropDownListFor(model => model.VolumeId, Model.SelectVolumes, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.VolumeId, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="strike close-strike">
+            <span>Time-span (Optional):</span>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("From", htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.Label("To", htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-3">
+                @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> View Report</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            //showSubtext: true
+        });
+
+        //Get a list of borrowed copies for the selected title ...
+        $("#TitleId").change(function() {
+            var selectCopies = $("#CopyId");
+            var selectVolumes = $("#VolumeId");
+            selectCopies.empty();
+            selectVolumes.empty();
+            $("#Barcode").val("");
+            
+            var selectedTitleId = { titleId: $("#TitleId").val() };
+
+            $.ajax({
+                url: '@Url.Action("GetCopies", "Loans")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedTitleId),
+                success: function(data) {
+                    if (data.success) {
+
+                        var copiesCount = data.BorrowedCopies.length;
+                        selectCopies.append($('<option/>', {
+                            value: "0",
+                            text: "All Copies (" + copiesCount + ")"
+                        }));
+
+                        var volumesCount = data.BorrowedVolumes.length;
+                        selectVolumes.append($('<option/>', {
+                            value: "0",
+                            text: "All Copy Items (" + volumesCount + ")"
+                        }));
+
+                        //Load in the copies ...
+                        $.each(data.BorrowedCopies, function(index, itemData) {
+                            selectCopies.append($('<option/>', {
+                                value: itemData.Value,
+                                text: itemData.Text
+                            }));
+                        });
+
+                        //Load in the volumes ...
+                        $.each(data.BorrowedVolumes, function (index, itemData) {
+                            selectVolumes.append($('<option/>', {
+                                value: itemData.Value,
+                                text: itemData.Text
+                            }));
+                        });
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+        });
+        
+        //Get a list of available volumes for a selected title/copy ...
+        function DoVolumes(copyId) {
+            var selectVolumes = $("#VolumeId");
+            var barcodeField = $("#Barcode");
+            selectVolumes.empty();
+
+            var selectedCopyId = { copyId: copyId };
+
+            $.ajax({
+                url: '@Url.Action("GetVolumes", "Loans")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedCopyId),
+                success: function (data) {
+                    if (data.success) {
+
+                        var volumesCount = data.BorrowedVolumes.length;
+                        selectVolumes.append($('<option/>', {
+                            value: "0",
+                            text: "All Copy Items (" + volumesCount + ")"
+                        }));
+
+                        $.each(data.BorrowedVolumes, function (index, itemData) {
+                            selectVolumes.append($('<option/>', {
+                                value: itemData.Value,
+                                text: itemData.Text
+                            }));
+                        });
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+        }
+
+        $("#CopyId").change(function () {
+            DoVolumes($("#CopyId").val());
+            $("#Barcode").val("");
+        });
+
+        $("#VolumeId").change(function () {
+            var barcode = $("#VolumeId option:selected").text();
+            $("#Barcode").val(barcode);
+        });
+    });
+</script>

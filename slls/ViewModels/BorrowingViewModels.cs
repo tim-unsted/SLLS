@@ -169,5 +169,23 @@ namespace slls.ViewModels
         public string NoDataOk { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        
+    }
+
+    public class LoansSelectorViewModel
+    {
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public bool DatesProvided { get; set; }
+        public string Barcode { get; set; }
+        public string Title { get; set; }
+        public int Days { get; set; }
+        public int TitleId { get; set; }
+        public int CopyId { get; set; }
+        public int VolumeId { get; set; }
+
+        public IEnumerable<SelectListItem> SelectCopies { get; set; }
+        public IEnumerable<SelectListItem> SelectTitles { get; set; }
+        public IEnumerable<SelectListItem> SelectVolumes { get; set; }
     }
 }
