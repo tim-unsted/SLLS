@@ -8,13 +8,12 @@
 <h2>@ViewBag.Title</h2>
 <hr />
 
-@if (Model.Titles.Any())
+@if (Model.Volumes.Any())
 {
-    foreach (var title in Model.Titles.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
-    {
+    
         <div class="row">
             <div class="col-md-12">
-                <h4>@Html.DisplayFor(modelItem => title.Title1)</h4>
+                <h4>@Html.DisplayFor(model => model.Title)</h4>
             </div>
         </div>
 
@@ -32,9 +31,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                        @foreach (var copy in title.Copies.OrderBy(c => c.CopyNumber))
+                        @foreach (var copy in Model.Copies.OrderBy(c => c.CopyNumber))
                         {
-                            foreach (var volume in copy.Volumes.Where(v => v.Borrowings.Any()).OrderBy(v => v.VolumeID))
+                            foreach (var volume in Model.Volumes.Where(v => v.Borrowings.Any()).OrderBy(v => v.VolumeID))
                             {
                                 foreach (var loan in volume.Borrowings.Where(b => b.Borrowed >= Model.StartDate && b.Borrowed <= Model.EndDate).OrderBy(x => x.Borrowed))
                                 {
@@ -55,5 +54,5 @@
             </div>
         </div>
 
-    }
+   
 }

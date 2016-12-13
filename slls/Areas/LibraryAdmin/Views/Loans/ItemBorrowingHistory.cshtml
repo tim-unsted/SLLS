@@ -2,9 +2,6 @@
 @using Westwind.Globalization
 @model slls.ViewModels.LoansSelectorViewModel
 
-
-
-
 @Html.Partial("_ModalEditHeader")
 
 @using (Html.BeginForm("Post_ItemBorrowingHistoryReport", "Loans", FormMethod.Post, new { @class = "form-horizontal", id = "frmSelect" }))
@@ -59,26 +56,48 @@
             </div>
         </div>
 
-        <div class="strike close-strike">
+        <div class="strike close-strike" style="margin-top: 20px;">
             <span>Time-span (Optional):</span>
         </div>
 
         <div class="form-group">
-            @Html.Label("From", htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-3">
-                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.Label("To", htmlAttributes: new { @class = "control-label col-md-3" })
-            <div class="col-md-3">
-                @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+            <div class="btn-group col-md-12" data-toggle="buttons" id="dateRangeType">
+                <div class="col-md-6">
+                    <div class="radio-inline col-md-10">
+                        <label>
+                            @Html.RadioButtonFor(model => model.DateRangeType, "span")Time-span
+                        </label>
+                        <div>
+                            @Html.DropDownList("Weeks", new SelectList(ViewBag.SelectWeeks, "Key", "Value", "0"), new { name = "weeks", @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="radio-inline">
+                        <label>
+                            @Html.RadioButtonFor(model => model.DateRangeType, "range")Date range
+                        </label>
+                        <div>
+                            @Html.Label("From", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.StartDate, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.StartDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <br /><br />
+                        <div>
+                            @Html.Label("To", htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-10">
+                                @Html.EditorFor(model => model.EndDate, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.EndDate, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
 
     <div class="modal-footer">
         <button type="submit" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> View Report</button>
@@ -88,20 +107,72 @@
 
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
+        var typingTimer; //timer identifier
+        var doneTypingInterval = 500; //time in ms, 0.5 seconds for example
+        var input = $('#Barcode');
+
+        input.focus();
+
+        //on keyup, start the countdown
+        input.on('keyup', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        });
+
+        //on keydown, clear the countdown
+        input.on('keydown', function () {
+            clearTimeout(typingTimer);
+        });
+
+        //on paste, clear the countdown
+        input.on('paste', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        });
+
+        function doneTyping() {
+            var selectedBarcode = { barcode: input.val() };
+            $.ajax({
+                url: '@Url.Action("GetIdsFromBarcode", "Loans")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedBarcode),
+                success: function (data) {
+                    if (data.success) {
+                        $("#TitleId").val(data.TitleId).change();
+                        $("#CopyId").val(data.CopyId).change();
+                        $("#VolumeId").val(data.VolumeId).change();
+                    }
+                }
+            });
+        }
+
         $('.selectpicker').selectpicker({
-            liveSearch: true,
-            //showSubtext: true
+            liveSearch: true
+        });
+
+        $('#Weeks').click(function () {
+            $('input:radio[id="DateRangeType"][value="span"]').prop("checked", true);
+        });
+
+        $('#StartDate').click(function () {
+            $('input:radio[id="DateRangeType"][value="range"]').prop("checked", true);
+        });
+
+        $('#EndDate').click(function () {
+            $('input:radio[id="DateRangeType"][value="range"]').prop("checked", true);
         });
 
         //Get a list of borrowed copies for the selected title ...
-        $("#TitleId").change(function() {
+        $("#TitleId").change(function () {
             var selectCopies = $("#CopyId");
             var selectVolumes = $("#VolumeId");
             selectCopies.empty();
             selectVolumes.empty();
-            $("#Barcode").val("");
-            
+            //alert($("#TitleId").val());
+
             var selectedTitleId = { titleId: $("#TitleId").val() };
 
             $.ajax({
@@ -110,7 +181,7 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 data: JSON.stringify(selectedTitleId),
-                success: function(data) {
+                success: function (data) {
                     if (data.success) {
 
                         var copiesCount = data.BorrowedCopies.length;
@@ -126,7 +197,7 @@
                         }));
 
                         //Load in the copies ...
-                        $.each(data.BorrowedCopies, function(index, itemData) {
+                        $.each(data.BorrowedCopies, function (index, itemData) {
                             selectCopies.append($('<option/>', {
                                 value: itemData.Value,
                                 text: itemData.Text
@@ -147,7 +218,7 @@
                 async: false
             });
         });
-        
+
         //Get a list of available volumes for a selected title/copy ...
         function DoVolumes(copyId) {
             var selectVolumes = $("#VolumeId");

@@ -7,6 +7,8 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls.Expressions;
+using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.Identity.Owin;
 using slls.Models;
 using slls.Utils.Helpers;
@@ -711,11 +713,13 @@ namespace slls.Areas.LibraryAdmin
             var borrowedCopies = (from c in _db.Copies
                                   join v in _db.Volumes on c.CopyID equals v.CopyID
                                   where c.TitleID == titleId && v.Borrowings.Any()
+                                  orderby c.CopyNumber
                                   select c).Distinct();
 
             var borrowedVolumes = from v in _db.Volumes
                                   join c in _db.Copies on v.CopyID equals c.CopyID
                                   where c.TitleID == titleId && v.Borrowings.Any()
+                                  orderby c.CopyID, v.VolumeID
                                   select v;
 
             var copies = new SelectList(borrowedCopies.ToList(), "CopyID", "CopyNumber");
@@ -735,6 +739,7 @@ namespace slls.Areas.LibraryAdmin
             var borrowedVolumes = from v in _db.Volumes
                                   where v.CopyID == copyId
                                   where v.Borrowings.Any()
+                                  orderby v.CopyID, v.VolumeID
                                   select v;
 
             var volumes = new SelectList(borrowedVolumes.ToList(), "VolumeID", "Barcode");
@@ -743,6 +748,29 @@ namespace slls.Areas.LibraryAdmin
             {
                 success = true,
                 BorrowedVolumes = volumes
+            });
+        }
+
+        public JsonResult GetIdsFromBarcode(string barcode)
+        {
+            var volumes = from v in _db.Volumes
+                where v.Barcode == barcode
+                select v;
+            
+            var copies = from c in _db.Copies
+                join v in volumes on c.CopyID equals v.CopyID
+                select c;
+
+            var title = from t in _db.Titles
+                join c in copies on t.TitleID equals c.TitleID
+                select t;
+
+            return Json(new
+            {
+                success = true,
+                VolumeId = volumes.FirstOrDefault().VolumeID,
+                CopyId = copies.FirstOrDefault().CopyID,
+                TitleId = title.FirstOrDefault().TitleID
             });
         }
 
@@ -915,8 +943,21 @@ namespace slls.Areas.LibraryAdmin
                 SelectTitles = titlesList,
                 SelectCopies = copiesList,
                 SelectVolumes = volumesList,
-                //StartDate = _db.Borrowings.FirstOrDefault().Borrowed ?? DateTime.Parse("01-Jan-1990"),
-                //EndDate = DateTime.Today
+                DateRangeType = "span"
+            };
+
+            ViewData["SelectWeeks"] = new Dictionary<string, string>
+            {
+                {"0", "Forever"},    
+                {"1", "Last week"},
+                {"2", "Last two weeks"},
+                {"4", "Last four weeks"},
+                {"8", "Last eight weeks"},
+                {"12", "Last three months"},
+                {"26", "Last six months"},
+                {"52", "Last year"},
+                {"104", "Last two years"},
+                {"260", "Last five years"}
             };
 
             ViewBag.DetailsText =
@@ -929,21 +970,91 @@ namespace slls.Areas.LibraryAdmin
         {
             if (ModelState.IsValid)
             {
-                if (viewModel.StartDate != null || viewModel.EndDate != null)
+                DateTime startDate = viewModel.StartDate ?? DateTime.Parse("01-Jan-1970");
+                DateTime endDate = viewModel.EndDate ?? DateTime.Now;
+
+                var dateRangeType = viewModel.DateRangeType;
+                if (dateRangeType == "span")
+                {
+                    var weeks = viewModel.Weeks;
+                    var daysToAdd = 7;
+                    if (weeks > 0)
+                    {
+                        switch (weeks)
+                        {
+                            case 1:
+                            {
+                                startDate = DateTime.Today.AddDays(-7);
+                                break;
+                            }
+                            case 2:
+                            {
+                                startDate = DateTime.Today.AddDays(-14);
+                                break;
+                            }
+                            case 4:
+                            {
+                                startDate = DateTime.Today.AddMonths(-1);
+                                break;
+                            }
+                            case 8:
+                            {
+                                startDate = DateTime.Today.AddMonths(-2);
+                                break;
+                            }
+                            case 12:
+                            {
+                                startDate = DateTime.Today.AddMonths(-3);
+                                break;
+                            }
+                            case 26:
+                            {
+                                startDate = DateTime.Today.AddMonths(-6);
+                                break;
+                            }
+                            case 52:
+                            {
+                                startDate = DateTime.Today.AddYears(-1);
+                                break;
+                            }
+                            case 104:
+                            {
+                                startDate = DateTime.Today.AddYears(-2);
+                                break;
+                            }
+                            case 260:
+                            {
+                                startDate = DateTime.Today.AddYears(-5);
+                                break;
+                            }
+                        }
+                        
+                        endDate = DateTime.Now;
+                        viewModel.DatesProvided = true;
+                    }
+                }else if (viewModel.StartDate != null || viewModel.EndDate != null)
                 {
                     viewModel.DatesProvided = true;
                 }
+
                 UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
-                string actionUrl = urlHelper.Action("Report_ItemBorrowingHistory", "Loans", new { startDate = viewModel.StartDate ?? DateTime.Parse("01-Jan-1970"), endDate = viewModel.EndDate ?? DateTime.Now, datesProvided = viewModel.DatesProvided, barcode = viewModel.Barcode ?? "", titleId = viewModel.TitleId, copyId = viewModel.CopyId });
+                string actionUrl = urlHelper.Action("Report_ItemBorrowingHistory", "Loans", new { startDate, endDate, datesProvided = viewModel.DatesProvided, dateRangeType = viewModel.DateRangeType, weeks = viewModel.Weeks, barcode = viewModel.Barcode ?? "", titleId = viewModel.TitleId, copyId = viewModel.CopyId });
                 return Json(new { success = true, redirectTo = actionUrl });
             }
             return null;
         }
 
-        public ActionResult Report_ItemBorrowingHistory(DateTime startDate, DateTime endDate, Boolean datesProvided, string barcode = "", int titleId = 0, int copyId = 0)
+        public ActionResult Report_ItemBorrowingHistory(DateTime startDate, DateTime endDate, Boolean datesProvided, string dateRangeType = "span", int weeks = 0, string barcode = "", int titleId = 0, int copyId = 0)
         {
             IEnumerable<Title> titles = from t in _db.Titles where t.TitleID == 0 select t;
+            IEnumerable<Volume> volumes = from v in _db.Volumes where v.VolumeID == 0 select v;
             IEnumerable<Borrowing> borrowings; // = from b in _db.Borrowings where b.VolumeID == 0 select b;
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                StartDate = startDate,
+                EndDate = endDate
+            };
 
             if (datesProvided)
             {
@@ -959,43 +1070,97 @@ namespace slls.Areas.LibraryAdmin
 
             if (!string.IsNullOrEmpty(barcode))
             {
-                titles = (from t in _db.Titles
-                         join c in _db.Copies on t.TitleID equals c.TitleID
-                         join v in _db.Volumes on c.CopyID equals v.CopyID
+                volumes = (from v in _db.Volumes 
                          join b in borrowings on v.VolumeID equals b.VolumeID
                          where v.Barcode == barcode
-                         select t).Distinct();
+                         select v).Distinct();
+                viewModel.Barcode = barcode;
             }
             else if (copyId > 0)
             {
-                titles = (from t in _db.Titles
-                         join c in _db.Copies on t.TitleID equals c.TitleID
+                volumes = (from c in _db.Copies
                          join v in _db.Volumes on c.CopyID equals v.CopyID
                          join b in borrowings on v.VolumeID equals b.VolumeID
                          where c.CopyID == copyId
-                         select t).Distinct();
+                         select v).Distinct();
+                viewModel.CopyId = copyId;
             }
             else if (titleId > 0)
             {
-                titles = (from t in _db.Titles
+                volumes = (from t in _db.Titles
                          join c in _db.Copies on t.TitleID equals c.TitleID
                          join v in _db.Volumes on c.CopyID equals v.CopyID
                          join b in borrowings on v.VolumeID equals b.VolumeID
                          where t.TitleID == titleId
-                         select t).Distinct();
+                         select v).Distinct();
             }
 
-            var viewModel = new LoansReportsViewModel()
-            {
-                Titles = titles,
-                StartDate = startDate,
-                EndDate = endDate,
-                HasData = titles.Any()
-            };
+            viewModel.Volumes = volumes;
+            viewModel.HasData = volumes.Any();
+            viewModel.Copies = (from c in _db.Copies
+                                         join v in volumes on c.CopyID equals v.CopyID
+                                         select c).Distinct();
+            viewModel.Title = volumes.FirstOrDefault().Copy.Title.Title1;
 
             if (datesProvided)
             {
-                ViewBag.Title = "Item Borrowing History Between " + startDate.ToString("dd MMM yyyy") + " and " + endDate.ToString("dd MMM yyyy");
+                if (dateRangeType == "range")
+                {
+                    ViewBag.Title = "Item Borrowing History Between " + startDate.ToString("dd MMM yyyy") + " and " + endDate.ToString("dd MMM yyyy");
+                }
+                else
+                {
+                    var timeSpan = "";
+                    switch (weeks)
+                    {
+                        case 1:
+                        {
+                            timeSpan = "Week";
+                            break;
+                        }
+                        case 2:
+                        {
+                            timeSpan = "Two Weeks";
+                            break;
+                        }
+                        case 4:
+                        {
+                            timeSpan = "Four Weeks";
+                            break;
+                        }
+                        case 8:
+                        {
+                            timeSpan = "Eight Weeks";
+                            break;
+                        }
+                            case 12:
+                        {
+                            timeSpan = "Three Months";
+                            break;
+                        }
+                            case 26:
+                        {
+                            timeSpan = "Six Months";
+                            break;
+                        }
+                            case 52:
+                        {
+                            timeSpan = "Year";
+                            break;
+                        }
+                            case 104:
+                        {
+                            timeSpan = "Two Years";
+                            break;
+                        }
+                            case 260:
+                        {
+                            timeSpan = "Five Years";
+                            break;
+                        }
+                    }
+                    ViewBag.Title = "Item Borrowing History Over Past " + timeSpan;
+                }
             }
             else
             {

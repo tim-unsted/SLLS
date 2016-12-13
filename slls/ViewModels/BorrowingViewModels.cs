@@ -169,6 +169,10 @@ namespace slls.ViewModels
         public string NoDataOk { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
+        public int TitleId { get; set; }
+        public int CopyId { get; set; }
+        public string Barcode { get; set; }
+        public string Title { get; set; }
         
     }
 
@@ -177,9 +181,10 @@ namespace slls.ViewModels
         public DateTime? StartDate { get; set; }
         public DateTime? EndDate { get; set; }
         public bool DatesProvided { get; set; }
+        public string DateRangeType { get; set; }   
         public string Barcode { get; set; }
         public string Title { get; set; }
-        public int Days { get; set; }
+        public int Weeks { get; set; }
         public int TitleId { get; set; }
         public int CopyId { get; set; }
         public int VolumeId { get; set; }
