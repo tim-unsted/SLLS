@@ -188,9 +188,10 @@ namespace slls.ViewModels
         public int TitleId { get; set; }
         public int CopyId { get; set; }
         public int VolumeId { get; set; }
-
+        public Dictionary<string,string> SelectWeeks { get; set; }
         public IEnumerable<SelectListItem> SelectCopies { get; set; }
         public IEnumerable<SelectListItem> SelectTitles { get; set; }
         public IEnumerable<SelectListItem> SelectVolumes { get; set; }
+        public string DetailsText { get; set; }
     }
 }

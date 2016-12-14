@@ -34,6 +34,7 @@ namespace slls.Areas.LibraryAdmin
         //[OutputCache(Duration = 300, VaryByParam = "none")] //cached for 300 seconds  
         public ActionResult Index()
         {
+            TempData["LoansSelectorViewModel"] = null;
             var viewModel = new DashboardViewModel()
             {
                 ShowWelcomeMessage = App_Settings.Settings.GetParameterValue("Admin.ShowWelcomeMessage", "true") == "true",

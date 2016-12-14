@@ -7,12 +7,18 @@
 @using (Html.BeginForm("Post_ItemBorrowingHistoryReport", "Loans", FormMethod.Post, new { @class = "form-horizontal", id = "frmSelect" }))
 {
     @Html.ValidationSummary()
+    
+    @Html.HiddenFor(m => m.DetailsText)
+    @*@Html.HiddenFor(m => m.SelectCopies)
+    @Html.HiddenFor(m => m.SelectTitles)
+    @Html.HiddenFor(m => m.SelectVolumes)
+    @Html.HiddenFor(m => m.SelectWeeks)*@
 
     <div class="modal-body">
-        @if (ViewBag.DetailsText != "")
+        @if (Model.DetailsText != "")
         {
             <div class="alert alert-info">
-                <p><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> @ViewBag.DetailsText</p>
+                <p><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> @Model.DetailsText</p>
             </div>
         }
 
@@ -68,7 +74,7 @@
                             @Html.RadioButtonFor(model => model.DateRangeType, "span")Time-span
                         </label>
                         <div>
-                            @Html.DropDownList("Weeks", new SelectList(ViewBag.SelectWeeks, "Key", "Value", "0"), new { name = "weeks", @class = "form-control" })
+                            @Html.DropDownList("Weeks", new SelectList(Model.SelectWeeks, "Key", "Value", "0"), new { name = "weeks", @class = "form-control" })
                         </div>
                     </div>
                 </div>

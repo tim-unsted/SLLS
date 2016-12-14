@@ -904,6 +904,7 @@ namespace slls.Areas.LibraryAdmin
             var titlesList = new List<SelectListItem>();
             var copiesList = new List<SelectListItem>();
             var volumesList = new List<SelectListItem>();
+            var viewModel = (LoansSelectorViewModel)TempData["LoansSelectorViewModel"];
 
             var titles = (from t in _db.Titles
                           join c in _db.Copies on t.TitleID equals c.TitleID
@@ -938,15 +939,17 @@ namespace slls.Areas.LibraryAdmin
                 Value = "0"
             });
 
-            var viewModel = new LoansSelectorViewModel()
+            if (viewModel == null)
             {
-                SelectTitles = titlesList,
-                SelectCopies = copiesList,
-                SelectVolumes = volumesList,
-                DateRangeType = "span"
-            };
+                viewModel = new LoansSelectorViewModel();
+            }
 
-            ViewData["SelectWeeks"] = new Dictionary<string, string>
+            viewModel.SelectTitles = titlesList;
+            viewModel.SelectCopies = copiesList;
+            viewModel.SelectVolumes = volumesList;
+            viewModel.DateRangeType = "span";
+
+            viewModel.SelectWeeks = new Dictionary<string, string>
             {
                 {"0", "Forever"},    
                 {"1", "Last week"},
@@ -960,16 +963,18 @@ namespace slls.Areas.LibraryAdmin
                 {"260", "Last five years"}
             };
 
-            ViewBag.DetailsText =
+            viewModel.DetailsText =
                 "To generate a report of borrowing history for a particular item, enter or scan the item's barcode or select the item from the drop-down list below. Optionally, select a time period or enter any relevant dates to filter the results further.";
             ViewBag.Title = "Item Borrowing History";
             return PartialView("ItemBorrowingHistory", viewModel);
         }
 
+        
         public ActionResult Post_ItemBorrowingHistoryReport(LoansSelectorViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
+                TempData["LoansSelectorViewModel"] = viewModel;
                 DateTime startDate = viewModel.StartDate ?? DateTime.Parse("01-Jan-1970");
                 DateTime endDate = viewModel.EndDate ?? DateTime.Now;
 
@@ -1097,10 +1102,14 @@ namespace slls.Areas.LibraryAdmin
 
             viewModel.Volumes = volumes;
             viewModel.HasData = volumes.Any();
-            viewModel.Copies = (from c in _db.Copies
-                                         join v in volumes on c.CopyID equals v.CopyID
-                                         select c).Distinct();
-            viewModel.Title = volumes.FirstOrDefault().Copy.Title.Title1;
+
+            if (volumes.Any())
+            {
+                viewModel.Copies = (from c in _db.Copies
+                                    join v in volumes on c.CopyID equals v.CopyID
+                                    select c).Distinct();
+                viewModel.Title = volumes.FirstOrDefault().Copy.Title.Title1;
+            }
 
             if (datesProvided)
             {
@@ -1166,7 +1175,12 @@ namespace slls.Areas.LibraryAdmin
             {
                 ViewBag.Title = "Item Borrowing History";
             }
-            
+
+            if (viewModel.HasData == false)
+            {
+                TempData["NoDataMsg"] = viewModel.NoDataMsg;
+            }
+
             return View("Reports/LoansHistory", viewModel);
         }
 

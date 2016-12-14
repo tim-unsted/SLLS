@@ -1552,6 +1552,7 @@
     <Content Include="Views\Shared\_SelectBetweenDates.cshtml" />
     <Content Include="Views\Shared\_EnterTextValuePopUp.cshtml" />
     <Content Include="Views\Shared\_EnterNumericValuePopUp.cshtml" />
+    <Content Include="Views\Shared\_PostNoData.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Config\Models\" />
