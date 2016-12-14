@@ -990,7 +990,7 @@ namespace slls.Utils.Helpers
             }
 
             //Add the actual users ...
-            foreach (var item in db.Users.Where(u => u.CanDelete).OrderBy(x => x.Lastname).ThenBy(x => x.Firstname))
+            foreach (var item in db.Users.Where(u => u.CanDelete && u.IsLive && u.Lastname != null).OrderBy(x => x.Lastname).ThenBy(x => x.Firstname))
             {
                 libraryUserList.Add(new SelectListItem
                 {

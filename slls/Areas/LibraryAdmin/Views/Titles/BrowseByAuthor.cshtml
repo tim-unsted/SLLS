@@ -7,7 +7,7 @@
 {
     <div class="well well-default">
         <div class="form-group">
-            @Html.DropDownList("ListAuthors", null, "Select an " + @DbRes.T("Authors.Author", "FieldDisplayName"), new { @class = "form-control", onchange = "this.form.submit();" })
+            @Html.DropDownList("ListAuthors", null, "Select an " + @DbRes.T("Authors.Author", "FieldDisplayName"), new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
         </div>
     </div>
 }
@@ -15,3 +15,12 @@
 <div id="TitlesTable">
     @Html.Partial("_Index", Model)
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
+</script>

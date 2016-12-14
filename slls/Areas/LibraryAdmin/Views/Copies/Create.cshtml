@@ -20,24 +20,15 @@
         <div class="form-group">
             @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.DropDownList("TitleID", null, new {@class = "form-control"})
+                @Html.DropDownList("TitleID", null, new {@class = "form-control selectpicker"})
                 @Html.ValidationMessageFor(model => model.TitleID, "", new {@class = "text-danger"})
             </div>
         </div>
-
-        @*<div class="form-group">
-            @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"), "Copy No.", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.CopyNumber, new {htmlAttributes = new {@class = "form-control"}})
-                <div id="warning-msg" class="text-danger" style="display: none;">This copy number is already being used!</div>
-                @Html.ValidationMessageFor(model => model.CopyNumber, "", new { @class = "text-danger" })
-            </div>
-        </div>*@
-
+        
         <div class="form-group">
             @Html.Label(DbRes.T("Locations.Location", "FieldDisplayName"), "Location", htmlAttributes: new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.DropDownList("LocationID", null, htmlAttributes: new {@class = "form-control"})
+                @Html.DropDownList("LocationID", null, htmlAttributes: new {@class = "form-control selectpicker"})
                 <span class="help-inline">This is the location where the item is normally found. (Optional)</span>
                 @Html.ValidationMessageFor(model => model.LocationId, "", new {@class = "text-danger"})
             </div>
@@ -76,6 +67,11 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
 
         $("#TitleID").change(function () {
             var copyNo = $("#CopyNumber");

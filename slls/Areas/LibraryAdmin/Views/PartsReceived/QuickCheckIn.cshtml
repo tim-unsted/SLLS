@@ -6,7 +6,7 @@
 <div class="alert alert-info">
     @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "quickcheckin" }))
     {
-        @Html.DropDownList("SelectedCopy", null, new { @class = "form-control", onchange = "this.form.submit();" })
+        @Html.DropDownList("SelectedCopy", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
     }
 </div>
 
@@ -69,6 +69,13 @@
 </div>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
+
     $('form').submit(function (e) {
         e.preventDefault();
         $.post(this.action, $(this).serialize(), function (response) {

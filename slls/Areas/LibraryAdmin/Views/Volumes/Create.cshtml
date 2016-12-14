@@ -3,10 +3,11 @@
 
 @Html.Partial("_HeaderCancel")
 
+<hr/>
+
 @using (Html.BeginForm("Create", "Volumes", FormMethod.Post, new { id = "frmNew " }))
 {
     @Html.AntiForgeryToken()
-
 
     <div class="form-horizontal">
 
@@ -16,7 +17,7 @@
         <div class="form-group">
             @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("TitleId", null, "Select a " + DbRes.T("Titles.Title", "FieldDisplayName"), new { @class = "form-control", @id = "TitleID" })
+                @Html.DropDownList("TitleId", null, "Select a " + DbRes.T("Titles.Title", "FieldDisplayName"), new { @class = "form-control selectpicker", @id = "TitleID" })
                 @Html.ValidationMessageFor(model => model.TitleId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -78,6 +79,11 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
 
         $("#TitleID").change(function () {
             var select = $("#CopyID");

@@ -1112,13 +1112,15 @@ namespace slls.Areas.LibraryAdmin
                 OkButtonText = "Add Selected"
             };
 
-            viewModel.AvailableItems = _db.Users.Where(u => u.IsLive && u.CanDelete && u.Lastname != null)
-                .Select(x => new SelectListItem
-                {
-                    Value = x.Id.ToString(),
-                    Text = x.Lastname + ", " + x.Firstname
-                }).OrderBy(c => c.Text)
-                .ToList();
+            //viewModel.AvailableItems = _db.Users.Where(u => u.IsLive && u.CanDelete && u.Lastname != null)
+            //    .Select(x => new SelectListItem
+            //    {
+            //        Value = x.Id.ToString(),
+            //        Text = x.Lastname + ", " + x.Firstname
+            //    }).OrderBy(c => c.Text)
+            //    .ToList();
+            
+            viewModel.AvailableItems = SelectListHelper.LibraryUserList();
 
             List<SelectListItem> cloneOptions = new List<SelectListItem>();
             cloneOptions.Add(new SelectListItem { Text = "Add to top of list", Value = "t" });

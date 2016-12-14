@@ -23,7 +23,7 @@
         <div class="form-group">
             <div class="col-md-12">
                 @Html.Label(Model.SelectLabel, htmlAttributes: new { @class = "control-label" })
-                @Html.DropDownListFor(x => x.SelectedItem, Model.AvailableItems, Model.SelectText, new { @class = "form-control" })
+                @Html.DropDownListFor(x => x.SelectedItem, Model.AvailableItems, Model.SelectText, new { @class = "form-control selectpicker" })
             </div>
         </div>
 
@@ -45,6 +45,13 @@
 }
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
+
     $(function () {
         $('#SelectedItem').on('dblclick', function () {
             $("#frmSelect").submit();

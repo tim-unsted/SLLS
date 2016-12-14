@@ -38,7 +38,7 @@
 
     @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "circulationlist" }))
     {
-        @Html.DropDownList("Copy", null, new { @class = "form-control", onchange = "this.form.submit();", style = "margin-bottom: 15px;" })
+        @Html.DropDownList("Copy", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();", style = "margin-bottom: 15px;" })
     }
 
     @if ((int)ViewData["CopyID"] > 0)
@@ -106,3 +106,12 @@
         </tbody>
     </table>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
+</script>

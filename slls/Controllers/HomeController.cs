@@ -688,7 +688,7 @@ namespace slls.Controllers
                            join c in _db.Copies on t.TitleID equals c.TitleID
                            join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
                            where t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && x.KeywordID == listSubjects && x.KeywordID != 0
-                           select t).ToList(),
+                           select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
                 IsActualSearch = false,
                 OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")

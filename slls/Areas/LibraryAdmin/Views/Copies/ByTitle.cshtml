@@ -6,7 +6,7 @@
 {
     <div class="well well-default">
         <div class="form-group">
-            @Html.DropDownList("ListTitle", null, new { @class = "form-control", onchange = "this.form.submit();" })
+            @Html.DropDownList("ListTitle", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
         </div>
     </div>
 }
@@ -14,3 +14,12 @@
 <div id="TitlesTable">
     @Html.Partial("_IndexNoTitle", Model)
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
+</script>
