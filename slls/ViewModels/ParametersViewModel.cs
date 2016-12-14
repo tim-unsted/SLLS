@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using slls.Utils.Helpers;
 
 namespace slls.ViewModels
@@ -15,7 +16,7 @@ namespace slls.ViewModels
 
         public ParametersAddEditViewModel()
         {
-            
+            Class = "";
         }
         public ParametersAddEditViewModel(Models.Parameter parameter)
         {
@@ -23,6 +24,7 @@ namespace slls.ViewModels
             this.ParameterID = _parameters.ParameterID;
             this.ParameterValue = _parameters.ParameterValue;
             this.ParamUsage = _parameters.ParamUsage;
+            Class = "";
         }
         
         [Key]
@@ -32,6 +34,8 @@ namespace slls.ViewModels
         public string ParameterID { get; set; }
 
         [DisplayName("Value")]
+        [AllowHtml]
+        [DataType(DataType.MultilineText)]
         public string ParameterValue { get; set; }
 
         [DisplayName("Area")]
@@ -52,6 +56,8 @@ namespace slls.ViewModels
 
         [Column(TypeName = "smalldatetime")]
         public DateTime? LastModified { get; set; }
+
+        public string Class { get; set; }
     }
 
     public class ParameterIndexViewModel

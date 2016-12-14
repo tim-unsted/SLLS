@@ -20,6 +20,8 @@ namespace slls.Models
         [DisplayName("Release Number")]
         public string ReleaseNumber { get; set; }
 
+        public string ReleaseName { get; set; }
+
         [Required]
         [StringLength(24)]
         [DisplayName("Release Date")]

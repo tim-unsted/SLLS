@@ -111,6 +111,23 @@ namespace slls.Areas.LibraryAdmin
                 ParameterArea = parameter.ParameterArea
             };
 
+            if (parameter.ParameterValue.Length <= 10)
+            {
+                viewModel.Class = "small";
+            }
+            if (parameter.ParameterValue == "true" || parameter.ParameterValue == "false")
+            {
+                viewModel.Class = "small";
+            }
+            if (parameter.ParameterValue.StartsWith("#"))
+            {
+                viewModel.Class = "small";
+            }
+            if (parameter.ParameterValue.EndsWith("px"))
+            {
+                viewModel.Class = "small";
+            }
+
             ViewBag.Title = "Edit System Parameter";
             return PartialView(viewModel);
         }

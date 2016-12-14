@@ -57,13 +57,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().FullnameRev)
+                @DbRes.T("Users.Fullname", "FieldDisplayName")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().UserName)
+               @DbRes.T("Users.Username", "FieldDisplayName")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().UserBarcode)
+                @DbRes.T("Users.Barcode", "FieldDisplayName")
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().Department.Department1)
@@ -72,10 +72,10 @@
                 @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().Location.Location1)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().Position)
+                @DbRes.T("Users.Position", "FieldDisplayName")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LibraryUsers.FirstOrDefault().IsLive)
+                @DbRes.T("Users.Is_Live", "FieldDisplayName")
             </th>
 
             <th></th>

@@ -4,6 +4,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net;
 using System.Web.Mvc;
+using System.Web.WebPages;
+using OfficeOpenXml.FormulaParsing.Utilities;
 using slls.App_Settings;
 using slls.DAO;
 using slls.Models;
@@ -147,6 +149,23 @@ namespace slls.Areas.Config
                 ParameterName = parameter.ParameterName,
                 ParameterArea = parameter.ParameterArea
             };
+
+            if (parameter.ParameterValue.Length <= 10)
+            {
+                viewModel.Class = "small";
+            }
+            if (parameter.ParameterValue == "true" || parameter.ParameterValue == "false")
+            {
+                viewModel.Class = "small";
+            }
+            if (parameter.ParameterValue.StartsWith("#"))
+            {
+                viewModel.Class = "small";
+            }
+            if (parameter.ParameterValue.EndsWith("px"))
+            {
+                viewModel.Class = "small";
+            }
 
             ViewBag.Title = "Edit System Parameter";
             return PartialView(viewModel);

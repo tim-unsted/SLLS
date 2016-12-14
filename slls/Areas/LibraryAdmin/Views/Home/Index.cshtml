@@ -16,8 +16,8 @@
 {
     <div class="jumbotron">
         <div class="container">
-            <h1>@Model.WelcomeHeader</h1>
-            <h3 class="text-muted">@Model.WelcomeMessage</h3>
+            @Html.Raw(Model.WelcomeHeader)
+            @Html.Raw(Model.WelcomeMessage)
         </div>
     </div>
 }

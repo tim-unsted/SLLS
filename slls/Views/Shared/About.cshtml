@@ -1,7 +1,16 @@
-﻿@using Roles = slls.Utils.Helpers.Roles
+﻿@using slls.Models
+@using Roles = slls.Utils.Helpers.Roles
 @{
     ViewBag.Title = "About Simple Little Library System";
+
+    var db = new DbEntities();
+    var releaseId = db.ReleaseHeaders.Max(r => r.ReleaseId);
+    var releaseHeader = db.ReleaseHeaders.Find(releaseId);
+    var releaseNumber = releaseHeader.ReleaseNumber;
+    var releaseName = releaseHeader.ReleaseName;
+    var releaseDate = releaseHeader.ReleaseDate.ToString();
 }
+
 
 <div class="container">
     <div class="row">
@@ -26,7 +35,7 @@
                 <br/>
                 <br/>
                 <p>
-                    You are currently using version 1.1.0 - 1st December 2016. 
+                    You are currently using @releaseName (@releaseNumber) - @releaseDate
                     @{
                         if (Roles.IsLibraryStaff())
                         {
