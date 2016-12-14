@@ -138,17 +138,38 @@ namespace slls.Areas.LibraryAdmin
             //Create a list of all default roles that should be selected/ticked when the form opens ...
             var defaultMenuRoles = new List<string> { "OPAC User" };
 
+            IEnumerable<SelectListItem> rolesList;
+            if (Roles.IsBaileyAdmin())
+            {
+                rolesList =
+                RoleManager.Roles.Where(r => r.Packages.Contains(_customerPackage))
+                    .ToList()
+                    .Select(x => new SelectListItem
+                    {
+                        Selected = defaultMenuRoles.Contains(x.Name),
+                        Text = x.Name,
+                        Value = x.Name
+                    });
+            }
+            else
+            {
+                rolesList =
+                RoleManager.Roles.Where(r => userRoles.Contains(r.Name) && r.Packages.Contains(_customerPackage))
+                    .ToList()
+                    .Select(x => new SelectListItem
+                    {
+                        Selected = defaultMenuRoles.Contains(x.Name),
+                        Text = x.Name,
+                        Value = x.Name
+                    });
+            }
+
             var viewModel = new LibraryUserAddViewModel()
             {
                 IsLive = true,
                 SelfLoansAllowed = true,
                 IgnoreAd = false,
-                RolesList = RoleManager.Roles.Where(r => userRoles.Contains(r.Name) && r.Packages.Contains(_customerPackage)).ToList().Select(x => new SelectListItem
-                {
-                    Selected = defaultMenuRoles.Contains(x.Name),
-                    Text = x.Name,
-                    Value = x.Name
-                })
+                RolesList = rolesList
             };
             
             viewModel.PasswordTip = GetPasswordTips();

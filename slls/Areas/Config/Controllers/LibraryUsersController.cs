@@ -143,32 +143,39 @@ namespace slls.Areas.Config
             //Create a list of all default roles that should be selected/ticked when the form opens ...
             var defaultMenuRoles = new List<string> { "OPAC User" };
 
+            IEnumerable<SelectListItem> rolesList;
+            if (Roles.IsBaileyAdmin())
+            {
+                rolesList =
+                RoleManager.Roles.Where(r => r.Packages.Contains(_customerPackage))
+                    .ToList()
+                    .Select(x => new SelectListItem
+                    {
+                        Selected = defaultMenuRoles.Contains(x.Name),
+                        Text = x.Name,
+                        Value = x.Name
+                    });
+            }
+            else
+            {
+                rolesList =
+                RoleManager.Roles.Where(r => userRoles.Contains(r.Name) && r.Packages.Contains(_customerPackage))
+                    .ToList()
+                    .Select(x => new SelectListItem
+                    {
+                        Selected = defaultMenuRoles.Contains(x.Name),
+                        Text = x.Name,
+                        Value = x.Name
+                    });
+            }
+
             var viewModel = new LibraryUserAddViewModel()
             {
                 IsLive = true,
                 SelfLoansAllowed = true,
-                IgnoreAd = false
+                IgnoreAd = false,
+                RolesList = rolesList
             };
-
-            try
-            {
-                var rolesList = (from r in RoleManager.Roles
-                                 where
-                                    r.Name != "Bailey Admin"
-                                    && r.Packages.Contains(_customerPackage)
-                                 select r).ToList();
-                viewModel.RolesList = rolesList.Select(x => new SelectListItem
-                {
-                    Selected = defaultMenuRoles.Contains(x.Name),
-                    Text = x.Name,
-                    Value = x.Name
-                });
-
-            }
-            catch (Exception e)
-            {
-
-            }
 
             viewModel.PasswordTip = GetPasswordTips();
             ViewBag.Title = "Add New " + _entityName;
