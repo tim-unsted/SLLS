@@ -356,6 +356,7 @@ namespace slls.Controllers
             //Get a list of all authors in use
             var authors = (from a in _db.Authors
                            join t in _db.TitleAuthors on a.AuthorID equals t.AuthorId
+                           where t.AuthorId != 0
                            select new { a.AuthorID, DisplayName = a.DisplayName.TrimStart() + " (" + a.TitleAuthors.Count + ")" }).Distinct().OrderBy(x => x.DisplayName);
 
             //Start a new list selectlist items ...
@@ -378,7 +379,7 @@ namespace slls.Controllers
                     join c in _db.Copies on t.TitleID equals c.TitleID
                     join a in _db.TitleAuthors on t.TitleID equals a.TitleId
                     where
-                        t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && a.AuthorId == listAuthors
+                        t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && a.AuthorId == listAuthors && a.AuthorId != 0
                 select t).Distinct().ToList();
             viewModel.LibraryStaff = Roles.IsLibraryStaff();
             viewModel.IsActualSearch = false;
@@ -686,7 +687,7 @@ namespace slls.Controllers
                     _db.Titles
                            join c in _db.Copies on t.TitleID equals c.TitleID
                            join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
-                           where t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && x.KeywordID == listSubjects
+                           where t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && x.KeywordID == listSubjects && x.KeywordID != 0
                            select t).ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
                 IsActualSearch = false,

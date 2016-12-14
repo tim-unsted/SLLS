@@ -429,6 +429,7 @@ namespace slls.Areas.LibraryAdmin
             //Get a list of all authors in use
             var authors = (from a in _db.Authors
                            join t in _db.TitleAuthors on a.AuthorID equals t.AuthorId
+                           where t.AuthorId != 0
                            select new { a.AuthorID, DisplayName = a.DisplayName.TrimStart() + " (" + a.TitleAuthors.Count + ")" }).Distinct().OrderBy(x => x.DisplayName);
 
             //Start a new list selectlist items ...
@@ -450,7 +451,7 @@ namespace slls.Areas.LibraryAdmin
                 (from t in
                      _db.Titles
                  join a in _db.TitleAuthors on t.TitleID equals a.TitleId
-                 where a.AuthorId == listAuthors
+                 where a.AuthorId == listAuthors && a.AuthorId != 0
                  select t).ToList();
             return View(viewModel);
         }
