@@ -157,7 +157,7 @@
                     foreach (var data in Model.TitleAdditionalFieldDatas)
                     {
                         <dt>@Html.Label(data.TitleAdditionalFieldDef.FieldName):</dt>
-                        <dd>@Html.DisplayFor(x => data.FieldData)</dd>
+                        <dd>@Html.Raw(data.FieldData)</dd>
                     }
                 }
 

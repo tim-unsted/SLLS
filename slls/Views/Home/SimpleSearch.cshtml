@@ -7,6 +7,11 @@
 
 @using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm" }))
 {
+    if (TempData["NoData"] != null)
+    {
+        @Html.Partial("_NoData", TempData["NoData"])
+    }
+
     <div class="alert alert-info" id="searchHeader">
         <div class="row">
             <div class=" col-md-12">
@@ -23,10 +28,7 @@
         </div>
     </div>
 
-    if (TempData["NoData"] != null)
-    {
-        @Html.Partial("_NoData", TempData["NoData"])
-    }
+    
     <div class="alert alert-info" id="helpAlert" style="display: none;">
         <a class="close" onclick="$('#helpAlert').hide()">×</a>
         <h4><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> Searching Tips</h4>
@@ -37,7 +39,7 @@
         <table class="table table-compact table-no-border">
             <tr>
                 <td>
-                    "some words"
+                    <span style="color: red; font-weight: bold">"</span>some words<span style="color: red; font-weight: bold">"</span>
                 </td>
                 <td>
                     finds records that contain "some words of wisdom", but not "some strange words".
@@ -53,7 +55,7 @@
             </tr>
             <tr>
                 <td>
-                    apple OR juice
+                    apple <span style="color: red">OR</span> juice
                 </td>
                 <td>
                     finds records that contain either of these words.
@@ -61,7 +63,7 @@
             </tr>
             <tr>
                 <td>
-                    apple -macintosh
+                    apple <span style="color: red; font-weight: bold">-</span>macintosh
                 </td>
                 <td>
                     finds records with "apple" but not "macintosh".
@@ -69,20 +71,28 @@
             </tr>
             <tr>
                 <td>
-                    apple* (default)
+                    apple <span style="color: red">not</span> macintosh
                 </td>
                 <td>
-                    finds "apple", "apples", "applesauce", and "applet".
+                    same as using "-", finds records with "apple" but not "macintosh".
                 </td>
             </tr>
             <tr>
+                <td>
+                    apple<span style="color: red; font-weight: bold">*</span> (default)
+                </td>
+                <td>
+                    finds "apple", "apples", "applesauce", and "applet". There is no need to append the "*" wild-card suffix in your searches.
+                </td>
+            </tr>
+            @*<tr>
                 <td>
                     *apple
                 </td>
                 <td>
                     finds "apple", "pineapple", and "grapple".
                 </td>
-            </tr>
+            </tr>*@
         </table>
     </div>
 
@@ -97,15 +107,19 @@
                         <span class="pull-right"><a href="@Url.Action("ClearAllFilters", "Home")" class="btn btn-link" title="Clear All Filters"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> Clear All</a></span>
                     </div>
                     <div class="panel-body">
-                        @if (Model.MediaFilter != null)
+                        @if (Model.MediaFilter.Count > 0)
+                        {
+                            @Html.Partial("_NarrowByKeyword")
+                        }
+                        @if (Model.MediaFilter.Count > 0)
                         {
                             @Html.Partial("_NarrowByMedia")
                         }
-                        @if (Model.ClassmarksFilter != null)
+                        @if (Model.ClassmarksFilter.Count > 0)
                         {
                             @Html.Partial("_NarrowByClassmark")
                         }
-                        @if (Model.PublisherFilter != null)
+                        @if (Model.PublisherFilter.Count > 0)
                         {
                             @Html.Partial("_NarrowByPublisher")
                         }
@@ -113,7 +127,7 @@
                         {
                             @Html.Partial("_NarrowByAuthor")
                         }
-                        @if (Model.LanguageFilter != null)
+                        @if (Model.LanguageFilter.Count > 0)
                         {
                             @Html.Partial("_NarrowByLanguage")
                         }

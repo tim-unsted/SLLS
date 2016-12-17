@@ -334,6 +334,7 @@
     <Compile Include="Models\LibraryUserSavedSearch.cs" />
     <Compile Include="Models\LibraryUserBookmark.cs" />
     <Compile Include="Models\LoanType.cs" />
+    <Compile Include="Models\OpacSearchResults.cs" />
     <Compile Include="Models\OrderCategory.cs" />
     <Compile Include="Models\Publisher.cs" />
     <Compile Include="Models\ReleaseHeader.cs" />
@@ -352,6 +353,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="SearchService.cs" />
     <Compile Include="Utils\Helpers\HelpTextHelper.cs" />
     <Compile Include="Utils\Helpers\HtmlHelpers.cs" />
     <Compile Include="Utils\Helpers\MenuHelper.cs" />

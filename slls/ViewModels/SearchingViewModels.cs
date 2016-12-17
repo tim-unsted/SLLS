@@ -35,6 +35,7 @@ namespace slls.ViewModels
 
         public IEnumerable<SelectListItem> SearchFields { get; set; }
 
+        public List<Title> Titles { get; set; }
         public List<Title> Results { get; set; }
         public JsonResult JsonData { get; set; }
         public List<Title> ResultsBeforeFilter { get; set; }

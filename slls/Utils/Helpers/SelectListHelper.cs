@@ -1301,7 +1301,7 @@ namespace slls.Utils.Helpers
             {
                 list.Add(new SelectListItem
                 {
-                    Text = string.IsNullOrEmpty(item.ReleaseNumber) ? "" : item.ReleaseNumber + " - " + item.ReleaseDate,
+                    Text = string.IsNullOrEmpty(item.ReleaseName) ? item.ReleaseNumber + " - " + item.ReleaseDate : item.ReleaseName + " (" + item.ReleaseNumber + ") - " + item.ReleaseDate,
                     Value = item.ReleaseId.ToString()
                 });
             }

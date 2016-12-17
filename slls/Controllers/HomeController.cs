@@ -757,7 +757,26 @@ namespace slls.Controllers
             viewModel.IsActualSearch = true;
             viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.");
             ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
-            
+
+            if (TempData["SearchTerm"] != null)
+            {
+                if (TempData["SearchTerm"].ToString() != viewModel.SearchString)
+                {
+                    TempData["ClassmarksFilter"] = null;
+                    TempData["AuthorFilter"] = null;
+                    TempData["KeywordFilter"] = null;
+                    TempData["MediaFilter"] = null;
+                    TempData["LanguageFilter"] = null;
+                    TempData["PublisherFilter"] = null;
+                    viewModel.ClassmarksFilter.Clear();
+                    viewModel.AuthorFilter.Clear();
+                    viewModel.KeywordFilter.Clear();
+                    viewModel.MediaFilter.Clear();
+                    viewModel.LanguageFilter.Clear();
+                    viewModel.ClassmarksFilter.Clear();
+                }
+            }
+
             //Classmarks filter ...
             if (!viewModel.ClassmarksFilter.Any())
             {
@@ -818,10 +837,10 @@ namespace slls.Controllers
             }
             var selectedAuthorIds = viewModel.GetSelectedAuthorIds().ToList();
 
-            //Do some work on the passes search string ...
+            //Do some work on the passed search string ...
 
             //1. Check if there is a hyphen before a word - this indicates an "AND NOT" search
-            var stringSplitter = new string[] { " -" };
+            var stringSplitter = new string[] { " -", " not " };
             var searchString = viewModel.SearchString.Split(stringSplitter, StringSplitOptions.None);
             var q = searchString[0].Trim();
             var qIgnore = "";
@@ -829,1465 +848,16 @@ namespace slls.Controllers
             {
                 for (int i = 1; i < searchString.Length; i++)
                 {
-                    qIgnore = qIgnore + searchString[i];
+                    qIgnore = qIgnore + " " + searchString[i];
                 }
             }
-
-            //Check for some other 'Google-type' advanced search characters ...
-            bool suffixSearch = q.StartsWith("*");
-            bool wholeWordOnly = q.StartsWith("\u0022"); // i.e. quote mark (chr(34)
-            bool prefixSearch = !suffixSearch && !wholeWordOnly;
-            bool orSearch = q.Contains(" OR ");
-            q = q.Replace("*", string.Empty);
-            q = q.Replace("\u0022", string.Empty);
-            q = q.ToLower();
-
-            //Generate a list of words to ignore - at some point we might want to consider putting this into a table so that the user can control it.
-            List<string> wordsToRemove = "and or the a an".Split(' ').ToList();
-
+            
             if (!string.IsNullOrEmpty(q))
             {
-                List<Title> results;
-
-                q = q.ToLower();
-
-                var opacTitles = CacheProvider.OpacTitles();
-                
-                //Initialize our results ...
-                results = orSearch ? _db.Titles.Where(x => 1 == 2).ToList() : opacTitles;
-
-                switch (viewModel.SearchField) // i.e. field to search in
-                {
-                    case "title":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.Title1 ?? "").ToLower() == q || (t.Title1 ?? "").ToLower().Contains(" " + q + " ") || (t.Title1 ?? "").ToLower().StartsWith(q + " ") || (t.Title1 ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Title1 ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.Title1 ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Title1 ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.Title1 ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Title1 ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.Title1 ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Title1 ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.Title1 ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Title1 ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Title1 ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.Title1 ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "author":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.AuthorString ?? "").ToLower() == q || (t.AuthorString ?? "").ToLower().Contains(" " + q + " ") || (t.AuthorString ?? "").ToLower().StartsWith(q + " ") || (t.AuthorString ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.AuthorString ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.AuthorString ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.AuthorString ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.AuthorString ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.AuthorString ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.AuthorString ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.AuthorString ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.AuthorString ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.AuthorString ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.AuthorString ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.AuthorString ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "editor":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.EditorString ?? "").ToLower() == q || (t.EditorString ?? "").ToLower().Contains(" " + q + " ") || (t.EditorString ?? "").ToLower().StartsWith(q + " ") || (t.EditorString ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.EditorString ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.EditorString ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.EditorString ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.EditorString ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.EditorString ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.EditorString ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.EditorString ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.EditorString ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.EditorString ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.EditorString ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.EditorString ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "publisher":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.Publisher.PublisherName ?? "").ToLower() == q || (t.Publisher.PublisherName ?? "").ToLower().Contains(" " + q + " ") || (t.Publisher.PublisherName ?? "").ToLower().StartsWith(q + " ") || (t.Publisher.PublisherName ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Publisher.PublisherName ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.Publisher.PublisherName ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Publisher.PublisherName ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.Publisher.PublisherName ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Publisher.PublisherName ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.Publisher.PublisherName ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Publisher.PublisherName ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.Publisher.PublisherName ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Publisher.PublisherName ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Publisher.PublisherName ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.Publisher.PublisherName ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "citation":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.Citation ?? "").ToLower() == q || (t.Citation ?? "").ToLower().Contains(" " + q + " ") || (t.Citation ?? "").ToLower().StartsWith(q + " ") || (t.Citation ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Citation ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.Citation ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Citation ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.Citation ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Citation ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.Citation ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Citation ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.Citation ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Citation ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Citation ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.Citation ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "source":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.Source ?? "").ToLower() == q || (t.Source ?? "").ToLower().Contains(" " + q + " ") || (t.Source ?? "").ToLower().StartsWith(q + " ") || (t.Source ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Source ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.Source ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Source ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.Source ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Source ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.Source ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Source ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.Source ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Source ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Source ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.Source ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "description":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.Description ?? "").ToLower() == q || (t.Description ?? "").ToLower().Contains(" " + q + " ") || (t.Description ?? "").ToLower().StartsWith(q + " ") || (t.Description ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Description ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.Description ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Description ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.Description ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Description ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.Description ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Description ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.Description ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Description ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Description ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.Description ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "series":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.Series ?? "").ToLower() == q || (t.Series ?? "").ToLower().Contains(" " + q + " ") || (t.Series ?? "").ToLower().StartsWith(q + " ") || (t.Series ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Series ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.Series ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Series ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.Series ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Series ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.Series ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Series ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.Series ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Series ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Series ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.Series ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "edition":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.Edition ?? "").ToLower() == q || (t.Edition ?? "").ToLower().Contains(" " + q + " ") || (t.Edition ?? "").ToLower().StartsWith(q + " ") || (t.Edition ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Edition ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.Edition ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Edition ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.Edition ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Edition ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.Edition ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Edition ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.Edition ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Edition ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Edition ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.Edition ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "isbn":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.Isbn ?? "").ToLower() == q || (t.Isbn ?? "").ToLower().Contains(" " + q + " ") || (t.Isbn ?? "").ToLower().StartsWith(q + " ") || (t.Isbn ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Isbn ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.Isbn ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Isbn ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.Isbn ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Isbn ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.Isbn ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Isbn ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.Isbn ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Isbn ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Isbn ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.Isbn ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "keywords":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.KeywordString ?? "").ToLower() == q || (t.KeywordString ?? "").ToLower().Contains(" " + q + " ") || (t.KeywordString ?? "").ToLower().StartsWith(q + " ") || (t.KeywordString ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.KeywordString ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.KeywordString ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.KeywordString ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.KeywordString ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.KeywordString ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.KeywordString ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.KeywordString ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.KeywordString ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.KeywordString ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.KeywordString ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.KeywordString ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "links":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.LinkString ?? "").ToLower() == q || (t.LinkString ?? "").ToLower().Contains(" " + q + " ") || (t.LinkString ?? "").ToLower().StartsWith(q + " ") || (t.LinkString ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.LinkString ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.LinkString ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.LinkString ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.LinkString ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.LinkString ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.LinkString ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.LinkString ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.LinkString ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.LinkString ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.LinkString ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.LinkString ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "titletexts":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.TitleTextString ?? "").ToLower() == q || (t.TitleTextString ?? "").ToLower().Contains(" " + q + " ") || (t.TitleTextString ?? "").ToLower().StartsWith(q + " ") || (t.TitleTextString ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.TitleTextString ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.TitleTextString ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.TitleTextString ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.TitleTextString ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.TitleTextString ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.TitleTextString ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.TitleTextString ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.TitleTextString ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.TitleTextString ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.TitleTextString ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.TitleTextString ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "customdata":
-                        if (wholeWordOnly)
-                        {
-                            results = (from t in opacTitles
-                                       where (t.CustomDataString ?? "").ToLower() == q || (t.CustomDataString ?? "").ToLower().Contains(" " + q + " ") || (t.CustomDataString ?? "").ToLower().StartsWith(q + " ") || (t.CustomDataString ?? "").ToLower().EndsWith(" " + q)
-                                       select t).ToList();
-                        }
-                        else if (prefixSearch) // the default
-                        {
-                            var qWords = q.Split(' ').Except(wordsToRemove);
-                            foreach (var word in qWords)
-                            {
-                                if (orSearch)
-                                {
-                                    results = results.Concat(from t in opacTitles
-                                                             where
-                                                                 (t.CustomDataString ?? "").ToLower().Contains(" " + word) ||
-                                                                 (t.CustomDataString ?? "").ToLower().StartsWith(word)
-                                                             select t).ToList();
-                                }
-                                else
-                                {
-                                    results = (from t in results
-                                               where
-                                                   (t.CustomDataString ?? "").ToLower().Contains(" " + word) ||
-                                                   (t.CustomDataString ?? "").ToLower().StartsWith(word)
-                                               select t).ToList();
-                                }
-                            }
-                        }
-                        else if (suffixSearch)
-                        {
-                            var qWords = q.Split(' ').Except(wordsToRemove);
-                            foreach (var word in qWords)
-                            {
-                                if (orSearch)
-                                {
-                                    results = results.Concat(from t in opacTitles
-                                                             where
-                                                                 (t.CustomDataString ?? "").ToLower().Contains(word + " ") ||
-                                                                 (t.CustomDataString ?? "").ToLower().EndsWith(word)
-                                                             select t).ToList();
-                                }
-                                else
-                                {
-                                    results = (from t in results
-                                               where
-                                                   (t.CustomDataString ?? "").ToLower().Contains(word + " ") ||
-                                                   (t.CustomDataString ?? "").ToLower().EndsWith(word)
-                                               select t).ToList();
-                                }
-                            }
-                        }
-                        else
-                        {
-                            var qWords = q.Split(' ').Except(wordsToRemove);
-                            foreach (var word in qWords)
-                            {
-                                if (orSearch)
-                                {
-                                    results = results.Concat(from t in opacTitles
-                                                             where
-                                                                 (t.CustomDataString ?? "").ToLower().Contains(word)
-                                                             select t).ToList();
-                                }
-                                else
-                                {
-                                    results = (from t in results
-                                               where
-                                                   (t.CustomDataString ?? "").ToLower().Contains(word)
-                                               select t).ToList();
-                                }
-                            }
-                        }
-                        if (qIgnore.Length > 0)
-                        {
-                            results = (from t in results
-                                       where
-                                           !(t.CustomDataString ?? "").ToLower().Contains(qIgnore)
-                                       select t).ToList();
-                        }
-                        break;
-                    case "notes":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.Notes ?? "").ToLower() == q || (t.Notes ?? "").ToLower().Contains(" " + q + " ") || (t.Notes ?? "").ToLower().StartsWith(q + " ") || (t.Notes ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Notes ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.Notes ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Notes ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.Notes ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Notes ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.Notes ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Notes ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.Notes ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Notes ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Notes ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.Notes ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    case "all":
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.SearchString ?? "").ToLower().Contains(" " + q + " ") || (t.SearchString ?? "").ToLower().StartsWith(q + " ") || (t.SearchString ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.SearchString ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.SearchString ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.SearchString ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.SearchString ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.SearchString ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.SearchString ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.SearchString ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.SearchString ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.SearchString ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.SearchString ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.SearchString ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                    default:
-                        {
-                            if (wholeWordOnly)
-                            {
-                                results = (from t in opacTitles
-                                           where (t.Title1 ?? "").ToLower() == q || (t.Title1 ?? "").ToLower().Contains(" " + q + " ") || (t.Title1 ?? "").ToLower().StartsWith(q + " ") || (t.Title1 ?? "").ToLower().EndsWith(" " + q)
-                                           select t).ToList();
-                            }
-                            else if (prefixSearch) // the default
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Title1 ?? "").ToLower().Contains(" " + word) ||
-                                                                     (t.Title1 ?? "").ToLower().StartsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Title1 ?? "").ToLower().Contains(" " + word) ||
-                                                       (t.Title1 ?? "").ToLower().StartsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else if (suffixSearch)
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Title1 ?? "").ToLower().Contains(word + " ") ||
-                                                                     (t.Title1 ?? "").ToLower().EndsWith(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Title1 ?? "").ToLower().Contains(word + " ") ||
-                                                       (t.Title1 ?? "").ToLower().EndsWith(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                var qWords = q.Split(' ').Except(wordsToRemove);
-                                foreach (var word in qWords)
-                                {
-                                    if (orSearch)
-                                    {
-                                        results = results.Concat(from t in opacTitles
-                                                                 where
-                                                                     (t.Title1 ?? "").ToLower().Contains(word)
-                                                                 select t).ToList();
-                                    }
-                                    else
-                                    {
-                                        results = (from t in results
-                                                   where
-                                                       (t.Title1 ?? "").ToLower().Contains(word)
-                                                   select t).ToList();
-                                    }
-                                }
-                            }
-                            if (qIgnore.Length > 0)
-                            {
-                                results = (from t in results
-                                           where
-                                               !(t.Title1 ?? "").ToLower().Contains(qIgnore)
-                                           select t).ToList();
-                            }
-                            break;
-                        }
-                }
+                var results = SearchService.DoFullTextSearch(q, qIgnore.Trim(), viewModel.SearchField == "all" ? "*" : viewModel.SearchField);
+                viewModel.ResultsBeforeFilter = results;
 
                 //Order the results ...
-                //results = results.OrderBy(r => r.Title1.Substring(r.NonFilingChars)).Distinct().ToList();
                 switch (viewModel.OrderBy)
                 {
                     case "title":
@@ -2311,7 +881,6 @@ namespace slls.Controllers
                         break;
                     }
                 }
-
 
                 results = results.OrderBy(r => r.Title1.Substring(r.NonFilingChars)).Distinct().ToList();
 
@@ -2390,7 +959,7 @@ namespace slls.Controllers
                 }
 
                 viewModel.Results = results;
-                var serializer = new JavaScriptSerializer();
+                //var serializer = new JavaScriptSerializer();
                 viewModel.JsonData = Json(results);
 
                 var take = viewModel.NarrowByDefaultRecordCount;
@@ -2440,6 +1009,7 @@ namespace slls.Controllers
                         viewModel.MediaFilter.Add(editorViewModel);
                     }
                 }
+                viewModel.MediaFilter = viewModel.MediaFilter.OrderByDescending(x => x.TitleCount).ToList();
                 TempData["MediaFilter"] = viewModel.MediaFilter;
 
                 //2. Get the classmarks to narrow by ...
@@ -2486,6 +1056,7 @@ namespace slls.Controllers
                         viewModel.ClassmarksFilter.Add(editorViewModel);
                     }
                 }
+                viewModel.ClassmarksFilter = viewModel.ClassmarksFilter.OrderByDescending(x => x.TitleCount).ToList();
                 TempData["ClassmarksFilter"] = viewModel.ClassmarksFilter;
 
                 //3. Get the publishers to narrow by ...
@@ -2533,6 +1104,7 @@ namespace slls.Controllers
                         viewModel.PublisherFilter.Add(editorViewModel);
                     }
                 }
+                viewModel.PublisherFilter = viewModel.PublisherFilter.OrderByDescending(x => x.TitleCount).ToList();
                 TempData["PublisherFilter"] = viewModel.PublisherFilter;
 
                 //4. Get the languages to narrow by ...
@@ -2581,63 +1153,63 @@ namespace slls.Controllers
                         viewModel.LanguageFilter.Add(editorViewModel);
                     }
                 }
+                viewModel.LanguageFilter = viewModel.LanguageFilter.OrderByDescending(x => x.TitleCount).ToList();
                 TempData["LangaugeFilter"] = viewModel.LanguageFilter;
 
-
-                //5. Get the keywords to narrow by ... NOT CURRENTLY USED AS TOO MANY KEYWORDS !
+                //5. Get the keywords to narrow by ... 
                 //Get a list of any keywords associated with titles in the search results ...
-                //viewModel.KeywordFilter.Clear();
-                //ModelState.Clear();
+                viewModel.KeywordFilter.Clear();
+                ModelState.Clear();
 
-                //var subjectIndexIds = results.Select(item => item.SubjectIndexes).ToList();
+                List<int> keywordIds;
 
-                //List<int> keywordIds;
+                if (selectedKeywordIds.Any())
+                {
+                    keywordIds = selectedKeywordIds;
+                }
+                else
+                {
+                    var subjectIndexIds = results.Select(item => item.SubjectIndexes).Distinct().ToList();
+                    keywordIds = subjectIndexIds.Select(item =>
+                    {
+                        var firstOrDefault = item.FirstOrDefault();
+                        return firstOrDefault != null ? firstOrDefault.KeywordID : 0;
+                    }).Distinct().ToList();
+                }
 
-                //if (selectedKeywordIds.Any())
-                //{
-                //    keywordIds = selectedKeywordIds;
-                //}
-                //else
-                //{
-                //    keywordIds = subjectIndexIds.Select(item =>
-                //    {
-                //        var firstOrDefault = item.FirstOrDefault();
-                //        return firstOrDefault != null ? firstOrDefault.KeywordID : 0;
-                //    }).Distinct().ToList();
-                //}
+                if (keywordIds.Any())
+                {
+                    var keywords = (from k in CacheProvider.GetAll<Keyword>("keywords")
+                                   where keywordIds.Contains(k.KeywordID)
+                                   select k).ToList();
 
-                //if (keywordIds.Any())
-                //{
-                //    var keywords = (from keyword in CacheProvider.GetAll<Keyword>("keywords")
-                //                    where keywordIds.Contains(keyword.KeywordID)
-                //                     select keyword).ToList();
+                    viewModel.KeywordFilter.Clear();
+                    //if (selectedKeywordIds.Any())
+                    //{
+                    //    take = 9999;
+                    //}
 
-                //    viewModel.KeywordFilter.Clear();
-                //    //var take = viewModel.NarrowByDefaultRecordCount;
-                //    if (selectedKeywordIds.Any())
-                //    {
-                //        take = 9999;
-                //    }
+                    foreach (var item in keywords.OrderByDescending(x => x.SubjectIndexes.Count).Take(take))
+                    {
+                        item.TitleCount = results.Count(r =>
+                        {
+                            var firstOrDefault = r.SubjectIndexes.FirstOrDefault();
+                            return firstOrDefault != null && firstOrDefault.KeywordID == item.KeywordID;
+                        });
 
-                //    foreach (var item in keywords.OrderByDescending(x => x.SubjectIndexes.Count).Take(take))
-                //    {
-                //        item.TitleCount = results.Count(r =>
-                //        {
-                //            var firstOrDefault = r.SubjectIndexes.FirstOrDefault();
-                //            return firstOrDefault != null && firstOrDefault.KeywordID == item.KeywordID;
-                //        });
-
-                //        var editorViewModel = new SelectKeywordEditorViewModel()
-                //        {
-                //            Id = item.KeywordID,
-                //            Name = item.KeywordTerm,
-                //            Selected = selectedLanguageIds.Contains(item.KeywordID),
-                //            TitleCount = item.TitleCount
-                //        };
-                //        viewModel.KeywordFilter.Add(editorViewModel);
-                //    }
-                //}
-                //TempData["KeywordFilter"] = viewModel.KeywordFilter;
+                        var editorViewModel = new SelectKeywordEditorViewModel()
+                        {
+                            Id = item.KeywordID,
+                            Name = item.KeywordTerm,
+                            Selected = selectedKeywordIds.Contains(item.KeywordID),
+                            TitleCount = item.TitleCount
+                        };
+                        viewModel.KeywordFilter.Add(editorViewModel);
+                    }
+                }
+                viewModel.KeywordFilter = viewModel.KeywordFilter.OrderByDescending(x => x.TitleCount).ToList();
+                TempData["KeywordFilter"] = viewModel.KeywordFilter;
+                
 
                 //6. Get the authors to narrow by ...
                 //Get a list of any authors associated with titles in the search results ...
@@ -2686,12 +1258,13 @@ namespace slls.Controllers
                         {
                             Id = item.AuthorID,
                             Name = item.DisplayName,
-                            Selected = selectedLanguageIds.Contains(item.AuthorID),
+                            Selected = selectedAuthorIds.Contains(item.AuthorID),
                             TitleCount = item.TitleCount
                         };
                         viewModel.AuthorFilter.Add(editorViewModel);
                     }
                 }
+                viewModel.AuthorFilter = viewModel.AuthorFilter.OrderByDescending(x => x.TitleCount).ToList();
                 TempData["AuthorFilter"] = viewModel.AuthorFilter;
             }
 
@@ -2702,6 +1275,7 @@ namespace slls.Controllers
 
             viewModel.LibraryStaff = Roles.IsLibraryStaff();
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(viewModel.SearchField);
+            TempData["SearchTerm"] = viewModel.SearchString;
             ViewBag.Title = !string.IsNullOrEmpty(q) ? "Search Results" : "Search the Library";
             TempData["simpleSearchingViewModel"] = viewModel;
             
@@ -2819,19 +1393,32 @@ namespace slls.Controllers
         public ActionResult ShowAllKeywordsFilter()
         {
             var viewModel = (SimpleSearchingViewModel)TempData["simpleSearchingViewModel"];
-            var keywords = CacheProvider.GetAll<Keyword>("keywords").ToList();
+            var allKeywords = CacheProvider.GetAll<Keyword>("keywords");
+            var keywords = (from k in allKeywords
+                join x in _db.SubjectIndexes on k.KeywordID equals x.KeywordID
+                join r in viewModel.ResultsBeforeFilter on x.TitleID equals r.TitleID
+                select k).Distinct().ToList();
+
             var selectedKeywordIds = viewModel.GetSelectedKeywordIds().ToList();
 
             viewModel.KeywordFilter.Clear();
 
             foreach (var item in keywords.OrderBy(x => x.KeywordTerm))
             {
+                var results = viewModel.ResultsBeforeFilter.Any() ? viewModel.ResultsBeforeFilter : viewModel.Results;
+                
+                item.TitleCount = results.Count(r =>
+                {
+                    var firstOrDefault = r.SubjectIndexes.FirstOrDefault();
+                    return firstOrDefault != null && firstOrDefault.KeywordID == item.KeywordID;
+                });
+                
                 var editorViewModel = new SelectKeywordEditorViewModel()
                 {
                     Id = item.KeywordID,
                     Name = item.KeywordTerm,
-                    Selected = selectedKeywordIds.Contains(item.KeywordID)
-                    //TitleCount = viewModel.Titles.Count(r => r.SubjectIndexes. == item.LanguageID)
+                    Selected = selectedKeywordIds.Contains(item.KeywordID),
+                    TitleCount = item.TitleCount
                 };
                 viewModel.KeywordFilter.Add(editorViewModel);
             }
@@ -2839,6 +1426,7 @@ namespace slls.Controllers
             TempData["simpleSearchingViewModel"] = viewModel;
             ViewBag.Title = "Narrow by " + @DbRes.T("Keywords.Keyword", "FieldDisplayName");
             return PartialView(viewModel);
+
         }
 
         [HttpGet]
