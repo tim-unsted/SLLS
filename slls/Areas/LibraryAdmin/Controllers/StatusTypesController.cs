@@ -169,7 +169,7 @@ namespace slls.Areas.LibraryAdmin
             // Refresh cached 'Opac titles' if neccessary
             if (statusType.Opac != opacStatus)
             {
-                CacheProvider.RemoveCache("opactitles");
+                //CacheProvider.RemoveCache("opactitles");
             }
 
             return Json(new { success = true });

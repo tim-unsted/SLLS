@@ -1,10 +1,10 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.SimpleSearchingViewModel
 
-@(Model.PublisherFilter.Count > 60 ? Html.Partial("_ModalHeaderRepeatFooter") : Html.Partial("_ModalDefaultHeader"))
-
 @using (Html.BeginForm("PostShowAllEntityFilter", "Home", FormMethod.Post))
 {
+    @(Model.PublisherFilter.Count > 60 ? Html.Partial("_ModalHeaderRepeatFooter") : Html.Partial("_ModalDefaultHeader"))
+    
     @Html.AntiForgeryToken()
     
     @Html.HiddenFor(x => x.Filters)

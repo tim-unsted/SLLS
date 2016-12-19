@@ -465,7 +465,7 @@ namespace slls.Areas.LibraryAdmin
                 //refresh cached 'Opac titles' if neccessary
                 if (copy.StatusType.Opac != opacCopy)
                 {
-                    CacheProvider.RemoveCache("opactitles");
+                    //CacheProvider.RemoveCache("opactitles");
                 }
 
                 return RedirectToAction("Edit", "Copies", new { id = copy.CopyID });
@@ -510,7 +510,7 @@ namespace slls.Areas.LibraryAdmin
             //Clear the cache of opac titles if neccessary ...
             if (copy.StatusType.Opac)
             {
-                CacheProvider.RemoveCache("opactitles");
+                //CacheProvider.RemoveCache("opactitles");
             }
 
             if (ModelState.IsValid)
