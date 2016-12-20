@@ -3,11 +3,11 @@
 
 @*<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>*@
 
-@Html.Label(DbRes.T("Classmarks.Classmark", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/Classmarks/_add")" class="button" id="addClassmarkLink" title="Classmark not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
+@Html.Label(DbRes.T("Classmarks.Classmark", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/Classmarks/_add")" class="button" id="addClassmarkLink" title="@DbRes.T("Classmarks.Classmark", "FieldDisplayName") not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 @Html.DropDownList("ClassmarkID", null, new { @class = "form-control" })
 @Html.ValidationMessageFor(model => model.ClassmarkID, "", new { @class = "text-danger" })
 
-<div id="newClassmarkDialog" title="Add New Classmark"></div>
+<div id="newClassmarkDialog" title="Add New @DbRes.T("Classmarks.Classmark", "FieldDisplayName")"></div>
 
 <script type="text/javascript">
     $(function () {

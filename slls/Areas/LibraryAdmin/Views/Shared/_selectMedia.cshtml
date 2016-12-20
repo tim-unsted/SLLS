@@ -1,4 +1,5 @@
-﻿@model slls.ViewModels.TitleAddViewModel
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleAddViewModel
 
 @Html.LabelFor(model => model.MediaID, new { @class = "control-label col-md-2" })
 <div class="col-md-5">
@@ -7,10 +8,10 @@
 </div>
 
 <div class="col-sm-1 hidden-sm hidden-xs" style="padding-top: 5px; padding-left: 0">
-    <a href="@Url.Content("~/LibraryAdmin/MediaTypes/_add")" class="button" id="addMediaLink" title="Media Type not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
+    <a href="@Url.Content("~/LibraryAdmin/MediaTypes/_add")" class="button" id="addMediaLink" title="@DbRes.T("MediaTypes.Media_Type", "FieldDisplayName") not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 </div>
 
-    <div id="newMediaDialog" title="Add New Media Type"></div>
+    <div id="newMediaDialog" title="Add New @DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")"></div>
 
     <script type="text/javascript">
         $(function () {

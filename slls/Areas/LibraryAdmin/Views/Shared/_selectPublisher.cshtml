@@ -1,4 +1,5 @@
-﻿@model slls.ViewModels.TitleAddViewModel
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleAddViewModel
 
 @Html.LabelFor(model => model.PublisherID, new { @class = "control-label col-md-2" })
 <div class="col-md-5">
@@ -7,10 +8,10 @@
 </div>
 
 <div class="col-sm-1 hidden-sm hidden-xs" style="padding-top: 5px; padding-left: 0">
-    <a href="@Url.Content("~/LibraryAdmin/Publishers/_add")" class="button" id="addPublisherLink" title="Publisher not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
+    <a href="@Url.Content("~/LibraryAdmin/Publishers/_add")" class="button" id="addPublisherLink" title="@DbRes.T("Publishers.Publisher", "FieldDisplayName") not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 </div>
 
-    <div id="newPublisherDialog" title="Add New Publisher"></div>
+    <div id="newPublisherDialog" title="Add New @DbRes.T("Publishers.Publisher", "FieldDisplayName")"></div>
 
     <script type="text/javascript">
         $(function () {
