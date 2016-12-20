@@ -149,6 +149,7 @@ namespace slls.Areas.LibraryAdmin
             if (!string.IsNullOrEmpty(q))
             {
                 var results = SearchService.DoFullTextSearch(q, qIgnore.Trim(), viewModel.SearchField == "all" ? "*" : viewModel.SearchField, "AdminFullTextSearch");
+                viewModel.ResultsBeforeFilter = results;
 
                 //Order the results ...
                 results = results.OrderBy(r => r.Title1.Substring(r.NonFilingChars)).Distinct().ToList();
@@ -277,8 +278,8 @@ namespace slls.Areas.LibraryAdmin
                 if (mediaIds.Any())
                 {
                     var mediatypes = (from mediatype in CacheProvider.GetAll<MediaType>("mediatypes")
-                        where mediaIds.Contains(mediatype.MediaID)
-                        select mediatype).ToList();
+                                      where mediaIds.Contains(mediatype.MediaID)
+                                      select mediatype).ToList();
 
                     viewModel.MediaFilter.Clear();
 
@@ -294,6 +295,7 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.MediaFilter.Add(editorViewModel);
                     }
                 }
+                viewModel.MediaFilter = viewModel.MediaFilter.OrderByDescending(x => x.TitleCount).ToList();
                 TempData["MediaFilter"] = viewModel.MediaFilter;
 
                 //2. Get the classmarks to narrow by ...
@@ -323,8 +325,8 @@ namespace slls.Areas.LibraryAdmin
                 if (classmarkIds.Any())
                 {
                     var classmarks = (from classmark in CacheProvider.GetAll<Classmark>("classmarks")
-                        where classmarkIds.Contains(classmark.ClassmarkID)
-                        select classmark).ToList();
+                                      where classmarkIds.Contains(classmark.ClassmarkID)
+                                      select classmark).ToList();
 
                     viewModel.ClassmarksFilter.Clear();
 
@@ -340,6 +342,7 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.ClassmarksFilter.Add(editorViewModel);
                     }
                 }
+                viewModel.ClassmarksFilter = viewModel.ClassmarksFilter.OrderByDescending(x => x.TitleCount).ToList();
                 TempData["ClassmarksFilter"] = viewModel.ClassmarksFilter;
 
                 //3. Get the publishers to narrow by ...
@@ -370,8 +373,8 @@ namespace slls.Areas.LibraryAdmin
                 if (publisherIds.Any())
                 {
                     var publishers = (from publisher in CacheProvider.GetAll<Publisher>("publishers")
-                        where publisherIds.Contains(publisher.PublisherID)
-                        select publisher).ToList();
+                                      where publisherIds.Contains(publisher.PublisherID)
+                                      select publisher).ToList();
 
                     viewModel.PublisherFilter.Clear();
 
@@ -387,6 +390,7 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.PublisherFilter.Add(editorViewModel);
                     }
                 }
+                viewModel.PublisherFilter = viewModel.PublisherFilter.OrderByDescending(x => x.TitleCount).ToList();
                 TempData["PublisherFilter"] = viewModel.PublisherFilter;
 
                 //4. Get the languages to narrow by ...
@@ -418,8 +422,8 @@ namespace slls.Areas.LibraryAdmin
                 if (languageIds.Any())
                 {
                     var languages = (from language in CacheProvider.GetAll<Language>("languages")
-                        where languageIds.Contains(language.LanguageID)
-                        select language).ToList();
+                                     where languageIds.Contains(language.LanguageID)
+                                     select language).ToList();
 
                     viewModel.LanguageFilter.Clear();
 
@@ -435,118 +439,119 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.LanguageFilter.Add(editorViewModel);
                     }
                 }
+                viewModel.LanguageFilter = viewModel.LanguageFilter.OrderByDescending(x => x.TitleCount).ToList();
                 TempData["LangaugeFilter"] = viewModel.LanguageFilter;
 
-
-                //5. Get the keywords to narrow by ... NOT CURRENTLY USED AS TOO MANY KEYWORDS !
+                //5. Get the keywords to narrow by ... 
                 //Get a list of any keywords associated with titles in the search results ...
-                //viewModel.KeywordFilter.Clear();
-                //ModelState.Clear();
-
-                //var subjectIndexIds = results.Select(item => item.SubjectIndexes).ToList();
+                viewModel.KeywordFilter.Clear();
+                ModelState.Clear();
 
                 //List<int> keywordIds;
+                var resultsKeywordIds = new List<int>();
 
-                //if (selectedKeywordIds.Any())
-                //{
-                //    keywordIds = selectedKeywordIds;
-                //}
-                //else
-                //{
-                //    keywordIds = subjectIndexIds.Select(item =>
-                //    {
-                //        var firstOrDefault = item.FirstOrDefault();
-                //        return firstOrDefault != null ? firstOrDefault.KeywordID : 0;
-                //    }).Distinct().ToList();
-                //}
+                // From the subject indexes of each result, get a list of any Keywords (KeywordID) 
+                // Note: this list may contain duplicates which we'll sort out in the next step...
+                var subjectIndexIds = results.Select(r => r.SubjectIndexes).Distinct().ToList();
+                foreach (var resultTitle in subjectIndexIds.Where(x => x.Count > 0))
+                {
+                    resultsKeywordIds.AddRange(resultTitle.Select(t => t.KeywordID));
+                }
 
-                //if (keywordIds.Any())
-                //{
-                //    var keywords = (from keyword in CacheProvider.GetAll<Keyword>("keywords")
-                //                    where keywordIds.Contains(keyword.KeywordID)
-                //                     select keyword).ToList();
+                //Now get a list of distinct Keyword IDs from the list above and a count of how many times they occur in the search results ...
+                var distinctKeywords = new Dictionary<int, int>(); ;
+                foreach (var distinctTerm in resultsKeywordIds.GroupBy(i => i)
+                        .Select(group => new
+                        {
+                            KeywordID = group.Key,
+                            Count = group.Count()
+                        })
+                        .OrderByDescending(x => x.Count).Take(take))
+                {
+                    distinctKeywords.Add(distinctTerm.KeywordID, distinctTerm.Count);
+                }
 
-                //    viewModel.KeywordFilter.Clear();
-                //    //var take = viewModel.NarrowByDefaultRecordCount;
-                //    if (selectedKeywordIds.Any())
-                //    {
-                //        take = 9999;
-                //    }
+                //Now get the actual Keyword details (we've only been dealing with thier ID's up until now) ...
+                if (distinctKeywords.Any())
+                {
+                    var keywords = (from k in CacheProvider.GetAll<Keyword>("keywords")
+                                    where resultsKeywordIds.Contains(k.KeywordID)
+                                    select k).ToList();
 
-                //    foreach (var item in keywords.OrderByDescending(x => x.SubjectIndexes.Count).Take(take))
-                //    {
-                //        item.TitleCount = results.Count(r =>
-                //        {
-                //            var firstOrDefault = r.SubjectIndexes.FirstOrDefault();
-                //            return firstOrDefault != null && firstOrDefault.KeywordID == item.KeywordID;
-                //        });
+                    // Loop through the rows in the 'distinctKeywords' list and get the KeywordTerm ...
+                    foreach (var item in distinctKeywords.OrderByDescending(k => k.Value))
+                    {
+                        var keyword = keywords.FirstOrDefault(k => k.KeywordID == item.Key);
+                        if (keyword == null) continue;
+                        var editorViewModel = new SelectKeywordEditorViewModel()
+                        {
+                            Id = keyword.KeywordID,
+                            Name = keyword.KeywordTerm,
+                            Selected = selectedKeywordIds.Contains(keyword.KeywordID),
+                            TitleCount = item.Value
+                        };
+                        viewModel.KeywordFilter.Add(editorViewModel);
+                    }
+                }
+                TempData["KeywordFilter"] = viewModel.KeywordFilter;
 
-                //        var editorViewModel = new SelectKeywordEditorViewModel()
-                //        {
-                //            Id = item.KeywordID,
-                //            Name = item.KeywordTerm,
-                //            Selected = selectedLanguageIds.Contains(item.KeywordID),
-                //            TitleCount = item.TitleCount
-                //        };
-                //        viewModel.KeywordFilter.Add(editorViewModel);
-                //    }
-                //}
-                //TempData["KeywordFilter"] = viewModel.KeywordFilter;
 
                 //6. Get the authors to narrow by ...
                 //Get a list of any authors associated with titles in the search results ...
                 viewModel.AuthorFilter.Clear();
                 ModelState.Clear();
 
-                List<int> authorIds;
+                var resultsAuthorIds = new List<int>();
 
-                if (selectedAuthorIds.Any())
+                // From the Title Authors of each result, get a list of any Authors (AuthorID) 
+                // Note: this list may contain duplicates which we'll sort out in the next step...
+                var titleAuthorIds = results.Select(r => r.TitleAuthors).Distinct().ToList();
+                foreach (var resultTitle in titleAuthorIds.Where(x => x.Count > 0))
                 {
-                    authorIds = selectedAuthorIds;
+                    resultsAuthorIds.AddRange(resultTitle.Select(t => t.AuthorId));
                 }
-                else
-                {
-                    var titleAuthorIds = results.Select(item => item.TitleAuthors).Distinct().ToList();
-                    authorIds = titleAuthorIds.Select(item =>
-                    {
-                        var firstOrDefault = item.FirstOrDefault();
-                        return firstOrDefault != null ? firstOrDefault.AuthorId : 0;
-                    }).Distinct().ToList();
-                }
-                //var authorIds = selectedAuthorIds.Any() ? selectedAuthorIds : results.Select(item => item.TitleAuthors).Distinct().ToList();
 
-                if (authorIds.Any())
-                {
-                    var authors = (from author in CacheProvider.GetAll<Author>("authors")
-                        where authorIds.Contains(author.AuthorID)
-                        select author).ToList();
-
-                    viewModel.AuthorFilter.Clear();
-                    //var take = viewModel.NarrowByDefaultRecordCount;
-                    if (selectedAuthorIds.Any())
-                    {
-                        take = 9999;
-                    }
-
-                    foreach (var item in authors.OrderByDescending(x => x.TitleAuthors.Count).Take(take))
-                    {
-                        item.TitleCount = results.Count(r =>
+                //Now get a list of distinct Keyword IDs from the list above and a count of how many times they occur in the search results ...
+                var distinctAuthors = new Dictionary<int, int>(); ;
+                foreach (var distinctAuthor in resultsAuthorIds.GroupBy(i => i)
+                        .Select(group => new
                         {
-                            var firstOrDefault = r.TitleAuthors.FirstOrDefault();
-                            return firstOrDefault != null && firstOrDefault.AuthorId == item.AuthorID;
-                        });
+                            AuthorID = group.Key,
+                            Count = group.Count()
+                        })
+                        .OrderByDescending(x => x.Count).Take(take))
+                {
+                    distinctAuthors.Add(distinctAuthor.AuthorID, distinctAuthor.Count);
+                }
 
+                //Now get the actual Author details (we've only been dealing with their ID's up until now) ...
+                if (distinctAuthors.Any())
+                {
+                    var authors = (from a in CacheProvider.GetAll<Author>("authors")
+                                   where resultsAuthorIds.Contains(a.AuthorID)
+                                   select a).ToList();
+
+                    // Loop through the rows in the 'distinctAuthors' list and get the DisplayName ...
+                    foreach (var item in distinctAuthors.OrderByDescending(a => a.Value))
+                    {
+                        var author = authors.FirstOrDefault(a => a.AuthorID == item.Key);
+                        if (author == null) continue;
                         var editorViewModel = new SelectAuthorEditorViewModel()
                         {
-                            Id = item.AuthorID,
-                            Name = item.DisplayName,
-                            Selected = selectedLanguageIds.Contains(item.AuthorID),
-                            TitleCount = item.TitleCount
+                            Id = author.AuthorID,
+                            Name = author.DisplayName,
+                            Selected = selectedAuthorIds.Contains(author.AuthorID),
+                            TitleCount = item.Value
                         };
                         viewModel.AuthorFilter.Add(editorViewModel);
                     }
                 }
                 TempData["AuthorFilter"] = viewModel.AuthorFilter;
+            }
+
+            if (!viewModel.Results.Any())
+            {
+                TempData["NoData"] = "Sorry, your search did not find any results. Please try again.";
             }
 
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(viewModel.SearchField);
@@ -1070,11 +1075,13 @@ namespace slls.Areas.LibraryAdmin
         [HttpGet]
         public ActionResult AdminShowAllClassmarksFilter()
         {
-            var viewModel = (SimpleSearchingViewModel) TempData["simpleSearchingViewModel"];
-            var classmarks = CacheProvider.GetAll<Classmark>("classmarks").ToList();
+            var viewModel = (SimpleSearchingViewModel)TempData["simpleSearchingViewModel"];
             var selectedClassmarkIds = viewModel.GetSelectedClassmarkIds().ToList();
-
             viewModel.ClassmarksFilter.Clear();
+
+            var classmarks = (from c in CacheProvider.GetAll<Classmark>("classmarks")
+                              join r in viewModel.ResultsBeforeFilter on c.ClassmarkID equals r.ClassmarkID
+                              select c).Distinct().ToList();
 
             foreach (var item in classmarks.OrderBy(x => x.Classmark1))
             {
@@ -1083,10 +1090,7 @@ namespace slls.Areas.LibraryAdmin
                     Id = item.ClassmarkID,
                     Name = item.Classmark1,
                     Selected = selectedClassmarkIds.Contains(item.ClassmarkID),
-                    TitleCount =
-                        viewModel.ResultsBeforeFilter.Any()
-                            ? viewModel.ResultsBeforeFilter.Count(r => r.ClassmarkID == item.ClassmarkID)
-                            : viewModel.Results.Count(r => r.ClassmarkID == item.ClassmarkID)
+                    TitleCount = viewModel.ResultsBeforeFilter.Any() ? viewModel.ResultsBeforeFilter.Count(r => r.ClassmarkID == item.ClassmarkID) : viewModel.Results.Count(r => r.ClassmarkID == item.ClassmarkID)
                 };
                 viewModel.ClassmarksFilter.Add(editorViewModel);
             }
@@ -1099,11 +1103,13 @@ namespace slls.Areas.LibraryAdmin
         [HttpGet]
         public ActionResult AdminShowAllMediaFilter()
         {
-            var viewModel = (SimpleSearchingViewModel) TempData["simpleSearchingViewModel"];
-            var mediatypes = CacheProvider.GetAll<MediaType>("mediatypes").ToList();
+            var viewModel = (SimpleSearchingViewModel)TempData["simpleSearchingViewModel"];
             var selectedMediaIds = viewModel.GetSelectedMediaIds().ToList();
-
             viewModel.MediaFilter.Clear();
+
+            var mediatypes = (from m in CacheProvider.GetAll<MediaType>("mediatypes")
+                              join r in viewModel.ResultsBeforeFilter on m.MediaID equals r.MediaID
+                              select m).Distinct().ToList();
 
             foreach (var item in mediatypes.OrderBy(x => x.Media))
             {
@@ -1112,10 +1118,7 @@ namespace slls.Areas.LibraryAdmin
                     Id = item.MediaID,
                     Name = item.Media,
                     Selected = selectedMediaIds.Contains(item.MediaID),
-                    TitleCount =
-                        viewModel.ResultsBeforeFilter.Any()
-                            ? viewModel.ResultsBeforeFilter.Count(r => r.MediaID == item.MediaID)
-                            : viewModel.Results.Count(r => r.MediaID == item.MediaID)
+                    TitleCount = viewModel.ResultsBeforeFilter.Any() ? viewModel.ResultsBeforeFilter.Count(r => r.MediaID == item.MediaID) : viewModel.Results.Count(r => r.MediaID == item.MediaID)
                 };
                 viewModel.MediaFilter.Add(editorViewModel);
             }
@@ -1128,11 +1131,13 @@ namespace slls.Areas.LibraryAdmin
         [HttpGet]
         public ActionResult AdminShowAllPublishersFilter()
         {
-            var viewModel = (SimpleSearchingViewModel) TempData["simpleSearchingViewModel"];
-            var publishers = CacheProvider.GetAll<Publisher>("publishers").ToList();
+            var viewModel = (SimpleSearchingViewModel)TempData["simpleSearchingViewModel"];
             var selectedPublisherIds = viewModel.GetSelectedPublisherIds().ToList();
-
             viewModel.PublisherFilter.Clear();
+
+            var publishers = (from p in CacheProvider.GetAll<Publisher>("publishers")
+                              join r in viewModel.ResultsBeforeFilter on p.PublisherID equals r.PublisherID
+                              select p).Distinct().ToList();
 
             foreach (var item in publishers.OrderBy(x => x.PublisherName))
             {
@@ -1141,11 +1146,7 @@ namespace slls.Areas.LibraryAdmin
                     Id = item.PublisherID,
                     Name = item.PublisherName,
                     Selected = selectedPublisherIds.Contains(item.PublisherID),
-                    //TitleCount = viewModel.Results.Count(r => r.PublisherID == item.PublisherID)
-                    TitleCount =
-                        viewModel.ResultsBeforeFilter.Any()
-                            ? viewModel.ResultsBeforeFilter.Count(r => r.PublisherID == item.PublisherID)
-                            : viewModel.Results.Count(r => r.PublisherID == item.PublisherID)
+                    TitleCount = viewModel.ResultsBeforeFilter.Any() ? viewModel.ResultsBeforeFilter.Count(r => r.PublisherID == item.PublisherID) : viewModel.Results.Count(r => r.PublisherID == item.PublisherID)
                 };
                 viewModel.PublisherFilter.Add(editorViewModel);
             }
@@ -1158,11 +1159,13 @@ namespace slls.Areas.LibraryAdmin
         [HttpGet]
         public ActionResult AdminShowAllLanguagesFilter()
         {
-            var viewModel = (SimpleSearchingViewModel) TempData["simpleSearchingViewModel"];
-            var languages = CacheProvider.GetAll<Language>("languages").ToList();
+            var viewModel = (SimpleSearchingViewModel)TempData["simpleSearchingViewModel"];
             var selectedLanguageIds = viewModel.GetSelectedLanguageIds().ToList();
-
             viewModel.LanguageFilter.Clear();
+
+            var languages = (from l in CacheProvider.GetAll<Language>("languages")
+                             join r in viewModel.ResultsBeforeFilter on l.LanguageID equals r.LanguageID
+                             select l).Distinct().ToList();
 
             foreach (var item in languages.OrderBy(x => x.Language1))
             {
@@ -1171,11 +1174,7 @@ namespace slls.Areas.LibraryAdmin
                     Id = item.LanguageID,
                     Name = item.Language1,
                     Selected = selectedLanguageIds.Contains(item.LanguageID),
-                    //TitleCount = viewModel.Results.Count(r => r.LanguageID == item.LanguageID)
-                    TitleCount =
-                        viewModel.ResultsBeforeFilter.Any()
-                            ? viewModel.ResultsBeforeFilter.Count(r => r.LanguageID == item.LanguageID)
-                            : viewModel.Results.Count(r => r.LanguageID == item.LanguageID)
+                    TitleCount = viewModel.ResultsBeforeFilter.Any() ? viewModel.ResultsBeforeFilter.Count(r => r.LanguageID == item.LanguageID) : viewModel.Results.Count(r => r.LanguageID == item.LanguageID)
                 };
                 viewModel.LanguageFilter.Add(editorViewModel);
             }
@@ -1188,24 +1187,52 @@ namespace slls.Areas.LibraryAdmin
         [HttpGet]
         public ActionResult AdminShowAllKeywordsFilter()
         {
-            var viewModel = (SimpleSearchingViewModel) TempData["simpleSearchingViewModel"];
-            var keywords = CacheProvider.GetAll<Keyword>("keywords").ToList();
+            var viewModel = (SimpleSearchingViewModel)TempData["simpleSearchingViewModel"];
             var selectedKeywordIds = viewModel.GetSelectedKeywordIds().ToList();
+            var resultsKeywordIds = new List<int>();
 
             viewModel.KeywordFilter.Clear();
 
-            foreach (var item in keywords.OrderBy(x => x.KeywordTerm))
+            // From the subject indexes of each result, get a list of any Keywords (KeywordID) 
+            // Note: this list may contain duplicates which we'll sort out in the next step...
+            var subjectIndexIds = viewModel.Results.Select(r => r.SubjectIndexes).Distinct().ToList();
+            foreach (var resultTitle in subjectIndexIds.Where(x => x.Count > 0))
             {
-                var editorViewModel = new SelectKeywordEditorViewModel()
-                {
-                    Id = item.KeywordID,
-                    Name = item.KeywordTerm,
-                    Selected = selectedKeywordIds.Contains(item.KeywordID)
-                    //TitleCount = viewModel.Titles.Count(r => r.SubjectIndexes. == item.LanguageID)
-                };
-                viewModel.KeywordFilter.Add(editorViewModel);
+                resultsKeywordIds.AddRange(resultTitle.Select(t => t.KeywordID));
             }
 
+            //Now get a list of distinct Keyword IDs from the list above and a count of how many times they occur in the search results ...
+            var distinctKeywords = new Dictionary<int, int>();
+            foreach (var distinctKeyword in resultsKeywordIds.GroupBy(i => i)
+                    .Select(group => new
+                    {
+                        KeywordID = group.Key,
+                        Count = group.Count()
+                    })
+                )
+            {
+                distinctKeywords.Add(distinctKeyword.KeywordID, distinctKeyword.Count);
+            }
+
+            //Now get the actual Keyword details (we've only been dealing with their ID's up until now) ...
+            if (distinctKeywords.Any())
+            {
+                // Loop through the rows in the 'distinctKeywords' list and get the KeywordTerm ...
+                foreach (var item in distinctKeywords)
+                {
+                    var keyword = _db.Keywords.Find(item.Key);
+                    if (keyword == null) continue;
+                    var editorViewModel = new SelectKeywordEditorViewModel()
+                    {
+                        Id = keyword.KeywordID,
+                        Name = keyword.KeywordTerm,
+                        Selected = selectedKeywordIds.Contains(keyword.KeywordID),
+                        TitleCount = item.Value
+                    };
+                    viewModel.KeywordFilter.Add(editorViewModel);
+                }
+            }
+            viewModel.KeywordFilter = viewModel.KeywordFilter.OrderBy(f => f.Name).ToList();
             TempData["simpleSearchingViewModel"] = viewModel;
             ViewBag.Title = "Narrow by " + @DbRes.T("Keywords.Keyword", "FieldDisplayName");
             return PartialView(viewModel);
@@ -1214,32 +1241,53 @@ namespace slls.Areas.LibraryAdmin
         [HttpGet]
         public ActionResult AdminShowAllAuthorsFilter()
         {
-            var viewModel = (SimpleSearchingViewModel) TempData["simpleSearchingViewModel"];
-            var authors = CacheProvider.GetAll<Author>("authors").ToList();
+            var viewModel = (SimpleSearchingViewModel)TempData["simpleSearchingViewModel"];
             var selectedAuthorIds = viewModel.GetSelectedAuthorIds().ToList();
+            var resultsAuthorIds = new List<int>();
 
             viewModel.AuthorFilter.Clear();
 
-            foreach (var item in authors.OrderBy(x => x.DisplayName))
+            // From the title authors of each result, get a list of any Authors (AuthorID) 
+            // Note: this list may contain duplicates which we'll sort out in the next step...
+            var titleAuthorIds = viewModel.ResultsBeforeFilter.Select(r => r.TitleAuthors).Distinct().ToList();
+            foreach (var resultTitle in titleAuthorIds.Where(x => x.Count > 0))
             {
-                var results = viewModel.ResultsBeforeFilter.Any() ? viewModel.ResultsBeforeFilter : viewModel.Results;
-
-                item.TitleCount = results.Count(r =>
-                {
-                    var firstOrDefault = r.TitleAuthors.FirstOrDefault();
-                    return firstOrDefault != null && firstOrDefault.AuthorId == item.AuthorID;
-                });
-
-                var editorViewModel = new SelectAuthorEditorViewModel()
-                {
-                    Id = item.AuthorID,
-                    Name = item.DisplayName,
-                    Selected = selectedAuthorIds.Contains(item.AuthorID),
-                    TitleCount = item.TitleCount
-                };
-                viewModel.AuthorFilter.Add(editorViewModel);
+                resultsAuthorIds.AddRange(resultTitle.Select(t => t.AuthorId));
             }
 
+            //Now get a list of distinct Author IDs from the list above and a count of how many times they occur in the search results ...
+            var distinctAuthors = new Dictionary<int, int>(); ;
+            foreach (var distinctAuthor in resultsAuthorIds.GroupBy(i => i)
+                    .Select(group => new
+                    {
+                        AuthorID = group.Key,
+                        Count = group.Count()
+                    })
+                )
+            {
+                distinctAuthors.Add(distinctAuthor.AuthorID, distinctAuthor.Count);
+            }
+
+            //Now get the actual Author details (we've only been dealing with thier ID's up until now) ...
+            if (distinctAuthors.Any())
+            {
+                // Loop through the rows in the 'distinctAuthors' list and get the DisplayName ...
+                foreach (var item in distinctAuthors)
+                {
+                    var author = _db.Authors.Find(item.Key);
+                    if (author == null) continue;
+                    var editorViewModel = new SelectAuthorEditorViewModel()
+                    {
+                        Id = author.AuthorID,
+                        Name = author.DisplayName,
+                        Selected = selectedAuthorIds.Contains(author.AuthorID),
+                        TitleCount = item.Value
+                    };
+                    viewModel.AuthorFilter.Add(editorViewModel);
+                }
+            }
+
+            viewModel.AuthorFilter = viewModel.AuthorFilter.OrderBy(f => f.Name).ToList();
             TempData["simpleSearchingViewModel"] = viewModel;
             ViewBag.Title = "Narrow by " + @DbRes.T("Authors.Author", "FieldDisplayName");
             return PartialView(viewModel);

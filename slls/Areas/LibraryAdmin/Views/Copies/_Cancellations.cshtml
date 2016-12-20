@@ -2,7 +2,7 @@
 @using Westwind.Globalization
 @model slls.ViewModels.CopyDetailsEditViewModel
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("PostEdit", "Copies", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -29,12 +29,12 @@
         <div class="form-group">
             <div class="col-md-3">
                 @Html.LabelFor(model => model.Cancellation)
-                @Html.EditorFor(model => model.Cancellation, string.Empty, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Cancellation, new { @class = "form-control", id = "dateCancelled", placeholder = "" })
                 @Html.ValidationMessageFor(model => model.Cancellation, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-6">
                 @Html.Label(DbRes.T("Copies.Cancelled_By","FieldDisplayName"))
-                @Html.DropDownList("UserID",(IEnumerable<SelectListItem>)ViewData["CancelledBy"], string.Empty, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("CancelledByUser", (IEnumerable<SelectListItem>)ViewData["CancelledBy"], string.Empty, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CancelledByUser, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -57,8 +57,11 @@
             {
                 <span class="pull-left">@Html.Partial("_PaginateDetails", Model)</span>
             }
+            <span class="pull-left">
+                <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
+            </span>
             <button type="submit" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Cancellations</button>
-            <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-default modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
+            @*<a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-default modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>*@
             &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
         </div>
 

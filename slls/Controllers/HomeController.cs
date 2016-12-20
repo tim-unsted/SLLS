@@ -736,17 +736,19 @@ namespace slls.Controllers
         }
 
         [HttpGet]
-        public ActionResult SimpleSearch()
+        public ActionResult SimpleSearch(string q = "")
         {
             var viewModel = new SimpleSearchingViewModel()
             {
                 //LibraryStaff = Roles.IsUserInRole("Catalogue Admin"),
                 Area = "opac",
                 OrderBy = "title",
-                IsActualSearch = true
+                IsActualSearch = true,
+                SearchString = q
             };
 
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(scope: "opac");
+            ViewBag.SearchTips = HelpTextHelper.GetHelpText("searchingtips");
             ViewBag.Title = Settings.GetParameterValue("Searching.SearchPageWelcome", "Search the Library");
             return View(viewModel);
         }
@@ -960,7 +962,6 @@ namespace slls.Controllers
                 }
 
                 viewModel.Results = results;
-                //var serializer = new JavaScriptSerializer();
                 viewModel.JsonData = Json(results);
 
                 //1. Get the media types to narrow by ...
@@ -1269,6 +1270,7 @@ namespace slls.Controllers
 
             viewModel.LibraryStaff = Roles.IsLibraryStaff();
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(viewModel.SearchField);
+            ViewBag.SearchTips = HelpTextHelper.GetHelpText("searchingtips");
             TempData["SearchTerm"] = viewModel.SearchString;
             ViewBag.Title = !string.IsNullOrEmpty(q) ? "Search Results" : "Search the Library";
             TempData["simpleSearchingViewModel"] = viewModel;

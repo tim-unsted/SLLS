@@ -122,7 +122,8 @@ namespace slls.ViewModels
         public DateTime? Commenced { get; set; }
 
         [LocalDisplayName("Copies.Cancelled_By", "FieldDisplayName")]
-        public virtual ApplicationUser CancelledByUser { get; set; }
+        //public virtual ApplicationUser CancelledByUser { get; set; }
+        public string CancelledByUser { get; set; }
 
         //[Column(TypeName = "smalldatetime")]
         [LocalDisplayName("Copies.Date_Cancelled", "FieldDisplayName")]

@@ -360,7 +360,7 @@ namespace slls.Areas.LibraryAdmin
                 StatusId = copy.StatusID,
                 TitleId = copy.TitleID,
                 Title = copy.Title.Title1,
-                CancelledByUser = copy.CancelledByUser,
+                CancelledByUser = copy.CancelledByUser == null ? "" : copy.CancelledByUser.Id,
                 Circulations = copy.Circulations,
                 CirculationMessage = copy.CirculationMessage
             };
@@ -451,7 +451,7 @@ namespace slls.Areas.LibraryAdmin
                 copy.Saving = viewModel.Saving;
                 copy.StatusID = viewModel.StatusId;
                 copy.TitleID = viewModel.TitleId;
-                copy.CancelledByUser = viewModel.CancelledByUser;
+                copy.CancelledByUser = _db.Users.Find(viewModel.CancelledByUser);
                 copy.LastModified = DateTime.Now;
                 _db.Entry(copy).State = EntityState.Modified;
                 _db.SaveChanges();
