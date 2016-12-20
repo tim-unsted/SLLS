@@ -52,7 +52,7 @@ namespace slls.Areas.Config
         [HttpGet]
         public ActionResult RemoveAll()
         {
-            var newTitlesList = DbRes.T("NewTitlesList", "EntityType");
+            //var newTitlesList = DbRes.T("NewTitlesList", "EntityType");
             var gcvm = new GenericConfirmationViewModel
             {
                 PostConfirmController = "Cache",
@@ -65,7 +65,6 @@ namespace slls.Areas.Config
                 Glyphicon = "glyphicon-remove"
             };
             return PartialView("_GenericConfirmation", gcvm);
-
         }
 
         [HttpPost]

@@ -11,16 +11,15 @@
 @using (Html.BeginForm(Model.PostConfirmAction, Model.PostConfirmController, FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.ValidationSummary()
-            <!-- Added hidden field so that these values persist when calling POST Action. Otherwise POST action will have all these properties as null -->
     @Html.HiddenFor(x => x.ConfirmEntityId)
     @Html.HiddenFor(x => x.PostConfirmAction)
     @Html.HiddenFor(x => x.PostConfirmController)
     @Html.HiddenFor(x => x.HeaderText)
-            <!-- Though not required in post action but may be in case of error useful-->
+    
     <div class="modal-body">
         <div class="control-group">
+            <div class="alert alert-info">@Html.DisplayFor(model => model.DetailsText)</div>
             <p>@Html.DisplayFor(model => model.ConfirmationText)</p>
-            <p>@Html.DisplayFor(model => model.DetailsText)</p>
             @ViewBag.Message
         </div>
     </div>

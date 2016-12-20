@@ -16,7 +16,69 @@ namespace slls.Areas.LibraryAdmin
     public class AdminToolsController : AdminBaseController
     {
         private readonly DbEntities _db = new DbEntities();
-        
+
+        public ActionResult ReIndexAll()
+        {
+            var gcvm = new GenericConfirmationViewModel
+            {
+                PostConfirmController = "AdminTools",
+                PostConfirmAction = "DoReIndexAll",
+                DetailsText = "You are about to re-index your entire catalogue. This won't do any harm but might help users find recently added or updated items when searching.",
+                ConfirmationText = "Are you sure you want to continue?",
+                ConfirmButtonText = "Ok",
+                ConfirmButtonClass = "btn-success",
+                CancelButtonText = "Cancel",
+                HeaderText = "Re-Index Catalogue?",
+                Glyphicon = "glyphicon-ok"
+            };
+            return PartialView("_GenericConfirmation", gcvm);
+        }
+
+        [HttpPost]
+        public ActionResult DoReIndexAll(GenericConfirmationViewModel viewModel)
+        {
+            if (SearchService.ReIndexAll() == true)
+            {
+                TempData["SuccessDialogMsg"] = "A full catalogue re-index has been started. Depending on the size of your catalogue, this make take a minute or so to complete.";
+            }
+            else
+            {
+                TempData["ErrorDialogMsg"] = "Sorry. A problem was encountered when trying to start a full re-index of your catalogue. Please try again.";
+            }
+            return Json(new { success = true }); 
+        }
+
+        public ActionResult IndexPending()
+        {
+            var gcvm = new GenericConfirmationViewModel
+            {
+                PostConfirmController = "AdminTools",
+                PostConfirmAction = "DoIndexPending",
+                DetailsText = "You are about to index your recently added or updated catalogue records. This won't do any harm but might help users find recently added or updated items when searching.",
+                ConfirmationText = "Are you sure you want to continue?",
+                ConfirmButtonText = "Ok",
+                ConfirmButtonClass = "btn-success",
+                CancelButtonText = "Cancel",
+                HeaderText = "Index Pending Changes?",
+                Glyphicon = "glyphicon-ok"
+            };
+            return PartialView("_GenericConfirmation", gcvm);
+        }
+
+        [HttpPost]
+        public ActionResult DoIndexPending(GenericConfirmationViewModel viewModel)
+        {
+            if (SearchService.IndexPending() == true)
+            {
+                TempData["SuccessDialogMsg"] = "The indexing of all recently added and update Catalogue records has been started. This should only take a few seconds to complete.";
+            }
+            else
+            {
+                TempData["ErrorDialogMsg"] = "Sorry. A problem was encountered when trying to start a full re-index of your catalogue. Please try again.";
+            }
+            return Json(new { success = true });
+        }
+
         public ActionResult UpdateMergeAuthorityList(string list = "")
         {
             var authorityLists = new Dictionary<string, string>();

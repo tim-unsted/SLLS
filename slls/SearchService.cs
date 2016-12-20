@@ -21,6 +21,36 @@ namespace slls
             var result = db.Titles.Where(t => titleIds.Contains(t.TitleID)).ToList();
             return result;
         }
-        
+
+        public static bool ReIndexAll()
+        {
+            var db = new DbEntities();
+            try
+            {
+                db.Database.ExecuteSqlCommand("EXEC dbo.UpdateOpacSearch");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+        }
+
+        public static bool IndexPending()
+        {
+            var db = new DbEntities();
+            try
+            {
+                db.Database.ExecuteSqlCommand("EXEC dbo.DoIndexing");
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
+
+
 }
