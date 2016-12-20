@@ -165,13 +165,7 @@ namespace slls.Areas.LibraryAdmin
             statusType.LastModified = DateTime.Now;
             _repository.Update(statusType);
             CacheProvider.RemoveCache("statustypes");
-
-            // Refresh cached 'Opac titles' if neccessary
-            if (statusType.Opac != opacStatus)
-            {
-                //CacheProvider.RemoveCache("opactitles");
-            }
-
+            
             return Json(new { success = true });
         }
         

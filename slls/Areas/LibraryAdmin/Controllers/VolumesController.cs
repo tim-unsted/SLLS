@@ -264,12 +264,6 @@ namespace slls.Areas.LibraryAdmin
                 {
                     _db.Volumes.Add(newVolume);
                     _db.SaveChanges();
-
-                    //Clear the cache of opac titles if neccessary ...
-                    if (opac)
-                    {
-                        //CacheProvider.RemoveCache("opactitles");
-                    }
                 }
                 catch (Exception e)
                 {
@@ -431,13 +425,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 return HttpNotFound();
             }
-
-            //Clear the cache of opac titles if neccessary ...
-            if (volume.Copy.StatusType.Opac)
-            {
-                //CacheProvider.RemoveCache("opactitles");
-            }
-
+            
             _db.Volumes.Remove(volume);
             _db.SaveChanges();
             
@@ -473,12 +461,6 @@ namespace slls.Areas.LibraryAdmin
             if (volume == null)
             {
                 return HttpNotFound();
-            }
-
-            //Clear the cache of opac titles if neccessary ...
-            if (volume.Copy.StatusType.Opac)
-            {
-                //CacheProvider.RemoveCache("opactitles");
             }
 
             if (ModelState.IsValid)
