@@ -12,14 +12,14 @@
                         <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="View/Edit @DbRes.T("Copies.Copy", "FieldDisplayName")" role="button"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                         <a href="@Url.Action("Delete", "Copies", new {id = item.CopyID}, null)" class="btn btn-link modal-link" title="Delete @DbRes.T("Copies.copy", "FieldDisplayName" )" role="button"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                     </span>
-                    <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="View/Edit @DbRes.T("Copies.Copy", "FieldDisplayName")" role="button"><strong>@Html.DisplayNameFor(model => model.CopyNumber):&nbsp;@Html.Raw(item.CopyNumber)</strong></a>
+                    <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="View/Edit @DbRes.T("Copies.Copy", "FieldDisplayName")" role="button"><strong>@Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName")):&nbsp;@Html.Raw(item.CopyNumber)</strong></a>
                 </div>
                 <div class="row">
                     <div class="col-sm-5">
                         <dl class="dl-horizontal">
-                            <dt>@Html.DisplayNameFor(model => model.Location.Location1):</dt>
+                            <dt>@Html.Label(DbRes.T("Locations.Location", "FieldDisplayName")):</dt>
                             <dd>@Html.DisplayFor(modelItem => item.Location.ParentLocation.Location1) @Html.DisplayFor(modelItem => item.Location.Location1) </dd>
-                            <dt>@Html.DisplayNameFor(model => model.StatusType.Status):</dt>
+                            <dt>@Html.Label(DbRes.T("StatusTypes.Status_Type", "FieldDisplayName")):</dt>
                             <dd>@Html.DisplayFor(modelItem => item.StatusType.Status)</dd>
                             <dt>@Html.DisplayNameFor(model => model.Holdings):</dt>
                             <dd>@Html.DisplayFor(modelItem => item.Holdings)</dd>

@@ -41,8 +41,8 @@ namespace slls.Areas.LibraryAdmin
             {
                 PostConfirmController = "Labels",
                 PostConfirmAction = "PostSetAllCopiesToPrint",
-                ConfirmationText = "Do you want to set the labels for ALL copies to print?",
-                DetailsText = "",
+                DetailsText = "You are about to set the labels for ALL " + DbRes.T("Copies", "EntityType") + " to print.",
+                ConfirmationText = "Do you want to continue?",
                 ConfirmButtonText = "Yes",
                 ConfirmButtonClass = "btn-success",
                 CancelButtonText = "Cancel",
@@ -58,7 +58,7 @@ namespace slls.Areas.LibraryAdmin
             try
             {
                 _db.Database.ExecuteSqlCommand("UPDATE Copies SET PrintLabel = 1");
-                TempData["SuccessDialogMsg"] = "All copy labels have been set to print.";
+                TempData["SuccessDialogMsg"] = "All " + DbRes.T("Copies.Copy","FieldDisplayName").ToLower() + " labels have been set to print.";
                 return Json(new { success = true });
             }
             catch (Exception e)
@@ -75,8 +75,8 @@ namespace slls.Areas.LibraryAdmin
             {
                 PostConfirmController = "Labels",
                 PostConfirmAction = "PostClearAllCopiesToPrint",
-                ConfirmationText = "Do you want to clear the print labels for ALL copies?",
-                DetailsText = "",
+                ConfirmationText = "Do you want to continue?",
+                DetailsText = "You are about to clear the print labels for ALL " + DbRes.T("Copies","EntityType").ToLower() + ".",
                 ConfirmButtonText = "Yes",
                 ConfirmButtonClass = "btn-danger",
                 CancelButtonText = "Cancel",
@@ -92,7 +92,7 @@ namespace slls.Areas.LibraryAdmin
             try
             {
                 _db.Database.ExecuteSqlCommand("UPDATE Copies SET PrintLabel = 0");
-                TempData["SuccessDialogMsg"] = "Print labels for ALL copies have been cleared successfully.";
+                TempData["SuccessDialogMsg"] = "Print labels for ALL " + DbRes.T("Copies.Copy","FieldDisplayName").ToLower() + " have been cleared successfully.";
                 return Json(new { success = true });
             }
             catch (Exception e)
@@ -109,8 +109,8 @@ namespace slls.Areas.LibraryAdmin
             {
                 PostConfirmController = "Labels",
                 PostConfirmAction = "PostClearAllVolumesToPrint",
-                ConfirmationText = "Do you want to clear the print labels for ALL volumes?",
-                DetailsText = "",
+                ConfirmationText = "Do you want to continue?",
+                DetailsText = "You are about to clear the print labels for ALL " + DbRes.T("Volumes","EntityType").ToLower() + ".",
                 ConfirmButtonText = "Yes",
                 ConfirmButtonClass = "btn-danger",
                 CancelButtonText = "Cancel",

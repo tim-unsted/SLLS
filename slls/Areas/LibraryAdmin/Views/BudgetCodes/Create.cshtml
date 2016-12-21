@@ -1,4 +1,5 @@
-﻿@model slls.ViewModels.BudgetCodeAddViewModel
+﻿@using Westwind.Globalization
+@model slls.ViewModels.BudgetCodeAddViewModel
 
 @Html.Partial("_ModalAddHeader")
 
@@ -11,7 +12,7 @@
         <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             <div class="form-group">
-                @Html.LabelFor(model => model.BudgetCode, htmlAttributes: new { @class = "control-label col-md-4" })
+                @Html.Label(DbRes.T("BudgetCode.Budget_Code", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-4" })
                 <div class="col-md-7">
                     @Html.EditorFor(model => model.BudgetCode, new { htmlAttributes = new { @class = "form-control", aria_required = true } })
                     @Html.ValidationMessageFor(model => model.BudgetCode, "", new { @class = "text-danger" })

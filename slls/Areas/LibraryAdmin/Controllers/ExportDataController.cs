@@ -5,6 +5,7 @@ using System.Web.Mvc;
 using slls.DAO;
 using slls.Models;
 using slls.ViewModels;
+using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
@@ -26,8 +27,8 @@ namespace slls.Areas.LibraryAdmin
             return new Dictionary<string, string>
             {
                 {"titles", "Titles only"},    
-                {"titlescopies", "Titles & Copy details"},
-                {"titlescopiesvolumes", "Titles, Copies & Copy Item (Volume) details"}
+                {"titlescopies", "Titles & " + DbRes.T("Copies.Copy", "FieldDisplayName") + " details"},
+                {"titlescopiesvolumes", "Titles, " + DbRes.T("Copies", "EntityType") + " & " + DbRes.T("Copies.Copy_Items", "FieldDisplayName").ToLower() + " (Volume) details"}
             };
         }
 

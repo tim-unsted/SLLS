@@ -7,7 +7,7 @@
             <div class="form-group ">
                 @Html.HiddenFor(model => model.CopyId)
 
-                @Html.LabelFor(model => model.Title, htmlAttributes: new {@class = "control-label col-md-3"})
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-9">
                     <p class="form-control-static"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a>
                     </p>
@@ -19,7 +19,7 @@
                     </p>
                 </div>
 
-                @Html.LabelFor(model => model.Media, htmlAttributes: new {@class = "control-label col-md-3"})
+                @Html.Label(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-9">
                     <p class="form-control-static">@Html.DisplayFor(model => model.Media)</p>
                 </div>
@@ -29,7 +29,7 @@
                     <p class="form-control-static">@Html.DisplayFor(model => model.Location)</p>
                 </div>
 
-                @Html.LabelFor(model => model.Status, htmlAttributes: new {@class = "control-label col-md-3"})
+                @Html.Label(DbRes.T("StatusTypes.Status_Type", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-9">
                     <p class="form-control-static">@Html.DisplayFor(model => model.Status)</p>
                 </div>

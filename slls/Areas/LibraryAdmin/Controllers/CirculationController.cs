@@ -713,9 +713,9 @@ namespace slls.Areas.LibraryAdmin
                 PostSelectController = "Circulation",
                 PostSelectAction = "PostAddCopyToCirculation",
                 SelectedItems = null,
-                HeaderText = "Add Copies to " + DbRes.T("Circulation.Circulated_Items", "FieldDisplayName") + " List",
+                HeaderText = "Add " + DbRes.T("Copies", "EntityType").ToLower() + " to " + DbRes.T("Circulation.Circulated_Items", "FieldDisplayName") + " List",
                 DetailsText =
-                    "Select the Copies you wish to include in the list of " +
+                    "Select the " + DbRes.T("Copies", "EntityType").ToLower() + " you wish to include in the list of " +
                     DbRes.T("Circulation.Circulated_Items", "FieldDisplayName"),
                 OkButtonText = "Add Selected",
                 SelectLabel = "Copies"
@@ -729,7 +729,7 @@ namespace slls.Areas.LibraryAdmin
 
             lbvm.AvailableItems = availableItems.Select(l => new SelectListItem { Text = l.Text, Value = l.Value });
 
-            ViewBag.Title = "Add Copies to " + DbRes.T("Circulation.Circulated_Items", "FieldDisplayName") + " List";
+            ViewBag.Title = "Add " + DbRes.T("Copies", "EntityType").ToLower() + " to " + DbRes.T("Circulation.Circulated_Items", "FieldDisplayName") + " List";
             return PartialView("_MultiSelectListBox", lbvm);
         }
 
@@ -1159,8 +1159,8 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new GenericConfirmationViewModel
             {
                 ConfirmEntityId = libraryUser.Id,
-                ConfirmationText =
-                    "Are you sure you want to add " + libraryUser.Firstname + " to ALL circulation lists?",
+                DetailsText = "You are about to add " + libraryUser.Firstname + " to ALL circulation lists.",
+                ConfirmationText = "Are you sure you want to continue",
                 ConfirmButtonText = "Ok",
                 HeaderText = "Add recipient to All lists",
                 PostConfirmController = "Circulation",

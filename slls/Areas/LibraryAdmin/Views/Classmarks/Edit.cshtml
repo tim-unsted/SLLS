@@ -24,7 +24,7 @@
             @Html.HiddenFor(model => model.CanDelete)
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Classmark, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.Label(DbRes.T("Classmarks.Classmark", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.Classmark, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.Classmark, "", new { @class = "text-danger" })

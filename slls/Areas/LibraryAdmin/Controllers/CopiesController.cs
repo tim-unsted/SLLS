@@ -70,7 +70,7 @@ namespace slls.Areas.LibraryAdmin
             var copies = _db.Copies.Where(c => allTitles.Contains(c.TitleID) && c.Volumes.Count == 0);
             if (!copies.Any())
             {
-                TempData["NoData"] = "You have no Copies without " + DbRes.T("Copies.Copy_Items", "FieldDisplayName") + "!";
+                TempData["NoData"] = "You have no " + DbRes.T("Copies", "EntityType").ToLower() + " without " + DbRes.T("Copies.Copy_Items", "FieldDisplayName").ToLower() + "!";
             }
             ViewBag.Title = "Copies Without " + DbRes.T("Copies.Copy_Items", "FieldDisplayName");
             return View(copies.ToList());
@@ -538,8 +538,8 @@ namespace slls.Areas.LibraryAdmin
                 PostSelectController = "Copies",
                 PostSelectAction = "PostBind",
                 SelectedItems = null,
-                HeaderText = "Add Copies to Binding List",
-                DetailsText = "Select the copies you wish to add to the binding list.",
+                HeaderText = "Add " + DbRes.T("Copies", "EntityType") + " to Binding List",
+                DetailsText = "Select the " + DbRes.T("Copies", "EntityType").ToLower() + " you wish to add to the binding list.",
                 SelectLabel = "Select Copies"
             };
 
@@ -559,7 +559,7 @@ namespace slls.Areas.LibraryAdmin
                 {"dateadded", "Recently Added"}
             };
 
-            ViewBag.Title = "Add Copies to Binding List";
+            ViewBag.Title = "Add " + DbRes.T("Copies", "EntityType") + " to Binding List";
             return PartialView("_MultiSelectListBox", viewModel);
         }
 

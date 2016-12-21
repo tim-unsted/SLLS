@@ -15,7 +15,7 @@
                 @Html.HiddenFor(model => model.UserId)
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-3" })
+                    @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                     <div class="col-md-8">
                         <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
                     </div>

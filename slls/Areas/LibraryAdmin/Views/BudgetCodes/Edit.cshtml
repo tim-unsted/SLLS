@@ -24,7 +24,7 @@
             @Html.HiddenFor(model => model.CanDelete)
 
             <div class="form-group">
-                @Html.LabelFor(model => model.BudgetCode, htmlAttributes: new { @class = "control-label col-md-4" })
+                @Html.Label(DbRes.T("BudgetCode.Budget_Code", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-4" })
                 <div class="col-md-7">
                     @Html.EditorFor(model => model.BudgetCode, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.BudgetCode, "", new { @class = "text-danger" })

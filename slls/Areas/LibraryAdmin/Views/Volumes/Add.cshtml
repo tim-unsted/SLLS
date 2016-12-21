@@ -27,7 +27,7 @@
 
     <div class="form-horizontal">
         <div class="form-group">
-            @Html.LabelFor(model => model.Title, htmlAttributes: new {@class = "control-label col-md-2"})
+            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
             <div class="col-md-10">
                 <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
             </div>
@@ -41,7 +41,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Barcode, new { @class = "control-label col-md-2" })
+            @Html.Label(DbRes.T("CopyItems.Barcode", "FieldDisplayName"), new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control" } })
                 <span class="help-inline">This is the unique barcode or indentifier for the @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName"). This should be the same as any barcode (e.g. label) attached to the item.</span>
@@ -50,7 +50,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.LabelText, new { @class = "control-label col-md-2" })
+            @Html.Label(DbRes.T("CopyItems.Label_Text", "FieldDisplayName"), new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.LabelText, new { htmlAttributes = new { @class = "form-control" } })
                 <span class="help-inline">This is the information printed on the item's label</span>

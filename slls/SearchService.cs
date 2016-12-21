@@ -45,8 +45,9 @@ namespace slls
                 db.Database.ExecuteSqlCommand("EXEC dbo.DoIndexing");
                 return true;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return false;
             }
         }

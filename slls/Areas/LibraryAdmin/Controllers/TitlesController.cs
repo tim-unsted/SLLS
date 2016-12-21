@@ -1944,8 +1944,8 @@ namespace slls.Areas.LibraryAdmin
             {
                 PostConfirmController = "Titles",
                 PostConfirmAction = "PostClearNewTitles",
-                ConfirmationText = "You are about to remove all items from the '" + newTitlesList + "'.",
-                DetailsText = "Are you sure you want to continue?",
+                ConfirmationText = "Are you sure you want to continue?",
+                DetailsText = "You are about to remove all items from the '" + newTitlesList + "'.",
                 ConfirmButtonText = "Clear",
                 ConfirmButtonClass = "btn-danger",
                 CancelButtonText = "Cancel",

@@ -16,14 +16,14 @@
             @Html.HiddenFor(model => model.TitleId)
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-8">
                     <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
                 </div>
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.Url, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.Label(DbRes.T("TitleLinks.URL_Path", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
@@ -31,7 +31,7 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.DisplayText, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.Label(DbRes.T("TitleLinks.Display_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.DisplayText, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.DisplayText, "", new { @class = "text-danger" })

@@ -45,13 +45,13 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Title.Title1)
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CopyNumber)
+                @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StatusType.Status)
+                @Html.Label(DbRes.T("StatusTypes.Status_Type", "FieldDisplayName"))
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Holdings)

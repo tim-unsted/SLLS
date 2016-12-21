@@ -57,12 +57,13 @@ namespace slls.Areas.Config
             {
                 PostConfirmController = "Cache",
                 PostConfirmAction = "DoRemoveAll",
-                ConfirmationText = "You are about to remove all cached data. Are you sure you want to continue?",
+                ConfirmationText = "Are you sure you want to continue?",
                 ConfirmButtonText = "Clear Cache",
-                ConfirmButtonClass = "btn-danger",
+                ConfirmButtonClass = "btn-success",
                 CancelButtonText = "Cancel",
                 HeaderText = "Clear Cache?",
-                Glyphicon = "glyphicon-remove"
+                Glyphicon = "glyphicon-remove",
+                DetailsText = "You are about to remove all cached data. This is perfectly safe and won't do any harm!"
             };
             return PartialView("_GenericConfirmation", gcvm);
         }

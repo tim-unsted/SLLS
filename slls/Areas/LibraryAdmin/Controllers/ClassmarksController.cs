@@ -99,7 +99,7 @@ namespace slls.Areas.LibraryAdmin
                     return Json(new
                     {
                         success = false,
-                        errMsg = "This Classmark already exists!"
+                        errMsg = "This " + DbRes.T("Classmarks.Classmark", "FieldDisplayName") + " already exists!"
                     });
                 }   
             }
