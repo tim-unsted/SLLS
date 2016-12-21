@@ -1592,7 +1592,7 @@ namespace slls.Areas.LibraryAdmin
 
             IList<SelectListItem> list = new List<SelectListItem>();
 
-            list.Add(new SelectListItem { Text = "[Show All]", Value = "-1" });
+            //list.Add(new SelectListItem { Text = "[Show All]", Value = "-1" });
 
             foreach (var t in titles)
             {

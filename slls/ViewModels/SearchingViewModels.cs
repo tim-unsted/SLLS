@@ -70,6 +70,8 @@ namespace slls.ViewModels
             this.SearchStyle = "prefix";
             this.OrderBy = "title";
             this.LibraryStaff = Roles.IsUserInRole("Catalogue Admin");
+            this.SearchField = "all";
+
         }
 
         public IEnumerable<int> GetSelectedClassmarkIds()
