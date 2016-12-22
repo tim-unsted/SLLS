@@ -1132,6 +1132,7 @@
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\ItemsOnLoanByTitle.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Loans\ItemBorrowingHistory.cshtml" />
     <Content Include="Content\bootstrap-select.css.map" />
+    <Content Include="Customer\Settings\HttpErrors.config" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
