@@ -10,7 +10,7 @@
             @foreach (var item in Model)
             {
                 <li>
-                     @Html.ActionLink(string.IsNullOrEmpty(item.Language1) ? "[no name]" : item.Language1, "SimpleSearch", "Titles", new
+                     @Html.ActionLink(string.IsNullOrEmpty(item.Language1) ? "[no name]" : item.Language1, "AdminSearch", "Searching", new
                           {
                               q = @ViewBag.SearchTerm,
                               f = @ViewBag.SearchField,
