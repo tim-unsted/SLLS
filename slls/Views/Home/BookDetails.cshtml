@@ -116,6 +116,12 @@
                     <dd>@Html.DisplayFor(modelItem => Model.Citation)</dd>
                 }
 
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Description", "FieldDisplayName")):</dt>
+                    <dd>@Html.DisplayFor(modelItem => Model.Description)</dd>
+                }
+
                 @if (Model.SubjectIndexes.Any())
                 {
                     <dt>@Html.DisplayName(DbRes.T("Titles.Keywords", "FieldDisplayName")):</dt>
