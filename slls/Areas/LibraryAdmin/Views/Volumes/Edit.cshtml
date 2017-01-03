@@ -112,20 +112,9 @@
                     @Html.ValidationMessageFor(model => model.LoanTypeId, "", new { @class = "text-danger" })
                 </div>
             </div>
-
-            @*<div class="form-group">
-                    @Html.LabelFor(model => model.RefOnly, new { @class = "control-label col-md-3" })
-                    <div class="col-md-8">
-                        <div class="checkbox">
-                            @Html.EditorFor(model => model.RefOnly)
-                            <span class="help-inline">Tick if this item is reference-only.</span>
-                            @Html.ValidationMessageFor(model => model.RefOnly, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>*@
-
+            
             <div class="form-group">
-                @Html.LabelFor(model => model.PrintLabel, new { @class = "control-label col-md-3" })
+                @Html.Label(DbRes.T("Copies.Print_Label", "FieldDisplayName"), new { @class = "control-label col-md-3" })
                 <div class="col-md-8">
                     <div class="checkbox">
                         @Html.EditorFor(model => model.PrintLabel)

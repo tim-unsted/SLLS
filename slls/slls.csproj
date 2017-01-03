@@ -1037,7 +1037,6 @@
     <Content Include="Areas\Config\Views\Parameters\Create.cshtml" />
     <Content Include="Areas\Config\Views\Parameters\Edit.cshtml" />
     <Content Include="Areas\Config\Views\Parameters\Index.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\Shared\Settings.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\_ListAuthorsNewTitle.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\EditorTemplates\Author.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\AddAuthor.cshtml" />

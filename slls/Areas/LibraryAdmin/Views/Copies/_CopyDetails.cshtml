@@ -28,17 +28,17 @@
 
         <div class="form-group">
             <div class="col-md-2">
-                @Html.LabelFor(model => model.CopyNumber)
+                @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
                 @Html.EditorFor(model => model.CopyNumber, new { htmlAttributes = new { @class = "form-control col-md-2" } })
                 @Html.ValidationMessageFor(model => model.CopyNumber, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-4">
-                @Html.LabelFor(model => model.Commenced)
+                @Html.Label(DbRes.T("Copies.Date_Commenced", "FieldDisplayName"))
                 @Html.EditorFor(model => model.Commenced, new { htmlAttributes = new { @class = "form-control", id = "dateCommenced" } })
                 @Html.ValidationMessageFor(model => model.Commenced, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-6">
-                @Html.LabelFor(model => model.AcquisitionsNo)
+                @Html.Label(DbRes.T("Copies.Acquisitions_No", "FieldDisplayName"))
                 @Html.EditorFor(model => model.AcquisitionsNo, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.AcquisitionsNo, "", new { @class = "text-danger" })
             </div>
@@ -56,10 +56,11 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PrintLabel, htmlAttributes: new { @class = "control-label-left col-md-2" })
+            @Html.Label(DbRes.T("Copies.Print_Label", "FieldDisplayName"), htmlAttributes: new { @class = "control-label-left col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
-                    @Html.EditorFor(model => model.PrintLabel)
+                    @Html.Label(DbRes.T("Copies.Print_Label", "FieldDisplayName"))
+                    @Html.Label(DbRes.T("Copies.Print_Label", "FieldDisplayName"))
                     @Html.ValidationMessageFor(model => model.PrintLabel, "", new { @class = "text-danger" })
                     <span class="help-inline">Tick if you would like to print labels for this copy / entire set, e.g. all copy items.</span>
                 </div>
@@ -67,7 +68,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.AcquisitionsList, htmlAttributes: new { @class = "control-label-left col-md-2" })
+            @Html.Label(DbRes.T("Copies.Print_Label", "FieldDisplayName"), htmlAttributes: new { @class = "control-label-left col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
                     @Html.EditorFor(model => model.AcquisitionsList)
@@ -78,7 +79,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Bind, htmlAttributes: new { @class = "control-label-left col-md-2" })
+            @Html.Label(DbRes.T("Copies.Bind", "FieldDisplayName"), htmlAttributes: new { @class = "control-label-left col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
                     @Html.EditorFor(model => model.Bind)
@@ -91,7 +92,7 @@
         @if (Model.IsSerialsAdmin)
         {
             <div class="form-group">
-                @Html.LabelFor(model => model.Circulated, htmlAttributes: new { @class = "control-label-left col-md-2" })
+                @Html.Label(DbRes.T("Copies.Is_Circulated", "FieldDisplayName"), htmlAttributes: new { @class = "control-label-left col-md-2" })
                 <div class="col-md-10">
                     <div class="checkbox">
                         @Html.EditorFor(model => model.Circulated)
@@ -111,7 +112,7 @@
 
                 <div class="form-group">
                     <div class="col-md-12">
-                        @Html.LabelFor(model => model.CirculationMessage.CirculationMsg)
+                        @Html.Label(DbRes.T("Circulation.Circulation_Slip_Message", "FieldDisplayName"))
                         @Html.DropDownList("CirculationMsgID", null, htmlAttributes: new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.CirculationMsgId, "", new { @class = "text-danger" })
                     </div>
@@ -122,7 +123,7 @@
         {
             <div class="form-group">
                 <div class="col-md-12">
-                    @Html.LabelFor(model => model.Holdings)
+                    @Html.Label(DbRes.T("Copies.Holdings", "FieldDisplayName"))
                     @Html.TextAreaFor(model => model.Holdings, new { rows = "", cols = "", @class = "form-control" })
                     @Html.ValidationMessageFor(model => model.Holdings, "", new { @class = "text-danger" })
                 </div>
@@ -131,7 +132,7 @@
 
         <div class="form-group">
             <div class="col-md-12">
-                @Html.LabelFor(model => model.Notes)
+                @Html.Label(DbRes.T("Copies.Notes", "FieldDisplayName"))
                 @Html.TextAreaFor(model => model.Notes, new { rows = "", cols = "", @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.Notes, "", new { @class = "text-danger" })
             </div>

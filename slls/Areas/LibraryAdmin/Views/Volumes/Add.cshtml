@@ -34,7 +34,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.CopyNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <p class="form-control-static">@Html.DisplayFor(model => model.CopyNumber)</p>
             </div>
@@ -68,7 +68,7 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.PrintLabel, new { @class = "control-label col-md-2" })
+            @Html.Label(DbRes.T("Copies.Print_Label", "FieldDisplayName"), new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
                     @Html.EditorFor(model => model.PrintLabel)
