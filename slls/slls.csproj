@@ -1132,6 +1132,7 @@
     <Content Include="Areas\LibraryAdmin\Views\Loans\ItemBorrowingHistory.cshtml" />
     <Content Include="Content\bootstrap-select.css.map" />
     <Content Include="Customer\Settings\HttpErrors.config" />
+    <Content Include="xApp_Offline.htm" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -1555,6 +1556,8 @@
     <Content Include="Views\Shared\_EnterTextValuePopUp.cshtml" />
     <Content Include="Views\Shared\_EnterNumericValuePopUp.cshtml" />
     <Content Include="Views\Shared\_PostNoData.cshtml" />
+    <Content Include="Views\Borrowing\_EnterBorrower.cshtml" />
+    <Content Include="Views\Borrowing\_SwipeBorrower .cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\Config\Models\" />

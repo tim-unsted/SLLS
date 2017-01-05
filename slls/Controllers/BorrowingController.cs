@@ -6,6 +6,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
+using slls.App_Settings;
 using slls.Models;
 using slls.Utils.Helpers;
 using slls.ViewModels;
@@ -30,7 +31,7 @@ namespace slls.Controllers
         }
         
         // GET: Loans/New
-        public ActionResult NewLoan(string userId = "", bool success = false)
+        public ActionResult NewLoan(string userId = "", bool success = false, bool invalidUser = false)
         {
             //Find the user record in th database: AspNetUsers ...
             if (string.IsNullOrEmpty(userId))
@@ -91,6 +92,10 @@ namespace slls.Controllers
             if (success)
             {
                 TempData["SuccessMsg"] = "Item loaned successfully. Add another?";
+            }
+            if (invalidUser)
+            {
+                TempData["ErrorMsg"] = "The " + DbRes.T("Users.Username", "FieldDisplayName") + " or " + DbRes.T("Users.Barcode", "FieldDisplayName") + " you entered cannot be found. Please check and try again.";
             }
             ViewBag.Title = "Borrow an Item";
             return View(viewModel);
@@ -784,29 +789,92 @@ namespace slls.Controllers
             return Json(volume != null);
         }
 
+        [HttpPost]
+        public JsonResult UserNameExists(string username)
+        {
+            username = username.Trim();
+            var user = _db.Users.FirstOrDefault(u => u.UserName == username);
+            return Json(user != null);
+        }
+
+        [HttpPost]
+        public JsonResult UserSwipeExists(string barcode)
+        {
+            barcode = barcode.Trim();
+            var user = _db.Users.FirstOrDefault(u => u.UserBarcode == barcode);
+            return Json(user != null);
+        }
+
         public ActionResult SelectBorrower()
         {
-            var viewModel = new SelectPopupViewModel
+            var selectBorrowerOption = Settings.GetParameterValue("Borrowing.SelectBorrowerMethod", "dropdownlist",
+                "Sets how borrowers can identify themselves in the loans screens when challenged. Valid options are: 'dropdownlist', 'swipecard', or 'username'.");
+            //var viewModel = new SelectPopupViewModel();
+
+            switch (selectBorrowerOption)
             {
-                PostSelectController = "Borrowing",
-                PostSelectAction = "PostSelectBorrower",
-                SelectedItem = "0",
-                HeaderText = "Select a Borrower",
-                DetailsText = "Choose a different borrower from the drop-down list below:",
-                SelectLabel = "",
-                OkButtonText = "Select Borrower"
-            };
-
-            viewModel.AvailableItems = _db.Users.Where(u => u.IsLive && u.CanDelete && u.Lastname != null)
-                .Select(x => new SelectListItem
+                case "dropdownlist":
                 {
-                    Value = x.Id.ToString(),
-                    Text = x.Lastname + ", " + x.Firstname
-                }).OrderBy(c => c.Text)
-                .ToList();
+                    var viewModel = new SelectPopupViewModel
+                    {
+                        PostSelectController = "Borrowing",
+                        PostSelectAction = "PostSelectBorrower",
+                        SelectedItem = "0",
+                        HeaderText = "Select a " + DbRes.T("Borrowing.Borrower", "FieldDisplayName"),
+                        DetailsText = "Select a different " + DbRes.T("Borrowing.Borrower", "FieldDisplayName") + " from the drop-down list below:",
+                        SelectLabel = "",
+                        OkButtonText = "Select " + DbRes.T("Borrowing.Borrower", "FieldDisplayName")
+                    };
 
-            ViewBag.Title = "Select a Borrower";
-            return PartialView("_SelectPopup", viewModel);
+                    viewModel.AvailableItems = _db.Users.Where(u => u.IsLive && u.CanDelete && u.Lastname != null && u.SelfLoansAllowed)
+                        .Select(x => new SelectListItem
+                        {
+                            Value = x.Id.ToString(),
+                            Text = x.Lastname + ", " + x.Firstname
+                        }).OrderBy(c => c.Text)
+                        .ToList();
+
+                    ViewBag.Title = "Change " + DbRes.T("Borrowing.Borrower", "FieldDisplayName");
+                    return PartialView("_SelectPopup", viewModel);
+                    break;
+                }
+                case "swipecard":
+                {
+                    var viewModel = new EnterTextValuePopupViewModel()
+                    {
+                        DetailsText = "To change the " + DbRes.T("Borrowing.Borrower", "FieldDisplayName") + ", enter or swipe a valid " + DbRes.T("Users.Barcode", "FieldDisplayName") + " in the box below.",
+                        PostSelectAction = "PostEnterUserSwipe"
+                    };
+                    ViewBag.Title = "Change " + DbRes.T("Borrowing.Borrower", "FieldDisplayName");
+                    return PartialView("_SwipeBorrower ", viewModel);
+                    break;
+                }
+                case "username":
+                {
+                    var viewModel = new EnterTextValuePopupViewModel()
+                    {
+                        DetailsText = "To change the " + DbRes.T("Borrowing.Borrower", "FieldDisplayName") + ", enter a valid " + DbRes.T("Users.Username", "FieldDisplayName") + " in the box below.",
+                        PostSelectAction = "PostEnterUsername"
+                    };
+                    ViewBag.Title = "Change " + DbRes.T("Borrowing.Borrower", "FieldDisplayName");
+                    return PartialView("_EnterBorrower", viewModel);
+                    break;
+                }
+                default:
+                {
+                    //Use username option as this is probably the most robust ...
+                    var viewModel = new EnterTextValuePopupViewModel()
+                    {
+                        DetailsText = "To change the " + DbRes.T("Borrowing.Borrower", "FieldDisplayName") + ", enter a valid " + DbRes.T("Users.Username", "FieldDisplayName") + " in the box below.",
+                        PostSelectAction = "PostEnterUsername"
+                    };
+                    return PartialView("_EnterBorrower", viewModel);
+                    break;
+                }
+            }
+
+            return null;
+
         }
 
         [HttpPost]
@@ -821,6 +889,44 @@ namespace slls.Controllers
             }
             RedirectToAction("NewLoan");
             return Json(new { success = true });
+        }
+
+        [HttpPost]
+        public ActionResult PostEnterUsername(EnterTextValuePopupViewModel viewModel)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.UserName == viewModel.UserName);
+            UrlHelper urlHelper;
+            string actionUrl = "";
+
+            if (user != null)
+            {
+                urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                actionUrl = urlHelper.Action("NewLoan", "Borrowing", new { userId = user.Id });
+                return Json(new { success = true, redirectTo = actionUrl });
+            }
+
+            urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+            actionUrl = urlHelper.Action("NewLoan", "Borrowing", new { invalidUser = true });
+            return Json(new { success = false, redirectTo = actionUrl });
+        }
+
+        [HttpPost]
+        public ActionResult PostEnterUserSwipe(EnterTextValuePopupViewModel viewModel)
+        {
+            var user = _db.Users.FirstOrDefault(u => u.UserBarcode == viewModel.UserSwipe);
+            UrlHelper urlHelper;
+            string actionUrl = "";
+
+            if (user != null)
+            {
+                urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                actionUrl = urlHelper.Action("NewLoan", "Borrowing", new { userId = user.Id });
+                return Json(new { success = true, redirectTo = actionUrl });
+            }
+
+            urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+            actionUrl = urlHelper.Action("NewLoan", "Borrowing", new { invalidUser = true });
+            return Json(new { success = false, redirectTo = actionUrl });
         }
 
         [HttpGet]

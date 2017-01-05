@@ -242,6 +242,12 @@ namespace slls.ViewModels
         [DisplayName("Value")]
         public String EnteredValue { get; set; }
 
+        [Remote("UserNameExists", "Borrowing", HttpMethod = "POST", ErrorMessage = "The value you've entered does not exist!")]
+        public string UserName { get; set; }
+
+        [Remote("UserSwipeExists", "Borrowing", HttpMethod = "POST", ErrorMessage = "The value you've entered does not exist!")]
+        public string UserSwipe { get; set; }
+
         public string OkButtonText { get; set; }
         
     }

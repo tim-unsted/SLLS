@@ -9,7 +9,7 @@
     var colClass = "col-md-12";
     var showBorrower = Settings.GetParameterValue("Borrowing.DisplayBorrowerEmail", "false", "Sets whether OPAC will display borrower's Email address") == "true";
     var selfLoansAllowed = Settings.GetParameterValue("Borrowing.SelfLoansEnabled", "false", "Tells whether OPAC users can do self-borrowing") == "true";
-    var selfReturnsAllowed = Settings.GetParameterValue("Borrowing.Borrowing.SelfReturnsEnabled", "false", "Tells whether OPAC users can do self-returns") == "true";
+    var selfReturnsAllowed = Settings.GetParameterValue("Borrowing.SelfReturnsEnabled", "false", "Tells whether OPAC users can do self-returns") == "true";
     var isCatalogueAdmin = Roles.IsUserInRole("Catalogue Admin");
 }
 

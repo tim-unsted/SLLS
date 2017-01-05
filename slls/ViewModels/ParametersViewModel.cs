@@ -18,12 +18,13 @@ namespace slls.ViewModels
         {
             Class = "";
         }
+
         public ParametersAddEditViewModel(Models.Parameter parameter)
         {
-            this._parameters = parameter;
-            this.ParameterID = _parameters.ParameterID;
-            this.ParameterValue = _parameters.ParameterValue;
-            this.ParamUsage = _parameters.ParamUsage;
+            _parameters = parameter;
+            ParameterID = _parameters.ParameterID;
+            ParameterValue = _parameters.ParameterValue;
+            ParamUsage = _parameters.ParamUsage;
             Class = "";
         }
         
