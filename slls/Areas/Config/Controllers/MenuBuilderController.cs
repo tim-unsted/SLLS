@@ -163,6 +163,13 @@ namespace slls.Areas.Config
             if (userRoles.Contains("Bailey Admin"))
             {
                 includedMenuRoles.Add("Bailey Admin");
+                includedMenuRoles.Add("Catalogue Admin");
+                includedMenuRoles.Add("Loans Admin");
+                includedMenuRoles.Add("Finance Admin");
+                includedMenuRoles.Add("Serials Admin");
+                includedMenuRoles.Add("Users Admin");
+                includedMenuRoles.Add("OPAC Admin");
+                includedMenuRoles.Add("System Admin");
                 allowedAreas.Add("LibraryAdmin");
                 allowedAreas.Add("Config");
             }
@@ -315,7 +322,7 @@ namespace slls.Areas.Config
             //Get the list (string) of all roles the menu item has ...
             var allMenuRoles = menuitem.Roles;
 
-            //Create a list of all roles the current use has access to ...
+            //Create a list of all roles the current user has access to ...
             var includedMenuRoles = new List<string> {"System Admin", "Anonymous", "OPAC User"};
 
             //Create a list of menu areas the current use has access to ...
@@ -325,6 +332,13 @@ namespace slls.Areas.Config
             if (userRoles.Contains("Bailey Admin"))
             {
                 includedMenuRoles.Add("Bailey Admin");
+                includedMenuRoles.Add("Catalogue Admin");
+                includedMenuRoles.Add("Loans Admin");
+                includedMenuRoles.Add("Finance Admin");
+                includedMenuRoles.Add("Serials Admin");
+                includedMenuRoles.Add("Users Admin");
+                includedMenuRoles.Add("OPAC Admin");
+                includedMenuRoles.Add("System Admin");
                 allowedAreas.Add("LibraryAdmin");
                 allowedAreas.Add("Config");
             }
