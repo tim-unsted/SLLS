@@ -65,5 +65,11 @@ namespace slls.Controllers
             ViewData["ParentMenuID"] = parentMenuId;
             return View(userItems);
         }
+
+        [AllowAnonymous]
+        public ActionResult CheckInOutMenu()
+        {
+            return View();
+        }
     }
 }

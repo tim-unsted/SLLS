@@ -1,0 +1,40 @@
+﻿@using Westwind.Globalization
+@*
+    This file contains what looks like invalid HTML - i.e. unclosed divs and divs with no opening part.
+    Don't worry, it all renderes correctly!
+*@
+
+@*
+    Close the opened Container div from the _Layout.cshtml ...
+*@
+@*<div class="container">*@
+</div>
+
+<div class="jumbotron">
+    <div class="container">
+        <h1 class="text-warning">@ViewBag.MainHeading</h1>
+        <h3 class="text-muted">@ViewBag.SubHeading</h3>
+    </div>
+</div>
+<hr/>
+<br/>
+<div class="container">
+    <div class="row">
+
+        <div class="col-md-4 col-md-offset-4">
+            <p>
+                <a href="@Url.Action("CheckOut")" title="Borrow an item" class="btn  btn-primary btn-lg btn-block">@DbRes.T("Borrowing.Check_Out", "FieldDisplayName").ToUpper()</a>
+            </p>
+            <br />
+            <p>
+                <a href="@Url.Action("CheckIn")" title="Return an item" class="btn  btn-primary btn-lg btn-block">@DbRes.T("Borrowing.Check_In", "FieldDisplayName").ToUpper()</a>
+            </p>
+            <br />
+            <br />
+            <br/>
+            <br />
+            <br />
+            <br />
+        </div>
+        
+    </div>

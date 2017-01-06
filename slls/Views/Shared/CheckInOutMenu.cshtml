@@ -1,0 +1,36 @@
+﻿@using slls.Models
+@using Westwind.Globalization
+@model IEnumerable<slls.Models.Menu>
+
+@{
+    Layout = null;
+}
+
+@{
+    //THIS IS THE MAIN MENU IN THE GENERAL/HOME/OPAC AREA
+}
+
+<ul class="nav navbar-nav">
+    @{
+        var db = new DbEntities();
+        <li class="dropdown">
+            @{
+                var home = db.Menus.FirstOrDefault(m => m.Key == "OPAC_Home");
+                var homeTitle = home == null ? "Home" : home.Title;
+            }
+            <a href="@Url.Action("Index", "Home", new { area = "CheckInOut" })" title="@homeTitle">@homeTitle</a>
+        </li>
+        <li class="dropdown">
+            @*@Html.ActionLink(DbRes.T("Borrowing.Check_Out", "FieldDisplayName"), "CheckOut", "Borrowing", new { Area = "" }, null)*@
+            <a href="@Url.Action("CheckOut", "Home", new { area = "CheckInOut" })" title="Borrow an item">@DbRes.T("Borrowing.Check_Out", "FieldDisplayName")</a>
+        </li>
+        @*<li class="dropdown">
+            @Html.ActionLink("Renew", "CheckOut", "Borrowing", new {Area = ""}, null)
+        </li>*@
+        <li class="dropdown">
+            @*@Html.ActionLink(DbRes.T("Borrowing.Check_In", "FieldDisplayName"), "CheckIn", "Borrowing", new { Area = "" }, null)*@
+            <a href="@Url.Action("CheckIn", "Home", new { area = "CheckInOut" })" title="Return an item">@DbRes.T("Borrowing.Check_In", "FieldDisplayName")</a>
+        </li>
+        
+}
+</ul>

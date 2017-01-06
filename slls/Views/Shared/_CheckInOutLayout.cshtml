@@ -5,14 +5,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - @GlobalVariables.SiteName</title>
-
-    @*@Styles.Render("~/Content/bootstrap")*@
-
+    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    @*@Scripts.Render("~/bundles/angular")*@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/datatables")
@@ -193,7 +190,7 @@
     <div class="brand-bar">
         <div class="container">
             <div class="row">
-                <a href="@Url.Action("Index", "Home", new {area = ""})" title="Home"><span><img src="~/Customer/Images/@CssManager.LogoFileName" alt="Logo" class="logo" /></span></a>
+                <a href="@Url.Action("Index", "Home", new {area = "" })" title="Main Site" target="_blank"><span><img src="~/Customer/Images/@CssManager.LogoFileName" alt="Logo" class="logo" /></span></a>
                 <div class="clearfix"></div>
             </div>
         </div>
@@ -210,19 +207,14 @@
                 </button>
             </div>
             <div class="navbar-collapse collapse">
-                @Html.Action("TopMenu", "PartialMenu")
-                @Html.Partial("_LoginPartial")
-                @Html.Action("_MenuSearchTool", "Home", new { area = "" })
+                @Html.Action("CheckInOutMenu", "PartialMenu" , new { Area = "CheckInOut"})
                 <div class="clearfix"></div>
             </div>
             @*</div>*@
         </div>
     </div>
-
-    @Html.Action("MainMenu", "PartialMenu")
-
+    
     <div class="container">
-        @*<div class="breadcrumb">@Html.MvcSiteMap().SiteMapPath()</div>*@
 
         @*Pop-up to provide a success message*@
         @if (TempData["SuccessDialogMsg"] != null)
@@ -249,7 +241,7 @@
         }
 
         @RenderBody()
-        @RenderPage("_Footer.cshtml")
+        @RenderPage("_CheckInOutFooter.cshtml")
     </div>
 
 @*@Scripts.Render("~/bundles/bootstrapjs")*@

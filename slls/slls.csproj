@@ -260,6 +260,10 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\CheckInOut\CheckInOutAreaRegistration.cs" />
+    <Compile Include="Areas\CheckInOut\Controllers\CheckInOutBaseController.cs" />
+    <Compile Include="Areas\CheckInOut\Controllers\HomeController.cs" />
+    <Compile Include="Areas\CheckInOut\Controllers\PartialMenuController.cs" />
     <Compile Include="Areas\Config\ConfigAreaRegistration.cs" />
     <Compile Include="Areas\Config\Controllers\BsAdminBaseController.cs" />
     <Compile Include="Areas\Config\Controllers\CacheController.cs" />
@@ -1133,6 +1137,10 @@
     <Content Include="Content\bootstrap-select.css.map" />
     <Content Include="Customer\Settings\HttpErrors.config" />
     <Content Include="xApp_Offline.htm" />
+    <Content Include="Areas\CheckInOut\Views\web.config" />
+    <Content Include="Areas\CheckInOut\Views\Home\Index.cshtml" />
+    <Content Include="Areas\CheckInOut\Views\Home\CheckIn.cshtml" />
+    <Content Include="Areas\CheckInOut\Views\Home\CheckOut.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -1558,8 +1566,13 @@
     <Content Include="Views\Shared\_PostNoData.cshtml" />
     <Content Include="Views\Borrowing\_EnterBorrower.cshtml" />
     <Content Include="Views\Borrowing\_SwipeBorrower .cshtml" />
+    <Content Include="Views\Shared\_CheckInOutLayout.cshtml" />
+    <Content Include="Views\Shared\CheckInOutMenu.cshtml" />
+    <Content Include="Views\Shared\_CheckInOutFooter.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\CheckInOut\Models\" />
+    <Folder Include="Areas\CheckInOut\Views\Shared\" />
     <Folder Include="Areas\Config\Models\" />
     <Folder Include="Areas\Config\Views\Cache\" />
     <Folder Include="Areas\LibraryAdmin\Models\" />

@@ -38,7 +38,6 @@ namespace slls.ViewModels
         public DateTime Borrowed { get; set; }
 
         [LocalDisplayName("Borrowing.Date_Return_Due", "FieldDisplayName")]
-        //[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
         [Column(TypeName = "smalldatetime")]
         [Required(ErrorMessage = "Please enter a return date.")]
         public DateTime ReturnDue { get; set; }
@@ -48,6 +47,15 @@ namespace slls.ViewModels
         public IEnumerable<SelectListItem> Titles { get; set; }
         public IEnumerable<SelectListItem> Volumes { get; set; }
         public List<Menu> SeeAlso { get; set; }
+
+        public bool Success { get; set; }
+        public int TimeOut { get; set; }
+
+        public NewLoanViewModel()
+        {
+            TimeOut = 6000;
+            Borrowed = DateTime.Today;
+        }
     }
 
     public class ReturnLoanViewModel
@@ -71,6 +79,14 @@ namespace slls.ViewModels
         public IEnumerable<SelectListItem> Titles { get; set; }
         public IEnumerable<SelectListItem> Volumes { get; set; }
         public List<Menu> SeeAlso { get; set; }
+
+        public bool Success { get; set; }
+        public int TimeOut { get; set; }
+
+        public ReturnLoanViewModel()
+        {
+            TimeOut = 6000;
+        }
     }
 
     public class RenewLoanViewModel
