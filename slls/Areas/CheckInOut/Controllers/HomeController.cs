@@ -171,11 +171,11 @@ namespace slls.Areas.CheckInOut
                 TempData["SuccessMsg"] = "Item returned successfully. Return another?";
             }
 
-            //if (!currentLoans.Any() && !success)
-            //{
-            //    TempData["ErrorMsg"] = "You don't currently have any " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "!";
-            //    TempData["InfoDialogMsg"] = "You don't currently have any " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "!";
-            //}
+            if (!currentLoans.Any())
+            {
+                TempData["ErrorMsg"] = "There are currently no " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "!";
+                TempData["InfoDialogMsg"] = "There are currently no " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "!";
+            }
 
             ViewData["SeeAlso"] = viewModel.SeeAlso;
             ViewBag.Title = DbRes.T("Borrowing.Check_In", "FieldDisplayName");
