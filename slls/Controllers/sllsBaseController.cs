@@ -1,29 +1,22 @@
 ﻿using System;
 using System.Configuration;
 using System.DirectoryServices.AccountManagement;
-using System.Linq;
+using System.IO;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
+using Microsoft.Win32;
+using slls.App_Settings;
 using slls.Models;
-using slls.Utils.Helpers;
+using slls.Utils;
 
 namespace slls.Controllers
 {
     public class sllsBaseController : Controller
     {
-        //protected new JsonResult Json(object data)
-        //{
-        //    if (!Request.AcceptTypes.Contains("application/json"))
-        //        return base.Json(data, "text/plain");
-        //    else
-        //        return base.Json(data);
-        //}
-
-
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var authMode =
@@ -33,7 +26,7 @@ namespace slls.Controllers
             if (User != null)
             {
                 var context = new ApplicationDbContext();
-                var currentUserId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
+                var currentUserId = PublicFunctions.GetUserId(); //User.Identity.GetUserId();
                 
                 //Find the user record in th database: AspNetUsers ...
                 var user = context.Users.Find(currentUserId);
@@ -52,7 +45,7 @@ namespace slls.Controllers
                     {
                         var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
                         var windowsUser = UserPrincipal.Current;
-                        var defaultPasswordPart = App_Settings.Settings.GetParameterValue(
+                        var defaultPasswordPart = Settings.GetParameterValue(
                             "Security.Passwords.DefaultPassweordPart", "6174",
                             "The numeric part of a default password when new users are added automatically, or via an import script or tool. A default password is constructed from a user's firstname, the default numeric part and the first letter of thier surname (e.g. tim1234u");
                 
@@ -89,6 +82,32 @@ namespace slls.Controllers
         }
         public sllsBaseController()
         { }
+
+        public FileResult SendFileToBrowser(string filePath)
+        {
+            string fileName = Path.GetFileName(filePath);
+            string contentType = GetMimeType(fileName);
+            return File(filePath, contentType, fileName);
+        }
+
+        public string GetMimeType(string fileName)
+        {
+            var mimeType = "text/plain";
+
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                String ext = Path.GetExtension(fileName).ToLower();
+                RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(ext);
+
+                if (regKey != null && regKey.GetValue("Content Type") != null)
+                {
+                    mimeType = regKey.GetValue("Content Type").ToString();
+                }
+                return mimeType;
+            }
+            return mimeType;
+        }
+
     }
 
 }

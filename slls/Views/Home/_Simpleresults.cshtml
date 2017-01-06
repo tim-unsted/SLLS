@@ -230,7 +230,8 @@
                                     foreach (var link in item.TitleLinks)
                                     {
                                         <dd>
-                                            <a href="@link.URL" title="@link.Title" target="_blank">@link.DisplayText</a><br/>
+                                            @*<a href="@link.URL" title="@link.Title" target="_blank">@link.DisplayText</a><br/>*@
+                                            @Html.ResolvedLink(link.URL,link.HoverTip,link.DisplayText)
                                         </dd>
                                     }
                                 }

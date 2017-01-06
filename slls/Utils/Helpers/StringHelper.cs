@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 
 namespace slls.Utils.Helpers
 {
@@ -12,6 +14,6 @@ namespace slls.Utils.Helpers
             if (string.IsNullOrEmpty(value)) return value;
             return value.Length <= maxLength ? value : value.Substring(0, maxLength) + " ...";
         }
-
+        
     }
 }

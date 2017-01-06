@@ -1,4 +1,5 @@
-﻿@using Westwind.Globalization
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
 @model IEnumerable<slls.Models.TitleLink>
 
 <table id="subjects" class="table table-compact table-hover">
@@ -7,8 +8,8 @@
         {
             <tr>
                 <td>
-                    @*@Html.DisplayFor(modelItem => item.DisplayText)*@
-                    <a href="@item.URL" title="@item.HoverTip" target="_blank">@item.DisplayText</a>
+                    @*<a href="@item.URL" title="@item.HoverTip" target="_blank">@item.DisplayText</a>*@
+                    @Html.ResolvedLink(item.URL,item.HoverTip,item.DisplayText)
                 </td>
                 <td class="just-right">
                     <a href="@Url.Action("Edit", "TitleLinks", new {id = item.TitleLinkID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit @DbRes.T("TitleLinks.Link", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>

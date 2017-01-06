@@ -1,6 +1,7 @@
 ﻿@using slls.App_Settings
 @using slls.Models
 @using slls.Utils
+@using slls.Utils.Helpers
 @using Westwind.Globalization
 @using Roles = slls.Utils.Helpers.Roles
 @model slls.Models.Title
@@ -145,7 +146,18 @@
                     foreach (var link in Model.TitleLinks)
                     {
                         <dd>
-                            <a href="@link.URL" title="@link.Title" target="_blank">@link.DisplayText</a><br />
+                            @*@if (Uri.IsWellFormedUriString(link.URL, UriKind.Absolute))
+                            {
+                                <a href="@link.URL" title="@link.Title" target="_blank">@link.DisplayText</a><br />
+                            }
+                            else
+                            {
+                                if (Path.GetFullPath(link.URL) != "")
+                                {
+                                    <a href="@Url.Action("SendFileToBrowser", new { filePath = link.URL })" title="@link.Title" target="_blank">@link.DisplayText</a><br />
+                                }
+                            }*@
+                            @Html.ResolvedLink(link.URL, link.HoverTip, link.DisplayText)
                         </dd>
                     }
                 }

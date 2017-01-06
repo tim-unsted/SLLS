@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Security.Policy;
 using System.Text;
 using System.Web;
 using System.Web.Configuration;
@@ -214,7 +216,24 @@ namespace slls.Utils.Helpers
             string str =
                 "<input type=\"button\" value=\"" + buttonText + "\" class=\"btn-link\" onclick=\"window.history.back();\" />";
             return new MvcHtmlString(str);
-        } 
+        }
+
+        public static MvcHtmlString ResolvedLink(this HtmlHelper helper, string linkUrl, string linkTitle = "", string linkDisplayText = "")
+        {
+            if (string.IsNullOrEmpty(linkUrl)) return null;
+            if (string.IsNullOrEmpty(linkTitle)) linkTitle = linkUrl;
+            if (string.IsNullOrEmpty(linkDisplayText)) linkDisplayText = linkUrl;
+
+            if (Uri.IsWellFormedUriString(linkUrl, UriKind.Absolute))
+            {
+                var link = "<a href=\"" + linkUrl + "\" title=\"" + linkTitle + "\" target=\"_blank\">" + linkDisplayText + "</a>";
+                return new MvcHtmlString(link);
+            }
+
+            if (Path.GetFullPath(linkUrl) == "") return null;
+            var actionLink = helper.ActionLink(linkDisplayText, "SendFileToBrowser", "sllsBase", new { filePath = linkUrl, area = "" }, null);
+            return actionLink;
+        }
 
     }
 }
