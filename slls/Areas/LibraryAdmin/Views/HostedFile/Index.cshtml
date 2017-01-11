@@ -18,13 +18,13 @@
                    "width": "10%",
                    "searchable": false,
                    "sortable": true,
-                   "targets": [5,6]
+                   "targets": [3,4]
                },
                {
                    "width": "10%",
                    "searchable": false,
                    "sortable": false,
-                   "targets": [7]
+                   "targets": [5]
                }
             ]
         });
@@ -56,12 +56,12 @@
             <th>
                 @DbRes.T("Hosted_Files.Date_Uploaded", "FieldDisplayName")
             </th>
-            <th>
+            @*<th>
                 @DbRes.T("Hosted_Files.File_Created", "FieldDisplayName")
             </th>
             <th>
                 @DbRes.T("Hosted_Files.File_Last_Updated", "FieldDisplayName")
-            </th>
+            </th>*@
             <th>
                 @DbRes.T("Hosted_Files.File_Size", "FieldDisplayName")
             </th>
@@ -85,12 +85,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.InputDate)
                 </td>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.CreateDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.LastUpdateDate)
-                </td>
+                </td>*@
                 <td>
                     @Html.Raw(Convert.ToDecimal(item.SizeStored).ToString("#,##0"))<span> KB</span>
                 </td>

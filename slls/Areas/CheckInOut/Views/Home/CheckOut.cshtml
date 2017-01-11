@@ -12,6 +12,7 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(m => m.Success)
         @Html.HiddenFor(m => m.TimeOut)
+        @Html.HiddenFor(m => m.UserID)
 
         @Html.Partial("_PostAlert")
 

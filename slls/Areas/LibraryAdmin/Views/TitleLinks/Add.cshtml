@@ -62,7 +62,7 @@
                             @Html.Label("Hosted file", new { @class = "control-label col-md-2" })
                             <div class="col-md-9">
                                 @Html.DropDownList("ExistingFile", null, "Select an existing hosted file", new { @class = "form-control selectpicker" })
-                                @Html.HelpInline("Select a file that has already been uploaded and stored on the SLLS server.")
+                                @Html.HelpInline("Or, select a file that has already been uploaded and stored on the SLLS server.")
                                 @Html.ValidationMessageFor(model => model.ExistingFiles, "", new { @class = "text-danger" })
                             </div>
                         </div>
@@ -79,7 +79,7 @@
                                 </label>
                                 <input type="text" class="form-control">
                             </div>
-                            @Html.HelpInline("Click 'Browse' to select a file stored on your PC, device or local network. A copy of the file will be uploaded to the SLLS server and stored in your database. These files can then be downloaded as a copy by the end user. The original file remains unaffected.")
+                            @Html.HelpInline("Or, click 'Browse' to select a file stored on your PC, device or local network. A copy of the file will be uploaded to the SLLS server and stored in your database. These files can then be downloaded as a copy by the end user. The original file remains unaffected.")
                             @Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })
                             @*@Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })*@
                         </div>

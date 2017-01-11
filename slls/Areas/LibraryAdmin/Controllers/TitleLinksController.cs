@@ -118,14 +118,11 @@ namespace slls.Areas.LibraryAdmin
                             if (file != null && file.ContentLength > 0)
                             {
                                 var name = Path.GetFileName(file.FileName);
-                                FileInfo fi = new FileInfo(file.FileName);
-                                var dateCreated = fi.CreationTime;
-                                var dateLastUpdate = fi.LastWriteTime;
                                 var type = file.ContentType;
-                                var ext = fi.Extension;
-                                var path = fi.FullName;
+                                var ext = Path.GetExtension(file.FileName);
+                                var path = Path.GetFullPath(file.FileName);
 
-                                viewModel.Success = HandleUpload(fileStream: file.InputStream, name: name, type: type, path: path, createDate: dateCreated, lastUpdateDate: dateLastUpdate, titleId: titleId, ext: ext,
+                                viewModel.Success = HandleUpload(fileStream: file.InputStream, name: name, type: type, path: path, titleId: titleId, ext: ext,
                                     displayText: viewModel.DisplayText, hoverTip: viewModel.HoverTip, login: viewModel.Login,
                                     password: viewModel.Password);
                             }
@@ -161,7 +158,7 @@ namespace slls.Areas.LibraryAdmin
             return PartialView("Add", viewModel);
         }
 
-        private bool HandleUpload(Stream fileStream, string name, string type, string ext, string path, DateTime createDate, DateTime lastUpdateDate, int titleId, string displayText, string hoverTip, string login, string password)
+        private bool HandleUpload(Stream fileStream, string name, string type, string ext, string path, int titleId, string displayText, string hoverTip, string login, string password)
         {
             var handled = false;
 
@@ -233,8 +230,6 @@ namespace slls.Areas.LibraryAdmin
                     Compressed = compressed,
                     SizeStored = compressedBytes.Length / 1024,
                     Path = path,
-                    CreateDate = createDate,
-                    LastUpdateDate = lastUpdateDate,
                     InputDate = DateTime.Now
                 };
                 _db.HostedFiles.Add(file);

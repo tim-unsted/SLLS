@@ -45,14 +45,10 @@ namespace slls.Areas.LibraryAdmin
                             if (file != null && file.ContentLength > 0)
                             {
                                 var name = Path.GetFileName(file.FileName);
-                                FileInfo fi = new FileInfo(file.FileName);
-                                var dateCreated = fi.CreationTime;
-                                var dateLastUpdate = fi.LastWriteTime;
                                 var type = file.ContentType;
-                                var ext = fi.Extension;
-                                var path = fi.FullName;
-
-                                success = HandleUpload(fileStream: file.InputStream, name: name, type: type, path: path, createDate: dateCreated, lastUpdateDate: dateLastUpdate, ext: ext);
+                                var ext = Path.GetExtension(file.FileName);
+                                var path = Path.GetFullPath(file.FileName);
+                                success = HandleUpload(fileStream: file.InputStream, name: name, type: type, path: path, ext: ext);
                             }
                         }
                     }
@@ -66,7 +62,7 @@ namespace slls.Areas.LibraryAdmin
             return null;
         }
 
-        private bool HandleUpload(Stream fileStream, string name, string type, string ext, string path, DateTime createDate, DateTime lastUpdateDate)
+        private bool HandleUpload(Stream fileStream, string name, string type, string ext, string path)
         {
             var handled = false;
             
@@ -107,8 +103,6 @@ namespace slls.Areas.LibraryAdmin
                     Compressed = compressed,
                     SizeStored = compressedBytes.Length / 1024,
                     Path = path,
-                    CreateDate = createDate,
-                    LastUpdateDate = lastUpdateDate,
                     InputDate = DateTime.Now
                 };
                 _db.HostedFiles.Add(file);
