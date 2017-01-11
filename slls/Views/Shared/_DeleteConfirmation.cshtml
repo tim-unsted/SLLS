@@ -18,7 +18,7 @@
     
     <div class="modal-body">
         <div class="control-group">
-            <p>@Html.DisplayFor(model => model.ConfirmationText) @Html.DisplayFor(model => model.HeaderText)?</p>
+            <p>@Html.DisplayFor(model => model.ConfirmationText) @Html.DisplayFor(model => model.HeaderText.ToLower())?</p>
             @if (!Model.DetailsText.IsEmpty())
             {
                 <p><mark><strong>@Html.Raw(Model.DetailsText)</strong></mark>

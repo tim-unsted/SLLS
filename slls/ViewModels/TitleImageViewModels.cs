@@ -5,21 +5,44 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using slls.Localization;
+using slls.Models;
 
 namespace slls.ViewModels
 {
     public class TitleImageAddViewModel
     {
+        public TitleImageAddViewModel()
+        {
+            ExistingFile = 1;
+        }
+        
         public int TitleId { get; set; }
 
+        [LocalDisplayName("Titles.Title", "FieldDisplayName")]
         public string Title { get; set; }
 
+        //[Required]
+        [RegularExpression(@"^(http(s)?://|ftp://|file://|[\w]\:|\\).+$", ErrorMessage = "This URL does not appear to be valid. Are you missing a prefix (e.g. 'http://')?")]
+        [LocalDisplayName("TitleLinks.URL_Path", "FieldDisplayName")]
         public string Url { get; set; }
+
+        [StringLength(1000)]
+        [LocalDisplayName("TitleLinks.Hover_Tip_Text", "FieldDisplayName")]
+        public string HoverTip { get; set; }
+
+        [StringLength(255)]
+        [LocalDisplayName("TitleLinks.Display_Text", "FieldDisplayName")]
+        public string DisplayText { get; set; }
+
+        [StringLength(70)]
+        public string Login { get; set; }
+
+        [StringLength(20)]
+        public string Password { get; set; }
 
         [LocalDisplayName("Titles.ISBN_ISSN", "FieldDisplayName")]
         public string Isbn { get; set; }
 
-        //[Required(ErrorMessage = "An image file is required")]
         public HttpPostedFileBase File { get; set; }
 
         public IEnumerable<HttpPostedFileBase> Files { get; set; }
@@ -34,6 +57,10 @@ namespace slls.ViewModels
                 return string.Empty;
             }
         }
+
+        public int ExistingFile { get; set; }
+
+        public IEnumerable<SelectListItem> ExistingFiles { get; set; }
 
         public bool HasAutocat { get; set; }
 

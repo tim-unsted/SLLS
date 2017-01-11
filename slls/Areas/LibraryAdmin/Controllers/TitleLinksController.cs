@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using slls.Models;
 using slls.Utils.Helpers;
 using slls.ViewModels;
@@ -49,19 +53,25 @@ namespace slls.Areas.LibraryAdmin
                 return HttpNotFound();
             }
 
-            var tlvm = new TitleLinksAddViewModel
+            //Get a list of any hosted (i.e. stored in database) files
+            var existingFiles = _db.HostedFiles.OrderBy(f => f.FileName).ToList();
+
+            var viewModel = new TitleImageAddViewModel
             {
                 TitleId = title.TitleID,
                 Title = title.Title1
             };
+
+            ViewBag.ExistingFile = new SelectList(existingFiles, "FileId", "FileName");
+            ViewBag.ExistingFileCount = existingFiles.Count();
             ViewBag.Title = "Add New " + DbRes.T("TitleLinks.Link", "FieldDisplayName");
-            return PartialView(tlvm);
+            return PartialView(viewModel);
         }
 
         // GET: LibraryAdmin/TitleLinks/Create
         public ActionResult Create()
         {
-            var tlvm = new TitleLinksAddViewModel
+            var tlvm = new TitleImageAddViewModel
             {
             };
 
@@ -72,10 +82,11 @@ namespace slls.Areas.LibraryAdmin
 
         // POST: LibraryAdmin/TitleLinks/Create
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult PostCreate([Bind(Include = "TitleId,Url,HoverTip,DisplayText,Login,Password")] TitleLinksAddViewModel viewModel)
+        //[ValidateAntiForgeryToken]
+        public ActionResult PostCreate(TitleImageAddViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            //Check if we've been passed a URL ...
+            if (!string.IsNullOrEmpty(viewModel.Url))
             {
                 var titleLink = new TitleLink
                 {
@@ -87,17 +98,198 @@ namespace slls.Areas.LibraryAdmin
                     Password = viewModel.Password,
                     InputDate = DateTime.Now
                 };
-                
+
                 _db.TitleLinks.Add(titleLink);
                 _db.SaveChanges();
+                return Json(new { success = true });
+            }
 
+            //Otherwise, check if we've been passed any new files ...
+            if (viewModel.Files != null)
+            {
+                if (viewModel.Files.First() != null)
+                {
+                    try
+                    {
+                        var titleId = viewModel.TitleId;
+
+                        foreach (var file in viewModel.Files)
+                        {
+                            if (file != null && file.ContentLength > 0)
+                            {
+                                var name = Path.GetFileName(file.FileName);
+                                FileInfo fi = new FileInfo(file.FileName);
+                                var dateCreated = fi.CreationTime;
+                                var dateLastUpdate = fi.LastWriteTime;
+                                var type = file.ContentType;
+                                var ext = fi.Extension;
+                                var path = fi.FullName;
+
+                                viewModel.Success = HandleUpload(fileStream: file.InputStream, name: name, type: type, path: path, createDate: dateCreated, lastUpdateDate: dateLastUpdate, titleId: titleId, ext: ext,
+                                    displayText: viewModel.DisplayText, hoverTip: viewModel.HoverTip, login: viewModel.Login,
+                                    password: viewModel.Password);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", e.Message);
+                    }
+                    return Json(new { success = true });
+                }
+            }
+            if (viewModel.ExistingFile != 0)
+            {
+                var file = _db.HostedFiles.Find(viewModel.ExistingFile);
+                if (file == null) return null;
+
+                var titleLink = new TitleLink()
+                {
+                    FileId = viewModel.ExistingFile,
+                    TitleID = viewModel.TitleId,
+                    DisplayText = viewModel.DisplayText ?? file.FileName,
+                    HoverTip = viewModel.HoverTip ?? file.FileName,
+                    Login = viewModel.Login,
+                    Password = viewModel.Password,
+                    InputDate = DateTime.Now
+                };
+                _db.TitleLinks.Add(titleLink);
+                _db.SaveChanges();
                 return Json(new { success = true });
             }
 
             return PartialView("Add", viewModel);
         }
 
-        // GET: LibraryAdmin/TitleLinks/Edit/5
+        private bool HandleUpload(Stream fileStream, string name, string type, string ext, string path, DateTime createDate, DateTime lastUpdateDate, int titleId, string displayText, string hoverTip, string login, string password)
+        {
+            var handled = false;
+
+            //Firstly, check to ensure we haven't already got this file by checking the path ...
+            var existingFile = _db.HostedFiles.FirstOrDefault(f => f.Path == path);
+            if (existingFile != null)
+            {
+                try
+                {
+                    //Get the Id of the existing file ...
+                    var existingfileId = existingFile.FileId;
+
+                    var titleLink = new TitleLink()
+                    {
+                        FileId = existingfileId,
+                        TitleID = titleId,
+                        DisplayText = string.IsNullOrEmpty(displayText) ? name : displayText,
+                        HoverTip = string.IsNullOrEmpty(hoverTip) ? name : hoverTip,
+                        Login = login,
+                        Password = password,
+                        InputDate = DateTime.Now
+                    };
+
+                    _db.TitleLinks.Add(titleLink);
+                    handled = (_db.SaveChanges() > 0);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                return handled;
+            }
+
+            //Otherwise ...
+            try
+            {
+                //Attempt to compress the file ...
+                var compressedBytes = Compress(fileStream);
+                bool compressed;
+                if (compressedBytes != null)
+                {
+                    compressed = true;
+                }
+                else
+                {
+                    compressedBytes = new byte[fileStream.Length];
+                    compressed = false;
+                }
+
+                //Check the name of the file - append [n] for each duplicate ...
+                var i = 1;
+                var existingFileName = _db.HostedFiles.FirstOrDefault(f => f.FileName == name);
+                while (existingFileName != null)
+                {
+                    name = name.Replace(ext, "");
+                    name = name + "[" + i + "]";
+                    name = name + ext;
+                    existingFileName = _db.HostedFiles.FirstOrDefault(f => f.FileName == name);
+                    i++;
+                }
+
+                //Save the file (binary data) to the database ...
+                fileStream.Read(compressedBytes, 0, compressedBytes.Length);
+                var file = new HostedFile
+                {
+                    Data = compressedBytes,
+                    FileName = name,
+                    FileExtension = ext,
+                    Compressed = compressed,
+                    SizeStored = compressedBytes.Length / 1024,
+                    Path = path,
+                    CreateDate = createDate,
+                    LastUpdateDate = lastUpdateDate,
+                    InputDate = DateTime.Now
+                };
+                _db.HostedFiles.Add(file);
+                _db.SaveChanges();
+
+                //Get the Id of the newly inserted file ...
+                var fileId = file.FileId;
+
+                var titleLink = new TitleLink()
+                {
+                    FileId = fileId,
+                    TitleID = titleId,
+                    DisplayText = string.IsNullOrEmpty(displayText) ? name : displayText,
+                    HoverTip = string.IsNullOrEmpty(hoverTip) ? name : hoverTip,
+                    Login = login,
+                    Password = password,
+                    InputDate = DateTime.Now
+                };
+
+                _db.TitleLinks.Add(titleLink);
+                handled = (_db.SaveChanges() > 0);
+
+            }
+            catch (Exception e)
+            {
+                // Oops, something went wrong, handle the exception
+                ModelState.AddModelError("", e.Message);
+                return false;
+            }
+
+            return handled;
+        }
+
+        private static byte[] Compress(Stream input)
+        {
+            try
+            {
+                using (var compressStream = new MemoryStream())
+                using (var compressor = new DeflateStream(compressStream, CompressionMode.Compress))
+                {
+                    input.CopyTo(compressor);
+                    compressor.Close();
+                    return compressStream.ToArray();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
+        }
+
+
+
+        // GET: LibraryAdmin/TitleLinks/Edit/5  
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -110,13 +302,15 @@ namespace slls.Areas.LibraryAdmin
                 return HttpNotFound();
             }
 
-            var tevm = new TitleLinksEditViewModel
+            var viewModel = new TitleLinksEditViewModel
             {
                 TitleLinkId = titleLink.TitleLinkID,
                 TitleId = titleLink.TitleID,
                 Title = (from t in _db.Titles.Where(t => t.TitleID == titleLink.TitleID)
                          select t.Title1).FirstOrDefault(),
                 Url = titleLink.URL,
+                FileId = titleLink.FileId,
+                FileName = (from f in _db.HostedFiles.Where(x => x.FileId == titleLink.FileId) select f.FileName).FirstOrDefault(),
                 DisplayText = titleLink.DisplayText,
                 HoverTip = titleLink.HoverTip,
                 Password = titleLink.Password,
@@ -125,9 +319,13 @@ namespace slls.Areas.LibraryAdmin
                 IsValid = titleLink.IsValid
             };
 
-            //ViewBag.Title = "Edit Link";
+            if (titleLink.FileId > 0)
+            {
+                viewModel.InfoMsg =
+                    "<p><strong>Note: </strong>You cannot edit the " + DbRes.T("TitleLinks.Linked_File", "FieldDisplayName").ToLower() + " here.  If this is incorrect or requires updating, please delete this link and create a new one to the correct, or updated, file.</p>";
+            }
             ViewBag.Title = "Edit " + DbRes.T("TitleLinks.Link", "FieldDisplayName");
-            return PartialView(tevm);
+            return PartialView(viewModel);
         }
 
         // POST: LibraryAdmin/TitleLinks/Edit/5
@@ -206,7 +404,7 @@ namespace slls.Areas.LibraryAdmin
                     link.LinkStatus = "Could not test url";
                     link.IsValid = false;
                 }
-                
+
                 try
                 {
                     if (ModelState.IsValid)
@@ -214,17 +412,19 @@ namespace slls.Areas.LibraryAdmin
                         _db.Entry(link).State = EntityState.Modified;
                         _db.SaveChanges();
                     }
-                    
+
                 }
                 catch
                 {
                     _db.Entry(link).State = EntityState.Unchanged;
                 }
-                
+
             }
             return RedirectToAction(_db.TitleLinks.Any(x => x.IsValid == false) ? "BrokenLinks" : "Index");
         }
-        
+
+        //public strin
+
         [HttpGet]
         public ActionResult Delete(int id = 0)
         {

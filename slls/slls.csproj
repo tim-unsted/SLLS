@@ -276,6 +276,7 @@
     <Compile Include="Areas\Config\Controllers\ParametersController.cs" />
     <Compile Include="Areas\Config\Controllers\PartialMenuController.cs" />
     <Compile Include="Areas\Config\Controllers\SearchConfigController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\HostedFileController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\LoansBaseController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\OpacAdminBaseController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\UsersBaseController.cs" />
@@ -335,6 +336,7 @@
     <Compile Include="Models\CopacLanguage.cs" />
     <Compile Include="Models\DashboardGadget.cs" />
     <Compile Include="Models\DefaultValue.cs" />
+    <Compile Include="Models\HostedFile.cs" />
     <Compile Include="Models\LibraryUserSavedSearch.cs" />
     <Compile Include="Models\LibraryUserBookmark.cs" />
     <Compile Include="Models\LoanType.cs" />
@@ -386,6 +388,7 @@
     <Compile Include="ViewModels\DataImportViewModels.cs" />
     <Compile Include="ViewModels\DefaultValueViewModels.cs" />
     <Compile Include="ViewModels\EmailViewModels.cs" />
+    <Compile Include="ViewModels\HostedFilesViewModel.cs" />
     <Compile Include="ViewModels\LoanTypesViewModels.cs" />
     <Compile Include="ViewModels\MenuViewModels.cs" />
     <Compile Include="ViewModels\NotificationViewModels.cs" />
@@ -1141,6 +1144,10 @@
     <Content Include="Areas\CheckInOut\Views\Home\Index.cshtml" />
     <Content Include="Areas\CheckInOut\Views\Home\CheckIn.cshtml" />
     <Content Include="Areas\CheckInOut\Views\Home\CheckOut.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\HostedFile\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\ByLinkedFile.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\HostedFile\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\HostedFile\Add.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

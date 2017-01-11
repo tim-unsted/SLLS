@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using Microsoft.AspNet.Identity;
@@ -1620,6 +1623,41 @@ namespace slls.Controllers
             var coverImage = _db.Images.Find(id);
             var buffer = coverImage.Image;
             return File(buffer, "image/jpg", string.Format("{0}.jpg", id));
+        }
+
+        private static MemoryStream Decompress(byte[] input)
+        {
+            var output = new MemoryStream();
+
+            using (var compressStream = new MemoryStream(input))
+            using (var decompressor = new DeflateStream(compressStream, CompressionMode.Decompress))
+                decompressor.CopyTo(output);
+
+            output.Position = 0;
+            return output;
+        }
+
+
+        public FileContentResult FileDownload(int id)
+        {
+            //using LINQ expression to get record from database for given id (FileID) value
+            var file = (from p in _db.HostedFiles
+                        where p.FileId == id
+                        select p).First();
+
+            //only one record will be returned from database as expression uses condition on primary field
+            //so get first record from returned values and retrive file content (binary) and filename 
+            var fileBytes = (byte[])file.Data.ToArray();
+
+            //var memoryStream = new MemoryStream();
+
+            var memoryStream = file.Compressed ? Decompress(fileBytes) : new MemoryStream(fileBytes);
+
+            var fileName = file.FileName;
+            var contentType = MimeMapping.GetMimeMapping(fileName);
+
+            //Finally, return file and provide byte file content and file name
+            return File(memoryStream.GetBuffer(), contentType, fileName);
         }
     }
 }

@@ -218,20 +218,20 @@ namespace slls.Utils.Helpers
             return new MvcHtmlString(str);
         }
 
-        public static MvcHtmlString ResolvedLink(this HtmlHelper helper, string linkUrl, string linkTitle = "", string linkDisplayText = "")
+        public static MvcHtmlString ResolvedLink(this HtmlHelper helper, string linkUrl = "", int fileId = 0, string linkTitle = "", string linkDisplayText = "")
         {
-            if (string.IsNullOrEmpty(linkUrl)) return null;
-            if (string.IsNullOrEmpty(linkTitle)) linkTitle = linkUrl;
-            if (string.IsNullOrEmpty(linkDisplayText)) linkDisplayText = linkUrl;
-
-            if (Uri.IsWellFormedUriString(linkUrl, UriKind.Absolute))
+            if (string.IsNullOrEmpty(linkUrl) && fileId == 0) return null;
+            if (!string.IsNullOrEmpty(linkUrl))
             {
-                var link = "<a href=\"" + linkUrl + "\" title=\"" + linkTitle + "\" target=\"_blank\">" + linkDisplayText + "</a>";
-                return new MvcHtmlString(link);
+                if (Uri.IsWellFormedUriString(linkUrl, UriKind.Absolute))
+                {
+                    var link = "<a href=\"" + linkUrl + "\" title=\"" + linkTitle + "\" target=\"_blank\">" + linkDisplayText + "</a>";
+                    return new MvcHtmlString(link);
+                }
             }
 
-            if (Path.GetFullPath(linkUrl) == "") return null;
-            var actionLink = helper.ActionLink(linkDisplayText, "SendFileToBrowser", "sllsBase", new { filePath = linkUrl, area = "" }, null);
+            if (fileId == 0) return null;
+            var actionLink = helper.ActionLink(linkDisplayText, "FileDownload", "Home", new { id = fileId, area = "" }, null);
             return actionLink;
         }
 

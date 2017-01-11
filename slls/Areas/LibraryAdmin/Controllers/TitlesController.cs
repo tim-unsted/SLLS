@@ -300,6 +300,35 @@ namespace slls.Areas.LibraryAdmin
             return View(viewModel);
         }
 
+        public ActionResult ByLinkedFile(int id)
+        {
+            var viewModel = new TitlesListViewModel
+            {
+                Titles = (from t in _db.Titles
+                          join l in _db.TitleLinks on t.TitleID equals l.TitleID
+                          where l.FileId == id
+                          select t).ToList()
+            };
+
+            if (viewModel.Titles.Count() == 1)
+            {
+                var firstOrDefault = viewModel.Titles.FirstOrDefault();
+                if (firstOrDefault != null)
+                {
+                    var titleId = firstOrDefault.TitleID;
+                    return RedirectToAction("Edit", new { id = titleId });
+                }
+            }
+
+            var linkedFiles = from f in _db.HostedFiles
+                        where f.FileId == id
+                        select f.FileName;
+
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
+            ViewBag.Title = ViewBag.Title + " By " + DbRes.T("TitleLinks.Linked_File", "FieldDisplayName") + ": " + linkedFiles.FirstOrDefault();
+            return View(viewModel);
+        }
+
         public ActionResult ByMedia(int id)
         {
             var viewModel = new TitlesListViewModel

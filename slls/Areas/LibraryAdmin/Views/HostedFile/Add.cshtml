@@ -1,0 +1,118 @@
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.UploadFileViewModel
+
+@Html.Partial("_ModalAddHeader")
+
+@using (Html.BeginForm("PostAdd", "HostedFile", FormMethod.Post, new { enctype = "multipart/form-data", id = "myForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="alert alert-info" role="alert">
+                <p>
+                    <strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>Use the form to upload one or more local files to the database. These files can then be linked to catalogue items.
+                </p>
+                <p>
+                    Click 'Browse' to select a file stored on your PC, device or local network. A copy of the file will be uploaded to the SLLS server and stored in your database. These files can then be downloaded as a copy by the end user. The original file remains unaffected.
+                </p>
+            </div>
+
+            <div class="form-group">
+                @*@Html.Label("Local Files", new { @class = "control-label col-md-2" })*@
+                <div class="col-md-12">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.Files, new { type = "file", multiple = "multiple", accept = ".*", @style = "display: none;" })
+                            </span>
+                        </label>
+                        <input type="text" class="form-control">
+                    </div>
+                    @Html.HelpInline("Tip: Press and hold the 'Ctrl' button in the pop-up file explorer to pick multiple files .")
+                    @Html.ValidationMessageFor(model => model.Files, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" id="btnSave" value="Upload File" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-cloud-upload"></span> Upload Files</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<script type="text/javascript">
+
+    $("#myForm").submit(function (e) {
+        e.preventDefault();
+        var formData = new FormData($(this)[0]);
+
+        $.ajax({
+            type: "POST",
+            url: this.action,
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.success) {
+                    $('#stdModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert('Oops! ' + data.success);
+                }
+            }
+        });
+        return false;
+    });
+
+    function OnSuccess(json) {
+        if (json.isRedirect) {
+            window.location.href = json.redirectUrl;
+        }
+    }
+
+    function OnFailure(response) {
+        var obj = $.parseJSON(response.responseText);
+        alert(obj.message);
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+
+        // We can attach the `fileselect` event to all file inputs on the page
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        // We can watch for our custom `fileselect` event like this
+        $(document).ready(function () {
+            $(':file').on('fileselect', function (event, numFiles, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                if (input.length) {
+                    input.val(log);
+                } else {
+                    if (log) alert(log);
+                }
+
+            });
+        });
+
+    });
+</script>

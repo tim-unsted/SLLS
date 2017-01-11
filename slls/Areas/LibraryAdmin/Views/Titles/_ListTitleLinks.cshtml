@@ -8,8 +8,12 @@
         {
             <tr>
                 <td>
-                    @*<a href="@item.URL" title="@item.HoverTip" target="_blank">@item.DisplayText</a>*@
-                    @Html.ResolvedLink(item.URL,item.HoverTip,item.DisplayText)
+                    @Html.ResolvedLink(item.URL, item.FileId, item.HoverTip, item.DisplayText)
+                    @*}
+                    else
+                    {
+                        <a href="@Url.Action("FileDownload", "Home", new { id = item.FileID, area = "" })" title="Download file">@item.DisplayText</a>
+                    }*@
                 </td>
                 <td class="just-right">
                     <a href="@Url.Action("Edit", "TitleLinks", new {id = item.TitleLinkID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit @DbRes.T("TitleLinks.Link", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>

@@ -1,0 +1,111 @@
+﻿@using slls.Areas.LibraryAdmin
+@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model IEnumerable<slls.Models.HostedFile>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('#files').DataTable({
+            "dom": sDom,
+            "pagingType": sPagingType,
+            "pageLength": sPageLength,
+            "lengthMenu": sLengthMenu,
+            "language": {
+                "url": "/DataTables/lang.txt"
+            },
+            "columnDefs": [
+               {
+                   "width": "10%",
+                   "searchable": false,
+                   "sortable": true,
+                   "targets": [5,6]
+               },
+               {
+                   "width": "10%",
+                   "searchable": false,
+                   "sortable": false,
+                   "targets": [7]
+               }
+            ]
+        });
+    });
+</script>
+
+<h2>@ViewBag.Title</h2>
+
+<div class="alert alert-info">
+    <p>
+        <strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>This page lists all @DbRes.T("Hosted_Files", "EntityType").ToLower() that have been uploaded to the site and are stored within the database. These, typically, are files used in @DbRes.T("TitleLinks", "EntityType").ToLower() for catalogue items. Use the tools on this page to manage your @DbRes.T("Hosted_Files", "EntityType").ToLower() and check @DbRes.T("TitleLinks", "EntityType").ToLower() to catalogue items.
+    </p>
+</div>
+
+
+<p>
+    <a href="@Url.Action("Add", "HostedFile")" title="Upload new files" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-cloud-upload"></span> Upload Files</a>
+</p>
+
+<table id="files" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("Hosted_Files.FileName", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Hosted_Files.Original_Path", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Hosted_Files.Date_Uploaded", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Hosted_Files.File_Created", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Hosted_Files.File_Last_Updated", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("Hosted_Files.File_Size", "FieldDisplayName")
+            </th>
+            <th>
+                @DbRes.T("TitleLinks", "EntityType")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @*@Html.DisplayFor(modelItem => item.FileName)*@
+                    @Html.ResolvedLink(fileId:item.FileId, linkDisplayText:item.FileName, linkTitle:item.FileName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Path)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.InputDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreateDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastUpdateDate)
+                </td>
+                <td>
+                    @Html.Raw(Convert.ToDecimal(item.SizeStored).ToString("#,##0"))<span> KB</span>
+                </td>
+                <td>
+                    @if (item.TitleLinks.Any())
+                    {
+                        <a href="@Url.Action("ByLinkedFile", "Titles", new { id = item.FileId })" title="View all items linked to this @DbRes.T("Hosted_Files.File", "FieldDisplayName")"><span class="badge badge-link">@item.TitleLinks.Count</span></a>
+                    }
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Delete", new {id = item.FileId})" class="btn btn-link modal-link" title="Remove hosted file"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("FileDownload", "Home", new {id = item.FileId, area = ""})" class="btn btn-link" title="View File"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

@@ -88,6 +88,7 @@ namespace slls.Models
         public virtual DbSet<SearchField> SearchFields { get; set; }
         public virtual DbSet<SearchOrderType> SearchOrderTypes { get; set; }
         public virtual DbSet<DashboardGadget> DashboardGadgets { get; set; }
+        public virtual DbSet<HostedFile> HostedFiles { get; set; }
         //public virtual DbSet<OpacSearchResults> OpacSearchResults { get; set; }
 
         //Views
