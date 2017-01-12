@@ -946,6 +946,8 @@
     <Content Include="Scripts\i18n\defaults-zh_CN.min.js" />
     <Content Include="Scripts\i18n\defaults-zh_TW.js" />
     <Content Include="Scripts\i18n\defaults-zh_TW.min.js" />
+    <Content Include="Scripts\idle.js" />
+    <Content Include="Scripts\idle.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\locales\bootstrap-datepicker.ar.min.js" />
@@ -1048,7 +1050,6 @@
     <Content Include="Areas\LibraryAdmin\Views\Titles\EditorTemplates\Author.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\AddAuthor.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Authors\_add.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Create_Orig.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\TitleLinks\BrokenLinks.cshtml" />
     <Content Include="Areas\Config\Views\Parameters\Styling.cshtml" />
     <Content Include="Mvc.sitemap">

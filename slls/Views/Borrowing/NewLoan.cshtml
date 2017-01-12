@@ -11,8 +11,17 @@
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(m => m.UserID)
+        @Html.HiddenFor(m => m.Borrowed)
+        @Html.HiddenFor(m => m.ReturnDue)
 
         @Html.Partial("_PostAlert")
+
+        <div class="alert alert-danger alert-dismissable" id="_errorAlert" role="alert" style="display: none;">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span aria-hidden="true" class="glyphicon glyphicon-exclamation-sign"></span>
+            <span class="sr-only">Message:</span>
+            <span id="errMsg"></span>
+        </div>
 
         <div class="well">
 
@@ -31,39 +40,14 @@
                     <i class="glyphicon glyphicon-barcode form-control-feedback"></i>
                 </div>
             </div>
-
-            <div class="form-group" id="_barcodeInvalid" style="display: none;">
-                <div class="col-md-2"></div>
-                <div class="col-md-10">
-                    <span id="errMsg" class="text-danger field-validation-error"></span>
-                </div>
-            </div>
-
-            <div id="_barcodeDetails" style="display: none;">
-                <dl class="dl-horizontal">
-                    <dt>@DbRes.T("Titles.Title", "FieldDisplayName")</dt>
-                    <dd><span id="title"></span></dd>
-                </dl>
-            </div>
             
-            <div class="form-group has-feedback">
-                @Html.Label(DbRes.T("Borrowing.Borrowed", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-sm-3">
-                    @Html.EditorFor(model => model.Borrowed, new { htmlAttributes = new { @class = "form-control" } })
-                    @Html.ValidationMessageFor(model => model.Borrowed, "", new { @class = "text-danger" })
-                    <i class="glyphicon glyphicon-calendar form-control-feedback"></i>
+            <div id="_barcodeDetails" style="display: none; padding-bottom: 50px;">
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-sm-10">
+                    <p class="form-control-static"><span id="title"></span></p>
                 </div>
             </div>
             
-            <div class="form-group has-feedback">
-                @Html.Label(DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
-                <div class="col-sm-3">
-                    @Html.EditorFor(model => model.ReturnDue, new {htmlAttributes = new {@class = "form-control"}})
-                    @Html.ValidationMessageFor(model => model.ReturnDue, "", new {@class = "text-danger"})
-                    <i class="glyphicon glyphicon-calendar form-control-feedback"></i>
-                </div>
-            </div>
-
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
                     <button type="submit" value="Do Loan" class="btn btn-success" id="cmdOk"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Do Loan</button>
@@ -227,7 +211,7 @@
             var confirmBarcode = $("#confirmBarcode");
             var returnDue = $("#ReturnDue");
             var confirmReturnDue = $("#confirmReturnDue");
-            var errorDiv = $("#_barcodeInvalid");
+            var errorDiv = $("#_errorAlert");
             var errorMsg = $("#errMsg");
             var validationError = $(".field-validation-error");
             var barcodeGroup = $("#barcodeGroup");

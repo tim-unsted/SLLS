@@ -779,7 +779,32 @@ namespace slls.Controllers
                 origReturnDue = origReturnDue == null ? "" : origReturnDue.Value.ToShortDateString(),
                 newReturnDue = newReturnDue.ToShortDateString()
             });
+        }
 
+        //Method used to supply JSON data for a user (Ajax stuff)
+        public JsonResult GetBorrowerDetails(string userIdNameSwipe = "")
+        {
+            ApplicationUser borrower = new ApplicationUser();
+            if (!string.IsNullOrEmpty(userIdNameSwipe))
+            {
+                borrower = _db.Users.FirstOrDefault(u => u.Id == userIdNameSwipe || u.UserName == userIdNameSwipe || u.UserBarcode == userIdNameSwipe);
+            }
+            
+            if (borrower == null)
+            {
+                return Json(new
+                {
+                    Fullname = "The username/barcode that you've entered is invalid. Please check and try again.",
+                    success = false
+                });
+            }
+
+            return Json(new
+            {
+                success = true,
+                UserId = borrower.Id,
+                Fullname = borrower.Fullname
+            });
         }
         
         [HttpPost]

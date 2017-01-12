@@ -28,8 +28,17 @@ namespace slls.ViewModels
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
         public string Barcode { get; set; }
 
+        public string SelectBorrowerOption { get; set; }
+
         [Required(ErrorMessage = "Please select a Borrower.")]
         public string UserID { get; set; }
+
+        public string CheckOutUserId { get; set; }
+
+        public string UserSwipe { get; set; }
+
+        [Remote("UserNameExists", "Borrowing", HttpMethod = "POST", ErrorMessage = "The username/barcode that you've entered is invalid. Please check and try again.")]
+        public string UserName { get; set; }    
 
         public string Borrower { get; set; }
 

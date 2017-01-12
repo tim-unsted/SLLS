@@ -65,9 +65,10 @@
                             }
                             else
                             {
-                            <li>@Html.ActionLink(l1.Title, l1.Action, l1.Controller, new { Area = l1.LinkArea }, null)</li>
+                            @*<li>@Html.ActionLink(l1.Title, l1.Action, l1.Controller, new { Area = l1.LinkArea }, null)</li>*@
+                            <a href="@Url.Action(l1.Action, l1.Controller, new { area = l1.LinkArea })" data-toggle="@l1.DataToggle" data-target="@l1.DataTarget" target="@l1.Target" title="@l1.HoverTip">@l1.Title</a>
                             }
-                                }
+}
                                 </li>
                         }
                     }

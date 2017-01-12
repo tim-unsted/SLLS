@@ -34,15 +34,18 @@ namespace slls.Areas.CheckInOut
             return View("Index", "_CheckInOutLayout");
         }
 
-        public ActionResult CheckOut(string userId = "", bool success = false, bool invalidUser = false)
+        public ActionResult CheckOut(string checkoutUserId = "", bool success = false, bool invalidUser = false)
         {
             //Find the user record in th database: AspNetUsers ...
             var fullName = "";
-            var user = _db.Users.Find(userId);
+            var userName = "";
+            var user = _db.Users.Find(checkoutUserId);
 
             if (user != null)
             {
-                fullName = string.Concat(new[] { user.Firstname, " ", user.Lastname });
+                //fullName = string.Concat(new[] { user.Firstname, " ", user.Lastname });
+                fullName = user.Fullname;
+                userName = user.UserName;
             }
 
             // Get a list of barcodes for a drop-down list
@@ -79,13 +82,15 @@ namespace slls.Areas.CheckInOut
             {
                 Borrowed = DateTime.Today,
                 ReturnDue = DateTime.Today.AddDays(21),
-                UserID = userId,
+                UserID = checkoutUserId,
                 Borrower = fullName,
+                UserName = userName,
                 Volumes = new SelectList(volumes, "VolumeID", "Barcode"),
                 Copies = new SelectList(copies, "CopyID", "CopyNumber"),
                 Titles = new SelectList(titles, "TitleID", "Title"),
                 Success = success,
-                TimeOut = int.Parse(Settings.GetParameterValue("Borrowing.StandAlonePageTimeOut", "6000", "The period of time the stand-alone Check-Out and Check-In pages can be left idle before they time-out and clear borrower and loan details.")),
+                SelectBorrowerOption = Settings.GetParameterValue("Borrowing.SelectBorrowerMethod", "dropdownlist","Sets how borrowers can identify themselves in the loans screens when challenged. Valid options are: 'dropdownlist', 'swipecard', or 'username'."),
+                TimeOut = int.Parse(Settings.GetParameterValue("Borrowing.StandAlonePageTimeOut", "10000", "The period of time the stand-alone Check-Out and Check-In pages can be left idle before they time-out and clear borrower and loan details.")),
                 SeeAlso = MenuHelper.SeeAlso("checkinoutSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
@@ -135,7 +140,7 @@ namespace slls.Areas.CheckInOut
                 _db.Entry(volume).State = EntityState.Modified;
                 _db.SaveChanges();
 
-                return RedirectToAction("CheckOut", new { userId = viewModel.UserID, success = true });
+                return RedirectToAction("CheckOut", new { checkoutUserId = viewModel.UserID, success = true });
             }
 
             ViewData["SeeAlso"] = viewModel.SeeAlso;
