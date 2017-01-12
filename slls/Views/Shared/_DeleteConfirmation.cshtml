@@ -6,7 +6,7 @@
     <h3 class="modal-title" id="deleteLabel">@Html.DisplayFor(model => model.FunctionText)&nbsp;@Html.DisplayFor(model => model.HeaderText)</h3>
 </div>
 
-@using (Html.BeginForm(Model.PostDeleteAction, Model.PostDeleteController, FormMethod.Post, new { @class = "modal-form form-horizontal" }))
+@using (Html.BeginForm(Model.PostDeleteAction, Model.PostDeleteController, FormMethod.Post, new { @class = "form-horizontal" }))
 {
     @Html.ValidationSummary()
     <!-- Added hidden fields so that these values persist when calling POST Action. Otherwise POST action will have all these properties as null -->
@@ -18,7 +18,7 @@
     
     <div class="modal-body">
         <div class="control-group">
-            <p>@Html.DisplayFor(model => model.ConfirmationText) @Html.DisplayFor(model => model.HeaderText.ToLower())?</p>
+            <p>@Html.DisplayFor(model => model.ConfirmationText) @Html.DisplayFor(model => model.HeaderText)?</p>
             @if (!Model.DetailsText.IsEmpty())
             {
                 <p><mark><strong>@Html.Raw(Model.DetailsText)</strong></mark>

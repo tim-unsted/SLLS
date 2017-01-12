@@ -138,10 +138,10 @@ namespace slls.Areas.LibraryAdmin
             }
         }
 
-        public static double GetFileSize(int FileId)
-        {
-            return 1234.0;
-        }
+        //public static double GetFileSize(int FileId)
+        //{
+        //    return 1234.0;
+        //}
 
         [HttpGet]
         public ActionResult Delete(int? id)

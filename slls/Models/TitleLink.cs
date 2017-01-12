@@ -20,7 +20,7 @@ namespace slls.Models
         [LocalDisplayName("TitleLinks.URL_Path", "FieldDisplayName")]
         public string URL { get; set; }
 
-        public int FileId { get; set; }
+        public int? FileId { get; set; }
 
         [StringLength(1000)]
         [LocalDisplayName("TitleLinks.Hover_Tip_Text", "FieldDisplayName")]

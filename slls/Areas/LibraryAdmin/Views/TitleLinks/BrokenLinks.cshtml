@@ -77,8 +77,7 @@
                         @Html.DisplayFor(modelItem => item.Title.Title1)
                     </td>
                     <td>
-                        @*<a href="@item.URL" title="@item.HoverTip" target="_blank">@item.URL</a>*@
-                        @Html.ResolvedLink(item.URL, item.HoverTip)
+                        @Html.ResolvedLink(item.URL, item.FileId ?? 0, item.HoverTip, item.DisplayText)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.IsValid)

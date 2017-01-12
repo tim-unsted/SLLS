@@ -1048,7 +1048,7 @@
     <Content Include="Areas\LibraryAdmin\Views\Titles\EditorTemplates\Author.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\AddAuthor.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Authors\_add.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Create_Orig.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\TitleLinks\BrokenLinks.cshtml" />
     <Content Include="Areas\Config\Views\Parameters\Styling.cshtml" />
     <Content Include="Mvc.sitemap">
@@ -1148,6 +1148,7 @@
     <Content Include="Areas\LibraryAdmin\Views\Titles\ByLinkedFile.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\HostedFile\Delete.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\HostedFile\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Create.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

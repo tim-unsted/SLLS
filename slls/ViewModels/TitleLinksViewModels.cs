@@ -88,7 +88,7 @@ namespace slls.ViewModels
         [StringLength(20)]
         public string Password { get; set; }
 
-        public int FileId { get; set; }
+        public int? FileId { get; set; }
 
         public string FileName { get; set; }    
 

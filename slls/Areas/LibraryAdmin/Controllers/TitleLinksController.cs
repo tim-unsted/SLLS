@@ -35,7 +35,7 @@ namespace slls.Areas.LibraryAdmin
         // GET: LibraryAdmin/BrokenLinks
         public ActionResult BrokenLinks()
         {
-            var titleLinks = _db.TitleLinks.Where(x => x.IsValid == false);
+            var titleLinks = _db.TitleLinks.Where(x => x.IsValid == false && x.FileId == null);
             ViewBag.Title = "Broken " + ViewBag.Title;
             return View(titleLinks.ToList());
         }
@@ -71,13 +71,15 @@ namespace slls.Areas.LibraryAdmin
         // GET: LibraryAdmin/TitleLinks/Create
         public ActionResult Create()
         {
-            var tlvm = new TitleImageAddViewModel
-            {
-            };
+            var viewModel = new TitleImageAddViewModel();
 
+            //Get a list of any hosted (i.e. stored in database) files
+            var existingFiles = _db.HostedFiles.OrderBy(f => f.FileName).ToList();
             ViewData["TitleId"] = SelectListHelper.TitlesList();
+            ViewBag.ExistingFile = new SelectList(existingFiles, "FileId", "FileName");
+            ViewBag.ExistingFileCount = existingFiles.Count();
             ViewBag.Title = "Add New " + DbRes.T("TitleLinks.Link", "FieldDisplayName");
-            return PartialView(tlvm);
+            return PartialView(viewModel);
         }
 
         // POST: LibraryAdmin/TitleLinks/Create
@@ -304,7 +306,7 @@ namespace slls.Areas.LibraryAdmin
                 Title = (from t in _db.Titles.Where(t => t.TitleID == titleLink.TitleID)
                          select t.Title1).FirstOrDefault(),
                 Url = titleLink.URL,
-                FileId = titleLink.FileId,
+                FileId = titleLink.FileId ?? 0,
                 FileName = (from f in _db.HostedFiles.Where(x => x.FileId == titleLink.FileId) select f.FileName).FirstOrDefault(),
                 DisplayText = titleLink.DisplayText,
                 HoverTip = titleLink.HoverTip,

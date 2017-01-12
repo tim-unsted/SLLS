@@ -146,18 +146,7 @@
                     foreach (var link in Model.TitleLinks)
                     {
                         <dd>
-                            @*@if (Uri.IsWellFormedUriString(link.URL, UriKind.Absolute))
-                            {
-                                <a href="@link.URL" title="@link.Title" target="_blank">@link.DisplayText</a><br />
-                            }
-                            else
-                            {
-                                if (Path.GetFullPath(link.URL) != "")
-                                {
-                                    <a href="@Url.Action("SendFileToBrowser", new { filePath = link.URL })" title="@link.Title" target="_blank">@link.DisplayText</a><br />
-                                }
-                            }*@
-                            @Html.ResolvedLink(link.URL, link.HoverTip, link.DisplayText)
+                            @Html.ResolvedLink(link.URL, link.FileId ?? 0, link.HoverTip, link.DisplayText)
                         </dd>
                     }
                 }
