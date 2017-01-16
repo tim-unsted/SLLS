@@ -466,6 +466,11 @@ namespace slls.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public ActionResult Unauthorised()
+        {
+            return View("Forbidden");
+        }
+
         //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]

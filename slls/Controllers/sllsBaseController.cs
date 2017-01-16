@@ -10,13 +10,16 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Win32;
 using slls.App_Settings;
+using slls.Filters;
 using slls.Models;
 using slls.Utils;
 
 namespace slls.Controllers
 {
+    [AuthorizeIPAddress] 
     public class sllsBaseController : Controller
     {
+        
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var authMode =
@@ -46,7 +49,7 @@ namespace slls.Controllers
                         var userManager = HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
                         var windowsUser = UserPrincipal.Current;
                         var defaultPasswordPart = Settings.GetParameterValue(
-                            "Security.Passwords.DefaultPassweordPart", "6174",
+                            "Security.Passwords.DefaultPasswordPart", "6174",
                             "The numeric part of a default password when new users are added automatically, or via an import script or tool. A default password is constructed from a user's firstname, the default numeric part and the first letter of thier surname (e.g. tim1234u");
                 
                         //Add a new Identity record and get the user's Id...

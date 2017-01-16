@@ -39,6 +39,19 @@ namespace slls.DAO
             return data;
         }
 
+        public static List<IpAddress> AllowedIpAddresses()
+        {
+            var ipAddresses = Cache["ipaddresses"] as List<IpAddress>;
+            if (ipAddresses != null) return ipAddresses;
+            using (var db = new DbEntities())
+            {
+                ipAddresses =
+                    (from a in db.IpAddresses.Where(x => x.AllowPassThrough && !x.Blocked) select a).Distinct().ToList();
+                Cache["ipaddresses"] = ipAddresses;
+                return ipAddresses;
+            }
+        }
+
         public static List<NewTitlesSimpleViewModel> NewTitles()
         {
             var newTitles = Cache["newtitles"] as List<NewTitlesSimpleViewModel>;

@@ -31,6 +31,7 @@ namespace slls.Models
         public virtual DbSet<ErrorLog> ErrorLogs { get; set; }
         public virtual DbSet<Frequency> Frequencies { get; set; }
         public virtual DbSet<HelpText> HelpTexts { get; set; }
+        public virtual DbSet<IpAddress> IpAddresses { get; set; }
         public virtual DbSet<CoverImage> Images { get; set; }
         public virtual DbSet<Keyword> Keywords { get; set; }
         public virtual DbSet<Language> Languages { get; set; }

@@ -13,6 +13,7 @@ namespace slls.App_Settings
         private static string _dateFormat = "DateFormat";
         private static string _popupTimeout = "PopupTimeout";
         private static string _package = "Package";
+        private static string _ipFilteringOn = "IpFilteringOn";
 
         public static string SiteName
         {
@@ -115,6 +116,26 @@ namespace slls.App_Settings
             {
                 HttpContext.Current.Application.Lock();
                 HttpContext.Current.Application[_package] = value;
+                HttpContext.Current.Application.UnLock();
+            }
+        }
+
+        public static bool IpFilteringOn
+        {
+            get
+            {
+                if (HttpContext.Current.Application[_ipFilteringOn] == null)
+                {
+                    HttpContext.Current.Application.Lock();
+                    HttpContext.Current.Application[_ipFilteringOn] = Settings.GetParameterValue("System.IpFilteringOn", "false", "Is IP Address Filtering applied? With IP Address Filtering applied, access to the site is restricted to only listed IP addresses or ranges. Valid values are 'true' or 'false'.", "Bailey Admin") == "true"; ;
+                    HttpContext.Current.Application.UnLock();
+                }
+                return (bool)HttpContext.Current.Application[_ipFilteringOn];
+            }
+            set
+            {
+                HttpContext.Current.Application.Lock();
+                HttpContext.Current.Application[_ipFilteringOn] = value;
                 HttpContext.Current.Application.UnLock();
             }
         }
