@@ -267,9 +267,9 @@ namespace slls.Controllers
                 var code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
                 var msgSubject = App_Settings.Settings.GetParameterValue("Security.Passwords.ChangePasswordConfirmationSubject",
-                    "Your password for Simple Little Library System has changed", "The email 'Subject' when generating an 'Changed Password' confirmation email.");
+                    "Your password for Simple Little Library System has changed", "The email 'Subject' when generating an 'Changed Password' confirmation email.", dataType: "longtext");
                 var msgBody = App_Settings.Settings.GetParameterValue("Security.Passwords.ChangePasswordConfirmationBody",
-                    "Your password for Simple Little Library System has recently been changed. If you did not request or authorise this change, click the link below to reset it now. Otherwise, you can ignore this message.", "The email 'Body' when generating an 'Changed Password' confirmation email.");
+                    "Your password for Simple Little Library System has recently been changed. If you did not request or authorise this change, click the link below to reset it now. Otherwise, you can ignore this message.", "The email 'Body' when generating an 'Changed Password' confirmation email.", dataType: "longtext");
                 await UserManager.SendEmailAsync(user.Id, msgSubject, msgBody + "<br><br><a href=\"" + callbackUrl + "\">Follow this link to reset your password now</a>");
                 
 

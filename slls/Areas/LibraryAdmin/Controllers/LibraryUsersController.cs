@@ -430,9 +430,9 @@ namespace slls.Areas.LibraryAdmin
             var code = await UserManager.GeneratePasswordResetTokenAsync(libraryUser.Id);
             var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = libraryUser.Id, code = code }, protocol: Request.Url.Scheme);
             var msgSubject = App_Settings.Settings.GetParameterValue("Security.Passwords.ChangePasswordConfirmationSubject",
-                "Your password for Simple Little Library System has changed", "The email 'Subject' when generating an 'Changed Password' confirmation email.");
+                "Your password for Simple Little Library System has changed", "The email 'Subject' when generating an 'Changed Password' confirmation email.", dataType: "longtext");
             var msgBody = App_Settings.Settings.GetParameterValue("Security.Passwords.ChangePasswordConfirmationBody",
-                "Your password for Simple Little Library System has recently been changed. If you did not request or authorise this change, click the link below to reset it now. Otherwise, you can ignore this message.", "The email 'Body' when generating an 'Changed Password' confirmation email.");
+                "Your password for Simple Little Library System has recently been changed. If you did not request or authorise this change, click the link below to reset it now. Otherwise, you can ignore this message.", "The email 'Body' when generating an 'Changed Password' confirmation email.", dataType: "longtext");
             await UserManager.SendEmailAsync(libraryUser.Id, msgSubject, msgBody + "<br><br><a href=\"" + callbackUrl + "\">Follow this link to reset your password now</a>");
 
             TempData["SuccessDialogMsg"] = "User's password has been changed. The user should receive an email alerting them of the change.";
@@ -486,7 +486,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 foreach (var libraryUser in users.ToList())
                 {
-                    var newPassword = libraryUser.TempPassword ?? Settings.GetParameterValue("Security.Passwords.DefaultTemporaryPassword","temp@123", "The default temporary password to use when importing user data from legacy systems without passwords.");
+                    var newPassword = libraryUser.TempPassword ?? Settings.GetParameterValue("Security.Passwords.DefaultTemporaryPassword", "temp@123", "The default temporary password to use when importing user data from legacy systems without passwords.", dataType: "text");
                     var hashedNewPassword = UserManager.PasswordHasher.HashPassword(newPassword);
                     await store.SetPasswordHashAsync(libraryUser, hashedNewPassword);
                     libraryUser.TempPassword = null;
@@ -505,22 +505,22 @@ namespace slls.Areas.LibraryAdmin
         {
             var passwordMaxLength =
                 int.Parse(Settings.GetParameterValue("Security.Passwords.MaximumLength", "999",
-                    "Specifies the maximum required length of a password."));
+                    "Specifies the maximum required length of a password.", dataType: "int"));
             var passwordMinLength =
                 int.Parse(Settings.GetParameterValue("Security.Passwords.MinimumLength", "8",
-                    "Specifies the minimum required length of a password."));
+                    "Specifies the minimum required length of a password.", dataType: "int"));
             var passwordRequireDigit =
                 Settings.GetParameterValue("Security.Passwords.RequireDigit", "false",
-                    "Specifies whether the password requires at least one digit (0-9).") == "true";
+                    "Specifies whether the password requires at least one digit (0-9).", dataType: "bool") == "true";
             var passwordRequireLowercase =
                 Settings.GetParameterValue("Security.Passwords.RequireLowercase", "false",
-                    "Specifies whether the password requires at least one lower-case letter.") == "true";
+                    "Specifies whether the password requires at least one lower-case letter.", dataType: "bool") == "true";
             var passwordRequireUppercase =
                 Settings.GetParameterValue("Security.Passwords.RequireUppercase", "false",
-                    "Specifies whether the password requires at least one upper-case letter") == "true";
+                    "Specifies whether the password requires at least one upper-case letter", dataType: "bool") == "true";
             var passwordRequireNonLetterOrDigit =
                 Settings.GetParameterValue("Security.Passwords.RequireNonLetterOrDigit", "false",
-                    "Specifies whether the password requires at least one non-alphanumeric character (e.g. '$', '~', '?', etc.") ==
+                    "Specifies whether the password requires at least one non-alphanumeric character (e.g. '$', '~', '?', etc.", dataType: "bool") ==
                 "true";
                 
             var passwordRequirements = new List<string>();

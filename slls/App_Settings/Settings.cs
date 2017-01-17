@@ -14,13 +14,13 @@ namespace slls.App_Settings
         public string ParameterID { get; set; }
         public string ParameterValue { get; set; }
 
-        public static string GetParameterValue(string id, string value = "", string usage = "", string roles = "System Admin")
+        public static string GetParameterValue(string id, string value = "", string usage = "", string roles = "System Admin", string dataType = "text")
         {
             var parameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
             var parameter = parameters.FirstOrDefault(p => p.ParameterID == id);
             if (parameter == null)
             {
-                if (AddParameter(id, value, usage, roles))
+                if (AddParameter(id, value, usage, roles, dataType))
                 {
                     return value;
                 }
@@ -29,7 +29,7 @@ namespace slls.App_Settings
             return parameter.ParameterValue;
         }
 
-        public static bool UpdateParameter(string id, string value, string usage = "", string roles = "System Admin")
+        public static bool UpdateParameter(string id, string value, string usage = "", string roles = "System Admin", string dataType = "text")
         {
             var repository = new GenericRepository(typeof(Models.Parameter));
             var parameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
@@ -37,7 +37,7 @@ namespace slls.App_Settings
 
             if (parameter == null)
             {
-                return AddParameter(id, value, usage, roles);
+                return AddParameter(id, value, usage, roles, dataType);
             }
 
             try
@@ -55,7 +55,7 @@ namespace slls.App_Settings
             }
         }
 
-        public static bool AddParameter(string id, string value, string usage = "", string roles = "System Admin")
+        public static bool AddParameter(string id, string value, string usage = "", string roles = "System Admin", string dataType = "text")
         {
             if (id == null) return false;
             if (value == null) return false;
@@ -105,6 +105,7 @@ namespace slls.App_Settings
                         ParameterID = id,
                         ParameterValue = value,
                         ParamUsage = usage,
+                        DataType1 = dataType,
                         Roles = roles,
                         Packages = packages,
                         InputDate = DateTime.Now

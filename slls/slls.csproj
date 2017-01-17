@@ -270,7 +270,7 @@
     <Compile Include="Areas\Config\Controllers\ConfigBaseController.cs" />
     <Compile Include="Areas\Config\Controllers\ConnectionController.cs" />
     <Compile Include="Areas\Config\Controllers\HomeController.cs" />
-    <Compile Include="Areas\Config\Controllers\IpAddressController.cs" />
+    <Compile Include="Areas\Config\Controllers\IpAddressesController.cs" />
     <Compile Include="Areas\Config\Controllers\LibraryUsersController.cs" />
     <Compile Include="Areas\Config\Controllers\LocalizationController.cs" />
     <Compile Include="Areas\Config\Controllers\MenuBuilderController.cs" />
@@ -1154,9 +1154,12 @@
     <Content Include="Areas\LibraryAdmin\Views\HostedFile\Delete.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\HostedFile\Add.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Create.cshtml" />
-    <Content Include="Areas\Config\Views\IpAddress\Index.cshtml" />
-    <Content Include="Areas\Config\Views\IpAddress\Add.cshtml" />
-    <Content Include="Areas\Config\Views\IpAddress\Edit.cshtml" />
+    <Content Include="Areas\Config\Views\IpAddresses\Index.cshtml" />
+    <Content Include="Areas\Config\Views\IpAddresses\Add.cshtml" />
+    <Content Include="Areas\Config\Views\IpAddresses\Edit.cshtml" />
+    <Content Include="Areas\Config\Views\Parameters\PasswordPolicy.cshtml" />
+    <Content Include="Areas\Config\Views\Parameters\LoansOptions.cshtml" />
+    <Content Include="Areas\Config\Views\Parameters\_index.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

@@ -43,13 +43,13 @@ namespace slls.Areas.Config
         {
             var viewModel = new SearchOptionsViewModel()
             {
-                DefaultSearchOrder = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results."),
+                DefaultSearchOrder = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text"),
                 DefaultSearchOrderTip = "Sets the default sort order for search results.",
-                DefaultNewTitlesOrder = Settings.GetParameterValue("Searching.DefaultNewTitlesSortOrder", "commenced.desc", "Sets the default sort order for the 'New Titles' list."),
+                DefaultNewTitlesOrder = Settings.GetParameterValue("Searching.DefaultNewTitlesSortOrder", "commenced.desc", "Sets the default sort order for the 'New Titles' list.", dataType: "text"),
                 DefaultNewTitlesOrderTip = "Sets the default sort order for the 'New Titles' list.",
-                SearchResultsPageSize = int.Parse(Settings.GetParameterValue("Searching.SearchResultSize", "10", "Sets the page size for OPAC simple search.")),
+                SearchResultsPageSize = int.Parse(Settings.GetParameterValue("Searching.SearchResultSize", "10", "Sets the page size for OPAC simple search.", dataType: "int")),
                 SearchResultsPageSizeTip = "Sets the page size for OPAC simple search",
-                NarrowByDefaultRecordCount = int.Parse(Settings.GetParameterValue("Searching.NarrowByDefaultRecordCount", "5", "Sets the number of initial narrow-by options for each narrow-by source (e.g. Media Types).")),
+                NarrowByDefaultRecordCount = int.Parse(Settings.GetParameterValue("Searching.NarrowByDefaultRecordCount", "5", "Sets the number of initial narrow-by options for each narrow-by source (e.g. Media Types).", dataType: "int")),
                 NarrowByDefaultRecordCountTip = "Sets the number of initial narrow-by options for each narrow-by source (e.g. Media Types)."
             };
 

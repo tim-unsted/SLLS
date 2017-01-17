@@ -834,7 +834,7 @@ namespace slls.Controllers
         public ActionResult SelectBorrower()
         {
             var selectBorrowerOption = Settings.GetParameterValue("Borrowing.SelectBorrowerMethod", "dropdownlist",
-                "Sets how borrowers can identify themselves in the loans screens when challenged. Valid options are: 'dropdownlist', 'swipecard', or 'username'.");
+                "Sets how borrowers can identify themselves in the loans screens when challenged. Valid options are: 'dropdownlist', 'swipecard', or 'username'.", dataType: "text");
             //var viewModel = new SelectPopupViewModel();
 
             switch (selectBorrowerOption)

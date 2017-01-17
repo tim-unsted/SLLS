@@ -25,7 +25,7 @@ namespace slls.Areas.Config
             _repository = new GenericRepository(typeof(Parameter));
         }
 
-        // GET: LibraryAdmin/Parameters
+        // GET: Config/Parameters
         public ActionResult Index(string parameterArea = "")
         {
             var allParameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
@@ -61,7 +61,7 @@ namespace slls.Areas.Config
             return View(viewModel);
         }
         
-        // GET: LibraryAdmin/Parameters/Create
+        // GET: Config/Parameters/Create
         [AuthorizeRoles(Roles.BaileyAdmin)]
         public ActionResult Create()
         {
@@ -70,7 +70,7 @@ namespace slls.Areas.Config
             return PartialView(viewModel);
         }
 
-        // POST: LibraryAdmin/Parameters/Create
+        // POST: Config/Parameters/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AuthorizeRoles(Roles.BaileyAdmin)]
@@ -128,18 +128,30 @@ namespace slls.Areas.Config
             return PartialView(viewmodel);
         }
 
-        // GET: LibraryAdmin/Parameters/Edit/5
-        public ActionResult Edit(int id = 0)
+        // GET: Config/Parameters/Edit/5
+        [AuthorizeRoles(Roles.BaileyAdmin, Roles.SystemAdmin)]
+        public ActionResult Edit(int id = 0, string parameterId = "", string title = "Edit System Parameter")
         {
-            if (id == 0)
+            if (id == 0 && string.IsNullOrEmpty(parameterId))
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var parameter = _db.Parameters.Find(id);
+
+            Parameter parameter = new Parameter();
+
+            if (id > 0)
+            {
+                parameter = _db.Parameters.Find(id);
+            }
+            if (!string.IsNullOrEmpty(parameterId))
+            {
+                parameter = _db.Parameters.FirstOrDefault(p => p.ParameterID == parameterId);
+            }
             if (parameter == null)
             {
                 return HttpNotFound();
             }
+
             var viewModel = new ParametersAddEditViewModel()
             {
                 RecID = parameter.RecID,
@@ -147,34 +159,53 @@ namespace slls.Areas.Config
                 ParameterValue = parameter.ParameterValue,
                 ParamUsage = parameter.ParamUsage,
                 ParameterName = parameter.ParameterName,
-                ParameterArea = parameter.ParameterArea
+                ParameterArea = parameter.ParameterArea,
+                DataType1 = parameter.DataType1
             };
 
-            if (parameter.ParameterValue.Length <= 10)
+            switch (parameter.DataType1)
             {
-                viewModel.Class = "small";
+                case "text":
+                {
+                    viewModel.ParameterValueText = parameter.ParameterValue;
+                    break;
+                }
+                case "longtext":
+                {
+                    viewModel.ParameterValueLongText = parameter.ParameterValue;
+                    break;
+                }
+                case "int":
+                {
+                    viewModel.ParameterValueInteger= int.Parse(parameter.ParameterValue);
+                    break;
+                }
+                case "double":
+                {
+                    viewModel.ParameterValueDouble = double.Parse(parameter.ParameterValue);
+                    break;
+                }
+                case "bool":
+                {
+                    viewModel.ParameterValueBoolean = parameter.ParameterValue == "true";
+                    break;
+                }
+                default:
+                {
+                    viewModel.ParameterValue = parameter.ParameterValue;
+                    break;
+                }
             }
-            if (parameter.ParameterValue == "true" || parameter.ParameterValue == "false")
-            {
-                viewModel.Class = "small";
-            }
-            if (parameter.ParameterValue.StartsWith("#"))
-            {
-                viewModel.Class = "small";
-            }
-            if (parameter.ParameterValue.EndsWith("px"))
-            {
-                viewModel.Class = "small";
-            }
-
-            ViewBag.Title = "Edit System Parameter";
+            
+            ViewBag.Title = title;
             return PartialView(viewModel);
         }
 
-        // POST: LibraryAdmin/Parameters/Edit/5
+        // POST: Config/Parameters/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult PostEdit([Bind(Include = "RecID,ParameterID,ParameterValue,ParamUsage")] ParametersAddEditViewModel viewModel)
+        [AuthorizeRoles(Roles.BaileyAdmin, Roles.SystemAdmin)]
+        public ActionResult PostEdit(ParametersAddEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -183,10 +214,45 @@ namespace slls.Areas.Config
                 {
                     return HttpNotFound();
                 }
+
                 parameter.ParameterID = viewModel.ParameterID;
-                parameter.ParameterValue = viewModel.ParameterValue;
                 parameter.ParamUsage = viewModel.ParamUsage;
+                parameter.DataType1 = viewModel.DataType1;
                 parameter.LastModified = DateTime.Now;
+
+                switch (viewModel.DataType1)
+                {
+                    case "text":
+                        {
+                            parameter.ParameterValue = viewModel.ParameterValueText;
+                            break;
+                        }
+                    case "longtext":
+                        {
+                            parameter.ParameterValue = viewModel.ParameterValueLongText;
+                            break;
+                        }
+                    case "int":
+                        {
+                            parameter.ParameterValue = viewModel.ParameterValueInteger.ToString();
+                            break;
+                        }
+                    case "double":
+                        {
+                            parameter.ParameterValue = viewModel.ParameterValueDouble.ToString();
+                            break;
+                        }
+                    case "bool":
+                        {
+                            parameter.ParameterValue = viewModel.ParameterValueBoolean == true ? "true" : "false";
+                            break;
+                        }
+                    default:
+                        {
+                            parameter.ParameterValue = viewModel.ParameterValue;
+                            break;
+                        }
+                }
 
                 _db.Entry(parameter).State = EntityState.Modified;
                 _db.SaveChanges();
@@ -197,16 +263,40 @@ namespace slls.Areas.Config
                 {
                     CssManager.LoadCss();
                 }
+                if (parameter.ParameterID == "General.PopupTimeout")
+                {
+                    GlobalVariables.PopupTimeout = parameter.ParameterValue;
+                }
+                if (parameter.ParameterID == "General.DatepickerDateFormat")
+                {
+                    GlobalVariables.DateFormat = parameter.ParameterValue;
+                }
+                if (parameter.ParameterID == "OPAC.OpacName")
+                {
+                    GlobalVariables.OpacName = parameter.ParameterValue;
+                }
+                if (parameter.ParameterID == "OPAC.SiteName")
+                {
+                    GlobalVariables.SiteName = parameter.ParameterValue;
+                }
+                if (parameter.ParameterID == "Security.IpFilteringOn")
+                {
+                    //Ensure that the current user's IP address is stored and allowed ...
+                    if (parameter.ParameterValue == "true")
+                    {
+                        IpAddressesController.AllowCurrentIpAddress();
+                    }
+                    GlobalVariables.IpFilteringOn = parameter.ParameterValue == "true";
+                }
 
                 return Json(new { success = true });
-                //return RedirectToAction("Index");
             }
 
             ViewBag.Title = "Edit System Parameter";
             return PartialView("Edit", viewModel);
         }
 
-        // GET: LibraryAdmin/Parameters
+        // GET: Config/Parameters
         public ActionResult Styling()
         {
             var userRoles = Roles.GetUserRoles();
@@ -221,7 +311,7 @@ namespace slls.Areas.Config
             return View(viewModel);
         }
 
-        // GET: LibraryAdmin/Parameters/EditStyle/5
+        // GET: Config/Parameters/EditStyle/5
         public ActionResult EditStyle(int id = 0)
         {
             var parameter = _db.Parameters.Find(id);
@@ -243,7 +333,35 @@ namespace slls.Areas.Config
             return PartialView("Edit", viewModel);
         }
 
-        // GET: LibraryAdmin/Parameters/Delete/5
+        // GET: Config/Parameters/PasswordPolicy
+        public ActionResult PasswordPolicy()
+        {
+            var allParameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
+
+            var viewModel = new ParameterIndexViewModel
+            {
+                Parameters = allParameters.Where(x => x.ParameterID.StartsWith("Security.Passwords."))
+            };
+
+            ViewBag.Title = "Passwords Policies";
+            return View(viewModel);
+        }
+        
+        // GET: Config/Parameters/LoanOptions
+        public ActionResult LoansOptions()
+        {
+            var allParameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
+
+            var viewModel = new ParameterIndexViewModel
+            {
+                Parameters = allParameters.Where(x => x.ParameterID.StartsWith("Borrowing."))
+            };
+
+            ViewBag.Title = "Loan/Borrowing Options";
+            return View(viewModel);
+        }
+        
+        // GET: Config/Parameters/Delete/5
         [HttpGet]
         public ActionResult Delete(int id = 0)
         {

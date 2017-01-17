@@ -22,7 +22,7 @@ namespace slls.App_Settings
                 if (HttpContext.Current.Application[_siteName] == null)
                 {
                     HttpContext.Current.Application.Lock();
-                    HttpContext.Current.Application[_siteName] = Settings.GetParameterValue("OPAC.SiteName", "Simple Little Library System", "The name you wish to call the entire application. This will appear on browser tabs, etc.");
+                    HttpContext.Current.Application[_siteName] = Settings.GetParameterValue("OPAC.SiteName", "Simple Little Library System", "The name you wish to call the entire application. This will appear on browser tabs, etc.", dataType:"text");
                     HttpContext.Current.Application.UnLock();
                 }
                 return HttpContext.Current.Application[_siteName].ToString();
@@ -42,7 +42,7 @@ namespace slls.App_Settings
                 if (HttpContext.Current.Application[_opacName] == null)
                 {
                     HttpContext.Current.Application.Lock();
-                    HttpContext.Current.Application[_opacName] = Settings.GetParameterValue("OPAC.OpacName", "Our Library", "The name you wish to call the public-facing 'OPAC'.");
+                    HttpContext.Current.Application[_opacName] = Settings.GetParameterValue("OPAC.OpacName", "Our Library", "The name you wish to call the public-facing 'OPAC'.", dataType: "text");
                     HttpContext.Current.Application.UnLock();
                 }
                 return HttpContext.Current.Application[_opacName].ToString();
@@ -62,7 +62,7 @@ namespace slls.App_Settings
                 if (HttpContext.Current.Application[_dateFormat] == null)
                 {
                     HttpContext.Current.Application.Lock();
-                    HttpContext.Current.Application[_dateFormat] = Settings.GetParameterValue("General.DatepickerDateFormat", "dd/mm/yy", "The date format for the date picker. Note: This must use a 2-digit year format.");
+                    HttpContext.Current.Application[_dateFormat] = Settings.GetParameterValue("General.DatepickerDateFormat", "dd/mm/yy", "The date format for the date picker. Note: This must use a 2-digit year format.", dataType: "text");
                     HttpContext.Current.Application.UnLock();
                 }
                 return HttpContext.Current.Application[_dateFormat].ToString();
@@ -82,7 +82,7 @@ namespace slls.App_Settings
                 if (HttpContext.Current.Application[_popupTimeout] == null)
                 {
                     HttpContext.Current.Application.Lock();
-                    var seconds = Int16.Parse(Settings.GetParameterValue("General.PopupTimeout", "3", "The number of seconds a confirmation or acknowledgement pop-up stays on screen. The default is 3 seconds."));
+                    var seconds = Int16.Parse(Settings.GetParameterValue("General.PopupTimeout", "3", "The number of seconds a confirmation or acknowledgement pop-up stays on screen. The default is 3 seconds.", dataType: "int"));
                     if (seconds == 0 || seconds == null)
                     {
                         seconds = 3;
@@ -107,7 +107,7 @@ namespace slls.App_Settings
                 if (HttpContext.Current.Application[_package] == null)
                 {
                     HttpContext.Current.Application.Lock();
-                    HttpContext.Current.Application[_package] = Settings.GetParameterValue("System.Package", "expert", "What package does the customer have?", "Bailey Admin"); ;
+                    HttpContext.Current.Application[_package] = Settings.GetParameterValue("System.Package", "expert", "What package does the customer have?", "Bailey Admin", dataType: "text"); ;
                     HttpContext.Current.Application.UnLock();
                 }
                 return HttpContext.Current.Application[_package].ToString();
@@ -127,7 +127,7 @@ namespace slls.App_Settings
                 if (HttpContext.Current.Application[_ipFilteringOn] == null)
                 {
                     HttpContext.Current.Application.Lock();
-                    HttpContext.Current.Application[_ipFilteringOn] = Settings.GetParameterValue("System.IpFilteringOn", "false", "Is IP Address Filtering applied? With IP Address Filtering applied, access to the site is restricted to only listed IP addresses or ranges. Valid values are 'true' or 'false'.", "Bailey Admin") == "true"; ;
+                    HttpContext.Current.Application[_ipFilteringOn] = Settings.GetParameterValue("Security.IpFilteringOn", "false", "Is IP Address Filtering applied? With IP Address Filtering applied, access to the site is restricted to only listed IP addresses or ranges. IP Addresses, including permanently blocked addresses, can be maintained via the 'Configuration > Security > IP Addresses' option.", "Bailey Admin", dataType: "bool") == "true"; ;
                     HttpContext.Current.Application.UnLock();
                 }
                 return (bool)HttpContext.Current.Application[_ipFilteringOn];

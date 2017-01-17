@@ -39,9 +39,9 @@ namespace slls.Controllers
         {
             var viewModel = new OPACHomePageViewModel()
             {
-                ShowWelcomeMessage = Settings.GetParameterValue("OPAC.ShowWelcomeMessage", "true") == "true",
-                WelcomeHeader = Settings.GetParameterValue("OPAC.WelcomeHeader", "Library OPAC"),
-                WelcomeMessage = Settings.GetParameterValue("OPAC.WelcomeMessage", "Welcome to our new on-line Library")
+                ShowWelcomeMessage = Settings.GetParameterValue("OPAC.ShowWelcomeMessage", "true", dataType: "bool") == "true",
+                WelcomeHeader = Settings.GetParameterValue("OPAC.WelcomeHeader", "Library OPAC", dataType: "longtext"),
+                WelcomeMessage = Settings.GetParameterValue("OPAC.WelcomeMessage", "Welcome to our new on-line Library", dataType: "longtext")
             };
             using (var db = new DbEntities())
             {
@@ -120,7 +120,7 @@ namespace slls.Controllers
         {
             var viewModel = new SimpleSearchingViewModel();
             viewModel.LibraryStaff = Roles.IsLibraryStaff();
-            viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultNewTitlesSortOrder", "commenced.desc", "Sets the default sort order for the 'New Titles' list.");
+            viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultNewTitlesSortOrder", "commenced.desc", "Sets the default sort order for the 'New Titles' list.", dataType: "text");
             ViewData["OrderBy"] = SelectListHelper.NewTitlesOrderBy(viewModel.OrderBy);
 
             //Get a collection of items on the 'New Titles' list ...
@@ -156,7 +156,7 @@ namespace slls.Controllers
                 case "askthelibrary":
                     {
                         var emailFrom = "";
-                        var emailTo = Settings.GetParameterValue("EmailSettings.EmailToAddress", "", "Sets the email address for ''Ask the Librarian'', etc.");
+                        var emailTo = Settings.GetParameterValue("EmailSettings.EmailToAddress", "", "Sets the email address for ''Ask the Librarian'', etc.", dataType: "text");
 
                         if (string.IsNullOrEmpty(emailTo))
                         {
@@ -272,7 +272,7 @@ namespace slls.Controllers
                         }
 
                         var newTitlesSortOrder = Settings.GetParameterValue("Searching.DefaultNewTitlesSortOrder",
-                            "commenced.desc", "Sets the default sort order for the 'New Titles' list.");
+                            "commenced.desc", "Sets the default sort order for the 'New Titles' list.", dataType: "text");
                         if (newTitlesSortOrder == "title.asc")
                         {
                             var newTitles = allnewtitles.OrderBy(t => t.Title.Substring(t.NonFilingChars)).GroupBy(x => x.TitleId).Select(t => t.First()).ToList();
@@ -386,7 +386,7 @@ namespace slls.Controllers
                  select t).Distinct().ToList();
             viewModel.LibraryStaff = Roles.IsLibraryStaff();
             viewModel.IsActualSearch = false;
-            viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.");
+            viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text");
 
             ViewData["ListAuthors"] = authorList;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", "");
@@ -436,7 +436,7 @@ namespace slls.Controllers
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
                 IsActualSearch = false,
-                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text")
             };
 
             ViewData["ListClassmarks"] = classmarkList;
@@ -487,7 +487,7 @@ namespace slls.Controllers
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
                 IsActualSearch = false,
-                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text")
             };
 
             ViewData["ListMedia"] = mediaList;
@@ -533,7 +533,7 @@ namespace slls.Controllers
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
                 IsActualSearch = false,
-                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text")
             };
 
             ViewData["ListPublishers"] = publisherList;
@@ -584,7 +584,7 @@ namespace slls.Controllers
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
                 IsActualSearch = false,
-                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text")
             };
 
             ViewData["ListLanguage"] = languageList;
@@ -635,7 +635,7 @@ namespace slls.Controllers
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
                 IsActualSearch = false,
-                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text")
             };
 
             ViewData["Listlocation"] = SelectListHelper.OfficeLocationList(); //locationList;
@@ -694,7 +694,7 @@ namespace slls.Controllers
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
                 IsActualSearch = false,
-                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.")
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text")
             };
 
             ViewData["ListSubjects"] = kwdList;
@@ -752,7 +752,7 @@ namespace slls.Controllers
 
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(scope: "opac");
             ViewBag.SearchTips = HelpTextHelper.GetHelpText("searchingtips");
-            ViewBag.Title = Settings.GetParameterValue("Searching.SearchPageWelcome", "Search the Library");
+            ViewBag.Title = Settings.GetParameterValue("Searching.SearchPageWelcome", "Search the Library", dataType: "text");
             return View(viewModel);
         }
 
@@ -760,7 +760,7 @@ namespace slls.Controllers
         public ActionResult SimpleSearchResults(SimpleSearchingViewModel viewModel)
         {
             viewModel.IsActualSearch = true;
-            viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.");
+            viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text");
             ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
             var take = viewModel.NarrowByDefaultRecordCount;
 

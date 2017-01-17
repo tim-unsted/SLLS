@@ -108,11 +108,11 @@
                 </td>
                 <td class="just-right">
                     @{
-                        if (Settings.GetParameterValue("Borrowing.SelfReturnsEnabled", "false", "Sets whether OPAC users can do self-returns") == "true")
+                        if (Settings.GetParameterValue("Borrowing.SelfReturnsEnabled", "false", "Sets whether OPAC users can do self-returns", dataType: "bool") == "true")
                         {
                             <a href="@Url.Action("ConfirmReturnLoan", "Borrowing", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span aria-hidden="true" class="glyphicon glyphicon-share-alt"></span></a>
                         }
-                        if (Settings.GetParameterValue("Borrowing.SelfLoansEnabled", "false", "Set whether OPAC users can do self-borrowing") == "true")
+                        if (Settings.GetParameterValue("Borrowing.SelfLoansEnabled", "false", "Set whether OPAC users can do self-borrowing", dataType: "bool") == "true")
                         {
                             <a href="@Url.Action("ConfirmRenewLoan", "Borrowing", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Renew loan"><span aria-hidden="true" class="glyphicon glyphicon-repeat"></span></a>
                         }

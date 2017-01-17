@@ -50,7 +50,7 @@ namespace slls.Controllers
                         var windowsUser = UserPrincipal.Current;
                         var defaultPasswordPart = Settings.GetParameterValue(
                             "Security.Passwords.DefaultPasswordPart", "6174",
-                            "The numeric part of a default password when new users are added automatically, or via an import script or tool. A default password is constructed from a user's firstname, the default numeric part and the first letter of thier surname (e.g. tim1234u");
+                            "The numeric part of a default password when new users are added automatically, or via an import script or tool. A default password is constructed from a user's firstname, the default numeric part and the first letter of thier surname (e.g. tim1234u)", dataType: "int");
                 
                         //Add a new Identity record and get the user's Id...
                         var identityUser = new ApplicationUser

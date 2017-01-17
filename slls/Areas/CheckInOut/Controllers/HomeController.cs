@@ -29,8 +29,8 @@ namespace slls.Areas.CheckInOut
         public ActionResult Index()
         {
             ViewBag.Title = DbRes.T("Borrowing.CheckIn_CheckOut", "EntityType");
-            ViewBag.MainHeading = Settings.GetParameterValue("Borrowing.CheckInOut.LargeHeaderText", "Check-In/Check-Out", "The main large heading on the stand-alone Check-In/Check-Out home page.", "System Admin;Loans Admin;");
-            ViewBag.SubHeading = Settings.GetParameterValue("Borrowing.CheckInOut.SubHeaderText", "Borrow and Return items here.", "The sub heading text on the stand-alone Check-In/Check-Out home page.", "System Admin;Loans Admin;");
+            ViewBag.MainHeading = Settings.GetParameterValue("Borrowing.CheckInOut.LargeHeaderText", "Check-In/Check-Out", "The main large heading on the stand-alone Check-In/Check-Out home page.", "System Admin;Loans Admin;", dataType: "longtext");
+            ViewBag.SubHeading = Settings.GetParameterValue("Borrowing.CheckInOut.SubHeaderText", "Borrow and Return items here.", "The sub heading text on the stand-alone Check-In/Check-Out home page.", "System Admin;Loans Admin;", dataType: "longtext");
             return View("Index", "_CheckInOutLayout");
         }
 
@@ -89,8 +89,8 @@ namespace slls.Areas.CheckInOut
                 Copies = new SelectList(copies, "CopyID", "CopyNumber"),
                 Titles = new SelectList(titles, "TitleID", "Title"),
                 Success = success,
-                SelectBorrowerOption = Settings.GetParameterValue("Borrowing.SelectBorrowerMethod", "dropdownlist","Sets how borrowers can identify themselves in the loans screens when challenged. Valid options are: 'dropdownlist', 'swipecard', or 'username'."),
-                TimeOut = int.Parse(Settings.GetParameterValue("Borrowing.StandAlonePageTimeOut", "10000", "The period of time the stand-alone Check-Out and Check-In pages can be left idle before they time-out and clear borrower and loan details.")),
+                SelectBorrowerOption = Settings.GetParameterValue("Borrowing.SelectBorrowerMethod", "dropdownlist", "Sets how borrowers can identify themselves in the loans screens when challenged. Valid options are: 'dropdownlist', 'swipecard', or 'username'.", dataType: "text"),
+                TimeOut = int.Parse(Settings.GetParameterValue("Borrowing.StandAlonePageTimeOut", "10000", "The period of time the stand-alone Check-Out and Check-In pages can be left idle before they time-out and clear borrower and loan details.", dataType: "int")),
                 SeeAlso = MenuHelper.SeeAlso("checkinoutSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
@@ -167,7 +167,7 @@ namespace slls.Areas.CheckInOut
             {
                 Volumes = new SelectList(volumes, "barcode", "title"),
                 Success = success,
-                TimeOut = int.Parse(Settings.GetParameterValue("Borrowing.StandAlonePageTimeOut", "6000", "The period of time the stand-alone Check-Out and Check-In pages can be left idle before they time-out and clear borrower and loan details.")),
+                TimeOut = int.Parse(Settings.GetParameterValue("Borrowing.StandAlonePageTimeOut", "6000", "The period of time the stand-alone Check-Out and Check-In pages can be left idle before they time-out and clear borrower and loan details.", dataType: "int")),
                 SeeAlso = MenuHelper.SeeAlso("checkinoutSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 

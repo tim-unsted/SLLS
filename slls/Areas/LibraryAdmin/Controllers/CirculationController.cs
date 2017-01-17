@@ -1667,7 +1667,7 @@ namespace slls.Areas.LibraryAdmin
             };
 
             //ViewBag.Title = "Circulation List Review Memo";
-            ViewBag.MemoText = Settings.GetParameterValue("Circulation.ReviewMemoText", "You are currently on circulation lists to read the journals listed below.  Please review the list and let us know if there are any you do not wish to see anymore, or if there are any you would like to see in addition to those listed.  If you need a list of journals currently received by the firm, please contact us.");
+            ViewBag.MemoText = Settings.GetParameterValue("Circulation.ReviewMemoText", "You are currently on circulation lists to read the journals listed below.  Please review the list and let us know if there are any you do not wish to see anymore, or if there are any you would like to see in addition to those listed.  If you need a list of journals currently received by the firm, please contact us.", dataType: "longtext");
 
             return View("Reports/CirculationReviewMemos", viewModel);
         }

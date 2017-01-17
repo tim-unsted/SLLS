@@ -53,24 +53,24 @@ namespace slls.Models
             manager.UserValidator = new UserValidator<ApplicationUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = Settings.GetParameterValue("Security.Logins.RequireUniqueEmail", "true", "Specifies whether user email addresses must be unique (Recommended)") == "false"
+                RequireUniqueEmail = Settings.GetParameterValue("Security.Logins.RequireUniqueEmail", "true", "Specifies whether user email addresses must be unique (Recommended)", dataType: "bool") == "false"
             };
 
             // Configure validation logic for passwords
             manager.PasswordValidator = new CustomPasswordValidator
             {
-                RequiredLength = int.Parse(Settings.GetParameterValue("Security.Passwords.MinimumLength", "8", "Specifies the minimum required length of a password.")),
-                RequireNonLetterOrDigit = Settings.GetParameterValue("Security.Passwords.RequireNonLetterOrDigit", "false", "Specifies whether the password requires at least one non-alphanumeric character (e.g. '$', '~', '?', etc.") == "true",
-                RequireDigit = Settings.GetParameterValue("Security.Passwords.RequireDigit", "false", "Specifies whether the password requires at least one digit (0-9).") == "true",
-                RequireLowercase = Settings.GetParameterValue("Security.Passwords.RequireLowercase", "false", "Specifies whether the password requires at least one lower-case letter.") == "true",
-                RequireUppercase = Settings.GetParameterValue("Security.Passwords.RequireUppercase", "false", "Specifies whether the password requires at least one upper-case letter") == "true",
-                MaxLength = int.Parse(Settings.GetParameterValue("Security.Passwords.MaximumLength", "999", "Specifies the maximum required length of a password."))
+                RequiredLength = int.Parse(Settings.GetParameterValue("Security.Passwords.MinimumLength", "8", "Specifies the minimum required length of a password.", dataType: "int")),
+                RequireNonLetterOrDigit = Settings.GetParameterValue("Security.Passwords.RequireNonLetterOrDigit", "false", "Specifies whether the password requires at least one non-alphanumeric character (e.g. '$', '~', '?', etc.)", dataType: "bool") == "true",
+                RequireDigit = Settings.GetParameterValue("Security.Passwords.RequireDigit", "false", "Specifies whether the password requires at least one digit (0-9).", dataType: "bool") == "true",
+                RequireLowercase = Settings.GetParameterValue("Security.Passwords.RequireLowercase", "false", "Specifies whether the password requires at least one lower-case letter.", dataType: "bool") == "true",
+                RequireUppercase = Settings.GetParameterValue("Security.Passwords.RequireUppercase", "false", "Specifies whether the password requires at least one upper-case letter", dataType: "bool") == "true",
+                MaxLength = int.Parse(Settings.GetParameterValue("Security.Passwords.MaximumLength", "999", "Specifies the maximum required length of a password.", dataType: "int"))
             };
 
             // Configure user lockout defaults
-            manager.UserLockoutEnabledByDefault = Settings.GetParameterValue("Security.Logins.UserLockoutEnabled", "true", "Specifies whether the user lockout is enabled when users are created.") == "true";
-            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(int.Parse(Settings.GetParameterValue("Security.Logins.AccountLockoutTimeSpan", "5", "Sets the default amount of time that a user is locked out for after MaxFailedAccessAttemptsBeforeLockout is reached.")));
-            manager.MaxFailedAccessAttemptsBeforeLockout = int.Parse(Settings.GetParameterValue("Security.Logins.MaxFailedAccessAttemptsBeforeLockout", "5", "Sets the maximum number of access attempts allowed before a user is locked out (if lockout is enabled)."));
+            manager.UserLockoutEnabledByDefault = Settings.GetParameterValue("Security.Logins.UserLockoutEnabled", "true", "Specifies whether the user lockout is enabled when users are created.", dataType: "bool") == "true";
+            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(int.Parse(Settings.GetParameterValue("Security.Logins.AccountLockoutTimeSpan", "5", "Sets the default amount of time that a user is locked out for after MaxFailedAccessAttemptsBeforeLockout is reached.", dataType: "int")));
+            manager.MaxFailedAccessAttemptsBeforeLockout = int.Parse(Settings.GetParameterValue("Security.Logins.MaxFailedAccessAttemptsBeforeLockout", "5", "Sets the maximum number of access attempts allowed before a user is locked out (if lockout is enabled).", dataType: "int"));
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug in here.

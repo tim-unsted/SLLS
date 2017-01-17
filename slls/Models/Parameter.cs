@@ -16,12 +16,15 @@ namespace slls.Models
         public int RecID { get; set; }
 
         [StringLength(255)]
-        [Required]
+        [Required(ErrorMessage = "Please enter a unique ID (name) for this setting/parameter.")]
         [DisplayName("Name")]
         public string ParameterID{ get; set; }
 
         [DisplayName("Value")]
         public string ParameterValue { get; set; }
+
+        [Column("DataType")]
+        public string DataType1 { get; set; }
 
         [StringLength(500)]
         [DisplayName("Comments")]

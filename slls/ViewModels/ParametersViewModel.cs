@@ -36,14 +36,36 @@ namespace slls.ViewModels
 
         [DisplayName("Value")]
         [AllowHtml]
-        [DataType(DataType.MultilineText)]
         public string ParameterValue { get; set; }
+
+        [DisplayName("Value")]
+        [AllowHtml]
+        public string ParameterValueText { get; set; }
+
+        [DisplayName("Value")]
+        [AllowHtml]
+        [DataType(DataType.MultilineText)]
+        public string ParameterValueLongText { get; set; }
+
+        [DisplayName("Value")]
+        public bool ParameterValueBoolean { get; set; }
+
+        [DisplayName("Value")]
+        [Range(0, int.MaxValue, ErrorMessage = "Please enter valid integer number (0 or greater)")]
+        public int ParameterValueInteger { get; set; }
+
+        [DisplayName("Value")]
+        [Range(0, double.MaxValue, ErrorMessage = "Please enter valid decimal number (0.0 or greater)")]
+        public double ParameterValueDouble { get; set; }
 
         [DisplayName("Area")]
         public string ParameterArea { get; set; }
 
         [DisplayName("Name")]
         public string ParameterName { get; set; }
+
+        [DisplayName("Data Type")]
+        public string DataType1 { get; set; }
 
         [StringLength(500)]
         [DisplayName("Comments")]

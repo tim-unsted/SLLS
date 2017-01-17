@@ -65,8 +65,8 @@ namespace slls.ViewModels
             this.AuthorFilter = new List<SelectAuthorEditorViewModel>();
             this.Filters = new List<string>();
             this.ResultsBeforeFilter = new List<Title>();
-            this.NarrowByDefaultRecordCount = int.Parse(Settings.GetParameterValue("Searching.NarrowByDefaultRecordCount", "5"));
-            this.SearchResultSize = int.Parse(Settings.GetParameterValue("Searching.SearchResultSize", "10"));
+            this.NarrowByDefaultRecordCount = int.Parse(Settings.GetParameterValue("Searching.NarrowByDefaultRecordCount", "5", dataType: "int"));
+            this.SearchResultSize = int.Parse(Settings.GetParameterValue("Searching.SearchResultSize", "10", dataType: "int"));
             this.SearchStyle = "prefix";
             this.OrderBy = "title";
             this.LibraryStaff = Roles.IsUserInRole("Catalogue Admin");
@@ -146,8 +146,8 @@ namespace slls.ViewModels
             this.RequestersFilter = new List<SelectRequesterEditorViewModel>();
             this.Filters = new List<string>();
             this.ResultsBeforeFilter = new List<OrderDetail>();
-            this.NarrowByDefaultRecordCount = int.Parse(Settings.GetParameterValue("Searching.NarrowByDefaultRecordCount", "5"));
-            this.SearchResultSize = int.Parse(Settings.GetParameterValue("Searching.SearchResultSize", "10"));
+            this.NarrowByDefaultRecordCount = int.Parse(Settings.GetParameterValue("Searching.NarrowByDefaultRecordCount", "5", dataType: "int"));
+            this.SearchResultSize = int.Parse(Settings.GetParameterValue("Searching.SearchResultSize", "10", dataType: "int"));
         }
 
         public IEnumerable<int> GetSelectedAccountYearIds()

@@ -139,17 +139,17 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult BookLabelsSelectedCopiesPdf()
         {
             var pageMarginLeft = Settings.GetParameterValue("Labels.BookLabels.MarginLeft", "4.7",
-                "Book label sheet left margin. The default is 4.7(mm) - Avery L7162 (2x8)").Replace("mm", "").Trim();
+                "Book label sheet left margin. The default is 4.7(mm) - Avery L7162 (2x8)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginRight = Settings.GetParameterValue("Labels.BookLabels.MarginRight", "4.7",
-                "Book label sheet right margin. The default is 4.7(mm) - Avery L7162 (2x8)").Replace("mm", "").Trim();
+                "Book label sheet right margin. The default is 4.7(mm) - Avery L7162 (2x8)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginTop = Settings.GetParameterValue("Labels.BookLabels.MarginTop", "13.7",
-                "Book label sheet top margin. The default is 13.7(mm) - Avery L7162 (2x8)").Replace("mm", "").Trim();
+                "Book label sheet top margin. The default is 13.7(mm) - Avery L7162 (2x8)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginBottom = Settings.GetParameterValue("Labels.BookLabels.MarginBottom", "4.7",
-                "Book label sheet bottom margin. The default is 4.7(mm) - Avery L7162 (2x8)").Replace("mm", "").Trim();
+                "Book label sheet bottom margin. The default is 4.7(mm) - Avery L7162 (2x8)", dataType: "double").Replace("mm", "").Trim();
             var pageRows = Settings.GetParameterValue("Labels.BookLabels.NumberDown", "8",
-                "Book label sheet number of labels down the page. The default is 8 - Avery L7162 (2x8)");
+                "Book label sheet number of labels down the page. The default is 8 - Avery L7162 (2x8)", dataType: "int");
             var pageCols = Settings.GetParameterValue("Labels.BookLabels.NumberAcross", "2",
-                "Book label sheet number of labels across the page. The default is 2 - Avery L7162 (2x8)");
+                "Book label sheet number of labels across the page. The default is 2 - Avery L7162 (2x8)", dataType: "int");
             
             var viewModel = new PrintLabelsViewModel()
             {
@@ -341,17 +341,17 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult BookLabelsSelectedVolumesPdf()
         {
             var pageMarginLeft = Settings.GetParameterValue("Labels.BookLabels.MarginLeft", "4.7",
-                "Book label sheet left margin. The default is 4.7(mm) - Avery L7162 (2x8)").Replace("mm", "").Trim();
+                "Book label sheet left margin. The default is 4.7(mm) - Avery L7162 (2x8)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginRight = Settings.GetParameterValue("Labels.BookLabels.MarginRight", "4.7",
-                "Book label sheet right margin. The default is 4.7(mm) - Avery L7162 (2x8)").Replace("mm", "").Trim();
+                "Book label sheet right margin. The default is 4.7(mm) - Avery L7162 (2x8)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginTop = Settings.GetParameterValue("Labels.BookLabels.MarginTop", "13.7",
-                "Book label sheet top margin. The default is 13.7(mm) - Avery L7162 (2x8)").Replace("mm", "").Trim();
+                "Book label sheet top margin. The default is 13.7(mm) - Avery L7162 (2x8)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginBottom = Settings.GetParameterValue("Labels.BookLabels.MarginBottom", "4.7",
-                "Book label sheet bottom margin. The default is 4.7(mm) - Avery L7162 (2x8)").Replace("mm", "").Trim();
+                "Book label sheet bottom margin. The default is 4.7(mm) - Avery L7162 (2x8)", dataType: "double").Replace("mm", "").Trim();
             var pageRows = Settings.GetParameterValue("Labels.BookLabels.NumberDown", "8",
-                "Book label sheet number of labels down the page. The default is 8 - Avery L7162 (2x8)");
+                "Book label sheet number of labels down the page. The default is 8 - Avery L7162 (2x8)", dataType: "int");
             var pageCols = Settings.GetParameterValue("Labels.BookLabels.NumberAcross", "2",
-                "Book label sheet number of labels across the page. The default is 2 - Avery L7162 (2x8)");
+                "Book label sheet number of labels across the page. The default is 2 - Avery L7162 (2x8)", dataType: "int");
 
             var viewModel = new PrintLabelsViewModel()
             {
@@ -543,17 +543,17 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult SpineLabelsSelectedCopiesPdf()
         {
             var pageMarginLeft = Settings.GetParameterValue("Labels.SpineLabels.MarginLeft", "4.75",
-                "Book label sheet left margin. The default is 4.75(mm) - Avery L7651 (5x13)").Replace("mm", "").Trim();
+                "Book label sheet left margin. The default is 4.75(mm) - Avery L7651 (5x13)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginRight = Settings.GetParameterValue("Labels.SpineLabels.MarginRight", "4.75",
-                "Book label sheet right margin. The default is 4.75(mm) - Avery L7651 (5x13)").Replace("mm", "").Trim();
+                "Book label sheet right margin. The default is 4.75(mm) - Avery L7651 (5x13)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginTop = Settings.GetParameterValue("Labels.SpineLabels.MarginTop", "11.6",
-                "Book label sheet top margin. The default is 11.6(mm) - Avery L7651 (5x13)").Replace("mm", "").Trim();
+                "Book label sheet top margin. The default is 11.6(mm) - Avery L7651 (5x13)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginBottom = Settings.GetParameterValue("Labels.SpineLabels.MarginBottom", "4.7",
-                "Book label sheet bottom margin. The default is 4.7(mm) - Avery L7651 (5x13)").Replace("mm", "").Trim();
+                "Book label sheet bottom margin. The default is 4.7(mm) - Avery L7651 (5x13)", dataType: "double").Replace("mm", "").Trim();
             var pageRows = Settings.GetParameterValue("Labels.SpineLabels.NumberDown", "13",
-                "Book label sheet number of labels down the page. The default is 8 - Avery L7651 (5x13))");
+                "Book label sheet number of labels down the page. The default is 8 - Avery L7651 (5x13))", dataType: "int");
             var pageCols = Settings.GetParameterValue("Labels.SpineLabels.NumberAcross", "5",
-                "Book label sheet number of labels across the page. The default is 2 -Avery L7651 (5x13)");
+                "Book label sheet number of labels across the page. The default is 2 -Avery L7651 (5x13)", dataType: "int");
 
             var viewModel = new PrintLabelsViewModel()
             {
@@ -665,17 +665,17 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult SpineLabelsSelectedVolumesPdf()
         {
             var pageMarginLeft = Settings.GetParameterValue("Labels.SpineLabels.MarginLeft", "4.75",
-                "Book label sheet left margin. The default is 4.75(mm) - Avery L7651 (5x13)").Replace("mm", "").Trim();
+                "Book label sheet left margin. The default is 4.75(mm) - Avery L7651 (5x13)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginRight = Settings.GetParameterValue("Labels.SpineLabels.MarginRight", "4.75",
-                "Book label sheet right margin. The default is 4.75(mm) - Avery L7651 (5x13)").Replace("mm", "").Trim();
+                "Book label sheet right margin. The default is 4.75(mm) - Avery L7651 (5x13)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginTop = Settings.GetParameterValue("Labels.SpineLabels.MarginTop", "11.6",
-                "Book label sheet top margin. The default is 11.6(mm) - Avery L7651 (5x13)").Replace("mm", "").Trim();
+                "Book label sheet top margin. The default is 11.6(mm) - Avery L7651 (5x13)", dataType: "double").Replace("mm", "").Trim();
             var pageMarginBottom = Settings.GetParameterValue("Labels.SpineLabels.MarginBottom", "4.7",
-                "Book label sheet bottom margin. The default is 4.7(mm) - Avery L7651 (5x13)").Replace("mm", "").Trim();
+                "Book label sheet bottom margin. The default is 4.7(mm) - Avery L7651 (5x13)", dataType: "double").Replace("mm", "").Trim();
             var pageRows = Settings.GetParameterValue("Labels.SpineLabels.NumberDown", "13",
-                "Book label sheet number of labels down the page. The default is 8 - Avery L7651 (5x13))");
+                "Book label sheet number of labels down the page. The default is 8 - Avery L7651 (5x13))", dataType: "int");
             var pageCols = Settings.GetParameterValue("Labels.SpineLabels.NumberAcross", "5",
-                "Book label sheet number of labels across the page. The default is 2 -Avery L7651 (5x13)");
+                "Book label sheet number of labels across the page. The default is 2 -Avery L7651 (5x13)", dataType: "int");
 
             var viewModel = new PrintLabelsViewModel()
             {

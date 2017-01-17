@@ -11,7 +11,7 @@ using slls.ViewModels;
 
 namespace slls.Areas.Config
 {
-    public class IpAddressController : Controller
+    public class IpAddressesController : Controller
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = "IP Address";
@@ -103,6 +103,36 @@ namespace slls.Areas.Config
 
             return Json(new { success = true });
         }
+
+        public static void AllowCurrentIpAddress()
+        {
+            //Get users IP Address 
+            string ipAddress = System.Web.HttpContext.Current.Request.UserHostAddress;
+            //Insert into IpAddresses if not exists
+            var db = new DbEntities();
+            var existing = db.IpAddresses.FirstOrDefault(x => x.IpAddress1 == ipAddress);
+            if (existing == null)
+            {
+                var newIpAddress = new IpAddress()
+                {
+                    IpAddress1 = ipAddress,
+                    AllowPassThrough = false,
+                    CanUpdate = true,
+                    CanDelete = true,
+                    InputDate = DateTime.Now
+                };
+                db.IpAddresses.Add(newIpAddress);
+                db.SaveChanges();
+            }
+            else
+            {
+                existing.AllowPassThrough = true;
+                db.Entry(existing).State = EntityState.Modified;
+                db.SaveChanges();
+                CacheProvider.RemoveCache("ipaddresses");
+            }
+        }
+
 
         [HttpGet]
         public ActionResult Delete(int id = 0)

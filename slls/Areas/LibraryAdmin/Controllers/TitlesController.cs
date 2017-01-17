@@ -1019,9 +1019,9 @@ namespace slls.Areas.LibraryAdmin
         //Code to create a new Title from a passed AutoCat record. This is called from 3 places  ....
         public int AddNewAutoCatTitle(AutoCatNewTitle newTitle)
         {
-            var doKeywords = Settings.GetParameterValue("AutoCat.IncludeKeywords", "false", "Add new keywords when using AutoCat") == "true";
-            var doReviews = Settings.GetParameterValue("AutoCat.IncludeReviews", "true", "Add reviews when using AutoCat") == "true";
-            var doContents = Settings.GetParameterValue("AutoCat.IncludeContents", "true", "Add contents when using AutoCat") == "true";
+            var doKeywords = Settings.GetParameterValue("AutoCat.IncludeKeywords", "false", "Add new keywords when using AutoCat", dataType: "bool") == "true";
+            var doReviews = Settings.GetParameterValue("AutoCat.IncludeReviews", "true", "Add reviews when using AutoCat", dataType: "bool") == "true";
+            var doContents = Settings.GetParameterValue("AutoCat.IncludeContents", "true", "Add contents when using AutoCat", dataType: "bool") == "true";
 
             var titleId = 0;
 

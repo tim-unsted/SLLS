@@ -14,7 +14,7 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.RecID)
             @Html.HiddenFor(model => model.ParameterID)
-
+            
             <div class="form-group">
                 @Html.LabelFor(model => model.ParameterID, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
@@ -23,17 +23,9 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(model => model.ParameterArea, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.LabelFor(model => model.ParameterArea, htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     <p class="form-control-static">@Html.DisplayFor(model => model.ParameterArea)</p>
-                </div>
-            </div>
-
-            <div class="form-group">
-                @Html.LabelFor(model => model.ParameterValue, htmlAttributes: new { @class = "control-label col-md-3" })
-                <div class="col-md-8">
-                    @Html.EditorFor(model => model.ParameterValue, new { htmlAttributes = new { @class = "form-control " + @Model.Class } })
-                    @Html.ValidationMessageFor(model => model.ParameterValue, "", new { @class = "text-danger" })
                 </div>
             </div>
 
@@ -43,8 +35,8 @@
                     @{
                         if (Roles.IsBaileyAdmin())
                         {
-                            @Html.EditorFor(model => model.ParamUsage, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.ParamUsage, "", new {@class = "text-danger"})
+                            @Html.EditorFor(model => model.ParamUsage, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.ParamUsage, "", new { @class = "text-danger" })
                         }
                         else
                         {
@@ -53,6 +45,89 @@
                     }
                 </div>
             </div>
+
+            @if (Model.DataType1 == "text")
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ParameterValueText, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.ParameterValueText, new { htmlAttributes = new { @class = "form-control small" } })
+                        @Html.ValidationMessageFor(model => model.ParameterValueText, "", new { @class = "text-danger" })
+                        <span class="help-inline">This parameter/setting accepts text, including HTML tags.</span>
+                    </div>
+                </div>
+            }
+            else if (Model.DataType1 == "longtext")
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ParameterValueLongText, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.ParameterValueLongText, new { htmlAttributes = new { @class = "form-control " } })
+                        @Html.ValidationMessageFor(model => model.ParameterValueLongText, "", new { @class = "text-danger" })
+                        <span class="help-inline">This parameter/setting accepts large texts, including HTML tags.</span>
+                    </div>
+                </div>
+            }
+            else if (Model.DataType1 == "bool")
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ParameterValueBoolean, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        <div class="checkbox">
+                            @Html.EditorFor(model => model.ParameterValueBoolean)
+                            @Html.ValidationMessageFor(model => model.ParameterValueBoolean, "", new { @class = "text-danger" })
+                            <span class="help-inline">True/False or "Yes"/"No"</span>
+                        </div>
+                    </div>
+                </div>
+            }
+            else if (Model.DataType1 == "int")
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ParameterValueInteger, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.ParameterValueInteger, new { htmlAttributes = new { @class = "form-control small" } })
+                        @Html.ValidationMessageFor(model => model.ParameterValueInteger, "", new { @class = "text-danger" })
+                        <span class="help-inline">This parameter/setting only accepts whole numbers (integers).</span>
+                    </div>
+                </div>
+            }
+            else if (Model.DataType1 == "double")
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ParameterValueDouble, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.ParameterValueDouble, new { htmlAttributes = new { @class = "form-control small" } })
+                        @Html.ValidationMessageFor(model => model.ParameterValueDouble, "", new { @class = "text-danger" })
+                        <span class="help-inline">This parameter/setting accepts decimal (floating point) numbers.</span>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ParameterValue, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.EditorFor(model => model.ParameterValue, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ParameterValue, "", new { @class = "text-danger" })
+                        <span class="help-inline">This parameter/setting accepts text, including HTML tags.</span>
+                    </div>
+                </div>
+            }
+            
+            @if (Roles.IsBaileyAdmin())
+            {
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DataType1, htmlAttributes: new {@class = "control-label col-md-3"})
+                    <div class="col-md-8">@Html.EditorFor(model => model.DataType1, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.DataType1, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.HiddenFor(model => model.DataType1)
+            }
 
         </div>
     </div>

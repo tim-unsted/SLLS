@@ -37,9 +37,9 @@ namespace slls.Areas.LibraryAdmin
             TempData["LoansSelectorViewModel"] = null;
             var viewModel = new DashboardViewModel()
             {
-                ShowWelcomeMessage = App_Settings.Settings.GetParameterValue("Admin.ShowWelcomeMessage", "true") == "true",
-                WelcomeHeader = App_Settings.Settings.GetParameterValue("Admin.WelcomeHeader", "Library Admin"),
-                WelcomeMessage = App_Settings.Settings.GetParameterValue("Admin.WelcomeMessage", "Simple Little Library System Admin Dashboard")
+                ShowWelcomeMessage = App_Settings.Settings.GetParameterValue("Admin.ShowWelcomeMessage", "true", dataType: "bool") == "true",
+                WelcomeHeader = App_Settings.Settings.GetParameterValue("Admin.WelcomeHeader", "Library Admin", dataType: "longtext"),
+                WelcomeMessage = App_Settings.Settings.GetParameterValue("Admin.WelcomeMessage", "Simple Little Library System Admin Dashboard", dataType: "longtext")
             };
 
             using (var db = new DbEntities())
@@ -254,7 +254,7 @@ namespace slls.Areas.LibraryAdmin
                         var viewModel = new DashboardViewModel();
 
                         var newTitlesSortOrder = Settings.GetParameterValue("Searching.DefaultNewTitlesSortOrder",
-                            "commenced.desc", "Sets the default sort order for the 'New Titles' list.");
+                            "commenced.desc", "Sets the default sort order for the 'New Titles' list.", dataType: "text");
                         if (newTitlesSortOrder == "title.asc")
                         {
                             var newTitles = allnewtitles.OrderBy(t => t.Title.Substring(t.NonFilingChars)).GroupBy(x => x.TitleId).Select(t => t.First()).ToList();

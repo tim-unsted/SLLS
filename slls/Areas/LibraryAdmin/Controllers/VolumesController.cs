@@ -59,7 +59,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 Volumes = volumes,
                 TitleId = id,
-                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true") == "true"
+                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true", dataType: "bool") == "true"
             };
             ViewData["TitleId"] = SelectListHelper.TitlesWithVolumes(id, msg: "Select a ");
             return View(viewModel);
@@ -79,7 +79,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 Volumes = volumes,
                 TitleId = id,
-                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true") == "true"
+                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true", dataType: "bool") == "true"
             };
             ViewData["TitleId"] = SelectListHelper.TitlesWithVolumes(id, msg: "Filter by ");
             ViewBag.Title = ViewBag.Title + " With System Generated " + DbRes.T("CopyItems.Barcode", "FieldDisplayName") + "s";
@@ -158,7 +158,7 @@ namespace slls.Areas.LibraryAdmin
                 Barcode = Utils.PublicFunctions.NewBarcode(),
                 PrintLabel = true,
                 LoanTypeId = 1,
-                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true") == "true"
+                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true", dataType: "bool") == "true"
             };
             return View(viewModel);
         }
@@ -228,7 +228,7 @@ namespace slls.Areas.LibraryAdmin
                 CopyNumber = copynumber.ToString(),
                 LoanTypeId = Utils.PublicFunctions.GetDefaultLoanType(title.MediaID),
                 PrintLabel = true,
-                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true") == "true",
+                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true", dataType: "bool") == "true",
                 Step = step,
                 AddMore = false,
                 ReturnController = returnController,
@@ -317,7 +317,7 @@ namespace slls.Areas.LibraryAdmin
                 CopyNumber = volume.Copy.CopyNumber,
                 LoanTypeId = volume.LoanTypeID.Value,
                 IsBarcodeEdited = volume.IsBarcodeEdited,
-                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true") == "true",
+                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true", dataType: "bool") == "true",
             };
             viewModel.BarcodeNeedsEditing = viewModel.IsBarcodeEdited == false && viewModel.UsePreprintedBarcodes;
             ViewData["LoanTypeId"] = new SelectList(_db.LoanTypes, "LoanTypeID", "LoanTypeName", volume.LoanTypeID);

@@ -46,7 +46,7 @@ namespace slls.Areas.LibraryAdmin
 
                 var defaultPasswordPart = App_Settings.Settings.GetParameterValue(
                 "Security.Passwords.DefaultPassweordPart", "6174",
-                "The numeric part of a default password when new users are added automatically, or via an import script or tool. A default password is constructed from a user's firstname, the default numeric part and the first letter of thier surname (e.g. tim1234u");
+                "The numeric part of a default password when new users are added automatically, or via an import script or tool. A default password is constructed from a user's firstname, the default numeric part and the first letter of their surname (e.g. tim1234u)", dataType: "int");
                 
                 if (Path.GetExtension(dataVm.File.FileName).ToLower() == ".xml")
                 {

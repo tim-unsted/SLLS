@@ -321,7 +321,7 @@ namespace slls.Controllers
             }
 
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(scope: "opac");
-            ViewBag.Title = Settings.GetParameterValue("Searching.SearchPageWelcome", "Search the Library");
+            ViewBag.Title = Settings.GetParameterValue("Searching.SearchPageWelcome", "Search the Library", dataType: "text");
             return RedirectToAction("SimpleSearchResults", "Home", viewModel);
         }
 
@@ -459,7 +459,7 @@ namespace slls.Controllers
             }
 
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(scope: "opac");
-            ViewBag.Title = Settings.GetParameterValue("Searching.SearchPageWelcome", "Search the Library");
+            ViewBag.Title = Settings.GetParameterValue("Searching.SearchPageWelcome", "Search the Library", dataType: "text");
             return RedirectToAction("AdminSearchResults", "Searching", viewModel);
         }
 

@@ -1,4 +1,5 @@
-﻿@using slls.Areas.LibraryAdmin
+﻿@using slls.App_Settings
+@using slls.Areas.LibraryAdmin
 @using slls.Utils.Helpers
 @using Westwind.Globalization
 @model IEnumerable<slls.Models.IpAddress>
@@ -29,8 +30,17 @@
 
 <div class="alert alert-info">
     <p>
-        <strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>This page lists all IP Addresses that have attempted to access this site. If IP Address filtering is turned on, only those IP Addresses listed below with '@Html.DisplayNameFor(x => x.AllowPassThrough)' ticked will be granted access. Visitors from any other IP Address will be blocked (i.e. receive a '403: Forbidden' error).
+        <strong>Tip:&nbsp;</strong>This page lists all IP Addresses that have attempted to access this site. If <a href="@Url.Action("Edit", "Parameters", new {parameterId = "Security.IpFilteringOn", area = "Config"})" title="Turn IP Address Filtering On/Off" class="modal-link">IP Address Filtering</a> is turned on, only those IP Addresses listed below with '@Html.DisplayNameFor(x => x.AllowPassThrough)' ticked will be granted access. Visitors from any other IP Address will be blocked (i.e. receive a '403: Forbidden' error).
     </p>
+    @if (GlobalVariables.IpFilteringOn)
+    {
+        <p><strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>IP Address Filtering is currently <span style="color:green">On</span>. <a href="@Url.Action("Edit", "Parameters", new {parameterId = "Security.IpFilteringOn", area = "Config"})" title="Turn IP Address Filtering off" class="modal-link">Click here</a> to turn it off.</p>
+    }
+    else
+    {
+        <p><strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>IP Address Filtering is currently <span style="color:red">Off</span>. <a href="@Url.Action("Edit", "Parameters", new {parameterId = "Security.IpFilteringOn", area = "Config"})" title="Turn IP Address Filtering on" class="modal-link">Click here</a> to turn it on.</p>
+    }
+    
 </div>
 
 
