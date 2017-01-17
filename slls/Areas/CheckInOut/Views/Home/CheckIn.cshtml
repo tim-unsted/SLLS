@@ -53,22 +53,25 @@
     </div>
 }
 
-<div class="form-horizontal">
-    <div class="alert alert-info">
+@if (Model.ShowCheckInOutItemHelper)
+{
+    <div class="form-horizontal">
+        <div class="alert alert-info">
 
-        <p>
-            <strong>Tip: </strong>If you don't have the item to hand and you don't know the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") of the item, try selecting it from the drop-down list below:
-        </p>
-        <br/>
+            <p>
+                <strong>Tip: </strong>If you don't have the item to hand and you don't know the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") of the item, try selecting it from the drop-down list below:
+            </p>
+            <br/>
 
-        <div class="form-group">
-             @Html.Label("All " + DbRes.T("Borrowing.Current_Loans", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-9">
-                @Html.DropDownList("CurrentLoans", Model.Volumes.OrderBy(v => v.Text), "Select an " + DbRes.T("Borrowing.Item_To_Return", "FieldDisplayName"), htmlAttributes: new { @class = "form-control", title = "This is a list of all items that you currently have on loan." })
+            <div class="form-group">
+                 @Html.Label("All " + DbRes.T("Borrowing.Current_Loans", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-9">
+                    @Html.DropDownList("CurrentLoans", Model.Volumes.OrderBy(v => v.Text), "Select an " + DbRes.T("Borrowing.Item_To_Return", "FieldDisplayName"), htmlAttributes: new { @class = "form-control", title = "This is a list of all items that you currently have on loan." })
+                </div>
             </div>
         </div>
     </div>
-</div>
+}
 
 <div id="confirmDialog" title="Confirm Return">
     <p>You are about to return the following item. Do you want to continue?</p>

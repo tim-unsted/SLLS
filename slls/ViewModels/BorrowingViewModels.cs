@@ -30,6 +30,10 @@ namespace slls.ViewModels
 
         public string SelectBorrowerOption { get; set; }
 
+        public bool ShowCheckInOutItemHelper { get; set; }
+
+        public bool ShowNewLoansItemHelper { get; set; }
+
         [Required(ErrorMessage = "Please select a Borrower.")]
         public string UserID { get; set; }
 
@@ -91,6 +95,8 @@ namespace slls.ViewModels
 
         public bool Success { get; set; }
         public int TimeOut { get; set; }
+        public bool ShowCheckInOutItemHelper { get; set; }
+        public bool ShowNewLoansItemHelper { get; set; }
 
         public ReturnLoanViewModel()
         {
@@ -121,6 +127,16 @@ namespace slls.ViewModels
         public IEnumerable<SelectListItem> Titles { get; set; }
         public IEnumerable<SelectListItem> Volumes { get; set; }
         public List<Menu> SeeAlso { get; set; }
+
+        public bool Success { get; set; }
+        public int TimeOut { get; set; }
+        public bool ShowCheckInOutItemHelper { get; set; }
+        public bool ShowNewLoansItemHelper { get; set; }
+
+        public RenewLoanViewModel()
+        {
+            TimeOut = 6000;
+        }
     }
 
     public class EditLoanViewModel

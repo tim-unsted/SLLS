@@ -89,10 +89,23 @@ namespace slls.Areas.CheckInOut
                 Copies = new SelectList(copies, "CopyID", "CopyNumber"),
                 Titles = new SelectList(titles, "TitleID", "Title"),
                 Success = success,
+                ShowCheckInOutItemHelper = Settings.GetParameterValue("Borrowing.CheckInOut.ShowItemHelper", "false", "Sets whether the Check-Out/In screens display a helper tool to find the item to borrow or return.", dataType: "bool") == "true",
                 SelectBorrowerOption = Settings.GetParameterValue("Borrowing.SelectBorrowerMethod", "dropdownlist", "Sets how borrowers can identify themselves in the loans screens when challenged. Valid options are: 'dropdownlist', 'swipecard', or 'username'.", dataType: "text"),
-                TimeOut = int.Parse(Settings.GetParameterValue("Borrowing.StandAlonePageTimeOut", "10000", "The period of time the stand-alone Check-Out and Check-In pages can be left idle before they time-out and clear borrower and loan details.", dataType: "int")),
-                SeeAlso = MenuHelper.SeeAlso("checkinoutSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
+                TimeOut = int.Parse(Settings.GetParameterValue("Borrowing.CheckInOut.PageTimeOut", "10000", "The period of time the stand-alone Check-Out and Check-In pages can be left idle before they time-out and clear borrower and loan details.", dataType: "int")),
+                //SeeAlso = MenuHelper.SeeAlso("checkinoutSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
+
+            var seeAlso = new List<Menu>();
+            var menu = new Menu()
+            {
+                Action = "CheckIn",
+                Controller = "Home",
+                DataTarget = "",
+                DataToggle = "",
+                Title = "Check In"
+            };
+            seeAlso.Add(menu);
+            viewModel.SeeAlso = seeAlso;
 
             viewModel.Users = _db.Users.Where(u => u.IsLive && u.CanDelete && u.Lastname != null && u.SelfLoansAllowed)
                         .Select(x => new SelectListItem
@@ -167,10 +180,23 @@ namespace slls.Areas.CheckInOut
             {
                 Volumes = new SelectList(volumes, "barcode", "title"),
                 Success = success,
-                TimeOut = int.Parse(Settings.GetParameterValue("Borrowing.StandAlonePageTimeOut", "6000", "The period of time the stand-alone Check-Out and Check-In pages can be left idle before they time-out and clear borrower and loan details.", dataType: "int")),
-                SeeAlso = MenuHelper.SeeAlso("checkinoutSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
+                ShowCheckInOutItemHelper = Settings.GetParameterValue("Borrowing.CheckInOut.ShowItemHelper", "false", "Sets whether the Check-Out/In screens display a helper tool to find the item to borrow or return.", dataType: "bool") == "true",
+                TimeOut = int.Parse(Settings.GetParameterValue("Borrowing.CheckInOut.PageTimeOut", "6000", "The period of time the stand-alone Check-Out and Check-In pages can be left idle before they time-out and clear borrower and loan details.", dataType: "int")),
+                //SeeAlso = MenuHelper.SeeAlso("checkinoutSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
+            var seeAlso = new List<Menu>();
+            var menu = new Menu()
+            {
+                Action = "CheckOut",
+                Controller = "Home",
+                DataTarget = "",
+                DataToggle = "",
+                Title = "Check Out"
+            };
+            seeAlso.Add(menu);
+            viewModel.SeeAlso = seeAlso;
+            
             if (success)
             {
                 TempData["SuccessMsg"] = "Item returned successfully. Return another?";
