@@ -30,8 +30,15 @@
 
 <div class="alert alert-info">
     <p>
-        <strong>Tip:&nbsp;</strong>This page lists all IP Addresses that have attempted to access this site. If <a href="@Url.Action("Edit", "Parameters", new {parameterId = "Security.IpFilteringOn", area = "Config"})" title="Turn IP Address Filtering On/Off" class="modal-link">IP Address Filtering</a> is turned on, only those IP Addresses listed below with '@Html.DisplayNameFor(x => x.AllowPassThrough)' ticked will be granted access. Visitors from any other IP Address will be blocked (i.e. receive a '403: Forbidden' error).
+        This page lists all IP addresses that have attempted to access this site. Use the features below to manage access to the site based on IP addresses.
     </p>
+    <p>
+        If <span style="background-color: yellow">&nbsp;<a href="@Url.Action("Edit", "Parameters", new {parameterId = "Security.IpFilteringOn", area = "Config"})" title="Turn IP Address Filtering On/Off" class="modal-link">IP Address Filtering</a>&nbsp;</span> is turned on, only those IP addresses listed below with '@Html.DisplayNameFor(x => x.AllowPassThrough)' ticked will be granted access. Visitors from any other IP address will be blocked (i.e. receive a '403: Forbidden' error).
+    </p>
+    <p>
+        <strong>Note: </strong>If any IP address listed below has '@Html.DisplayNameFor(x => x.Blocked)' ticked, access from that IP address will be blocked, regardless of whether IP Address Filtering is turned on or not.
+    </p>
+    <br/>
     @if (GlobalVariables.IpFilteringOn)
     {
         <p><strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>IP Address Filtering is currently <span style="color:green">On</span>. <a href="@Url.Action("Edit", "Parameters", new {parameterId = "Security.IpFilteringOn", area = "Config"})" title="Turn IP Address Filtering off" class="modal-link">Click here</a> to turn it off.</p>
@@ -45,7 +52,7 @@
 
 
 <p>
-    <a href="@Url.Action("Add", "IpAddress")" title="Add new IP Address to list" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Add", "IpAddresses")" title="Add new IP Address to list" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 <table id="ipaddresses" class="table table-hover">
@@ -55,10 +62,10 @@
                 @Html.DisplayNameFor(x => x.IpAddress1)
             </th>
             <th>
-                @Html.DisplayNameFor(x => x.Blocked)
+                @Html.DisplayNameFor(x => x.AllowPassThrough)
             </th>
             <th>
-                @Html.DisplayNameFor(x => x.AllowPassThrough)
+                @Html.DisplayNameFor(x => x.Blocked)
             </th>
             <th>
                 @Html.DisplayNameFor(x => x.InputDate)
@@ -73,7 +80,7 @@
                 <td>
                     @if (item.CanUpdate)
                     {
-                        @Html.ActionLink(string.IsNullOrEmpty(item.IpAddress1) ? " " : item.IpAddress1, "Edit", "IpAddress", new {id = item.RecId}, new {@class = "modal-link"})
+                        @Html.ActionLink(string.IsNullOrEmpty(item.IpAddress1) ? " " : item.IpAddress1, "Edit", "IpAddresses", new {id = item.RecId}, new {@class = "modal-link"})
                     }
                     else
                     {
@@ -81,10 +88,10 @@
                     }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Blocked)
+                    @Html.DisplayFor(modelItem => item.AllowPassThrough)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.AllowPassThrough)
+                    @Html.DisplayFor(modelItem => item.Blocked)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.InputDate)

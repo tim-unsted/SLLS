@@ -41,13 +41,26 @@ namespace slls.DAO
 
         public static List<IpAddress> AllowedIpAddresses()
         {
-            var ipAddresses = Cache["ipaddresses"] as List<IpAddress>;
+            var ipAddresses = Cache["ipwhitelist"] as List<IpAddress>;
             if (ipAddresses != null) return ipAddresses;
             using (var db = new DbEntities())
             {
                 ipAddresses =
                     (from a in db.IpAddresses.Where(x => x.AllowPassThrough && !x.Blocked) select a).Distinct().ToList();
-                Cache["ipaddresses"] = ipAddresses;
+                Cache["ipwhitelist"] = ipAddresses;
+                return ipAddresses;
+            }
+        }
+
+        public static List<IpAddress> BlockedIpAddresses()
+        {
+            var ipAddresses = Cache["ipblacklist"] as List<IpAddress>;
+            if (ipAddresses != null) return ipAddresses;
+            using (var db = new DbEntities())
+            {
+                ipAddresses =
+                    (from a in db.IpAddresses.Where(x => x.Blocked) select a).Distinct().ToList();
+                Cache["ipblacklist"] = ipAddresses;
                 return ipAddresses;
             }
         }

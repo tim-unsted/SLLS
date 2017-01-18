@@ -16,10 +16,9 @@ using slls.Utils;
 
 namespace slls.Controllers
 {
-    [AuthorizeIPAddress] 
+    [AuthorizeIpAddress] 
     public class sllsBaseController : Controller
     {
-        
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             var authMode =

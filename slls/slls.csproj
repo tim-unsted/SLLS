@@ -1163,6 +1163,7 @@
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\PublishProfiles\Local.pubxml" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -1341,7 +1342,7 @@
     <Content Include="Customer\Settings\AppSettings.config">
       <SubType>Designer</SubType>
     </Content>
-    <None Include="Properties\PublishProfiles\local.pubxml" />
+    <None Include="Properties\PublishProfiles\BS-2012.pubxml" />
     <Content Include="Scripts\confirmDelete.js" />
     <Content Include="Scripts\DatePickerReady.js" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />
