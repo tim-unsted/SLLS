@@ -11,6 +11,7 @@ namespace slls.ViewModels
     public class PublisherAddViewModel
     {
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Publishers.Publisher_Name", "FieldDisplayName")]
         public string PublisherName { get; set; }
 
@@ -23,6 +24,7 @@ namespace slls.ViewModels
         public int PublisherID { get; set; }
 
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Publishers.Publisher_Name", "FieldDisplayName")]
         public string PublisherName { get; set; }
 

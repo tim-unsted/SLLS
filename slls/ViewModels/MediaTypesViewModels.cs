@@ -12,6 +12,7 @@ namespace slls.ViewModels
     {
         [Required (ErrorMessage = "Please enter a Media Type!")]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("MediaTypes.Media_Type", "FieldDisplayName")]
         public string Media { get; set; }
 
@@ -28,6 +29,7 @@ namespace slls.ViewModels
 
         [Required]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("MediaTypes.Media_Type", "FieldDisplayName")]
         public string Media { get; set; }
 

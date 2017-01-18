@@ -21,6 +21,7 @@ namespace slls.Models
         [Column("Language")]
         [Required]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Languages.Language", "FieldDisplayName")]
         public string Language1 { get; set; }
 

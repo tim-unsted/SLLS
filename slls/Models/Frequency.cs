@@ -18,6 +18,7 @@ namespace slls.Models
         public int FrequencyID { get; set; }
 
         [Column("Frequency")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Frequency.Frequency", "FieldDisplayName")]
         [StringLength(255)]
         public string Frequency1 { get; set; }

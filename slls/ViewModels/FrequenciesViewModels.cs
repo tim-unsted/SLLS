@@ -12,6 +12,7 @@ namespace slls.ViewModels
     {
         [LocalDisplayName("Frequency.Frequency", "FieldDisplayName")]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Frequency { get; set; }
 
         [DisplayName("Days Between")]
@@ -31,6 +32,7 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Frequency.Frequency", "FieldDisplayName")]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Frequency { get; set; }
 
         [DisplayName("Days Between")]

@@ -20,6 +20,7 @@ namespace slls.Models
         public int PublisherID { get; set; }
 
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Publishers.Publisher_Name", "FieldDisplayName")]
         public string PublisherName { get; set; }
 

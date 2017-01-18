@@ -21,6 +21,7 @@ namespace slls.Models
 
         [Required]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("MediaTypes.Media_Type", "FieldDisplayName")]
         public string Media { get; set; }
 

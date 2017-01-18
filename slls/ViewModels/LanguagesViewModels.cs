@@ -12,6 +12,7 @@ namespace slls.ViewModels
     {
         [Required]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Languages.Language", "FieldDisplayName")]
         public string Language { get; set; }
 
@@ -25,6 +26,7 @@ namespace slls.ViewModels
 
         [Required]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Languages.Language", "FieldDisplayName")]
         public string Language { get; set; }
 
