@@ -11,6 +11,7 @@ namespace slls.ViewModels
     public class ClassmarksAddViewModel
     {
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Classmarks.Classmark", "FieldDisplayName")]
         public string Classmark { get; set; }
 
@@ -27,6 +28,7 @@ namespace slls.ViewModels
         public int ClassmarkID { get; set; }
 
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Classmarks.Classmark", "FieldDisplayName")]
         public string Classmark { get; set; }
 

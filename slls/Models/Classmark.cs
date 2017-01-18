@@ -19,6 +19,7 @@ namespace slls.Models
 
         [Column("Classmark")]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Classmarks.Classmark", "FieldDisplayName")]
         public string Classmark1 { get; set; }
 
