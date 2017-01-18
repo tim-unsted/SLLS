@@ -980,3 +980,7 @@ h5 {
 .parent { position:fixed; }
         
 .details { position:fixed;width: auto; }
+
+.ui-autocomplete {
+    z-index: 2147483647 !important;
+}

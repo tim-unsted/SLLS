@@ -11,9 +11,21 @@
         <div class="form-horizontal">
             @Html.ValidationSummary(true, "", new {@class = "text-danger"})
             @Html.HiddenFor(model => model.TitleId)
+            @Html.HiddenFor(model => model.KeywordId)
 
             <div class="alert alert-info">
-                <span>You may add multiple <span class="text-lowercase">@DbRes.T("Keywords.Keyword", "FieldDisplayName")</span>s at once by clicking on the required items whilst holding down the CTRL key.</span>
+                @if (Model.LargeData)
+                {
+                    <p>
+                        <strong><span class="glyphicon glyphicon-info-sign"></span></strong> Start typing the @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() you wish to add in the box below. You can add a new @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() if the one you require does not already exist.
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <strong><span class="glyphicon glyphicon-info-sign"></span></strong> Select the @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() you wish to add from the drop-down list below.
+                    </p>
+                }
             </div>
 
             <div class="form-group">
@@ -22,20 +34,72 @@
                     <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
                 </div>
             </div>
-            <div class="form-group">
-                @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
-                <div class="col-md-10">
-                    @Html.ListBoxFor(x => x.SelectedKeywords, Model.AvailableKeywords, new {size = 15, @class = "form-control"})
-                    @Html.ValidationMessageFor(model => model.KeywordId, "", new {@class = "text-danger"})
+
+            @if (Model.LargeData)
+            {
+                <div class="form-group">
+                    @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
+                    <div class="input-group col-md-9">
+                        @*<input id="Keyword" type="text" placeholder="Start typing the term you are looking for ..." class="form-control">*@
+                        @Html.TextBoxFor(x => x.Keyword, new { @placeholder="Start typing the term you are looking for ...", @class="form-control"})
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(x => x.KeywordId, Model.AvailableKeywords, new { @class = "form-control selectpicker" })
+                        @Html.ValidationMessageFor(model => model.KeywordId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
         </div>
     </div>
 
     <div class="modal-footer">
-        <button id="add_btn" type="submit" value="Add" class="btn btn-success" ><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Add selected @DbRes.T("Keywords.Keyword", "FieldDisplayName")s</button>
+        <button id="add_btn" type="submit" value="Add" class="btn btn-success" ><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Add selected @DbRes.T("Keywords.Keyword", "FieldDisplayName")</button>
         &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
-
     </div>
 }
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
+
+    $("#Keyword").autocomplete({
+        appendTo: "#stdModal",
+        source: function (request, response) {
+            var title = new Array();
+            var urlGetTerms = "@Url.Action("Autocomplete", "Keywords")";
+            $.ajax({
+                async: false,
+                cache: false,
+                type: "POST",
+                url: urlGetTerms,
+                data: { "term": request.term },
+                success: function(data) {
+                    for (var i = 0; i < data.length; i++) {
+                        title[i] = { label: data[i].Value, Id: data[i].Key };
+                    }
+                }
+            });
+            response(title);
+        },
+        select: function (event, ui) {
+            if (ui.item) {
+                //alert(ui.item.label);
+                if (ui.item.Id != null) {
+                    $('#KeywordId').val(ui.item.Id);
+                } 
+            }
+        }
+    });
+
+</script>
 

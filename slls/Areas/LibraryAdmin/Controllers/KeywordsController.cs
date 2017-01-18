@@ -172,6 +172,30 @@ namespace slls.Areas.LibraryAdmin
             return null;
         }
 
+        public static int _addNew(string keywordTerm)
+        {
+            var db = new DbEntities();
+            var newKeyword = db.Keywords.FirstOrDefault(x => x.KeywordTerm == keywordTerm);
+
+            if (newKeyword == null)
+            {
+                newKeyword = new Keyword
+                {
+                    KeywordTerm = keywordTerm,
+                    ParentKeywordID = -1,
+                    CanUpdate = true,
+                    CanDelete = true,
+                    InputDate = DateTime.Now
+                };
+
+                db.Keywords.Add(newKeyword);
+                CacheProvider.RemoveCache("keywords");
+                db.SaveChanges();
+                    
+            }
+            return newKeyword.KeywordID;
+        }
+
         // GET: Keywords/Edit/5
         public ActionResult Edit(int? id)
         {
@@ -251,6 +275,37 @@ namespace slls.Areas.LibraryAdmin
             db.SaveChanges();
             CacheProvider.RemoveCache("keywords");
             return newKeyword.KeywordID;
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult Autocomplete(string term)
+        {
+            var keywords = new List<Keyword>();
+            if (term.Length < 3)
+            {
+                keywords = (from k in _db.Keywords
+                            where k.KeywordTerm.StartsWith(term)
+                            orderby k.KeywordTerm
+                            select k).Take(100).ToList();
+            }
+            else
+            {
+                keywords = (from k in _db.Keywords
+                            where k.KeywordTerm.Contains(term)
+                            orderby k.KeywordTerm
+                            select k).Take(100).ToList();
+            }
+
+            IList<SelectListItem> list = new List<SelectListItem>();
+
+            foreach (var x in keywords)
+            {
+                list.Add(new SelectListItem { Text = x.KeywordTerm, Value = x.KeywordID.ToString() });
+            }
+
+            var result = list.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         

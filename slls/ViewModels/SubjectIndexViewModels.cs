@@ -11,6 +11,8 @@ namespace slls.ViewModels
         public IEnumerable<int> SelectedKeywords { get; set; }
 
         public IEnumerable<SelectListItem> AvailableKeywords { get; set; }
+
+        public bool LargeData { get; set; }
         
         public int SubjectIndexId { get; set; }
 

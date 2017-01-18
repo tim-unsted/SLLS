@@ -33,58 +33,66 @@ namespace slls.Areas.LibraryAdmin
         // GET: LibraryAdmin/SubjectIndexes/Add - when passed a Title ID
         public ActionResult Add(int id = 0)
         {
-            SubjectIndexAddViewModel sivm = new SubjectIndexAddViewModel
+            var viewModel = new SubjectIndexAddViewModel
             {
                 TitleId = id,
                 Title = (from t in _db.Titles.Where(t => t.TitleID == id)
-                    select t.Title1).FirstOrDefault(),
-                SelectedKeywords = null,
-                AvailableKeywords = _db.Keywords
-                    .Select(x => new SelectListItem
-                    {
-                        Value = x.KeywordID.ToString(),
-                        Text = x.KeywordTerm
-                    }).OrderBy(item => item.Text)
-                    .ToList()
+                    select t.Title1).FirstOrDefault()
             };
 
-
-            //ViewData["KeywordID"] = SelectListHelper.SelectkeywordList();
+            var count = _db.Keywords.Count();
+            if (count > 1000)
+            {
+                viewModel.LargeData = true;
+            }
+            else
+            {
+                viewModel.LargeData = false;
+                viewModel.AvailableKeywords = _db.Keywords.Where(k => k.ParentKeywordID != null).Take(100)
+                .Select(x => new SelectListItem
+                {
+                    Value = x.KeywordID.ToString(),
+                    Text = x.KeywordTerm
+                }).OrderBy(item => item.Text)
+                .ToList();
+            }
+            
             ViewBag.Msg = "Add " + DbRes.T("Keywords.Keyword", "FieldDisplayName") + " to " + DbRes.T("Titles.Title", "FieldDisplayName");
             ViewBag.Title = "Add " + DbRes.T("Keywords.Keyword", "FieldDisplayName") + " to " + DbRes.T("Titles.Title", "FieldDisplayName");
-            return PartialView(sivm);
+            return PartialView(viewModel);
         }
 
         // POST: LibraryAdmin/SubjectIndexes/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Add(SubjectIndexAddViewModel sivm)
+        public ActionResult Add(SubjectIndexAddViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    if (sivm.SelectedKeywords != null)
+                    if (viewModel.KeywordId == 0 && viewModel.Keyword.Length > 0)
                     {
-                        foreach (var keywordId in sivm.SelectedKeywords)
-                        {
-                            //Check if the keyword has already been added to the title ...
-                            bool exists = _db.SubjectIndexes.Any(s => s.KeywordID == keywordId && s.TitleID == sivm.TitleId);
+                        viewModel.KeywordId = KeywordsController.GetKeywordId(viewModel.Keyword.Trim());
+                    }
+                    if (viewModel.KeywordId != 0)
+                    {
+                        //Check if the keyword has already been added to the title ...
+                        bool exists = _db.SubjectIndexes.Any(s => s.KeywordID == viewModel.KeywordId && s.TitleID == viewModel.TitleId);
 
-                            //If not, proceed ...
-                            if (exists == false)
+                        //If not, proceed ...
+                        if (exists == false)
+                        {
+                            SubjectIndex si = new SubjectIndex
                             {
-                                SubjectIndex si = new SubjectIndex
-                                {
-                                    TitleID = sivm.TitleId,
-                                    KeywordID = keywordId,
-                                    InputDate = DateTime.Now
-                                };
-                                _repository.Insert(si);
-                            }
+                                TitleID = viewModel.TitleId,
+                                KeywordID = viewModel.KeywordId,
+                                InputDate = DateTime.Now
+                            };
+                            _repository.Insert(si);
                         }
                     }
-                    //return RedirectToAction("Edit", "Titles", new { id = sivm.TitleId });
+
                     return Json(new { success = true });
                 }
                 catch (Exception e)
@@ -93,12 +101,7 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            //If something's gone wrong ...
-            //sivm.Title = (from t in _db.Titles.Where(t => t.TitleID == sivm.TitleId)
-            //              select t.Title1).FirstOrDefault();
-            //ViewData["KeywordID"] = SelectListHelper.SelectkeywordList(sivm.KeywordId);
-            //ViewBag.Msg = "Add " + DbRes.T("Keywords.Keyword", "FieldDisplayName") + " to " + DbRes.T("Titles.Title", "FieldDisplayName");
-            return View(sivm);
+            return Json(new { success = false });
         }
 
         // GET: LibraryAdmin/SubjectIndexes/Create
