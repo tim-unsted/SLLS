@@ -39,6 +39,7 @@ namespace slls.ViewModels
     {
         [Required]
         [LocalDisplayName("Keywords.Keyword", "FieldDisplayName")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string KeywordTerm { get; set; }
 
         [Required]
@@ -53,6 +54,7 @@ namespace slls.ViewModels
         public int KeywordID { get; set; }
         
         [LocalDisplayName("Keywords.Keyword", "FieldDisplayName")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string KeywordTerm { get; set; }
 
         [Required]

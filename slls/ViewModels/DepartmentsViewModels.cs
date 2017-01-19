@@ -8,6 +8,7 @@ namespace slls.ViewModels
     {
         [LocalDisplayName("Departments.Department", "FieldDisplayName")]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Department { get; set; }
 
         public bool CanUpdate { get; set; }
@@ -20,6 +21,7 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Departments.Department", "FieldDisplayName")]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Department { get; set; }
 
         [DisplayName("Can update?")]

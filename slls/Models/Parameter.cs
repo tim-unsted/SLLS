@@ -21,6 +21,7 @@ namespace slls.Models
         public string ParameterID{ get; set; }
 
         [DisplayName("Value")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string ParameterValue { get; set; }
 
         [Column("DataType")]

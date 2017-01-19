@@ -13,6 +13,7 @@ namespace slls.ViewModels
     {
         [LocalDisplayName("BudgetCode.Budget_Code", "FieldDisplayName")]
         [Required(ErrorMessage = "A budget code is required")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [StringLength(255)]
         public string BudgetCode { get; set; }
 
@@ -36,6 +37,7 @@ namespace slls.ViewModels
         
         [LocalDisplayName("BudgetCode.Budget_Code", "FieldDisplayName")]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string BudgetCode { get; set; }
 
         [Column(TypeName = "money")]

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
@@ -14,6 +15,7 @@ namespace slls.ViewModels
         public int? ParentLocationID { get; set; }
 
         [LocalDisplayName("Locations.Location", "FieldDisplayName")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Location { get; set; }
 
         public bool CanUpdate { get; set; }
@@ -28,6 +30,7 @@ namespace slls.ViewModels
         public int? ParentLocationID { get; set; }
 
         [LocalDisplayName("Locations.Location", "FieldDisplayName")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Location { get; set; }
 
         [DisplayName("Can update?")]

@@ -21,6 +21,7 @@ namespace slls.Models
         public int MethodID { get; set; }
 
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("SupplierCommTypes.Communication_Type", "FieldDisplayName")]
         public string Method { get; set; }
 

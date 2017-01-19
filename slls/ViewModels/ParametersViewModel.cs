@@ -36,6 +36,7 @@ namespace slls.ViewModels
 
         [DisplayName("Value")]
         [AllowHtml]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string ParameterValue { get; set; }
 
         [DisplayName("Value")]

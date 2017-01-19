@@ -20,16 +20,19 @@ namespace slls.Models
         [Column("AccountYear")]
         [Required]
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("AccountYears.Account_Year", "FieldDisplayName")]
         public string AccountYear1 { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         [Required]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("AccountYears.Year_Start_Date", "FieldDisplayName")]
         public DateTime? YearStartDate { get; set; }
 
         [Column(TypeName = "smalldatetime")]
         [Required]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("AccountYears.Year_End_Date", "FieldDisplayName")]
         public DateTime? YearEndDate { get; set; }
 

@@ -13,6 +13,7 @@ namespace slls.ViewModels
     {
         [StringLength(255)]
         [Required]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("AccountYears.Account_Year", "FieldDisplayName")]
         public string AccountYear { get; set; }
 
@@ -42,6 +43,7 @@ namespace slls.ViewModels
         public int AccountYearID { get; set; }
         
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("AccountYears.Account_Year", "FieldDisplayName")]
         [Required]
         public string AccountYear { get; set; }

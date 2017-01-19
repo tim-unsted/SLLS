@@ -12,6 +12,7 @@ namespace slls.ViewModels
     {
         [StringLength(255)]
         [LocalDisplayName("StatusTypes.Status_Type", "FieldDisplayName")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Status { get; set; }
 
         [LocalDisplayName("StatusTypes.Opac", "FieldDisplayName")]
@@ -27,6 +28,7 @@ namespace slls.ViewModels
 
         [StringLength(255)]
         [LocalDisplayName("StatusTypes.Status_Type", "FieldDisplayName")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string Status { get; set; }
 
         [LocalDisplayName("StatusTypes.Opac", "FieldDisplayName")]

@@ -20,6 +20,7 @@ namespace slls.Models
         public int OrderCategoryID { get; set; }
 
         [Column("OrderCategory")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("OrderCategories.Order_Category", "FieldDisplayName")]
         [StringLength(255)]
         public string OrderCategory1 { get; set; }

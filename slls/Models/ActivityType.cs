@@ -13,6 +13,7 @@ namespace slls.Models
         public int ActivityCode { get; set; }
 
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Activities.Activity_Type", "FieldDisplayName")]
         public string Activity { get; set; }
 

@@ -20,6 +20,7 @@ namespace slls.ViewModels
         [StringLength(255)]
         [Required]
         [LocalDisplayName("Suppliers.Supplier_Name", "FieldDisplayName")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string SupplierName { get; set; }
 
         [DataType(DataType.MultilineText)]
@@ -37,6 +38,7 @@ namespace slls.ViewModels
         [Required]
         [StringLength(255)]
         [LocalDisplayName("Suppliers.Supplier_Name", "FieldDisplayName")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         public string SupplierName { get; set; }
 
         [LocalDisplayName("Suppliers.Notes", "FieldDisplayName")]

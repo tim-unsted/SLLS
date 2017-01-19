@@ -18,6 +18,7 @@ namespace slls.Models
         public int DepartmentID { get; set; }
 
         [Column("Department")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Departments.Department", "FieldDisplayName")]
         [StringLength(255)]
         public string Department1 { get; set; }

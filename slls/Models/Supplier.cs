@@ -20,6 +20,7 @@ namespace slls.Models
         public int SupplierID { get; set; }
 
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Suppliers.Supplier_Name", "FieldDisplayName")]
         public string SupplierName { get; set; }
 

@@ -19,6 +19,7 @@ namespace slls.Models
         public int StatusID { get; set; }
 
         [StringLength(255)]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("StatusTypes.Status_Type", "FieldDisplayName")]
         public string Status { get; set; }
 

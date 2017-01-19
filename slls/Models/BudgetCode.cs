@@ -18,6 +18,7 @@ namespace slls.Models
         public int BudgetCodeID { get; set; }
 
         [Column("BudgetCode")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("BudgetCode.Budget_Code", "FieldDisplayName")]
         [StringLength(255)]
         public string BudgetCode1 { get; set; }

@@ -22,6 +22,7 @@ namespace slls.Models
         public int LocationID { get; set; }
 
         [Column("ParentLocationID")]
+        [DisplayFormat(ConvertEmptyStringToNull = false)]
         [LocalDisplayName("Locations.Parent_Location", "FieldDisplayName")]
         public int? ParentLocationID { get; set; }
 
