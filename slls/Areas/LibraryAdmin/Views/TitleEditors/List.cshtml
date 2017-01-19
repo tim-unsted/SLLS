@@ -1,5 +1,6 @@
-﻿@using Westwind.Globalization
-@model IEnumerable<slls.Models.TitleEditor>
+﻿@using System.Linq
+@using Westwind.Globalization
+@model System.Collections.Generic.IEnumerable<slls.Models.TitleEditor>
 
 <h2>@ViewBag.Title</h2>
 <h3><a href="@Url.Action("Edit", "Titles", new {id = @Model.FirstOrDefault().TitleID}, null)" title="Back to title">@Model.FirstOrDefault().Title.Title1</a></h3>
