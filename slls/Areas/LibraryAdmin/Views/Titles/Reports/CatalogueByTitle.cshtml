@@ -13,7 +13,10 @@
         <div class="col-md-12">
             <h4 class="report_h4">@Html.DisplayFor(x => title.CatalogueByTitle)</h4>
             <p>@Html.DisplayFor(x => title.AuthorAndImprint)</p>
-            <p>@DbRes.T("Classmarks.Classmark", "FieldDisplayName") : @Html.DisplayFor(modelItem => title.Classmark.ClassmarkDisplay)</p>
+            @if (string.IsNullOrEmpty(title.Classmark.Classmark1))
+            {
+                <p>@DbRes.T("Classmarks.Classmark", "FieldDisplayName") : @Html.DisplayFor(modelItem => title.Classmark.ClassmarkDisplay)</p>
+            }
 
             @{
                 var copies = from c in title.Copies

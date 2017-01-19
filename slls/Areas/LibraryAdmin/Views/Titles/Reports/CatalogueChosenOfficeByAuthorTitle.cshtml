@@ -14,11 +14,14 @@
         {
             <h4 class="report_h4">@Html.DisplayFor(x => title.CatalogueByAuthor)</h4>
             <p>@Html.DisplayFor(x => title.DescriptionAndImprint)</p>
-            <p>@DbRes.T("Classmarks.Classmark", "FieldDisplayName") : @Html.DisplayFor(modelItem => title.Classmark.ClassmarkDisplay)</p>
+            if (string.IsNullOrEmpty(title.Classmark.Classmark1))
+            {
+                <p>@DbRes.T("Classmarks.Classmark", "FieldDisplayName") : @Html.DisplayFor(modelItem => title.Classmark.ClassmarkDisplay)</p>
+            }
 
             {
                 var copies = from c in title.Copies
-                             where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value) && (c.Location.ParentLocation != null ? c.Location.ParentLocation.LocationID == Model.Office.LocationID : 1 == 0 || c.LocationID == Model.Office.LocationID) 
+                             where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value) && (c.Location.ParentLocation != null ? c.Location.ParentLocation.LocationID == Model.Office.LocationID : 1 == 0 || c.LocationID == Model.Office.LocationID)
                              select c;
 
                 foreach (var copy in copies.OrderBy(c => c.CopyNumber))

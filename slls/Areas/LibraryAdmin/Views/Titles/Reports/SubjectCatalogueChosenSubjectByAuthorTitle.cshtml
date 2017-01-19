@@ -15,7 +15,10 @@
         {
             <h4 class="report_h4">@Html.DisplayFor(x => title.CatalogueByAuthor)</h4>
             <p>@Html.DisplayFor(x => title.DescriptionAndImprint)</p>
-            <p>@DbRes.T("Classmarks.Classmark", "FieldDisplayName"):&nbsp;@Html.DisplayFor(x => title.Classmark.ClassmarkDisplay)</p>
+            if (string.IsNullOrEmpty(title.Classmark.Classmark1))
+            {
+                <p>@DbRes.T("Classmarks.Classmark", "FieldDisplayName") : @Html.DisplayFor(modelItem => title.Classmark.ClassmarkDisplay)</p>
+            }
             {
                 var copies = from c in title.Copies
                              where c.StatusID != null && Model.StatusTypes.Contains(c.StatusID.Value)
