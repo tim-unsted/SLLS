@@ -1,4 +1,5 @@
 ﻿@using System
+@using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Borrowing>
 
 <script type="text/javascript">
@@ -14,11 +15,7 @@
             "columnDefs":
             [{
                 "visible": false,
-                "targets": [6, 7, 8]
-            },
-            {
-                "orderData": [6],
-                "targets": [4]
+                "targets": [7, 8, 9]
             },
             {
                 "orderData": [7],
@@ -26,13 +23,17 @@
             },
             {
                 "orderData": [8],
+                "targets": [6]
+            },
+            {
+                "orderData": [9],
                 "targets": [1]
             },
             {
-                "width": "10%",
+                "width": "15%",
                 "searchable": false,
                 "sortable": false,
-                "targets": [9]
+                "targets": [10]
             }]
         });
     });
@@ -42,22 +43,25 @@
     <thead>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Volume.Barcode)
+            @DbRes.T("CopyItems.Barcode", "FieldDisplayName")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Volume.Copy.Title.Title1)
+            @DbRes.T("Titles.Title", "FieldDisplayName")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Volume.Copy.CopyNumber)
+            @DbRes.T("Copies.Copy_Number", "FieldDisplayName")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.BorrowerUser.Fullname)
+            @DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Borrowed)
+            @DbRes.T("Departments.Department", "FieldDisplayName")
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.ReturnDue)
+            @DbRes.T("Borrowing.Borrowed", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName")
         </th>
         <th></th>
         <th></th>
@@ -70,25 +74,35 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Volume.Barcode)
-                </td>
-                <td>
-                    @if (String.IsNullOrEmpty(item.Volume.Copy.Title.Title1))
+                    @*@Html.DisplayFor(modelItem => item.Volume.Barcode)*@
+                    @if (string.IsNullOrEmpty(item.Volume.Barcode))
                     {
-                        <a href="@Url.Action("Edit", "Titles", new { id = item.Volume.Copy.TitleID })"></a>
+                        <a href="@Url.Action("Edit", "Volumes", new { id = item.Volume.VolumeID })" class="modal-link" title="View details"></a>
                     }
                     else
                     {
-                        <a href="@Url.Action("Edit", "Titles", new { id = item.Volume.Copy.TitleID })">@item.Volume.Copy.Title.Title1</a>
+                        <a href="@Url.Action("Edit", "Volumes", new { id = item.Volume.VolumeID })" class="modal-link" title="View details">@item.Volume.Barcode</a>
                     }
                 </td>
                 <td>
-                    @*@Html.ActionLink(item.Volume.Copy.CopyNumber.ToString(), "Edit", "Copies", new {id = item.Volume.CopyID})*@
-                    <a href="@Url.Action("Edit", "Copies", new { id = item.Volume.Copy.CopyID })">@item.Volume.Copy.CopyNumber</a>
+                    @if (string.IsNullOrEmpty(item.Volume.Copy.Title.Title1))
+                    {
+                        <a href="@Url.Action("Edit", "Titles", new { id = item.Volume.Copy.TitleID })" title="View details"></a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("Edit", "Titles", new { id = item.Volume.Copy.TitleID })" title="View details">@item.Volume.Copy.Title.Title1</a>
+                    }
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "Copies", new { id = item.Volume.Copy.CopyID })" title="View details">@item.Volume.Copy.CopyNumber</a>
                 </td>
 
                 <td>
-                    @Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)
+                    <a href="@Url.Action("Edit","LibraryUsers", new { id = item.BorrowerUser.Id })" class="modal-link" title="View details">@Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BorrowerUser.Department.Department1)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Borrowed)
@@ -106,10 +120,11 @@
                     @Html.DisplayFor(modelItem => item.Volume.Copy.Title.FiledTitle)
                 </td>
                 <td style="text-align: right;">
+                    <a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.BorrowerUser.Email, subject = item.Volume.Copy.Title.Title1, area = "" })" class="modal-link" title="Email @item.BorrowerUser.Firstname"><span class="glyphicon glyphicon-envelope"></span></a>
                     <a href="@Url.Action("ConfirmReturnLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span aria-hidden="true" class="glyphicon glyphicon-share-alt"></span></a>
                     <a href="@Url.Action("ConfirmRenewLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Renew loan"><span aria-hidden="true" class="glyphicon glyphicon-repeat"></span></a>
-                    <a href="@Url.Action("Edit", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
-                    <a href="@Url.Action("Delete", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash" /></a>
+                    <a href="@Url.Action("Edit", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                 </td>
             </tr>
         }

@@ -20,7 +20,7 @@
         </div>
 
         <div class="row">
-            <div class="col-md-10 col-md-push-1">
+            <div class="col-md-11 col-md-push-1">
                 <table class="table table-striped table-no-border">
                     <thead>
                     <tr>
@@ -30,6 +30,7 @@
                         <th>@DbRes.T("Borrowing.Borrowed", "FieldDisplayName")</th>
                         <th>@DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName")</th>
                         <th>@DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName")</th>
+                        <th>@DbRes.T("Departments.Department", "FieldDisplayName")</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -45,7 +46,8 @@
                                         <td style="width: 10%;">@Html.DisplayFor(modelItem => loan.Volume.Barcode)</td>
                                         <td style="width: 10%;">@Html.DisplayFor(modelItem => loan.Borrowed)</td>
                                         <td style="width: 10%;">@Html.DisplayFor(modelItem => loan.ReturnDue)</td>
-                                        <td style="width: 30%;">@Html.DisplayFor(modelItem => loan.BorrowerUser.Fullname)</td>
+                                        <td style="width: 15%;">@Html.DisplayFor(modelItem => loan.BorrowerUser.Fullname)</td>
+                                        <td style="width: 15%;">@Html.DisplayFor(modelItem => loan.BorrowerUser.Department.Department1)</td>
                                     </tr>
                                 }
                             }

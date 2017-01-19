@@ -13,11 +13,7 @@
             },
             "columnDefs": [{
                 "visible": false,
-                "targets": [7, 8, 9, 10]
-            },
-            {
-                "orderData": [7],
-                "targets": [3]
+                "targets": [8, 9, 10, 11]
             },
             {
                 "orderData": [8],
@@ -26,17 +22,21 @@
             {
                 "orderData": [9],
                 "targets": [5]
+            },
+            {
+                "orderData": [10],
+                "targets": [6]
             }
             ,
             {
-                "orderData": [10],
+                "orderData": [11],
                 "targets": [0]
             },
             {
                 "width": "10%",
                 "searchable": false,
                 "sortable": false,
-                "targets": [11]
+                "targets": [12]
             }]
         });
     });
@@ -58,6 +58,9 @@
             </th>
             <th>
                 @Html.DisplayName(DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.DisplayName(DbRes.T("Departments.Department", "FieldDisplayName"))
             </th>
             <th>
                 @Html.DisplayName(DbRes.T("Borrowing.Borrowed", "FieldDisplayName"))
@@ -90,7 +93,10 @@
                     @Html.DisplayFor(modelItem => item.Volume.Copy.CopyNumber)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)
+                    <a href="@Url.Action("Edit","LibraryUsers", new { id = item.BorrowerUser.Id })" class="modal-link" title="View details">@Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.BorrowerUser.Department.Department1)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Borrowed)
@@ -120,6 +126,7 @@
                 <td style="text-align: right;">
                     @if (item.Returned.ToString() == null || item.Returned.ToString() == "")
                     {
+                        <a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.BorrowerUser.Email, subject = item.Volume.Copy.Title.Title1, area = "" })" class="modal-link" title="Email @item.BorrowerUser.Firstname"><span class="glyphicon glyphicon-envelope"></span></a>
                         <a href="@Url.Action("ConfirmReturnLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span aria-hidden="true" class="glyphicon glyphicon-share-alt"></span></a>
                         <a href="@Url.Action("ConfirmRenewLoan", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Renew loan"><span aria-hidden="true" class="glyphicon glyphicon-repeat"></span></a>
                     }
