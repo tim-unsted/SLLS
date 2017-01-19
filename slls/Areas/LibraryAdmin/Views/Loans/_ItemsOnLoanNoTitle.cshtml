@@ -1,4 +1,5 @@
-﻿@model IEnumerable<slls.Models.Borrowing>
+﻿@using Westwind.Globalization
+@model System.Collections.Generic.IEnumerable<slls.Models.Borrowing>
 
 <script type="text/javascript">
     $(document).ready(function () {
@@ -29,7 +30,7 @@
                 "targets": [4]
             },
             {
-                "width": "10%",
+                "width": "15%",
                 "searchable": false,
                 "sortable": false,
                 "targets": [7]
@@ -42,19 +43,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Volume.Barcode)
+                @DbRes.T("CopyItems.Barcode", "FieldDisplayName")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Volume.LabelText)
+                @DbRes.T("CopyItems.Label_Text", "FieldDisplayName")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.BorrowerUser.Fullname)
+                @DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Borrowed)
+                @DbRes.T("Borrowing.Borrowed", "FieldDisplayName")
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ReturnDue)
+                @DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName")
             </th>
             <th></th>
             <th></th>
@@ -72,7 +73,8 @@
                     @Html.DisplayFor(modelItem => item.Volume.LabelText)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)
+                    @*@Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)*@
+                    <a href="@Url.Action("Edit","LibraryUsers", new { id = item.BorrowerUser.Id })" class="modal-link">@Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)</a>&nbsp;&nbsp;<a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.BorrowerUser.Email, subject = item.Volume.Copy.Title.Title1, area = "" })" class="modal-link" title="Email @item.BorrowerUser.Firstname"><span class="glyphicon glyphicon-envelope"></span></a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Borrowed)

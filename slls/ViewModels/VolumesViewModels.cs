@@ -112,6 +112,8 @@ namespace slls.ViewModels
 
         public int CopyNumber { get; set; }
 
+        public string Title { get; set; }
+
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
         public string Barcode { get; set; }
 
@@ -145,6 +147,10 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Borrowing.Borrowed_By", "FieldDisplayName")]
         public string Fullname { get; set; }
+
+        [LocalDisplayName("Borrowing.Borrowed_By", "FieldDisplayName")]
+        public string Firstname { get; set; }
+
     }
 
     public class VolumesWithLoansIndexViewModel

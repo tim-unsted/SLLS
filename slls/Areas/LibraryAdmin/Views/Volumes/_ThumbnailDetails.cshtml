@@ -1,4 +1,5 @@
-﻿@model slls.ViewModels.VolumesWithLoansIndexViewModel
+﻿@using Westwind.Globalization
+@model slls.ViewModels.VolumesWithLoansIndexViewModel
 
 @*<div>&nbsp;</div>*@
 <div class="row">
@@ -16,26 +17,24 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <dl class="dl-horizontal">
-                            <dt>@Html.DisplayNameFor(model => item.LabelText):</dt>
+                            <dt>@DbRes.T("CopyItems.Label_Text", "FieldDisplayName"):</dt>
                             <dd>@Html.DisplayFor(modelItem => item.LabelText)</dd>
-                            <dt>@Html.DisplayNameFor(model => item.PrintLabel):</dt>
+                            <dt>@DbRes.T("CopyItems.Print_Label", "FieldDisplayName"):</dt>
                             <dd>@Html.DisplayFor(modelItem => item.PrintLabel)</dd>
-                            @*<dt>@Html.Label(DbRes.T("CopyItems.Is_Ref_Only", "FieldDisplayName")):</dt>
-                            <dd>@Html.DisplayFor(modelItem => item.RefOnly)</dd>*@
-                            <dt>@Html.DisplayNameFor(model => item.LoanType):</dt>
+                            <dt>@DbRes.T("CopyItems.Loan_Type", "FieldDisplayName"):</dt>
                             <dd>@Html.DisplayFor(modelItem => item.LoanType)</dd>
                         </dl>
                     </div>
                     <div class="col-sm-6">
                         <dl class="dl-horizontal">
-                            <dt>@Html.DisplayNameFor(model => item.OnLoan):</dt>
+                            <dt>@DbRes.T("CopyItems.Is_On_Loan", "FieldDisplayName"):</dt>
                             <dd>@Html.DisplayFor(modelItem => item.OnLoan)</dd>
-                            <dt>@Html.DisplayNameFor(model => item.Borrowed):</dt>
+                            <dt>@DbRes.T("Borrowing.Borrowed", "FieldDisplayName"):</dt>
                             <dd>@Html.DisplayFor(modelItem => item.Borrowed)</dd>
-                            <dt>@Html.DisplayNameFor(model => item.ReturnDue):</dt>
+                            <dt>@DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName"):</dt>
                             <dd>@Html.DisplayFor(modelItem => item.ReturnDue)</dd>
-                            <dt>@Html.DisplayNameFor(model => item.Fullname):</dt>
-                            <dd>@Html.DisplayFor(modelItem => item.Fullname)</dd>
+                            <dt>@DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName"):</dt>
+                            <dd><a href="@Url.Action("Edit", "LibraryUsers", new { id = item.BorrowerUser_ID })" class="modal-link">@Html.DisplayFor(modelItem => item.Fullname)</a>&nbsp;&nbsp;<a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.EmailAddress, subject = item.Title, area = "" })" class="modal-link" title="Email @item.Firstname"><span class="glyphicon glyphicon-envelope"></span></a></dd>
                         </dl>
                     </div>
                 </div>

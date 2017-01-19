@@ -1,4 +1,6 @@
-﻿@model slls.ViewModels.NewEmailViewModel
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.NewEmailViewModel
 
 @Html.Partial("_ModalAddHeader")
 
@@ -14,7 +16,10 @@
 
 			</div>
 		</div>
-
-     @Html.Partial("_ModalAddFooter")
+    
+    <div class="modal-footer">
+        <button type="submit" id="btnSend" value="Send" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-send"></span> Send</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
 }
 

@@ -1,4 +1,5 @@
 ﻿@using System.Linq
+@using slls.Models
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Copy>
 
@@ -39,6 +40,7 @@
                                             <th>@Html.DisplayName(DbRes.T("CopyItems.Label_Text", "FieldDisplayName"))</th>
                                             <th>@Html.DisplayName(DbRes.T("CopyItems.Is_Ref_Only", "FieldDisplayName"))</th>
                                             <th>@Html.DisplayName(DbRes.T("CopyItems.Is_On_Loan", "FieldDisplayName"))</th>
+                                            <th>@Html.DisplayName(DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName"))</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -49,6 +51,25 @@
                                                 <td>@Html.DisplayFor(x => volume.LabelText)</td>
                                                 <td>@Html.DisplayFor(x => volume.LoanType.RefOnly)</td>
                                                 <td>@Html.DisplayFor(x => volume.OnLoan)</td>
+                                                @{
+                                                    if (volume.OnLoan)
+                                                    {
+                                                        var lastOrDefault = volume.Borrowings.LastOrDefault(b => b.Returned == null);
+                                                        if (lastOrDefault != null)
+                                                        {
+                                                            var borrower = lastOrDefault.BorrowerUser;
+                                                            <td><a href="@Url.Action("Edit", "LibraryUsers", new { id = borrower.Id })" class="modal-link">@Html.DisplayFor(x => borrower.Fullname)</a>&nbsp;&nbsp;<a href="@Url.Action("NewEmailPopup", "Messaging", new { to = borrower.Email, subject = volume.Copy.Title.Title1, area = "" })" class="modal-link" title="Email @borrower.Firstname"><span class="glyphicon glyphicon-envelope"></span></a></td>
+                                                        }
+                                                        else
+                                                        {
+                                                            <td></td>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <td></td>
+                                                    }
+                                                }
                                             </tr>
                                         }
                                     </tbody>

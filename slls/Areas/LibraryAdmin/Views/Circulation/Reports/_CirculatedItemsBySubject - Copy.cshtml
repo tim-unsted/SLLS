@@ -1,5 +1,6 @@
-﻿@using Westwind.Globalization
-@model IEnumerable<slls.Models.Title>
+﻿@using System.Linq
+@using Westwind.Globalization
+@model System.Collections.Generic.IEnumerable<slls.Models.Title>
 
 @foreach (var title in Model.OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
 {

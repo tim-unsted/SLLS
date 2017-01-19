@@ -57,7 +57,7 @@ namespace slls.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult NewEmailPopup(string to = "", string subject = "")
+        public ActionResult NewEmailPopup(string to = "", string subject = "", string message = "")
         {
             var userId = PublicFunctions.GetUserId();
             var emailFrom = "";
@@ -70,7 +70,8 @@ namespace slls.Controllers
             {
                 To = to,
                 From = emailFrom,
-                Subject = subject
+                Subject = subject,
+                Message = message
             };
 
             ViewBag.Title = "New Email";

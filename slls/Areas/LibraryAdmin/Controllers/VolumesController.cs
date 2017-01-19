@@ -111,15 +111,20 @@ namespace slls.Areas.LibraryAdmin
                 {
                     CopyID = volume.CopyID,
                     CopyNumber = volume.Copy.CopyNumber,
+                    Title = volume.Copy.Title.Title1,
                     Barcode = volume.Barcode,
                     VolumeID = volume.VolumeID,
-                    Fullname = currentLoan == null ? "" : currentLoan.BorrowerUser.FullnameRev,
+                    Fullname = currentLoan == null ? "" : currentLoan.BorrowerUser.Fullname,
+                    Firstname = currentLoan == null ? "" : currentLoan.BorrowerUser.Firstname,
                     PrintLabel = volume.PrintLabel,
                     LabelText = volume.LabelText,
                     LoanType = volume.LoanType.LoanTypeName,
                     Borrowed = currentLoan == null ? null : currentLoan.Borrowed,
                     ReturnDue = currentLoan == null ? null : currentLoan.ReturnDue,
-                    OnLoan = currentLoan != null
+                    OnLoan = currentLoan != null,
+                    BorrowerUser_ID = currentLoan == null ? null : currentLoan.BorrowerUser.Id,
+                    EmailAddress = currentLoan == null ? null : currentLoan.BorrowerUser.Email,
+
                 };
                 viewModel.VolumesWithLoans.Add(row);
             }
