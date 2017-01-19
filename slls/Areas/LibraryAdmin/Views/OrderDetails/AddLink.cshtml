@@ -1,0 +1,222 @@
+﻿@using System.Activities.Expressions
+@using slls.Utils.Helpers
+@using VortexSoft.Bootstrap
+@using Westwind.Globalization
+@model slls.ViewModels.TitleImageAddViewModel
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h3 class="modal-title" id="titleLabel">@ViewBag.Title</h3>
+</div>
+
+@using (Html.BeginForm("PostAddLink", "OrderDetails", FormMethod.Post, new { enctype = "multipart/form-data", id = "myForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.TitleId)
+
+            <div class="alert alert-info" role="alert">
+                <p>
+                    <strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>Use the form to add a link to the current order.
+                </p>
+                <p>
+                    Links can be to on-line resources (i.e. web pages or externally hosted files - e.g. DropBox, ShareFile, Google Drive, etc.), to files hosted on the SLLS server (i.e. files that have already been uploaded to your database), or to local files stored on your PC/device, network or intranet.
+                </p>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Suppliers.Supplier_Name", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.SupplierName)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("TitleLinks.URL_Path", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.HelpInline("Type or paste the web address/Url to an on-line resource (e.g. a webpage or a hosted file). The Url will normally start with 'http://' or 'https://'.")
+                    @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            @if (ViewBag.ExistingFileCount > 0)
+            {
+                <div class="form-group">
+                    @Html.Label("Hosted file", new { @class = "control-label col-md-3" })
+                    <div class="col-md-8">
+                        @Html.DropDownList("ExistingFile", null, "Select an existing hosted file", new { @class = "form-control selectpicker" })
+                        @Html.HelpInline("Or, select a file that has already been uploaded and stored on the SLLS server.")
+                        @Html.ValidationMessageFor(model => model.ExistingFiles, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                @Html.Label("Local File", new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.Files, new { type = "file", multiple = "multiple", accept = ".*", @style = "display: none;" })
+                            </span>
+                        </label>
+                        <input type="text" class="form-control">
+                    </div>
+                    @Html.HelpInline("Or, click 'Browse' to select a file stored on your PC, device or local network. A copy of the file will be uploaded to the SLLS server and stored in your database. These files can then be downloaded as a copy by the end user. The original file remains unaffected.")
+                    @Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })
+                    @*@Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })*@
+                </div>
+            </div>
+
+            @*<br />
+            <div class="form-group">
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("TitleLinks.Display_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.DisplayText, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.HelpInline("Enter a friendly text that is displayed in the link in place of the full address or file name.")
+                    @Html.ValidationMessageFor(model => model.DisplayText, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.HoverTip, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.HoverTip, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.HelpInline("Enter a tool-tip that appears when the mouse is hovered over the link.")
+                    @Html.ValidationMessageFor(model => model.HoverTip, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-3">
+                    @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.HelpInline("Optional: This is a default login/username required to access the resource. ")
+                    @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+                </div>
+                @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.HelpInline("Optional: This is a default password required to access the resource. ")
+                    @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
+                </div>
+            </div>*@
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" id="btnUpload" name="submit" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Add Link</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
+
+    $("#myForm").submit(function (e) {
+        e.preventDefault();
+        var formData = new FormData($(this)[0]);
+
+        $.ajax({
+            type: "POST",
+            url: this.action,
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.success) {
+                    $('#stdModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert('Oops! ' + data.success);
+                }
+            }
+        });
+        return false;
+    });
+
+    function OnSuccess(json) {
+        if (json.isRedirect) {
+            window.location.href = json.redirectUrl;
+        }
+    }
+
+    function OnFailure(response) {
+        var obj = $.parseJSON(response.responseText);
+        alert(obj.message);
+    }
+
+</script>
+
+<script>
+    var Url = $('#Url');
+    $("#myform").validate({
+        rules: {
+            Url: {
+                required: true,
+                url: true
+            }
+        }
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+
+        // We can attach the `fileselect` event to all file inputs on the page
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        // We can watch for our custom `fileselect` event like this
+        $(document).ready(function () {
+            $(':file').on('fileselect', function (event, numFiles, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                if (input.length) {
+                    //alert(input.length);
+                    input.val(log);
+                } else {
+                    if (log) alert(log);
+                }
+
+            });
+        });
+
+    });
+</script>

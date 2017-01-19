@@ -57,7 +57,7 @@ namespace slls.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult NewEmailPopup(string to = "", string subject = "", string message = "")
+        public ActionResult NewEmailPopup(string to = "", string subject = "", string message = "", bool showCaptcha = true)
         {
             var userId = PublicFunctions.GetUserId();
             var emailFrom = "";
@@ -71,7 +71,8 @@ namespace slls.Controllers
                 To = to,
                 From = emailFrom,
                 Subject = subject,
-                Message = message
+                Message = message,
+                ShowCaptcha = showCaptcha
             };
 
             ViewBag.Title = "New Email";

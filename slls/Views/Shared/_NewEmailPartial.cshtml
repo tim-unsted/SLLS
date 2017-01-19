@@ -70,9 +70,13 @@
     </div>
 </div>
 
-<div class="form-group">
-    <div class="col-md-offset-2 col-md-10">
-        @Html.ValidationMessage("reCaptcha", new { @class = "text-danger" })
-        @Html.ReCaptcha()
+@if (Model.ShowCaptcha)
+{
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            @Html.ValidationMessage("reCaptcha", new { @class = "text-danger" })
+            @Html.ReCaptcha()
+        </div>
     </div>
-</div>
+}
+

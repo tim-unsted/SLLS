@@ -18,6 +18,8 @@ namespace slls.ViewModels
         
         public int TitleId { get; set; }
 
+        public int OrderId { get; set; }
+
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
         public string Title { get; set; }
 
@@ -71,6 +73,8 @@ namespace slls.ViewModels
         public string ErrorMessage { get; set; }
 
         public List<string> Sources { get; set; }
+
+        public string SupplierName { get; set; }
     }
 
     public class TitleImageEditViewModel

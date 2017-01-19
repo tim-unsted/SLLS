@@ -1162,6 +1162,7 @@
     <Content Include="Areas\Config\Views\Parameters\_index.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\ItemsOnLoanByDepartment.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\DepartmentBorrowingHistory.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AddLink.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

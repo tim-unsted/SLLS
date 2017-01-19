@@ -33,19 +33,22 @@
     }
 
     <h2>@ViewBag.Title</h2>
+
     <div class="alert alert-info">
 
         @using (Html.BeginForm("Edit", "Copies", FormMethod.Get))
         {
-            <div class="form-group" title="@ViewBag.Message">
-                @Html.DropDownList("id", (IEnumerable<SelectListItem>)ViewData["CopyId"], new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control" })
+            <div class="row" style="margin-right: 0">
+                <div class="col-md-10">
+                    @Html.DropDownList("id", (IEnumerable<SelectListItem>)ViewData["CopyId"], new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control" })
+                </div>
+                <span class="pull-right"><a href="@Url.Action("Add", "Copies", new {id = @Model.TitleId, returnAction = "Edit", returnController = "Copies"})" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a></span>
             </div>
         }
-
-        <a href="@Url.Action("Add", "Copies", new {id = @Model.TitleId, returnAction = "Edit" , returnController = "Copies" })" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
-
     </div>
 </div>
+
+
 
 @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
 {
@@ -66,28 +69,42 @@
 
     using (tabs.BeginPanel())
     {
+        <br/>
+        <div>
+            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+        </div>
+        <div>
+            <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
+        </div>
         <div id="CopyDetails">
             @Html.Partial("_CopyDetails", Model)
         </div>
     }
     using (tabs.BeginPanel())
     {
+        <br/>
+        <div>
+            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+        </div>
+        <div>
+            <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
+        </div>
         <br />
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-md-12">
-                    <div class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> Create a @DbRes.T("CopyItems.Copy_Item","FieldDisplayName") for each individual volume if it is a multi-volume work.</div>
+                    <div class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> Create a @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName") for each individual volume if it is a multi-volume work.</div>
                     <p>
                         <a href="@Url.Action("Add", "Volumes", new {id = Model.CopyId})" class="btn btn-primary" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")</a>
                     </p>
-                    @Html.Action("_ThumbnailDetails", "Volumes", new {id = Model.CopyId})
+                    @Html.Action("_ThumbnailDetails", "Volumes", new { id = Model.CopyId })
                     <div class="form-footer">
                         @if (ViewBag.RecordCount > 1)
                         {
-                            <span class="pull-left">@Html.Partial("_PaginateDetails", Model)</span>
+                            <span class="pull-left" style="padding-right: 15px;">@Html.Partial("_PaginateDetails", Model)</span>
                         }
                         <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
-                        &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();"/>
+                        &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
                     </div>
                 </div>
             </div>
@@ -98,8 +115,23 @@
     {
         using (tabs.BeginPanel())
         {
+            <br />
+            <div>
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+            </div>
+            <div>
+                <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
+            </div>
             <div id="PartsReceived">
-                @Html.Action("_Holdings", "Copies", new { id = Model.CopyId })
+                @Html.Action("_Holdings", "Copies", new {id = Model.CopyId})
+            </div>
+            <div class="form-footer">
+                @if (ViewBag.RecordCount > 1)
+                {
+                    <span class="pull-left" style="padding-right: 15px;">@Html.Partial("_PaginateDetails", Model)</span>
+                }
+                <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
+                &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
             </div>
         }
     }
@@ -108,6 +140,13 @@
     {
         using (tabs.BeginPanel())
         {
+            <br />
+            <div>
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+            </div>
+            <div>
+                <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
+            </div>
             <div id="Cancellations">
                 @Html.Partial("_Cancellations", Model)
             </div>
@@ -119,8 +158,23 @@
         using (tabs.BeginPanel())
         {
             <br />
+            <div>
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+            </div>
+            <div>
+                <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
+            </div>
             <div id="Loans">
-                @Html.Action("_ItemsOnLoanByCopy", "Loans", new { id = Model.CopyId })
+                @Html.Action("_ItemsOnLoanByCopy", "Loans", new {id = Model.CopyId})
+            </div>
+            <br/>
+            <div class="form-footer">
+                @if (ViewBag.RecordCount > 1)
+                {
+                    <span class="pull-left" style="padding-right: 15px;">@Html.Partial("_PaginateDetails", Model)</span>
+                }
+                <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
+                &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
             </div>
         }
     }

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Net;
@@ -2932,6 +2934,244 @@ namespace slls.Areas.LibraryAdmin
                 success = true,
                 AllOrders = allOrders
             });
+        }
+
+
+        // GET: LibraryAdmin/OrderDetails/AddLink
+        public ActionResult AddLink(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            var order = _db.OrderDetails.Find(id);
+            if (order == null)
+            {
+                return HttpNotFound();
+            }
+
+            //Get a list of any hosted (i.e. stored in database) files
+            var existingFiles = _db.HostedFiles.OrderBy(f => f.FileName).ToList();
+
+            var viewModel = new TitleImageAddViewModel
+            {
+                OrderId = order.OrderID,
+                Title = order.Title.Title1,
+                SupplierName = order.Supplier.SupplierName
+            };
+
+            ViewBag.ExistingFile = new SelectList(existingFiles, "FileId", "FileName");
+            ViewBag.ExistingFileCount = existingFiles.Count();
+            ViewBag.Title = "Add New " + DbRes.T("Orders.Link_URL", "FieldDisplayName");
+            return PartialView(viewModel);
+        }
+
+        // POST: LibraryAdmin/OrderDetails/PostAddLink
+        [HttpPost]
+        //[ValidateAntiForgeryToken]
+        public ActionResult PostAddLink(TitleImageAddViewModel viewModel)
+        {
+            //Check if we've been passed a URL ...
+            if (!string.IsNullOrEmpty(viewModel.Url))
+            {
+                var orderDetail = _db.OrderDetails.Find(viewModel.OrderId);
+                if (orderDetail == null)
+                {
+                    return null;
+                }
+
+                orderDetail.Link = viewModel.Url;
+                _db.Entry(orderDetail).State = EntityState.Modified;
+                _db.SaveChanges();
+                return Json(new { success = true });
+            }
+
+            //Otherwise, check if we've been passed any new files ...
+            if (viewModel.Files != null)
+            {
+                if (viewModel.Files.First() != null)
+                {
+                    try
+                    {
+                        var titleId = viewModel.TitleId;
+
+                        foreach (var file in viewModel.Files)
+                        {
+                            if (file != null && file.ContentLength > 0)
+                            {
+                                var name = Path.GetFileName(file.FileName);
+                                var type = file.ContentType;
+                                var ext = Path.GetExtension(file.FileName);
+                                var path = Path.GetFullPath(file.FileName);
+
+                                viewModel.Success = HandleUpload(fileStream: file.InputStream, name: name, type: type, path: path, titleId: titleId, ext: ext,
+                                    displayText: viewModel.DisplayText, hoverTip: viewModel.HoverTip, login: viewModel.Login,
+                                    password: viewModel.Password);
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", e.Message);
+                    }
+                    return Json(new { success = true });
+                }
+            }
+            if (viewModel.ExistingFile != 0)
+            {
+                var file = _db.HostedFiles.Find(viewModel.ExistingFile);
+                if (file == null) return null;
+
+                var orderDetail = _db.OrderDetails.Find(viewModel.OrderId);
+                if (orderDetail == null)
+                {
+                    return null;
+                }
+
+                orderDetail.Link = viewModel.Url;
+                _db.Entry(orderDetail).State = EntityState.Modified;
+                _db.SaveChanges();
+
+                var titleLink = new TitleLink()
+                {
+                    FileId = viewModel.ExistingFile,
+                    TitleID = viewModel.TitleId,
+                    DisplayText = viewModel.DisplayText ?? file.FileName,
+                    HoverTip = viewModel.HoverTip ?? file.FileName,
+                    Login = viewModel.Login,
+                    Password = viewModel.Password,
+                    InputDate = DateTime.Now
+                };
+                _db.TitleLinks.Add(titleLink);
+                _db.SaveChanges();
+                return Json(new { success = true });
+            }
+
+            return PartialView("Add", viewModel);
+        }
+
+        private bool HandleUpload(Stream fileStream, string name, string type, string ext, string path, int titleId, string displayText, string hoverTip, string login, string password)
+        {
+            var handled = false;
+
+            //Firstly, check to ensure we haven't already got this file by checking the path ...
+            var existingFile = _db.HostedFiles.FirstOrDefault(f => f.Path == path);
+            if (existingFile != null)
+            {
+                try
+                {
+                    //Get the Id of the existing file ...
+                    var existingfileId = existingFile.FileId;
+
+                    var titleLink = new TitleLink()
+                    {
+                        FileId = existingfileId,
+                        TitleID = titleId,
+                        DisplayText = string.IsNullOrEmpty(displayText) ? name : displayText,
+                        HoverTip = string.IsNullOrEmpty(hoverTip) ? name : hoverTip,
+                        Login = login,
+                        Password = password,
+                        InputDate = DateTime.Now
+                    };
+
+                    _db.TitleLinks.Add(titleLink);
+                    handled = (_db.SaveChanges() > 0);
+                }
+                catch (Exception)
+                {
+                    return false;
+                }
+                return handled;
+            }
+
+            //Otherwise ...
+            try
+            {
+                //Attempt to compress the file ...
+                var compressedBytes = Compress(fileStream);
+                bool compressed;
+                if (compressedBytes != null)
+                {
+                    compressed = true;
+                }
+                else
+                {
+                    compressedBytes = new byte[fileStream.Length];
+                    compressed = false;
+                }
+
+                //Check the name of the file - append [n] for each duplicate ...
+                var i = 1;
+                var existingFileName = _db.HostedFiles.FirstOrDefault(f => f.FileName == name);
+                while (existingFileName != null)
+                {
+                    name = name.Replace(ext, "");
+                    name = name + "[" + i + "]";
+                    name = name + ext;
+                    existingFileName = _db.HostedFiles.FirstOrDefault(f => f.FileName == name);
+                    i++;
+                }
+
+                //Save the file (binary data) to the database ...
+                fileStream.Read(compressedBytes, 0, compressedBytes.Length);
+                var file = new HostedFile
+                {
+                    Data = compressedBytes,
+                    FileName = name,
+                    FileExtension = ext,
+                    Compressed = compressed,
+                    SizeStored = compressedBytes.Length / 1024,
+                    Path = path,
+                    InputDate = DateTime.Now
+                };
+                _db.HostedFiles.Add(file);
+                _db.SaveChanges();
+
+                //Get the Id of the newly inserted file ...
+                var fileId = file.FileId;
+
+                var titleLink = new TitleLink()
+                {
+                    FileId = fileId,
+                    TitleID = titleId,
+                    DisplayText = string.IsNullOrEmpty(displayText) ? name : displayText,
+                    HoverTip = string.IsNullOrEmpty(hoverTip) ? name : hoverTip,
+                    Login = login,
+                    Password = password,
+                    InputDate = DateTime.Now
+                };
+
+                _db.TitleLinks.Add(titleLink);
+                handled = (_db.SaveChanges() > 0);
+
+            }
+            catch (Exception e)
+            {
+                // Oops, something went wrong, handle the exception
+                ModelState.AddModelError("", e.Message);
+                return false;
+            }
+
+            return handled;
+        }
+
+        private static byte[] Compress(Stream input)
+        {
+            try
+            {
+                using (var compressStream = new MemoryStream())
+                using (var compressor = new DeflateStream(compressStream, CompressionMode.Compress))
+                {
+                    input.CopyTo(compressor);
+                    compressor.Close();
+                    return compressStream.ToArray();
+                }
+            }
+            catch (Exception)
+            {
+                return null;
+            }
+
         }
 
 

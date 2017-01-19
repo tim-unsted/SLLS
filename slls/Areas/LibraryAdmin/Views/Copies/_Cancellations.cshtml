@@ -55,13 +55,10 @@
         <div class="form-footer">
             @if (ViewBag.RecordCount > 1)
             {
-                <span class="pull-left">@Html.Partial("_PaginateDetails", Model)</span>
+                <span class="pull-left" style="padding-right: 15px;">@Html.Partial("_PaginateDetails", Model)</span>
             }
-            <span class="pull-left">
-                <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
-            </span>
             <button type="submit" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Cancellations</button>
-            @*<a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-default modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>*@
+            <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
             &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
         </div>
 
