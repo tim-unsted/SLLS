@@ -202,6 +202,7 @@ namespace slls.ViewModels
         public IEnumerable<Copy> Copies { get; set; }
         public IEnumerable<Volume> Volumes { get; set; }
         public IEnumerable<ApplicationUser> Borrowers { get; set; }
+        public IEnumerable<Department> Departments { get; set; }
         public ApplicationUser Borrower { get; set; }
         public string BorrowerName { get; set; }
         public bool HasData { get; set; }
@@ -214,6 +215,8 @@ namespace slls.ViewModels
         public int CopyId { get; set; }
         public string Barcode { get; set; }
         public string Title { get; set; }
+        public string Department { get; set; }
+        public int  DepartmentId { get; set; }
         
     }
 

@@ -1,0 +1,70 @@
+﻿@using System.Linq
+@using System.Web.Http.Results
+@using slls.Models
+@using Westwind.Globalization
+@model slls.ViewModels.LoansReportsViewModel
+
+@Html.Partial("_PrintHeader")
+
+@{
+    var db = new DbEntities(); 
+}
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+@if (Model.Departments.Any())
+{
+    foreach (var department in Model.Departments.OrderBy(d => d.Department1))
+    {
+        <div class="row">
+            <div class="col-md-12">
+                <h3>@Html.DisplayFor(modelItem => department.Department1)</h3>
+            </div>
+        </div>
+
+        var department1 = department;
+        var borrowings = from b in db.Borrowings
+            join u in db.Users on b.BorrowerUser.Id equals u.Id
+            where u.DepartmentId == department1.DepartmentID && u.Borrowings.Any() && b.Returned == null
+            select b;
+
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped table-no-border">
+                        <thead>
+                            <tr>
+                                <th>@DbRes.T("Titles.Title", "FieldDisplayName")</th>
+                                <th>@DbRes.T("Copies.Copy", "FieldDisplayName")</th>
+                                @*<th>@DbRes.T("CopyItems.Label_Text", "FieldDisplayName")</th>*@
+                                <th>@DbRes.T("CopyItems.Barcode", "FieldDisplayName")</th>
+                                <th>@DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName")</th>
+                                <th>@DbRes.T("Borrowing.Borrowed", "FieldDisplayName")</th>
+                                <th>@DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName")</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var loan in borrowings.OrderBy(t => t.Volume.Copy.Title.Title1.Substring(t.Volume.Copy.Title.NonFilingChars)).ThenBy(c => c.Volume.Copy.CopyNumber).ThenBy(v => v.Volume.Barcode))
+                            {
+                                <tr>
+                                    <td style="width: 30%;">@Html.DisplayFor(modelItem => loan.Volume.Copy.Title.Title1)</td>
+                                    <td style="width: 10%;">@DbRes.T("Copies.Copy", "FieldDisplayName"): @Html.DisplayFor(modelItem => loan.Volume.Copy.CopyNumber)</td>
+                                    @*<td style="width: 20%;">@Html.DisplayFor(modelItem => loan.Volume.LabelText)</td>*@
+                                    <td style="width: 10%;">@Html.DisplayFor(modelItem => loan.Volume.Barcode)</td>
+                                    <td style="width: 15%;">@Html.DisplayFor(modelItem => loan.BorrowerUser.Fullname)</td>
+                                    <td style="width: 15%;">@Html.DisplayFor(modelItem => loan.Borrowed)</td>
+                                    <td style="width: 20%;">@Html.DisplayFor(modelItem => loan.ReturnDue)</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div style="margin-bottom: 5px;">&nbsp;</div>
+                </div>
+            </div>
+
+        
+    }
+
+
+}

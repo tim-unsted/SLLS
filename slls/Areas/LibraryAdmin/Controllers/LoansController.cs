@@ -1430,6 +1430,94 @@ namespace slls.Areas.LibraryAdmin
             return View("Reports/BorrowerEnquiry", viewModel);
         }
 
+        public ActionResult DepartmentBorrowingHistory()
+        {
+            var viewModel = new SelectPopupViewModel
+            {
+                PostSelectController = "Loans",
+                PostSelectAction = "Post_DepartmentBorrowingHistory",
+                SelectedItem = "0",
+                HeaderText = DbRes.T("Loans", "EntityType") + "Reports: " + DbRes.T("Departments.Department", "FieldDisplayName") + " Borrowing History",
+                DetailsHeader = "To generate a report of all borrowing activity (history) for a given " + DbRes.T("Departments.Department", "FieldDisplayName").ToLower() + ", select the " + DbRes.T("Departments.Department", "FieldDisplayName").ToLower() + " from the drop-down list below.",
+                SelectLabel = "",
+                SelectText = "Select a " + DbRes.T("Departments.Department", "FieldDisplayName"),
+                OkButtonText = "View Report",
+                PostSelectId = 0
+            };
+
+            var departments = (from d in _db.Departments
+                join u in _db.Users on d.DepartmentID equals u.DepartmentId
+                where u.Borrowings.Any()
+                select d).Distinct().ToList();
+
+            viewModel.AvailableItems = departments
+                    .Select(x => new SelectListItem
+                    {
+                        Value = x.DepartmentID.ToString(),
+                        Text = x.Department1
+                    }).OrderBy(c => c.Text)
+                    .ToList();
+
+            ViewBag.Title = DbRes.T("Departments.Department", "FieldDisplayName") + " Borrowing History";
+            return PartialView("_SelectPopup", viewModel);
+        }
+
+        public ActionResult Post_DepartmentBorrowingHistory(SelectPopupViewModel selectedDepartment)
+        {
+            var id = int.Parse(selectedDepartment.SelectedItem);
+            if (id == 0)
+            {
+                return null;
+            }
+            var department = _db.Departments.Find(id);
+            if (department == null)
+            {
+                return null;
+            }
+            if (department != null)
+            {
+                UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                string actionUrl = urlHelper.Action("Report_DepartmentBorrowingHistory", "Loans", new { departmentId = department.DepartmentID });
+                return Json(new { success = true, redirectTo = actionUrl });
+            }
+            return Json(new { success = false });
+        }
+
+        public ActionResult Report_DepartmentBorrowingHistory(int departmentId = 0)
+        {
+            var department = _db.Departments.Find(departmentId);
+            if (department == null)
+            {
+                return null;
+            }
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                Department = department.Department1,
+                DepartmentId = department.DepartmentID
+            };
+
+            var currentLoans =
+                _db.Users.Where(u => u.DepartmentId == department.DepartmentID && u.Borrowings.Any())
+                    .Select(u => u.Borrowings);
+            if (currentLoans.Any())
+            {
+                viewModel.HasData = true;
+            }
+
+            var titles = (from t in _db.Titles
+                          join c in _db.Copies on t.TitleID equals c.TitleID
+                          join v in _db.Volumes on c.CopyID equals v.CopyID
+                          join b in _db.Borrowings on v.VolumeID equals b.VolumeID
+                          join u in _db.Users on b.BorrowerUser.Id equals u.Id
+                          where b.BorrowerUser.DepartmentId == department.DepartmentID
+                          select t).Distinct();
+
+            viewModel.Titles = titles;
+            ViewBag.Title = DbRes.T("Departments.Department", "FieldDisplayName") + " Borrowing History";
+            return View("Reports/DepartmentBorrowingHistory", viewModel);
+        }
+
         public ActionResult Report_ItemsOnLoanByTitle()
         {
             var titles = (from t in _db.Titles
@@ -1461,6 +1549,25 @@ namespace slls.Areas.LibraryAdmin
 
             ViewBag.Title = "Items Currently On Loan - By Borrower";
             return View("Reports/ItemsOnLoanByBorrower", viewModel);
+        }
+
+        public ActionResult Report_ItemsOnLoanByDepartment()
+        {
+            //var borrowers = _db.Users.Where(u => u.Borrowings.Any(b => b.Returned == null));
+            
+            var departments = (from d in _db.Departments
+                join u in _db.Users on d.DepartmentID equals u.DepartmentId
+                where u.Borrowings.Any(b => b.Returned == null)
+                select d).Distinct();
+
+            var viewModel = new LoansReportsViewModel()
+            {
+                Departments = departments,
+                HasData = departments.Any()
+            };
+
+            ViewBag.Title = "Items Currently On Loan - By Department";
+            return View("Reports/ItemsOnLoanByDepartment", viewModel);
         }
 
         public ActionResult Report_ItemsNeverLoaned()

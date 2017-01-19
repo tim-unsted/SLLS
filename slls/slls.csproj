@@ -1160,6 +1160,8 @@
     <Content Include="Areas\Config\Views\Parameters\PasswordPolicy.cshtml" />
     <Content Include="Areas\Config\Views\Parameters\LoansOptions.cshtml" />
     <Content Include="Areas\Config\Views\Parameters\_index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\ItemsOnLoanByDepartment.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\DepartmentBorrowingHistory.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
