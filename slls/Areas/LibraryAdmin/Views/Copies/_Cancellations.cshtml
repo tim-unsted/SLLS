@@ -26,6 +26,16 @@
         @Html.HiddenFor(model => model.AddedToAcquisitions)
 
         <div class="alert alert-info"><span class="glyphicon glyphicon-info-sign"></span> Enter cancellation details for serial subscriptions and standing orders that have been cancelled. Each cancellation is for a specific copy. Run the 'Savings from Cancellations' report to total your savings for the assigned account year.</div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+            </div>
+            <div class="col-md-12">
+                <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-md-3">
                 @Html.LabelFor(model => model.Cancellation)
@@ -33,7 +43,7 @@
                 @Html.ValidationMessageFor(model => model.Cancellation, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-6">
-                @Html.Label(DbRes.T("Copies.Cancelled_By","FieldDisplayName"))
+                @Html.Label(DbRes.T("Copies.Cancelled_By", "FieldDisplayName"))
                 @Html.DropDownList("CancelledByUser", (IEnumerable<SelectListItem>)ViewData["CancelledBy"], string.Empty, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.CancelledByUser, "", new { @class = "text-danger" })
             </div>
@@ -42,13 +52,13 @@
         <div class="form-group">
             <div class="col-md-3">
                 @Html.Label(DbRes.T("Copies.Cancelled_Account_Year"))
-                @Html.DropDownList("AccountYearID", (IEnumerable<SelectListItem>) ViewData["CancelledYear"], string.Empty, new {@class = "form-control"})
-                @Html.ValidationMessageFor(model => model.AccountYearId, "", new {@class = "text-danger"})
+                @Html.DropDownList("AccountYearID", (IEnumerable<SelectListItem>)ViewData["CancelledYear"], string.Empty, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.AccountYearId, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-3">
                 @Html.LabelFor(model => model.Saving)
-                @Html.EditorFor(model => model.Saving, new {htmlAttributes = new {@class = "form-control"}})
-                @Html.ValidationMessageFor(model => model.Saving, "", new {@class = "text-danger"})
+                @Html.EditorFor(model => model.Saving, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Saving, "", new { @class = "text-danger" })
             </div>
         </div>
 

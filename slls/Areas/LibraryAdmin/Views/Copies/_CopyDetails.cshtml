@@ -34,14 +34,17 @@
             </div>
             <div class="col-md-4">
                 @Html.Label(DbRes.T("Copies.Date_Commenced", "FieldDisplayName"))
-                @Html.EditorFor(model => model.Commenced, new { htmlAttributes = new { @class = "form-control", id = "dateCommenced" } })
-                @Html.ValidationMessageFor(model => model.Commenced, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.Commenced, new {htmlAttributes = new {@class = "form-control", id = "dateCommenced"}})
+                @Html.ValidationMessageFor(model => model.Commenced, "", new {@class = "text-danger"})
             </div>
             <div class="col-md-6">
+                @Html.Partial("_selectStatusTypeViewEdit")
+            </div>
+            @*<div class="col-md-6">
                 @Html.Label(DbRes.T("Copies.Acquisitions_No", "FieldDisplayName"))
                 @Html.EditorFor(model => model.AcquisitionsNo, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.AcquisitionsNo, "", new { @class = "text-danger" })
-            </div>
+            </div>*@
         </div>
 
         <div class="form-group">
@@ -50,9 +53,9 @@
                 @Html.DropDownList("LocationID", null, htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.LocationId, "", new { @class = "text-danger" })
             </div>
-            <div class="col-md-6">
+            @*<div class="col-md-6">
                 @Html.Partial("_selectStatusTypeViewEdit")
-            </div>
+            </div>*@
         </div>
 
         <div class="form-group">

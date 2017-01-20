@@ -3,7 +3,16 @@
 
 <div class="form-horizontal">
     <br />
-    
+
+    <div class="form-group">
+        <div class="col-md-12">
+            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+        </div>
+        <div class="col-md-12">
+            <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleID}, null)" title="View/Edit Title">@Model.Title.Title1</a></span>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-md-7">
             
