@@ -19,10 +19,11 @@
                 {
                     "width": "25%",
                     "orderData": 9,
-                    "targets": [0],
-                    "render": function(data, type, row) {
-                        return '<a href="Edit/' + row[8] + '" class="btn-link">' + data + '</a>';
-                    }
+                    "targets": [0]
+                    //,
+                    //"render": function(data, type, row) {
+                    //    return '<a href="Edit/' + row[8] + '" class="btn-link">' + data + '</a>';
+                    //}
                 },
                 {
                     "width": "10%",
@@ -131,7 +132,8 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title1)
+                @*@Html.DisplayFor(modelItem => item.Title1)*@
+                <a href="@Url.Action("Edit", "Titles", new { id = item.TitleID})">@Html.DisplayFor(modelItem => item.Title1)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Isbn)
