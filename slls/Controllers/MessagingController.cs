@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using slls.App_Settings;
 using slls.Models;
 using slls.Utils;
+using slls.Utils.Helpers;
 using slls.ViewModels;
 
 namespace slls.Controllers
@@ -60,56 +61,67 @@ namespace slls.Controllers
         public ActionResult NewEmailPopup(string to = "", string subject = "", string message = "", bool showCaptcha = true)
         {
             var userId = PublicFunctions.GetUserId();
-            var emailFrom = "";
-            if (userId != null)
-            {
-                emailFrom = _db.Users.Find(userId).Email;
-            }
 
             var viewModel = new NewEmailViewModel
             {
                 To = to,
-                From = emailFrom,
                 Subject = subject,
                 Message = message,
                 ShowCaptcha = showCaptcha,
                 IsModal = true,
                 InternalMsg = userId != null
             };
+
+            if (userId != null)
+            {
+                if (Roles.IsLibraryStaff())
+                {
+                    viewModel.From = Settings.GetParameterValue("EmailSettings.EmailFromAddress", "library@mycompany.com", "The 'from', or reply,  email address that will be quoted in system-generated emails. This should be a valid email address that users can reply to.", dataType: "text");
+                    viewModel.FromLibraryAdmin = true;
+                }
+                else
+                {
+                    viewModel.From = _db.Users.Find(userId).Email;
+                    viewModel.FromLibraryAdmin = false;
+                }
+            }
 
             ViewBag.Title = "New Email";
             return PartialView("NewEmailPopup", viewModel);
         }
 
-        [HttpPost]
-        public ActionResult NewEmailPopup(NewEmailViewModel viewModel)
-        {
-            Messaging.EmailService.SendDbMail(destination: viewModel.To, from: viewModel.From, cc: viewModel.Cc, bcc: viewModel.Bcc, subject: viewModel.Subject, body: viewModel.Message);
-            return Json(new { success = true });
-        }
-
         public ActionResult _NewEmail(string to = "", string subject = "", string message = "", bool showCaptcha = true)
         {
-            var userId = PublicFunctions.GetUserId();
-            var emailFrom = "";
-            if (userId != null)
-            {
-                emailFrom = _db.Users.Find(userId).Email;
-            }
+            return RedirectToAction("NewEmailPopup", new { to, subject, message, showCaptcha });
+            //var userId = PublicFunctions.GetUserId();
+            
+            //var emailFrom = "";
+            
+            //if (userId != null)
+            //{
+            //    if (Roles.IsLibraryStaff())
+            //    {
+            //        emailFrom = Settings.GetParameterValue("EmailSettings.EmailFromAddress", "library@mycompany.com", "The 'from', or reply,  email address that will be quoted in system-generated emails. This should be a valid email address that users can reply to.", dataType: "text");
+            //    }
+            //    else
+            //    {
+            //        emailFrom = _db.Users.Find(userId).Email;
+            //    }
+            //}
 
-            var viewModel = new NewEmailViewModel
-            {
-                To = to,
-                From = emailFrom,
-                Subject = subject,
-                Message = message,
-                ShowCaptcha = showCaptcha,
-                IsModal = true,
-                InternalMsg = userId != null
-            };
+            //var viewModel = new NewEmailViewModel
+            //{
+            //    To = to,
+            //    From = emailFrom,
+            //    Subject = subject,
+            //    Message = message,
+            //    ShowCaptcha = showCaptcha,
+            //    IsModal = true,
+            //    InternalMsg = userId != null
+            //};
 
-            ViewBag.Title = "New Email";
-            return PartialView("_NewEmail", viewModel);
+            //ViewBag.Title = "New Email";
+            //return PartialView("_NewEmail", viewModel);
         }
 
         [HttpPost]

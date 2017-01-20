@@ -12,6 +12,7 @@
     var showBorrower = Settings.GetParameterValue("Borrowing.DisplayBorrowerEmail", "false", "Sets whether OPAC will display borrower's Email address", dataType: "bool") == "true";
     var selfLoansAllowed = Settings.GetParameterValue("Borrowing.SelfLoansEnabled", "false", "Tells whether OPAC users can do self-borrowing", dataType: "bool") == "true";
     var selfReturnsAllowed = Settings.GetParameterValue("Borrowing.SelfReturnsEnabled", "false", "Tells whether OPAC users can do self-returns", dataType: "bool") == "true";
+    var emailToAddress = Settings.GetParameterValue("EmailSettings.EmailToAddress", "library@mycompany.com", "Sets the email for Ask the Librarian.", dataType: "text");
     var isCatalogueAdmin = Roles.IsUserInRole("Catalogue Admin");
 }
 
@@ -23,7 +24,7 @@
 <div class="">
     <div class="caption" style="border-bottom: 1px solid #ddd; margin-bottom: 15px;">
         <span class="pull-right">
-            <a href="@Url.Action("NewEmailPopup", "Messaging", new {to = "support@baileysolutions.co.uk", subject = "Message about: " + Model.Title1 })" class="btn btn-link modal-link" title="Email an enquiry about this item">Email <span aria-hidden="true" class="glyphicon glyphicon-envelope"></span></a>
+            <a href="@Url.Action("NewEmailPopup", "Messaging", new { to = emailToAddress, subject = "Message about: " + Model.Title1 })" class="btn btn-link modal-link" title="Email an enquiry about this item">Email <span aria-hidden="true" class="glyphicon glyphicon-envelope"></span></a>
             @if (User.Identity.IsAuthenticated)
             {
                 <span> | </span><a href="@Url.Action("Add", "LibraryUserBookmarks", new {id = Model.TitleID})" class="btn btn-link modal-link" title="Bookmark @DbRes.T("Titles.Title", "FieldDisplayName")">Bookmark <span aria-hidden="true" class="glyphicon glyphicon-bookmark"></span></a>
