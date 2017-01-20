@@ -1,18 +1,26 @@
-﻿@model slls.ViewModels.NewEmailViewModel
+﻿@using Westwind.Globalization
+@model slls.ViewModels.NewEmailViewModel
 
-@using (Html.BeginForm())
+@Html.Partial("_ModalAddHeader")
+
+@using (Html.BeginForm("SendEmail", "Messaging", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
+    @Html.HiddenFor(x => Model.IsModal)
+    @Html.HiddenFor(x => Model.InternalMsg)
 
-        @Html.Partial("_NewEmailPartial")
+    <div class="modal-body">
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
+        <div class="form-horizontal">
+
+            @Html.Partial("_NewEmailPartial")
+
         </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" id="btnSend" value="Send" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-send"></span> Send</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
     </div>
 }
 

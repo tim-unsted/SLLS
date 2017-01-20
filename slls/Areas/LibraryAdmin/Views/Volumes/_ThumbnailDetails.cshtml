@@ -36,7 +36,7 @@
                                 <dt>@DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName"):</dt>
                                 <dd>@Html.DisplayFor(modelItem => item.ReturnDue)</dd>
                                 <dt>@DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName"):</dt>
-                                <dd><a href="@Url.Action("Edit", "LibraryUsers", new {id = item.BorrowerUser_ID})" class="modal-link">@Html.DisplayFor(modelItem => item.Fullname)</a>&nbsp;&nbsp;<a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.EmailAddress, subject = item.Title, showCaptcha = false, area = "" })" class="modal-link" title="Email @item.Firstname"><span class="glyphicon glyphicon-envelope"></span></a></dd>
+                                <dd><a href="@Url.Action("Edit", "LibraryUsers", new {id = item.BorrowerUser_ID})" class="modal-link">@Html.DisplayFor(modelItem => item.Fullname)</a>&nbsp;&nbsp;<a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.EmailAddress, subject = "Message about: " + item.Title, showCaptcha = false, area = "" })" class="modal-link" title="Email @item.Firstname"><span class="glyphicon glyphicon-envelope"></span></a></dd>
                             }
                         </dl>
                     </div>

@@ -18,6 +18,7 @@ namespace slls.ViewModels
             Title = "Ask a Question";
             InternalMsg = true;
             ShowCaptcha = true;
+            IsModal = false;
         }
         
         [Key]
@@ -58,6 +59,8 @@ namespace slls.ViewModels
         public bool InternalMsg { get; set; }
 
         public bool ShowCaptcha { get; set; }
+
+        public bool IsModal { get; set; }
 
     }
 }

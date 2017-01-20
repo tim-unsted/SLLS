@@ -1,4 +1,5 @@
-﻿@model slls.ViewModels.NewEmailViewModel
+﻿@using Westwind.Globalization
+@model slls.ViewModels.NewEmailViewModel
 
 @Html.Partial("_HeaderCancel")
 
@@ -12,7 +13,7 @@
 
         <div class="form-footer">
             <button type="submit" id="btnSubmit" value="Send" class="btn btn-success" title="Send message"><span aria-hidden="true" class="glyphicon glyphicon-send"></span> Send</button>
-            &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
+            &nbsp;&nbsp;or&nbsp;<input type="button" value="@DbRes.T("Buttons.Cancel", "Terminology")" class="btn-link" onclick="window.history.back();" />
         </div>
     </div>
 }

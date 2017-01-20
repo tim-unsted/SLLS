@@ -74,7 +74,7 @@
                 </td>
                 <td>
                     @*@Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)*@
-                    <a href="@Url.Action("Edit","LibraryUsers", new { id = item.BorrowerUser.Id })" class="modal-link">@Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)</a>&nbsp;&nbsp;<a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.BorrowerUser.Email, subject = item.Volume.Copy.Title.Title1, showCaptcha = false, area = "" })" class="modal-link" title="Email @item.BorrowerUser.Firstname"><span class="glyphicon glyphicon-envelope"></span></a>
+                    <a href="@Url.Action("Edit","LibraryUsers", new { id = item.BorrowerUser.Id })" class="modal-link">@Html.DisplayFor(modelItem => item.BorrowerUser.Fullname)</a>&nbsp;&nbsp;<a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.BorrowerUser.Email, subject = "Message about: " + item.Volume.Copy.Title.Title1, showCaptcha = false, area = "" })" class="modal-link" title="Email @item.BorrowerUser.Firstname"><span class="glyphicon glyphicon-envelope"></span></a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Borrowed)

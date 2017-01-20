@@ -72,7 +72,9 @@ namespace slls.Controllers
                 From = emailFrom,
                 Subject = subject,
                 Message = message,
-                ShowCaptcha = showCaptcha
+                ShowCaptcha = showCaptcha,
+                IsModal = true,
+                InternalMsg = userId != null
             };
 
             ViewBag.Title = "New Email";
@@ -86,7 +88,7 @@ namespace slls.Controllers
             return Json(new { success = true });
         }
 
-        public ActionResult _NewEmail(string to = "", string subject = "")
+        public ActionResult _NewEmail(string to = "", string subject = "", string message = "", bool showCaptcha = true)
         {
             var userId = PublicFunctions.GetUserId();
             var emailFrom = "";
@@ -99,8 +101,14 @@ namespace slls.Controllers
             {
                 To = to,
                 From = emailFrom,
-                Subject = subject
+                Subject = subject,
+                Message = message,
+                ShowCaptcha = showCaptcha,
+                IsModal = true,
+                InternalMsg = userId != null
             };
+
+            ViewBag.Title = "New Email";
             return PartialView("_NewEmail", viewModel);
         }
 
@@ -177,6 +185,10 @@ namespace slls.Controllers
                         return View(viewModel.RedirectAction, viewModel);
                     }
                 }
+                if (viewModel.IsModal)
+                {
+                    return Json(new {success = false});
+                }
                 return View("NewEmail", viewModel);
             }
 
@@ -186,8 +198,14 @@ namespace slls.Controllers
             {
                 return RedirectToAction(viewModel.RedirectAction, viewModel.RedirectController, new { success = true });
             }
+
+            if (viewModel.IsModal)
+            {
+                return Json(new { success = true });
+            }
             return RedirectToAction("Index", "Home", new { success = true });
         }
+
 
         public ActionResult ErrorEmail()
         {

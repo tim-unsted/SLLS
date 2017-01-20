@@ -126,7 +126,7 @@
                 <td style="text-align: right;">
                     @if (item.Returned.ToString() == null || item.Returned.ToString() == "")
                     {
-                        <a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.BorrowerUser.Email, subject = item.Volume.Copy.Title.Title1, showCaptcha = false, area = "" })" class="modal-link" title="Email @item.BorrowerUser.Firstname"><span class="glyphicon glyphicon-envelope"></span></a>
+                        <a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.BorrowerUser.Email, subject = "Message about: " + item.Volume.Copy.Title.Title1, showCaptcha = false, area = "" })" class="modal-link" title="Email @item.BorrowerUser.Firstname"><span class="glyphicon glyphicon-envelope"></span></a>
                         <a href="@Url.Action("ConfirmReturnLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span aria-hidden="true" class="glyphicon glyphicon-share-alt"></span></a>
                         <a href="@Url.Action("ConfirmRenewLoan", new { id = item.BorrowID })" class="btn btn-link modal-link" title="Renew loan"><span aria-hidden="true" class="glyphicon glyphicon-repeat"></span></a>
                     }
