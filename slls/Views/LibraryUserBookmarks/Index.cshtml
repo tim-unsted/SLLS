@@ -60,14 +60,7 @@
         {
             <tr>
                 <td>
-                    @if (String.IsNullOrEmpty(item.Title.Title1))
-                    {
-                        @Html.ActionLink(" ", "Edit", "LibraryUserBookmarks", new { id = item.BookmarkID }, new { @class = "modal-link" })
-                    }
-                    else
-                    {
-                        @Html.ActionLink(item.Title.Title1, "Edit", "LibraryUserBookmarks", new { id = item.BookmarkID }, new { @class = "modal-link" })
-                    }
+                    <a href="@Url.Action("BookDetails", "Home", new { id = item.TitleID })" title="View this bookmarked item">@Html.DisplayFor(modelItem => item.Title.Title1)</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Description)
