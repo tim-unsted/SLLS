@@ -58,7 +58,7 @@
                                                         if (lastOrDefault != null)
                                                         {
                                                             var borrower = lastOrDefault.BorrowerUser;
-                                                            <td><a href="@Url.Action("Edit", "LibraryUsers", new { id = borrower.Id })" class="modal-link">@Html.DisplayFor(x => borrower.Fullname)</a>&nbsp;&nbsp;<a href="@Url.Action("NewEmailPopup", "Messaging", new { to = borrower.Email, subject = "Message about: " + volume.Copy.Title.Title1, showCaptcha = false, area = "" })" class="modal-link" title="Email @borrower.Firstname"><span class="glyphicon glyphicon-envelope"></span></a></td>
+                                                            <td><a href="@Url.Action("Edit", "LibraryUsers", new { id = borrower.Id })" class="modal-link">@Html.DisplayFor(x => borrower.Fullname)</a>&nbsp;&nbsp;<a href="@Url.Action("NewEmailPopup", "Messaging", new { to = borrower.Email, subject = "Message about: " + volume.Copy.Title.Title1, area = "" })" class="modal-link" title="Email @borrower.Firstname"><span class="glyphicon glyphicon-envelope"></span></a></td>
                                                         }
                                                         else
                                                         {

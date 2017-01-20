@@ -58,7 +58,7 @@ namespace slls.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult NewEmailPopup(string to = "", string subject = "", string message = "", bool showCaptcha = true)
+        public ActionResult NewEmailPopup(string to = "", string subject = "", string message = "")
         {
             var userId = PublicFunctions.GetUserId();
 
@@ -67,7 +67,7 @@ namespace slls.Controllers
                 To = to,
                 Subject = subject,
                 Message = message,
-                ShowCaptcha = showCaptcha,
+                ShowCaptcha = userId == null,
                 IsModal = true,
                 InternalMsg = userId != null
             };
@@ -90,9 +90,9 @@ namespace slls.Controllers
             return PartialView("NewEmailPopup", viewModel);
         }
 
-        public ActionResult _NewEmail(string to = "", string subject = "", string message = "", bool showCaptcha = true)
+        public ActionResult _NewEmail(string to = "", string subject = "", string message = "")
         {
-            return RedirectToAction("NewEmailPopup", new { to, subject, message, showCaptcha });
+            return RedirectToAction("NewEmailPopup", new { to, subject, message });
             //var userId = PublicFunctions.GetUserId();
             
             //var emailFrom = "";

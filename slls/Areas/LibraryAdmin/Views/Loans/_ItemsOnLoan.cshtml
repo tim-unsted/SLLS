@@ -120,7 +120,7 @@
                     @Html.DisplayFor(modelItem => item.Volume.Copy.Title.FiledTitle)
                 </td>
                 <td style="text-align: right;">
-                    <a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.BorrowerUser.Email, subject = "Message about: " + item.Volume.Copy.Title.Title1, showCaptcha = false, area = "" })" class="modal-link" title="Email @item.BorrowerUser.Firstname"><span class="glyphicon glyphicon-envelope"></span></a>
+                    <a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.BorrowerUser.Email, subject = "Message about: " + item.Volume.Copy.Title.Title1, area = "" })" class="modal-link" title="Email @item.BorrowerUser.Firstname"><span class="glyphicon glyphicon-envelope"></span></a>
                     <a href="@Url.Action("ConfirmReturnLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Return loan"><span aria-hidden="true" class="glyphicon glyphicon-share-alt"></span></a>
                     <a href="@Url.Action("ConfirmRenewLoan", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Renew loan"><span aria-hidden="true" class="glyphicon glyphicon-repeat"></span></a>
                     <a href="@Url.Action("Edit", new {id = item.BorrowID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
