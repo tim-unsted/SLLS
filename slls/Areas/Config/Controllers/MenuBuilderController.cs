@@ -162,7 +162,7 @@ namespace slls.Areas.Config
             //Add extra roles and menu area if allowed ...
             if (userRoles.Contains("Bailey Admin"))
             {
-                includedMenuRoles.Add("Bailey Admin");
+                //includedMenuRoles.Add("Bailey Admin");
                 includedMenuRoles.Add("Catalogue Admin");
                 includedMenuRoles.Add("Loans Admin");
                 includedMenuRoles.Add("Finance Admin");
@@ -331,7 +331,6 @@ namespace slls.Areas.Config
             //Add extra roles and menu area if allowed ...
             if (userRoles.Contains("Bailey Admin"))
             {
-                includedMenuRoles.Add("Bailey Admin");
                 includedMenuRoles.Add("Catalogue Admin");
                 includedMenuRoles.Add("Loans Admin");
                 includedMenuRoles.Add("Finance Admin");
@@ -341,6 +340,34 @@ namespace slls.Areas.Config
                 includedMenuRoles.Add("System Admin");
                 allowedAreas.Add("LibraryAdmin");
                 allowedAreas.Add("Config");
+            }
+
+            if (userRoles.Contains("System Admin"))
+            {
+                includedMenuRoles.Add("Catalogue Admin");
+                includedMenuRoles.Add("Loans Admin");
+                includedMenuRoles.Add("Finance Admin");
+                includedMenuRoles.Add("Serials Admin");
+                includedMenuRoles.Add("Users Admin");
+                includedMenuRoles.Add("OPAC Admin");
+            }
+
+            //Remove the 'OPAC User' role if we're editing the Library Admin menu ...
+            if (menuitem.MenuArea == "LibraryAdmin")
+            {
+                includedMenuRoles.Remove("OPAC User");
+            }
+
+            //Remove the 'OPAC User' and 'Admin' roles if we're editing the Config menu ...
+            if (menuitem.MenuArea == "Config")
+            {
+                includedMenuRoles.Remove("OPAC User");
+                includedMenuRoles.Remove("Catalogue Admin");
+                includedMenuRoles.Remove("Loans Admin");
+                includedMenuRoles.Remove("Finance Admin");
+                includedMenuRoles.Remove("Serials Admin");
+                includedMenuRoles.Remove("Users Admin");
+                includedMenuRoles.Remove("OPAC Admin");
             }
 
             //Create our view model of data to work with ...
@@ -390,21 +417,21 @@ namespace slls.Areas.Config
                 });
             }
 
-            //Remove the 'OPAC User' role if we're editing the Library Admin menu ...
-            if (menuitem.MenuArea == "LibraryAdmin")
-            {
-                var opacUser = viewModel.RolesList.Single(r => r.Value == "OPAC User");
-                viewModel.RolesList.Remove(opacUser);
-            }
+            ////Remove the 'OPAC User' role if we're editing the Library Admin menu ...
+            //if (menuitem.MenuArea == "LibraryAdmin")
+            //{
+            //    var opacUser = viewModel.RolesList.Single(r => r.Value == "OPAC User");
+            //    viewModel.RolesList.Remove(opacUser);
+            //}
 
-            //Remove the 'OPAC User' and 'Library Staff' roles if we're editing the Library Admin menu ...
-            if (menuitem.MenuArea == "Config")
-            {
-                var opacUser = viewModel.RolesList.Single(r => r.Value == "OPAC User");
-                viewModel.RolesList.Remove(opacUser);
-                var staff = viewModel.RolesList.Single(r => r.Value == "Library Staff");
-                viewModel.RolesList.Remove(staff);
-            }
+            ////Remove the 'OPAC User' and 'Library Staff' roles if we're editing the Library Admin menu ...
+            //if (menuitem.MenuArea == "Config")
+            //{
+            //    var opacUser = viewModel.RolesList.Single(r => r.Value == "OPAC User");
+            //    viewModel.RolesList.Remove(opacUser);
+            //    var staff = viewModel.RolesList.Single(r => r.Value == "Library Staff");
+            //    viewModel.RolesList.Remove(staff);
+            //}
 
             //Get data for various drop-down lists ...
             ViewBag.Targets = GetTargets();
