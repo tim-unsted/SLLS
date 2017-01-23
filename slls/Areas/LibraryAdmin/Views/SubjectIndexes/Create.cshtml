@@ -12,9 +12,20 @@
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.TitleId)
 
-            @*<div class="alert alert-info">
-                <span>You may add multiple <span class="text-lowercase">@DbRes.T("Keywords.Keyword", "FieldDisplayName")</span>s at once by clicking on the required items whilst holding down the CTRL key.</span>
-            </div>*@
+            <div class="alert alert-info">
+                @if (Model.LargeData)
+                {
+                    <p>
+                        <strong><span class="glyphicon glyphicon-info-sign"></span></strong> Start typing the @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() you wish to add in the box below. You can add a new @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() if the one you require does not already exist.
+                    </p>
+                }
+                else
+                {
+                    <p>
+                        <strong><span class="glyphicon glyphicon-info-sign"></span></strong> Select the @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() you wish to add from the drop-down list below.
+                    </p>
+                }
+            </div>
 
             <div class="form-group">
                 @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
@@ -23,13 +34,28 @@
                     @Html.ValidationMessageFor(model => model.TitleId, "", new { @class = "text-danger" })
                 </div>
             </div>
-            <div class="form-group">
-                @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-10">
-                    @Html.DropDownListFor(x => x.SelectedKeywords, Model.AvailableKeywords, new { @class = "form-control selectpicker" })
-                    @Html.ValidationMessageFor(model => model.KeywordId, "", new { @class = "text-danger" })
+
+            @if (Model.LargeData)
+            {
+                <div class="form-group">
+                    @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="input-group col-md-9">
+                        @Html.TextBoxFor(x => x.Keyword, new { @placeholder = "Start typing the term you are looking for ...", @class = "form-control" })
+                        @Html.HiddenFor(model => model.KeywordId)
+                    </div>
                 </div>
-            </div>
+            }
+            else
+            {
+                <div class="form-group">
+                    @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownListFor(x => x.KeywordId, Model.AvailableKeywords, new { @class = "form-control selectpicker" })
+                        @Html.ValidationMessageFor(model => model.KeywordId, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+
         </div>
     </div>
 
