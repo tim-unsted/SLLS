@@ -90,7 +90,7 @@ namespace slls.Areas.Config
             };
         }
 
-        //Method used to supply a JSON list of parent menu itemss when selecting a menu area (Ajax stuf)
+        //Method used to supply a JSON list of parent menu items when selecting a menu area (Ajax stuf)
         public JsonResult GetParents(int AreaID = 0)
         {
             var parents = new SelectList(_db.Menus.Where(m => m.ParentID == AreaID).OrderBy(m => m.SortOrder).ToList(), "ID", "Title");
@@ -101,6 +101,43 @@ namespace slls.Areas.Config
                 ParentData = parents
             });
         }
+        
+
+        public List<string> ActionNames(string controllerName = "", string nameSpace = "")
+        {
+            var types =
+                from a in AppDomain.CurrentDomain.GetAssemblies()
+                from t in a.GetTypes()
+                where typeof(IController).IsAssignableFrom(t) &&
+                        string.Equals(nameSpace + "." + controllerName + "Controller", t.FullName, StringComparison.OrdinalIgnoreCase)
+
+                select t;
+
+            var controllerType = types.FirstOrDefault();
+
+            if (controllerType == null)
+            {
+                return Enumerable.Empty<string>().ToList();
+            }
+            return new ReflectedControllerDescriptor(controllerType)
+                .GetCanonicalActions().Select(x => x.ActionName)
+                .Distinct()
+                .ToList();
+        }
+
+
+        public JsonResult GetActionNames(string controllerName = "", string nameSpace = "")
+        {
+            var actionList = ActionNames(controllerName, nameSpace);
+
+            var actions = new SelectList(actionList, "ActionName").OrderBy(x => x.Text);
+            return Json(new
+            {
+                success = true,
+                Actions = actions
+            });
+        }
+        
 
         [AuthorizeRoles(Roles.BaileyAdmin)]
         public ActionResult LibraryAdmin()
@@ -316,6 +353,31 @@ namespace slls.Areas.Config
                 return HttpNotFound();
             }
 
+            var nameSpace = "";
+            switch (menuitem.LinkArea)
+            {
+                case "OPAC":
+                {
+                    nameSpace = "slls.Controllers";
+                    break;
+                }
+                case "LibraryAdmin":
+                {
+                    nameSpace = "slls.Areas.LibraryAdmin";
+                    break;
+                }
+                case "Config":
+                {
+                    nameSpace = "slls.Areas.Config";
+                    break;
+                }
+                case "CheckInOut":
+                {
+                    nameSpace = "slls.Areas.CheckInOut";
+                    break;
+                }
+            }
+
             //Establish what roles the current user has. Should be at least 'Admin' to get here ...
             var userRoles = Roles.GetUserRoles();
 
@@ -396,6 +458,8 @@ namespace slls.Areas.Config
                 Description = menuitem.Description,
                 Groups = menuitem.Groups,
                 RolesList = new List<SelectListItem>(),
+                Actions = new List<SelectListItem>(),
+                NameSpace = nameSpace,
                 IsBsAdmin = Roles.IsBaileyAdmin()
             };
 
@@ -417,26 +481,10 @@ namespace slls.Areas.Config
                 });
             }
 
-            ////Remove the 'OPAC User' role if we're editing the Library Admin menu ...
-            //if (menuitem.MenuArea == "LibraryAdmin")
-            //{
-            //    var opacUser = viewModel.RolesList.Single(r => r.Value == "OPAC User");
-            //    viewModel.RolesList.Remove(opacUser);
-            //}
-
-            ////Remove the 'OPAC User' and 'Library Staff' roles if we're editing the Library Admin menu ...
-            //if (menuitem.MenuArea == "Config")
-            //{
-            //    var opacUser = viewModel.RolesList.Single(r => r.Value == "OPAC User");
-            //    viewModel.RolesList.Remove(opacUser);
-            //    var staff = viewModel.RolesList.Single(r => r.Value == "Library Staff");
-            //    viewModel.RolesList.Remove(staff);
-            //}
-
             //Get data for various drop-down lists ...
             ViewBag.Targets = GetTargets();
             ViewBag.MenuAreas = GetMenuAreas();
-            ViewBag.Controllers = MvcHelpers.GetControllerShortNames();
+            ViewBag.Controllers = MvcHelpers.GetControllerShortNames(nameSpace);
             ViewBag.DataToggles = GetDataToggles();
             ViewBag.DataTargets = GetDataTargets();
 
@@ -456,11 +504,13 @@ namespace slls.Areas.Config
                     greatGrandParentId = grandParentItem.ParentID;
                 }
             }
-
+            
             //Only provide access to certain areas, depending on the user's roles ...
             ViewData["ParentArea"] = new SelectList(_db.Menus.Where(m => m.ParentID == greatGrandParentId && allowedAreas.Contains(m.MenuArea) && m.MenuArea == menuitem.MenuArea).OrderBy(m => m.Title), "ID", "Title", grandParentId);
             ViewData["ParentID"] = new SelectList(_db.Menus.Where(m => m.ParentID == grandParentId && allowedAreas.Contains(m.MenuArea)).OrderBy(m => m.Title), "ID", "Title", menuitem.ParentID);
-            
+            var actions = ActionNames(viewModel.Controller, nameSpace); // SelectList(ActionNames(viewModel.Controller, nameSpace), "ActionName", null, viewModel.Action);
+            ViewBag.Actions = actions.OrderBy(x => x.ToLowerInvariant()).ToList();
+
             ViewBag.Title = "Edit Menu Item";
             return PartialView(viewModel);
         }

@@ -82,33 +82,34 @@ namespace slls.Controllers
             }
             base.OnActionExecuted(filterContext);
         }
-        public sllsBaseController()
-        { }
 
-        public FileResult SendFileToBrowser(string filePath)
-        {
-            string fileName = Path.GetFileName(filePath);
-            string contentType = GetMimeType(fileName);
-            return File(filePath, contentType, fileName);
-        }
+        //public sllsBaseController()
+        //{ }
 
-        public string GetMimeType(string fileName)
-        {
-            var mimeType = "text/plain";
+        //public FileResult SendFileToBrowser(string filePath)
+        //{
+        //    string fileName = Path.GetFileName(filePath);
+        //    string contentType = GetMimeType(fileName);
+        //    return File(filePath, contentType, fileName);
+        //}
 
-            if (!string.IsNullOrEmpty(fileName))
-            {
-                String ext = Path.GetExtension(fileName).ToLower();
-                RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(ext);
+        //public string GetMimeType(string fileName)
+        //{
+        //    var mimeType = "text/plain";
 
-                if (regKey != null && regKey.GetValue("Content Type") != null)
-                {
-                    mimeType = regKey.GetValue("Content Type").ToString();
-                }
-                return mimeType;
-            }
-            return mimeType;
-        }
+        //    if (!string.IsNullOrEmpty(fileName))
+        //    {
+        //        String ext = Path.GetExtension(fileName).ToLower();
+        //        RegistryKey regKey = Registry.ClassesRoot.OpenSubKey(ext);
+
+        //        if (regKey != null && regKey.GetValue("Content Type") != null)
+        //        {
+        //            mimeType = regKey.GetValue("Content Type").ToString();
+        //        }
+        //        return mimeType;
+        //    }
+        //    return mimeType;
+        //}
 
     }
 

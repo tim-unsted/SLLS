@@ -42,6 +42,8 @@ namespace slls.ViewModels
         [StringLength(50)]
         public string Action { get; set; }
 
+        public string NameSpace { get; set; }
+
         [StringLength(50)]
         [DisplayName("Link Destination Area")]
         public string LinkArea { get; set; }
@@ -107,5 +109,7 @@ namespace slls.ViewModels
         public virtual Menu Menu2 { get; set; }
 
         public List<SelectListItem> RolesList { get; set; }
+
+        public List<SelectListItem> Actions { get; set; }
     }
 }

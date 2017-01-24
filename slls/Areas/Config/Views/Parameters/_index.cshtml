@@ -36,7 +36,8 @@
         {
             <tr>
                 <td>
-                    @Html.ActionLink(item.ParameterName, "Edit", "Parameters", new { id = item.RecID }, new { @class = "modal-link" })
+                    @*@Html.ActionLink(item.ParameterName, "Edit", "Parameters", new { id = item.RecID }, new { @class = "modal-link" })*@
+                    <a href="@Url.Action("Edit", "Parameters", new { id = item.RecID, area = "Config" })" title="Edit" class ="modal-link">@item.ParameterName</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ParameterValue)
