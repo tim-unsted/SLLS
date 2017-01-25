@@ -47,12 +47,16 @@
     <div class="row" style="margin-left: 2px;">
         @if (Model.TitleImages.Any())
         {
-            colClass = "col-md-10";
-            <div class="col-md-2">
-                <div class="thumbnail">
-                    <img src="@Url.Action("ViewImage", "Home", new {id = Model.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@Model.TitleImages.FirstOrDefault().Alt">
+            var image = Model.TitleImages.FirstOrDefault(i => i.IsPrimary) ?? Model.TitleImages.FirstOrDefault();
+            if (image != null)
+            {
+                colClass = "col-md-10";
+                <div class="col-md-2">
+                    <div class="thumbnail">
+                        <img src="@Url.Action("ViewImage", "Home", new { id = image.ImageId })" alt="@image.Alt">
+                    </div>
                 </div>
-            </div>
+            }
         }
         <div class=@colClass>
             <dl class="dl-horizontal">

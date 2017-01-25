@@ -156,14 +156,18 @@
                     <div class="row" style="margin-left: 2px; margin-bottom: 0;">
                         @if (item.TitleImages.Any())
                         {
-                            colClass = "col-md-10";
-                            <div class="col-md-2">
-                                <div class="coverthumbnail">
-                                    <a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")">
-                                        <img src="@Url.Action("ViewImage", "Home", new {id = item.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@item.TitleImages.FirstOrDefault(i => i.IsPrimary).Alt" style="width: 100%;">
-                                    </a>
+                            var image = item.TitleImages.FirstOrDefault(i => i.IsPrimary) ?? item.TitleImages.FirstOrDefault();
+                            if (image != null)
+                            {
+                                colClass = "col-md-10";
+                                <div class="col-md-2">
+                                    <div class="coverthumbnail">
+                                        <a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")">
+                                            <img src="@Url.Action("ViewImage", "Home", new { id = image.ImageId })" alt="@image.Alt" style="width: 100%;">
+                                        </a>
+                                    </div>
                                 </div>
-                            </div>
+                            }
                         }
                         <div class=@colClass>
                             <dl class="dl-horizontal">
