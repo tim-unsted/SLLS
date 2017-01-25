@@ -549,6 +549,7 @@
     <Content Include="App_Data\Templates\DefaultEmail.txt" />
     <Content Include="Content\bootstrap-select.css" />
     <Content Include="Content\bootstrap-select.min.css" />
+    <Content Include="Images\logo_1x.png" />
     <Content Include="Logs\logErrors.txt" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\OrdersBySupplier.cshtml">
       <SubType>Code</SubType>
@@ -1319,7 +1320,7 @@
     <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueChosenPublisherByAuthorTitle.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueSelectedMediaByAuthorTitle.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\CatalogueSelectedLocationsByAuthorTitle.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\Shared\TopMenuX.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\TopMenuXzz.cshtml" />
     <Content Include="Areas\Config\Views\Shared\TopMenuX.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectCatalogueChosenSubjectByAuthorTitle.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\SubjectCatalogueChosenSubjectByTitle.cshtml" />

@@ -32,9 +32,14 @@
                                 foreach (var l3 in itemsL3)
                                 {
                                     //Create the actual sub menu item links ...
-                                    <li style="padding: 3px 10px;">
-                                        <a href="@Url.Action(l3.Action, l3.Controller, new { area = "" })" data-toggle="@l3.DataToggle" data-target="@l3.DataTarget" target="@l3.Target" title="@l3.HoverTip">@l3.Title</a>
-                                    </li>
+                                    if (!string.IsNullOrEmpty(l3.URL))
+                                    {
+                                        <li style="padding: 3px 10px;"><a href="@l3.URL" target="@l3.Target" title="@l3.HoverTip">@l3.Title</a></li>
+                                    }
+                                    else
+                                    {
+                                        <li style="padding: 3px 10px;"><a href="@Url.Action(l3.Action, l3.Controller, new { area = l3.LinkArea })" class="@l3.Class" data-toggle="@l3.DataToggle" data-target="@l3.DataTarget" target="@l3.Target" title="@l3.HoverTip">@l3.Title</a></li>
+                                    }
                                 }
                             }
                         }
@@ -42,7 +47,6 @@
                 }
                 else
                 {
-                    @*@Html.ActionLink(l1.Title, l1.Action, l1.Controller, new { Area = l1.LinkArea }, null)*@
                     <a href="@Url.Action(l1.Action, l1.Controller, new { area = l1.LinkArea })" data-toggle="@l1.DataToggle" data-target="@l1.DataTarget" target="@l1.Target" title="@l1.HoverTip">@l1.Title</a>
                 }
 }

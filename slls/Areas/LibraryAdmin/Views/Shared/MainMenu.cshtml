@@ -5,7 +5,8 @@
 <script src="//code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
 @{
-    Layout = null;    
+    Layout = null;
+    var colClass = "col-sm-3";
 }
 
 @{
@@ -36,11 +37,16 @@
                             <li class="dropdown menu-large">
                                 @{
                                     //Get the sub menu items ...
+                                    colClass = "col-sm-3";
                                     var topItem = l1;
                                     var itemsL2 = from p in Model.Where(m => m.IsVisible && m.ParentID == topItem.ID) select p;
                                     
                                     if (itemsL2.Any())
                                     {
+                                        if (itemsL2.Count() > 4)
+                                        {
+                                            colClass = "col-sm-2";
+                                        }
                                         //Create a top-level dropdown menu item ...
                                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">@topItem.Title<span class="caret"></span></a>
                                         <ul class="dropdown-menu megamenu row" role="menu">
@@ -48,27 +54,31 @@
                                             @foreach (var l2 in itemsL2)
                                             {
                                                 var subItem = l2;
-                                                <li class="col-sm-2">
+                                                <li class=@colClass>
                                                     <ul>
                                                         <li class="dropdown-header">@subItem.Title</li>
                                                         @{
-                                                //Get the actual sub menu items ...
-                                                var itemsL3 = from l in Model.Where(m => m.IsVisible && m.ParentID == subItem.ID) select l;
-                                                if (itemsL3 != null || itemsL3.Any())
-                                                {
-                                                    foreach (var l3 in itemsL3)
-                                                    {
-                                                        //Create the actual sub menu item links ...
-                                                        if (l3.Class == "divider")
-                                                        {
-                                                            <li role="separator" class="divider"></li>
-                                                        }
-                                                        else
-                                                        {
-                                                            <li><a href="@Url.Action(l3.Action, l3.Controller)" class="@l3.Class" data-toggle="@l3.DataToggle" data-target="@l3.DataTarget" target="@l3.Target" title="@l3.HoverTip">@l3.Title</a></li>
-                                                        }
-                                                    }
-                                                }
+                                                            //Get the actual sub menu items ...
+                                                            var itemsL3 = from l in Model.Where(m => m.IsVisible && m.ParentID == subItem.ID) select l;
+                                                            if (itemsL3 != null || itemsL3.Any())
+                                                            {
+                                                                foreach (var l3 in itemsL3)
+                                                                {
+                                                                    //Create the actual sub menu item links ...
+                                                                    if (l3.Class == "divider")
+                                                                    {
+                                                                        <li role="separator" class="divider"></li>
+                                                                    }
+                                                                    else if (!string.IsNullOrEmpty(l3.URL))
+                                                                    {
+                                                                        <li><a href="@l3.URL" target="@l3.Target" title="@l3.HoverTip">@l3.Title</a></li>
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        <li><a href="@Url.Action(l3.Action, l3.Controller, new { area = l3.LinkArea })" class="@l3.Class" data-toggle="@l3.DataToggle" data-target="@l3.DataTarget" target="@l3.Target" title="@l3.HoverTip">@l3.Title</a></li>
+                                                                    }
+                                                                }
+                                                            }
                                                         }
                                                     </ul>
                                                 </li>
@@ -78,7 +88,6 @@
                                     else
                                     {
                                         //Create a non-dropdown top-level menu item (e.g "Home")
-                                        @*@Html.ActionLink(topItem.Title, topItem.Action, topItem.Controller, new { Area = topItem.LinkArea }, null)*@
                                         <a href="@Url.Action(l1.Action, l1.Controller, new { area = l1.LinkArea })" data-toggle="@l1.DataToggle" data-target="@l1.DataTarget" target="@l1.Target" title="@l1.HoverTip">@l1.Title</a>
                                     }
 }
