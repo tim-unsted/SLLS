@@ -25,7 +25,6 @@
         {
             @Html.AntiForgeryToken()
             @Html.HiddenFor(model => model.To)
-            @Html.HiddenFor(model => model.From)
             @Html.HiddenFor(model => model.InternalMsg)
             @Html.HiddenFor(model => model.RedirectAction)
             @Html.HiddenFor(model => model.RedirectController)
@@ -33,12 +32,26 @@
             <div class="form-horizontal">
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
-                <div class="form-group">
+                @if (string.IsNullOrEmpty(Model.From))
+                {
+                    <div class="form-group">
+                        <div class="col-md-12">
+                            @Html.LabelFor(model => model.From)
+                            @Html.EditorFor(model => model.From, new {htmlAttributes = new {@class = "form-control"}})
+                            @Html.ValidationMessageFor(model => model.From, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @Html.HiddenFor(model => model.From)
+                }
 
+                <div class="form-group">
                     <div class="col-md-12">
                         @Html.LabelFor(model => model.Subject)
-                        @Html.EditorFor(model => model.Subject, new {htmlAttributes = new {@class = "form-control"}})
-                        @Html.ValidationMessageFor(model => model.Subject, "", new {@class = "text-danger"})
+                        @Html.EditorFor(model => model.Subject, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Subject, "", new { @class = "text-danger" })
                     </div>
                 </div>
 
@@ -50,12 +63,21 @@
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <div class="col-md-12">
-                        @Html.ValidationMessage("reCaptcha", new { @class = "text-danger" })
-                        @Html.ReCaptcha()
+                @if (Model.ShowCaptcha)
+                {
+                    <div class="form-group">
+                        @*<div class="col-md-offset-2 col-md-10">*@
+                            <div class="col-md-12">
+                                @Html.ValidationMessage("reCaptcha", new { @class = "text-danger" })
+                                @Html.ReCaptcha()
+                            </div>
+                        @*</div>*@
                     </div>
-                </div>
+                }
+                else
+                {
+                    @Html.Hidden("captchaValid", "true")
+                }
                 
                 <div style="text-align: right;">
                     <button type="submit" id="btnSubmit" value="Send" class="btn btn-success" title="Send message"><span aria-hidden="true" class="glyphicon glyphicon-send"></span> Send</button>

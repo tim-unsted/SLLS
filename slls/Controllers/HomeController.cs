@@ -168,10 +168,10 @@ namespace slls.Controllers
                             emailFrom = _db.Users.Find(userId).Email;
                         }
 
-                        if (string.IsNullOrEmpty(emailFrom))
-                        {
-                            return null;
-                        }
+                        //if (string.IsNullOrEmpty(emailFrom))
+                        //{
+                        //    return null;
+                        //}
 
                         var newEmailViewModel = new NewEmailViewModel
                         {
@@ -180,7 +180,8 @@ namespace slls.Controllers
                             RedirectAction = "Index",
                             RedirectController = "Home",
                             Title = "Ask a Question",
-                            InternalMsg = true
+                            InternalMsg = true,
+                            ShowCaptcha = string.IsNullOrEmpty(emailFrom)
                         };
 
                         var enquiryTypes = new Dictionary<string, string>

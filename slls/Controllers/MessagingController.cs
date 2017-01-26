@@ -132,7 +132,20 @@ namespace slls.Controllers
                 var defaultFrom = Settings.GetParameterValue("EmailSettings.NoReplyAddress", "no-reply@slls.online", "The default 'from' address that is used when generating email notifications. This is the actual address that the email will appear to come from. Use something generic, rather than an internal email address, to avoid emails being rejected by your incoming mail server because of relaying blocks and spam filtering.", dataType: "text");
                 var replyAddress = Settings.GetParameterValue("EmailSettings.EmailFromAddress", "library@mycompany.com", "The 'from' address that will be quoted in system-generated emails. This should be a valid email address that users can reply to.", dataType: "text");
                 var userId = Utils.PublicFunctions.GetUserId();
-                var userFullName = _db.Users.Find(userId).Fullname;
+                var userFullName = viewModel.From;
+                if (userId != null)
+                {
+                    userFullName = _db.Users.Find(userId).Fullname;
+                }
+                else
+                {
+                    var parts = viewModel.From.Split('@');
+                    if (parts.Any())
+                    {
+                        userFullName = parts[0].Replace(".", " ");
+                    }
+                    
+                }
                 
                 //Read template file from the App_Data folder. This is the 'default message' template
                 using (var sr = new StreamReader(Server.MapPath("\\App_Data\\Templates\\DefaultEmail.txt")))
