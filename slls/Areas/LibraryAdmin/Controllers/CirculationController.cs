@@ -10,8 +10,10 @@ using System.Web.UI.WebControls.Expressions;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using slls.App_Settings;
+using slls.Controllers;
 using slls.DAO;
 using slls.Models;
+using slls.Utils;
 using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
@@ -1689,6 +1691,40 @@ namespace slls.Areas.LibraryAdmin
                                    select t).Distinct();
 
             return PartialView("Reports/_CirculatedItemsByUser", circulatedItems);
+        }
+
+
+        public ActionResult EmailAllRecipients(int id = 0)
+        {
+            if (id == 0)
+            {
+                return Json(new { success = false });
+            }
+
+            var copy = _db.Copies.Find(id);
+            if (copy == null)
+            {
+                return Json(new { success = false });
+            }
+
+            var circulations = _db.Circulations.Where(c => c.CopyID == id);
+            var emailAddresses = "";
+            foreach (var item in circulations)
+            {
+                var user = _db.Users.Find(item.RecipientUser.Id);
+                if (user != null)
+                {
+                    if (!string.IsNullOrEmpty(user.Email))
+                    {
+                        emailAddresses = emailAddresses + user.Email + ";";
+                    }
+                }
+            }
+
+            using (var messaging = new MessagingController())
+            {
+                return messaging.NewEmailPopup(emailAddresses, "Message about " + copy.Title.Title1);
+            }
         }
 
 

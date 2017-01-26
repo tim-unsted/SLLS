@@ -3,7 +3,7 @@
 
 @Html.Partial("_ModalAddHeader")
 
-@using (Html.BeginForm("SendEmail", "Messaging", FormMethod.Post))
+@using (Html.BeginForm("SendEmail", "Messaging", new { area = "" }, FormMethod.Post))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(x => Model.IsModal)

@@ -311,8 +311,17 @@ textarea.form-control.xlarge {
 }
 
 .glyphicon {
-    font-size: 1.0em;
+    font-size: 1.1em;
+    padding-right: 3px;
 }
+
+/*Stuff to resize Glyphicons */
+.glyphicon-standard{font-size: 1.2em;}
+.glyphicon-larger{font-size: 1.5em;}
+.glyphicon-large{font-size: 2em;}
+.glyphicon-xlarge{font-size: 3em;}
+.glyphicon-xxlarge{font-size: 4em;}
+.glyphicon-xxxlarge{font-size: 5em;}
 
 /*Zebra effect on tables - dark colour*/
 .table-striped > tbody > tr:nth-of-type(odd) {
@@ -984,3 +993,6 @@ h5 {
 .ui-autocomplete {
     z-index: 2147483647 !important;
 }
+
+
+

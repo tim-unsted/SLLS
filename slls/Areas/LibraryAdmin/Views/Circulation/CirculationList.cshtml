@@ -23,7 +23,7 @@
                 "targets": [1]
             },
             {
-                "width": "10%",
+                "width": "20%",
                 "searchable": false,
                 "sortable": false,
                 "targets": [2]
@@ -45,7 +45,6 @@
     
     @if ((int)ViewData["CopyID"] > 0)
     {
-        @*<div style="padding-top: 10px;"></div>*@
         @Html.HorizontalSpacer();
         <div class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -61,6 +60,7 @@
     @if (Model.Any())
     {
         <a href="@Url.Action("RemoveAllRecipients", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" title="Remove All @DbRes.T("Circulation.Recipients", "FieldDisplayName") from this @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> Remove <strong>All</strong></a>
+        <a href="@Url.Action("EmailAllRecipients", new {id = ViewData["CopyID"]})" class="btn btn-success modal-link" title="Email All @DbRes.T("Circulation.Recipients", "FieldDisplayName") on this @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> Email @DbRes.T("Circulation.Recipients", "FieldDisplayName")</a>
     }
 
 
@@ -102,7 +102,8 @@
                     <td class="just-right">
                         <a href="@Url.Action("MoveRecipientUpList", new { id = item.CirculationID })" class="btn btn-link" title="Move @DbRes.T("Circulation.Recipient", "FieldDisplayName") up List"><span aria-hidden="true" class="glyphicon glyphicon-arrow-up"></span></a>
                         <a href="@Url.Action("MoveRecipientDownList", new { id = item.CirculationID })" class="btn btn-link" title="Move @DbRes.T("Circulation.Recipient", "FieldDisplayName") down List"><span aria-hidden="true" class="glyphicon glyphicon-arrow-down"></span></a>
-                        <a href="@Url.Action("Edit", "LibraryUsers", new { id = item.RecipientUser.Id })" class="btn btn-link" title="Edit @DbRes.T("Circulation.Recipient", "FieldDisplayName")" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
+                        <a href="@Url.Action("Edit", "LibraryUsers", new {id = item.RecipientUser.Id})" class="btn btn-link" title="Edit @DbRes.T("Circulation.Recipient", "FieldDisplayName")" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
+                        <a href="@Url.Action("NewEmailPopup", "Messaging", new { to = item.RecipientUser.Email, subject = "Message about: " + item.Copy.Title.Title1, area = "" })" class="modal-link" title="Email @item.RecipientUser.Firstname"><span class="glyphicon glyphicon-envelope"></span></a>
                         <a href="@Url.Action("RemoveRecipient", new { id = item.CirculationID })" class="btn btn-link modal-link" title="Remove @DbRes.T("Circulation.Recipient", "FieldDisplayName") from List"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></a>
                     </td>
                 </tr>

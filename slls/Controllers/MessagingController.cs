@@ -58,6 +58,7 @@ namespace slls.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet]
         public ActionResult NewEmailPopup(string to = "", string subject = "", string message = "")
         {
             var userId = PublicFunctions.GetUserId();
@@ -93,35 +94,6 @@ namespace slls.Controllers
         public ActionResult _NewEmail(string to = "", string subject = "", string message = "")
         {
             return RedirectToAction("NewEmailPopup", new { to, subject, message });
-            //var userId = PublicFunctions.GetUserId();
-            
-            //var emailFrom = "";
-            
-            //if (userId != null)
-            //{
-            //    if (Roles.IsLibraryStaff())
-            //    {
-            //        emailFrom = Settings.GetParameterValue("EmailSettings.EmailFromAddress", "library@mycompany.com", "The 'from', or reply,  email address that will be quoted in system-generated emails. This should be a valid email address that users can reply to.", dataType: "text");
-            //    }
-            //    else
-            //    {
-            //        emailFrom = _db.Users.Find(userId).Email;
-            //    }
-            //}
-
-            //var viewModel = new NewEmailViewModel
-            //{
-            //    To = to,
-            //    From = emailFrom,
-            //    Subject = subject,
-            //    Message = message,
-            //    ShowCaptcha = showCaptcha,
-            //    IsModal = true,
-            //    InternalMsg = userId != null
-            //};
-
-            //ViewBag.Title = "New Email";
-            //return PartialView("_NewEmail", viewModel);
         }
 
         [HttpPost]

@@ -60,7 +60,7 @@
                         <div class="form-group">
                             @Html.Label(DbRes.T("Users.Password","FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
-                                <a href="@Url.Action("ResetUserPassword", new { id = Model.Id })" title="Reset Password" class="btn btn-primary modal-link" id="cmdResetPwd">Reset Password</a>
+                                <a href="@Url.Action("ResetUserPassword", new {id = Model.Id})" title="Reset Password" class="btn btn-primary modal-link" id="cmdResetPwd"><span class="glyphicon glyphicon-refresh"></span> Reset Password</a>
                             </div>
                         </div>
 
@@ -173,27 +173,23 @@
         </div>
     </div>
 
-    @Html.Partial("_ModalEditFooter")
+
+    <div class="modal-footer">
+        @if (!string.IsNullOrEmpty(Model.Email))
+        {
+            <span class="pull-left">
+                <a href="@Url.Action("NewEmailPopup", "Messaging", new {to = Model.Email, area = ""})" class="btn btn-primary modal-link" data-dismiss="modal" title="Email User"><span class="glyphicon glyphicon-envelope"></span> Send Email</a>
+            </span>
+        }
+        <button type="submit" id="btnSave" value="Save" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
 }
 
 <script type="text/javascript">
     $('#cmdResetPwd').click(function () {
         $('#lrgModal').modal('hide');
     });
-    //$(function () {
-    //    $('form').submit(function (e) {
-    //        e.preventDefault();
-    //        $.post(this.action, $(this).serialize(), function (response) {
-    //            if (response.error) {
-    //                alert(response.error);
-    //            }
-    //            else {
-    //                $('#stdModal').modal('hide');
-    //                $('#lrgModal').modal('hide');
-    //            }
-    //        }, 'json');
-    //    });
-    //});
 </script>
 
 
