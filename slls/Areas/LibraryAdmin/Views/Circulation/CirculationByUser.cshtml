@@ -1,5 +1,6 @@
 ﻿@using System
 @using System.Linq
+@using slls.Utils.Helpers
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Circulation>
 
@@ -42,6 +43,7 @@
 
     @if (!string.IsNullOrEmpty((string)ViewData["UserID"]) && (string)ViewData["UserID"] != "0")
     {
+        @Html.HorizontalSpacer();
         <div class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add @ViewData["UserName"] to Circulation Lists <span class="caret"></span>

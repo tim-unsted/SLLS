@@ -1,5 +1,6 @@
 ﻿@using System.Linq
 @using slls.Models
+@using slls.Utils.Helpers
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Circulation>
 
@@ -41,9 +42,11 @@
     {
         @Html.DropDownList("Copy", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();", style = "margin-bottom: 15px;" })
     }
-
+    
     @if ((int)ViewData["CopyID"] > 0)
     {
+        @*<div style="padding-top: 10px;"></div>*@
+        @Html.HorizontalSpacer();
         <div class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Circulation.Recipients", "FieldDisplayName") <span class="caret"></span>

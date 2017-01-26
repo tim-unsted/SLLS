@@ -237,7 +237,7 @@ namespace slls.Areas.LibraryAdmin
             cloneOptions.Add(new SelectListItem { Text = "Append", Value = "a" });
             cloneOptions.Add(new SelectListItem { Text = "Overwrite", Value = "o" });
             viewModel.AdditionalOptions = cloneOptions;
-
+            ViewBag.Title = viewModel.HeaderText;
             return PartialView("CloneRecipient", viewModel);
         }
 
@@ -1027,6 +1027,7 @@ namespace slls.Areas.LibraryAdmin
                 }));
 
             viewModel.AvailableItems2 = user2List;
+            ViewBag.Title = viewModel.HeaderText;
             return PartialView("_Select2Popup", viewModel);
         }
 
@@ -1126,7 +1127,7 @@ namespace slls.Areas.LibraryAdmin
             cloneOptions.Add(new SelectListItem { Text = "Add to top of list", Value = "t" });
             cloneOptions.Add(new SelectListItem { Text = "Add to bottom of list", Value = "b" });
             viewModel.AdditionalOptions = cloneOptions;
-
+            ViewBag.Title = viewModel.HeaderText;
             return PartialView("_SelectPopupWithOption", viewModel);
         }
 

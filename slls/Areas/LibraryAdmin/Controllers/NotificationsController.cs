@@ -31,7 +31,7 @@ namespace slls.Areas.LibraryAdmin
         public Dictionary<string, string> GetScopeTypes()
         {
             var scopeTypes = new Dictionary<string, string>();
-            if (Roles.IsAdmin())
+            if (Roles.IsAdmin() || Roles.IsBaileyAdmin())
             {
                 scopeTypes.Add("A", "Library Admin");
             }

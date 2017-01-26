@@ -235,5 +235,12 @@ namespace slls.Utils.Helpers
             return actionLink;
         }
 
+        //A thin hrixontal spacer, userful between dropdownlist and buttons beneath ...
+        public static MvcHtmlString HorizontalSpacer(this HtmlHelper helper, int padding = 10)
+        {
+            var str = "<div style=\"padding-top: " + padding + "px;\"></div>";
+            return new MvcHtmlString(str);
+        }
+
     }
 }
