@@ -1,57 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using slls.Localization;
 
 namespace slls.ViewModels
 {
-    public class TitleLinksAddViewModel
+    public class OrderLinksAddViewModel
     {
         [Key]
-        public int TitleLinkId { get; set; }
+        public int OrderLinkId { get; set; }
 
         [Required]
         [Range(1, int.MaxValue)]
-        public int TitleId { get; set; }
+        public int OrderId { get; set; }
 
-        [LocalDisplayName("Titles.Title", "FieldDisplayName")]
-        public string Title { get; set; }
+        [LocalDisplayName("Orders.Order", "FieldDisplayName")]
+        public string OrderDetail { get; set; }
         
         //[Required]
         [RegularExpression(@"^(http(s)?://|ftp://|file://|[\w]\:|\\).+$", ErrorMessage = "This URL does not appear to be valid. Are you missing a prefix (e.g. 'http://')?")]
-        [LocalDisplayName("Links.URL_Path", "FieldDisplayName")]
+        [LocalDisplayName("OrderLinks.URL_Path", "FieldDisplayName")]
         public string Url { get; set; }
 
         [StringLength(1000)]
-        [LocalDisplayName("Links.Hover_Tip_Text", "FieldDisplayName")]
+        [LocalDisplayName("OrderLinks.Hover_Tip_Text", "FieldDisplayName")]
         public string HoverTip { get; set; }
 
         [StringLength(255)]
-        [LocalDisplayName("Links.Display_Text", "FieldDisplayName")]
+        [LocalDisplayName("OrderLinks.Display_Text", "FieldDisplayName")]
         public string DisplayText { get; set; }
-
-        [StringLength(70)]
-        public string Login { get; set; }
-
-        [StringLength(20)]
-        public string Password { get; set; }
         
         public bool Success { get; set; }
     }
 
-    public class TitleLinksEditViewModel
+    public class OrderLinksEditViewModel
     {
         [Key]
-        public int TitleLinkId { get; set; }
+        public int OrderLinkId { get; set; }
 
-        public int TitleId { get; set; }
+        public int OrderId { get; set; }
 
-        [LocalDisplayName("Titles.Title", "FieldDisplayName")]
-        public string Title { get; set; }
+        [LocalDisplayName("Orders.Order", "FieldDisplayName")]
+        public string OrderDetail { get; set; }
         
         [RegularExpression(@"^(http(s)?://|ftp://|file://|[\w]\:|\\).+$", ErrorMessage = "This URL does not appear to be valid. Are you missing a prefix (e.g. 'http://')?")]
         [LocalDisplayName("Links.URL_Path", "FieldDisplayName")]
@@ -64,13 +53,7 @@ namespace slls.ViewModels
         [StringLength(255)]
         [LocalDisplayName("Links.Display_Text", "FieldDisplayName")]
         public string DisplayText { get; set; }
-
-        [StringLength(70)]
-        public string Login { get; set; }
-
-        [StringLength(20)]
-        public string Password { get; set; }
-
+        
         public int? FileId { get; set; }
 
         public string FileName { get; set; }    

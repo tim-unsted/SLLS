@@ -23,17 +23,20 @@ namespace slls.ViewModels
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
         public string Title { get; set; }
 
+        [LocalDisplayName("Order.Order", "FieldDisplayName")]
+        public string OrderDetails { get; set; }
+
         //[Required]
         [RegularExpression(@"^(http(s)?://|ftp://|file://|[\w]\:|\\).+$", ErrorMessage = "This URL does not appear to be valid. Are you missing a prefix (e.g. 'http://')?")]
-        [LocalDisplayName("TitleLinks.URL_Path", "FieldDisplayName")]
+        [LocalDisplayName("Links.URL_Path", "FieldDisplayName")]
         public string Url { get; set; }
 
         [StringLength(1000)]
-        [LocalDisplayName("TitleLinks.Hover_Tip_Text", "FieldDisplayName")]
+        [LocalDisplayName("Links.Hover_Tip_Text", "FieldDisplayName")]
         public string HoverTip { get; set; }
 
         [StringLength(255)]
-        [LocalDisplayName("TitleLinks.Display_Text", "FieldDisplayName")]
+        [LocalDisplayName("Links.Display_Text", "FieldDisplayName")]
         public string DisplayText { get; set; }
 
         [StringLength(70)]

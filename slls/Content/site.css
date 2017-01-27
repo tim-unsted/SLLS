@@ -360,12 +360,15 @@ textarea.form-control.xlarge {
 
 .listpanel {
     border: 1px solid #ccc;
+    border-radius: 4px;
     -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
     -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
     -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     margin-bottom: 0px;
+    padding-top: 3px;
+    padding-bottom: 3px;
 }
 
 .modal-header {
@@ -618,9 +621,15 @@ dd {
   line-height: 1.8;
 }
 
+
+
 .table-bordered-outeronly {
     border: 1px solid #ccc;
     border-radius: 4px;
+}
+
+.table-bordered-outeronly td, .table-bordered-outeronly th {
+    border: none;
 }
 
 @media all {
@@ -992,6 +1001,16 @@ h5 {
 
 .ui-autocomplete {
     z-index: 2147483647 !important;
+}
+
+.well-control {
+    min-height: 20px;
+    padding: 6px 12px;
+    background-color: transparent;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .05);
+    box-shadow: inset 0px 1px 1px rgba(0,0,0,0.05);
 }
 
 

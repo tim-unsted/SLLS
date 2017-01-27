@@ -1,23 +1,19 @@
+using System;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using slls.Localization;
 
 namespace slls.Models
 {
-    using System;
-    using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
-    using System.ComponentModel.DataAnnotations.Schema;
-    using System.Data.Entity.Spatial;
-
-    [Table("TitleLinks")]
-    public partial class TitleLink
+    [Table("OrderLinks")]
+    public partial class OrderLink
     {
-        public int TitleLinkID { get; set; }
+        public int OrderLinkID { get; set; }
 
-        public int TitleID { get; set; }
+        public int OrderID { get; set; }
 
-        //[Required]
-        [LocalDisplayName("Links.URL_Path", "FieldDisplayName")]
+        [LocalDisplayName("OrderLinks.URL_Path", "FieldDisplayName")]
         public string URL { get; set; }
 
         public int? FileId { get; set; }
@@ -29,13 +25,7 @@ namespace slls.Models
         [StringLength(255)]
         [LocalDisplayName("Links.Display_Text", "FieldDisplayName")]
         public string DisplayText { get; set; }
-
-        [StringLength(70)]
-        public string Login { get; set; }
-
-        [StringLength(20)]
-        public string Password { get; set; }
-
+        
         [LocalDisplayName("Links.Is_Valid", "FieldDisplayName")]
         public bool IsValid { get; set; }
 
@@ -57,7 +47,7 @@ namespace slls.Models
         [MaxLength(8)]
         public byte[] RowVersion { get; set; }
 
-        public virtual Title Title { get; set; }
+        public virtual OrderDetail Order { get; set; }
 
         public virtual HostedFile HostedFiles { get; set; }
     }

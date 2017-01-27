@@ -12,7 +12,7 @@
     <h3 class="modal-title" id="titleLabel">@ViewBag.Title</h3>
 </div>
 
-@using (Html.BeginForm("PostCreate", "TitleLinks", FormMethod.Post, new { enctype = "multipart/form-data", id = "myForm" }))
+@using (Html.BeginForm("PostCreate", "OrderLinks", FormMethod.Post, new { enctype = "multipart/form-data", id = "myForm" }))
 {
     @Html.AntiForgeryToken()
 
@@ -21,6 +21,7 @@
         <div class="form-horizontal">
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.OrderId)
 
             <div class="alert alert-info" role="alert">
                 <p>
@@ -40,10 +41,9 @@
                 {
                     <br />
                     <div class="form-group">
-                        @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.Label(DbRes.T("Orders.Order", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
-                            @Html.DropDownList("TitleId", null, new { @class = "form-control selectpicker" })
-                            @Html.ValidationMessageFor(model => model.TitleId, "", new { @class = "text-danger" })
+                            <p class="form-control-static">@Html.DisplayFor(model => model.OrderDetails)</p>
                         </div>
                     </div>
 
@@ -67,21 +67,20 @@
                             </div>
                         </div>
                     }
-
+                    
                     <div class="form-group">
                         @Html.Label("Local File", new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
                             <div class="input-group">
                                 <label class="input-group-btn">
                                     <span class="btn btn-primary">
-                                        <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.Files, new { type = "file", multiple = "multiple", accept = ".*", @style = "display: none;" })
+                                        <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.Files, new {type = "file", multiple = "multiple", accept = ".*", @style = "display: none;"})
                                     </span>
                                 </label>
                                 <input type="text" class="form-control">
                             </div>
                             @Html.HelpInline("Or, click 'Browse' to select a file stored on your PC, device or local network. A copy of the file will be uploaded to the SLLS server and stored in your database. These files can then be downloaded as a copy by the end user. The original file remains unaffected.")
                             @Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })
-                            @*@Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })*@
                         </div>
                     </div>
 
@@ -91,9 +90,15 @@
                 {
 
                     <br />
+                    <div class="form-group">
+                        @Html.Label(DbRes.T("Orders.Order", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-9">
+                            <p class="form-control-static">@Html.DisplayFor(model => model.OrderDetails)</p>
+                        </div>
+                    </div>
 
                     <div class="form-group">
-                        @Html.Label(DbRes.T("Links.Display_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.Label(DbRes.T("OrderLinks.Display_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
                             @Html.EditorFor(model => model.DisplayText, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.HelpInline("Enter a friendly text that is displayed in the link in place of the full address or file name.")
@@ -107,21 +112,6 @@
                             @Html.EditorFor(model => model.HoverTip, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.HelpInline("Enter a tool-tip that appears when the mouse is hovered over the link.")
                             @Html.ValidationMessageFor(model => model.HoverTip, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-3">
-                            @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.HelpInline("Optional: This is a default login/username required to access the resource. ")
-                            @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
-                        </div>
-                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.HelpInline("Optional: This is a default password required to access the resource. ")
-                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 }

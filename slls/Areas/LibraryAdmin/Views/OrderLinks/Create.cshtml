@@ -12,7 +12,7 @@
     <h3 class="modal-title" id="titleLabel">@ViewBag.Title</h3>
 </div>
 
-@using (Html.BeginForm("PostCreate", "TitleLinks", FormMethod.Post, new { enctype = "multipart/form-data", id = "myForm" }))
+@using (Html.BeginForm("PostCreate", "OrderLinks", FormMethod.Post, new { enctype = "multipart/form-data", id = "myForm" }))
 {
     @Html.AntiForgeryToken()
 
@@ -40,10 +40,10 @@
                 {
                     <br />
                     <div class="form-group">
-                        @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.Label(DbRes.T("Orders.Order", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
-                            @Html.DropDownList("TitleId", null, new { @class = "form-control selectpicker" })
-                            @Html.ValidationMessageFor(model => model.TitleId, "", new { @class = "text-danger" })
+                            @Html.DropDownList("OrderId", null, new { @class = "form-control selectpicker" })
+                            @Html.ValidationMessageFor(model => model.OrderId, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
@@ -81,7 +81,6 @@
                             </div>
                             @Html.HelpInline("Or, click 'Browse' to select a file stored on your PC, device or local network. A copy of the file will be uploaded to the SLLS server and stored in your database. These files can then be downloaded as a copy by the end user. The original file remains unaffected.")
                             @Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })
-                            @*@Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })*@
                         </div>
                     </div>
 
@@ -107,21 +106,6 @@
                             @Html.EditorFor(model => model.HoverTip, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.HelpInline("Enter a tool-tip that appears when the mouse is hovered over the link.")
                             @Html.ValidationMessageFor(model => model.HoverTip, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-3">
-                            @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.HelpInline("Optional: This is a default login/username required to access the resource. ")
-                            @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
-                        </div>
-                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-4">
-                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.HelpInline("Optional: This is a default password required to access the resource. ")
-                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 }

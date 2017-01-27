@@ -29,6 +29,19 @@
             }
         </table>
     }
-
-
 </div>
+
+@*<div class="well-control">
+    <ul class="list-unstyled">
+        @foreach (var item in Model.OrderBy(x => x.OrderSeq))
+        {
+            <li>
+                <a href="@Url.Action("Edit", "Authors", new { id = item.AuthorId })" class="btn-link modal-link" title="Edit this @DbRes.T("Authors.Author", "FieldDisplayName")">@item.Author.DisplayName</a>
+                <span>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<a href="@Url.Action("Edit", "TitleAuthors", new {id = item.TitleAuthorId})" class="btn btn-link modal-link" title="Edit Title @DbRes.T("Authors.Author", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", "TitleAuthors", new {id = item.TitleAuthorId})" class="btn btn-link modal-link" title="Remove this @DbRes.T("Authors.Author", "FieldDisplayName")"><span class=" glyphicon glyphicon-trash"></span></a>
+                </span>
+            </li>
+        }
+    </ul>
+</div>*@

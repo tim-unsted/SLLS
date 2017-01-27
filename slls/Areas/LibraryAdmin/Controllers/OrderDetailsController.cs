@@ -1157,6 +1157,7 @@ namespace slls.Areas.LibraryAdmin
                 Item = orderDetail.Item,
                 TitleID = orderDetail.TitleID,
                 Link = orderDetail.Link,
+                OrderLinks = orderDetail.OrderLinks,
                 Notes = orderDetail.Notes,
                 Price = orderDetail.Price,
                 Passed = orderDetail.Passed,
@@ -1219,16 +1220,16 @@ namespace slls.Areas.LibraryAdmin
                     return HttpNotFound();
                 }
                 orderDetail.OrderID = viewModel.OrderID;
-                orderDetail.AccountYearID = viewModel.AccountYearID;
+                orderDetail.AccountYearID = viewModel.AccountYearID == 0 ? null : viewModel.AccountYearID;
                 orderDetail.Accepted = viewModel.Accepted;
                 orderDetail.AuthoriserUser = _db.Users.Find(viewModel.Authority);
                 orderDetail.OnApproval = viewModel.OnApproval;
-                orderDetail.BudgetCodeID = viewModel.BudgetCodeID;
+                orderDetail.BudgetCodeID = viewModel.BudgetCodeID == 0 ? null : viewModel.BudgetCodeID;
                 orderDetail.RequesterUser = _db.Users.Find(viewModel.RequestedBy);
                 orderDetail.Chased = viewModel.Chased;
                 orderDetail.Cancelled = viewModel.Cancelled;
                 orderDetail.NumCopies = viewModel.NumCopies;
-                orderDetail.OrderCategoryID = viewModel.OrderCategoryID;
+                orderDetail.OrderCategoryID = viewModel.OrderCategoryID == 0 ? null : viewModel.OrderCategoryID;
                 orderDetail.InvoiceDate = viewModel.InvoiceDate;
                 orderDetail.MonthSubDue = viewModel.MonthSubDue;
                 orderDetail.OrderDate = viewModel.OrderDate;
@@ -1238,7 +1239,7 @@ namespace slls.Areas.LibraryAdmin
                 orderDetail.InvoiceRef = viewModel.InvoiceRef;
                 orderDetail.Item = viewModel.Item;
                 orderDetail.TitleID = viewModel.TitleID;
-                orderDetail.SupplierID = viewModel.SupplierID;
+                orderDetail.SupplierID = viewModel.SupplierID == 0 ? null : viewModel.SupplierID;
                 orderDetail.Link = viewModel.Link;
                 orderDetail.Notes = viewModel.Notes;
                 orderDetail.OrderNo = viewModel.OrderNo;

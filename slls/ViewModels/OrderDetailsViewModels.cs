@@ -275,6 +275,9 @@ namespace slls.ViewModels
         [AllowHtml]
         public string WarningMsg { get; set; }
 
+        [LocalDisplayName("Orders.Links", "FieldDisplayName")]
+        public virtual ICollection<OrderLink> OrderLinks { get; set; }
+
     }
 
     public class OrderReceiptsViewModel

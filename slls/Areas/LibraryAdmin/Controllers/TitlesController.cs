@@ -325,7 +325,7 @@ namespace slls.Areas.LibraryAdmin
                         select f.FileName;
 
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
-            ViewBag.Title = ViewBag.Title + " By " + DbRes.T("TitleLinks.Linked_File", "FieldDisplayName") + ": " + linkedFiles.FirstOrDefault();
+            ViewBag.Title = ViewBag.Title + " By " + DbRes.T("Links.Linked_File", "FieldDisplayName") + ": " + linkedFiles.FirstOrDefault();
             return View(viewModel);
         }
 

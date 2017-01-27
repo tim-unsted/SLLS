@@ -18,7 +18,7 @@ namespace slls.Areas.LibraryAdmin
     public class TitleLinksController : CatalogueBaseController
     {
         private readonly DbEntities _db = new DbEntities();
-        private readonly string _entityName = DbRes.T("TitleLinks.Link", "FieldDisplayName");
+        private readonly string _entityName = DbRes.T("Links.Link", "FieldDisplayName");
 
         public TitleLinksController()
         {
@@ -64,7 +64,7 @@ namespace slls.Areas.LibraryAdmin
 
             ViewBag.ExistingFile = new SelectList(existingFiles, "FileId", "FileName");
             ViewBag.ExistingFileCount = existingFiles.Count();
-            ViewBag.Title = "Add New " + DbRes.T("TitleLinks.Link", "FieldDisplayName");
+            ViewBag.Title = "Add New " + DbRes.T("Links.Link", "FieldDisplayName");
             return PartialView(viewModel);
         }
 
@@ -78,7 +78,7 @@ namespace slls.Areas.LibraryAdmin
             ViewData["TitleId"] = SelectListHelper.TitlesList();
             ViewBag.ExistingFile = new SelectList(existingFiles, "FileId", "FileName");
             ViewBag.ExistingFileCount = existingFiles.Count();
-            ViewBag.Title = "Add New " + DbRes.T("TitleLinks.Link", "FieldDisplayName");
+            ViewBag.Title = "Add New " + DbRes.T("Links.Link", "FieldDisplayName");
             return PartialView(viewModel);
         }
 
@@ -284,8 +284,6 @@ namespace slls.Areas.LibraryAdmin
 
         }
 
-
-
         // GET: LibraryAdmin/TitleLinks/Edit/5  
         public ActionResult Edit(int? id)
         {
@@ -319,9 +317,9 @@ namespace slls.Areas.LibraryAdmin
             if (titleLink.FileId > 0)
             {
                 viewModel.InfoMsg =
-                    "<p><strong>Note: </strong>You cannot edit the " + DbRes.T("TitleLinks.Linked_File", "FieldDisplayName").ToLower() + " here.  If this is incorrect or requires updating, please delete this link and create a new one to the correct, or updated, file.</p>";
+                    "<p><strong>Note: </strong>You cannot edit the " + DbRes.T("Links.Linked_File", "FieldDisplayName").ToLower() + " here.  If this is incorrect or requires updating, please delete this link and create a new one to the correct, or updated, file.</p>";
             }
-            ViewBag.Title = "Edit " + DbRes.T("TitleLinks.Link", "FieldDisplayName");
+            ViewBag.Title = "Edit " + DbRes.T("Links.Link", "FieldDisplayName");
             return PartialView(viewModel);
         }
 
@@ -434,7 +432,7 @@ namespace slls.Areas.LibraryAdmin
             DeleteConfirmationViewModel deleteConfirmationViewModel = new DeleteConfirmationViewModel
             {
                 DeleteEntityId = id,
-                HeaderText = DbRes.T("TitleLinks.Link", "FieldDisplayName") + " from " + DbRes.T("Titles.Title", "FieldDisplayName"),
+                HeaderText = DbRes.T("Links.Link", "FieldDisplayName") + " from " + DbRes.T("Titles.Title", "FieldDisplayName"),
                 PostDeleteAction = "Delete",
                 PostDeleteController = "TitleLinks",
                 FunctionText = "Remove",

@@ -1,0 +1,26 @@
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model IEnumerable<slls.Models.OrderLink>
+
+<div class="panel listpanel">
+
+    @if (Model.Any())
+    {
+        <table class="listtable">
+            @foreach (var item in Model.OrderBy(x => x.DisplayText))
+            {
+                <tr>
+                    <td>
+                        @Html.ResolvedLink(item.URL, item.FileId ?? 0, item.HoverTip, item.DisplayText)
+                    </td>
+                    <td class="just-right">
+                        <a href="@Url.Action("Edit", "OrderLinks", new {id = item.OrderLinkID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit @DbRes.T("Links.Link", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="@Url.Action("Delete", "OrderLinks", new { id = item.OrderLinkID })" class="btn btn-link modal-link" title="Remove @DbRes.T("Links.Link", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+
+
+</div>

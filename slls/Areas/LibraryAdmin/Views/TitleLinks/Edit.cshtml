@@ -42,7 +42,7 @@
                     if (!string.IsNullOrEmpty(Model.Url))
                     {
                         <div class="form-group">
-                            @Html.Label(DbRes.T("TitleLinks.URL_Path", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.Label(DbRes.T("Links.URL_Path", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-9">
                                 @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" } })
                                 @Html.HelpInline("The web address/Url to an on-line resource (e.g. a webpage or a hosted file). The Url will normally start with 'http://' or 'https://'.")
@@ -54,16 +54,16 @@
                     if (!string.IsNullOrEmpty(Model.FileName))
                     {
                         <div class="form-group">
-                            @Html.Label(DbRes.T("TitleLinks.Linked_File", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                            @Html.Label(DbRes.T("Links.Linked_File", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-9">
                                 <p class="form-control-static">@Html.DisplayFor(model => model.FileName)</p>
-                                @Html.HelpInline("The hosted " + DbRes.T("TitleLinks.Linked_File", "FieldDisplayName").ToLower() + " name. Note: The " + DbRes.T("TitleLinks.Linked_File", "FieldDisplayName").ToLower() + " cannot be edited here.")
+                                @Html.HelpInline("The hosted " + DbRes.T("Links.Linked_File", "FieldDisplayName").ToLower() + " name. Note: The " + DbRes.T("Links.Linked_File", "FieldDisplayName").ToLower() + " cannot be edited here.")
                             </div>
                         </div>
                     }
 
                     <div class="form-group">
-                        @Html.Label(DbRes.T("TitleLinks.Display_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.Label(DbRes.T("Links.Display_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
                             @Html.EditorFor(model => model.DisplayText, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.HelpInline("The friendly text that is displayed in the link in place of the full address or file name.")
@@ -72,7 +72,7 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.Label(DbRes.T("TitleLinks.Hover_Tip_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.Label(DbRes.T("Links.Hover_Tip_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
                             @Html.EditorFor(model => model.HoverTip, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.HelpInline("The tool-tip that appears when the mouse is hovered over the link.")
@@ -109,7 +109,7 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.IsValid, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.Label(DbRes.T("Links.Is_Valid", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
                             @Html.CheckBoxFor(model => model.IsValid, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.IsValid, "", new { @class = "text-danger" })
@@ -117,7 +117,7 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.LinkStatus, htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.Label(DbRes.T("Links.Link_Status", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
                             @Html.EditorFor(model => model.LinkStatus, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.LinkStatus, "", new { @class = "text-danger" })

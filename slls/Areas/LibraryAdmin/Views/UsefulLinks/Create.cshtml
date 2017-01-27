@@ -27,7 +27,7 @@
             </div>
 
             <div class="form-group">
-                @Html.Label(DbRes.T("TitleLinks.Display_Text", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
+                @Html.Label(DbRes.T("Links.Display_Text", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.DisplayText, new {htmlAttributes = new {@class = "form-control"}})
                     @Html.HelpInline("This is the friendly text that is displayed in the link in place of the full URL.")

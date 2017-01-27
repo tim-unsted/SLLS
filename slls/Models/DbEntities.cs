@@ -57,6 +57,7 @@ namespace slls.Models
         //public virtual DbSet<OPACUserControl> OPACUserControls { get; set; }
         public virtual DbSet<OrderCategory> OrderCategories { get; set; }
         public virtual DbSet<OrderDetail> OrderDetails { get; set; }
+        public virtual DbSet<OrderLink> OrderLinks { get; set; }
         public virtual DbSet<Parameter> Parameters { get; set; }
         public virtual DbSet<PartsReceived> PartsReceiveds { get; set; }
         public virtual DbSet<Publisher> Publishers { get; set; }

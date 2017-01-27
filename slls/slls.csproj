@@ -280,6 +280,7 @@
     <Compile Include="Areas\LibraryAdmin\Controllers\HostedFileController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\LoansBaseController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\OpacAdminBaseController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\OrderLinksController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\UsersBaseController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\SerialsBaseController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\CatalogueBaseController.cs" />
@@ -353,6 +354,7 @@
     <Compile Include="Models\SuppliersList.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\Notification.cs" />
+    <Compile Include="Models\OrderLink.cs" />
     <Compile Include="Models\UsefulLink.cs" />
     <Compile Include="Models\vwAccountQry.cs" />
     <Compile Include="Models\vwVolumesWithLoans.cs" />
@@ -538,6 +540,7 @@
     <Compile Include="ViewModels\TitleAuthorViewModels.cs" />
     <Compile Include="ViewModels\TitleEditorViewModels.cs" />
     <Compile Include="ViewModels\TitleImageViewModels.cs" />
+    <Compile Include="ViewModels\OrderLinksViewModels.cs" />
     <Compile Include="ViewModels\TitleLinksViewModels.cs" />
     <Compile Include="ViewModels\TitleReportsViewModels.cs" />
     <Compile Include="ViewModels\TitlesViewModels.cs" />
@@ -1164,6 +1167,11 @@
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\ItemsOnLoanByDepartment.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\DepartmentBorrowingHistory.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AddLink.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderLinks\_OrderLinkList.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderLinks\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderLinks\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderLinks\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_ListOrderLinks.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

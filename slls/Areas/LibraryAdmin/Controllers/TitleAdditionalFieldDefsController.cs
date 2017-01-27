@@ -267,7 +267,7 @@ namespace slls.Areas.LibraryAdmin
             DeleteConfirmationViewModel deleteConfirmationViewModel = new DeleteConfirmationViewModel
             {
                 DeleteEntityId = id,
-                //HeaderText = DbRes.T("TitleLinks.Link", "FieldDisplayName") + " from " + DbRes.T("Titles.Title", "FieldDisplayName"),
+                //HeaderText = DbRes.T("Links.Link", "FieldDisplayName") + " from " + DbRes.T("Titles.Title", "FieldDisplayName"),
                 HeaderText = "Custom Title Field",
                 PostDeleteAction = "Delete",
                 PostDeleteController = "TitleAdditionalFieldDefs",

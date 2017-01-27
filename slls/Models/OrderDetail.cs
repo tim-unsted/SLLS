@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -198,5 +199,8 @@ namespace slls.Models
         public virtual Supplier Supplier { get; set; }
         public virtual OrderCategory OrderCategory { get; set; }
         public virtual Title Title { get; set; }
+
+        [LocalDisplayName("Orders.Links", "FieldDisplayName")]
+        public virtual ICollection<OrderLink> OrderLinks { get; set; }
     }
 }
