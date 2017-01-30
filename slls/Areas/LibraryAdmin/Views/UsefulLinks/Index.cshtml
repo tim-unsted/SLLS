@@ -59,15 +59,7 @@
         {
             <tr>
                 <td>
-                    @*@if (String.IsNullOrEmpty(item.DisplayText))
-                    {
-                        @Html.ActionLink(" ", "Edit", "UsefulLinks", new { id = item.LinkID }, new { @class = "modal-link" })
-                    }
-                    else
-                    {
-                        @Html.ActionLink(item.DisplayText, "Edit", "UsefulLinks", new { id = item.LinkID }, new { @class = "modal-link" })
-                    }*@
-                    @Html.ResolvedLink(item.Url, item.FileId ?? 0, item.HoverTip, item.DisplayText)
+                    <span><a href="@Url.Action("Edit", new {id = item.LinkID})" c class="btn btn-link modal-link" title="Edit this Useful Link"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a></span>&nbsp;&nbsp;@Html.ResolvedLink(item.Url, item.FileId ?? 0, item.HoverTip, item.DisplayText)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Url)

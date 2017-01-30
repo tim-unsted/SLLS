@@ -22,65 +22,47 @@
                 </p>
                 @Html.Raw(Model.InfoMsg)
             </div>
-
-            @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
+            
+            @if (!string.IsNullOrEmpty(Model.Url))
             {
-                tabs.Tab("Link Details", "linkdetails");
-                tabs.Tab("More ", "more");
-
-                using (tabs.BeginPanel())
-                {
-                    <br />
-                    
-                    if (!string.IsNullOrEmpty(Model.Url))
-                    {
-                        <div class="form-group">
-                            @Html.Label(DbRes.T("Links.URL_Path", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-9">
-                                @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" } })
-                                @Html.HelpInline("The web address/Url to an on-line resource (e.g. a webpage or a hosted file). The Url will normally start with 'http://' or 'https://'.")
-                                @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    }
-
-                    if (!string.IsNullOrEmpty(Model.FileName))
-                    {
-                        <div class="form-group">
-                            @Html.Label(DbRes.T("Links.Linked_File", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                            <div class="col-md-9">
-                                <p class="form-control-static">@Html.DisplayFor(model => model.FileName)</p>
-                                @Html.HelpInline("The hosted " + DbRes.T("Links.Linked_File", "FieldDisplayName").ToLower() + " name. Note: The " + DbRes.T("Links.Linked_File", "FieldDisplayName").ToLower() + " cannot be edited here.")
-                            </div>
-                        </div>
-                    }
-
-                    <div class="form-group">
-                        @Html.Label(DbRes.T("Links.Display_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.DisplayText, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.HelpInline("The friendly text that is displayed in the link in place of the full address or file name.")
-                            @Html.ValidationMessageFor(model => model.DisplayText, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.Label(DbRes.T("Links.Hover_Tip_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.HoverTip, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.HelpInline("The tool-tip that appears when the mouse is hovered over the link.")
-                            @Html.ValidationMessageFor(model => model.HoverTip, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                }
-
-                using (tabs.BeginPanel())
-                {
-
-                    
-                }
+            <div class="form-group">
+                @Html.Label(DbRes.T("Links.URL_Path", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.HelpInline("The web address/Url to an on-line resource (e.g. a webpage or a hosted file). The Url will normally start with 'http://' or 'https://'.")
+                    @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
+                </div>
+            </div>
             }
+
+            @if (!string.IsNullOrEmpty(Model.FileName))
+            {
+            <div class="form-group">
+                @Html.Label(DbRes.T("Links.Linked_File", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-9">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.FileName)</p>
+                    @Html.HelpInline("The hosted " + DbRes.T("Links.Linked_File", "FieldDisplayName").ToLower() + " name. Note: The " + DbRes.T("Links.Linked_File", "FieldDisplayName").ToLower() + " cannot be edited here.")
+                </div>
+            </div>
+            }
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Links.Display_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.DisplayText, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.HelpInline("The friendly text that is displayed in the link in place of the full address or file name.")
+                    @Html.ValidationMessageFor(model => model.DisplayText, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Links.Hover_Tip_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.HoverTip, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.HelpInline("The tool-tip that appears when the mouse is hovered over the link.")
+                    @Html.ValidationMessageFor(model => model.HoverTip, "", new { @class = "text-danger" })
+                </div>
+            </div>
         </div>
     </div>
 

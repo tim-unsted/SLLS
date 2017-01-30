@@ -877,7 +877,6 @@
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\StandingOrders.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\OrdersByRequestor.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Reports\OrdersByAuthoriser.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\UsefulLinks\Delete.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\UsefulLinks\Edit.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\UsefulLinks\Index.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\UsefulLinks\Create.cshtml" />
@@ -1610,7 +1609,6 @@
     <Folder Include="Areas\Config\Models\" />
     <Folder Include="Areas\Config\Views\Cache\" />
     <Folder Include="Areas\LibraryAdmin\Models\" />
-    <Folder Include="Areas\LibraryAdmin\Views\Links\" />
     <Folder Include="Services\" />
     <Folder Include="Utils\Mvc\Extensions\" />
     <Folder Include="Utils\Settings\" />
