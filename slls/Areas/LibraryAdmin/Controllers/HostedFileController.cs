@@ -6,13 +6,16 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using slls.Controllers;
 using slls.Models;
+using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
 
 namespace slls.Areas.LibraryAdmin
 {
-    public class HostedFileController : AdminBaseController
+    [AuthorizeRoles(Roles.CatalogueAdmin, Roles.UsersAdmin, Roles.FinanceAdmin, Roles.LoansAdmin, Roles.SerialsAdmin, Roles.OpacAdmin, Roles.BaileyAdmin, Roles.SystemAdmin, Roles.BaileyAdmin)]
+    public class HostedFileController : sllsBaseController
     {
         private readonly DbEntities _db = new DbEntities();
 
@@ -33,94 +36,98 @@ namespace slls.Areas.LibraryAdmin
         [HttpPost]
         public ActionResult PostAdd(UploadFileViewModel viewModel)
         {
-            bool success;
-            if (viewModel.Files != null)
-            {
-                if (viewModel.Files.First() != null)
-                {
-                    try
-                    {
-                        foreach (var file in viewModel.Files.ToList())
-                        {
-                            if (file != null && file.ContentLength > 0)
-                            {
-                                var name = Path.GetFileName(file.FileName);
-                                var type = file.ContentType;
-                                var ext = Path.GetExtension(file.FileName);
-                                var path = Path.GetFullPath(file.FileName);
-                                success = HandleUpload(fileStream: file.InputStream, name: name, type: type, path: path, ext: ext);
-                            }
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        ModelState.AddModelError("", e.Message);
-                    }
-                    return Json(new { success = true });
-                }
-            }
-            return null;
-        }
+            bool success = false;
 
-        private bool HandleUpload(Stream fileStream, string name, string type, string ext, string path)
-        {
-            var handled = false;
-            
+            if (viewModel.Files == null) return null;
+            if (viewModel.Files.First() == null) return null;
             try
             {
-                //Attempt to compress the file ...
-                var compressedBytes = Compress(fileStream);
-                bool compressed;
-                if (compressedBytes != null)
+                foreach (var file in viewModel.Files.ToList())
                 {
-                    compressed = true;
+                    if (file != null && file.ContentLength > 0)
+                    {
+                        var name = Path.GetFileName(file.FileName);
+                        var type = file.ContentType;
+                        var ext = Path.GetExtension(file.FileName);
+                        var path = Path.GetFullPath(file.FileName);
+                        success =
+                            UploadFile(fileStream: file.InputStream, name: name, type: type,
+                                path: path, ext: ext) > 0;
+                    }
                 }
-                else
-                {
-                    compressedBytes = new byte[fileStream.Length];
-                    compressed = false;
-                }
-
-                //Check the name of the file - append [n] for each duplicate ...
-                var i = 1;
-                var existingFileName = _db.HostedFiles.FirstOrDefault(f => f.FileName == name);
-                while (existingFileName != null)
-                {
-                    name = name.Replace(ext, "");
-                    name = name + "[" + i + "]";
-                    name = name + ext;
-                    existingFileName = _db.HostedFiles.FirstOrDefault(f => f.FileName == name);
-                    i++;
-                }
-
-                //Save the file (binary data) to the database ...
-                fileStream.Read(compressedBytes, 0, compressedBytes.Length);
-                var file = new HostedFile
-                {
-                    Data = compressedBytes,
-                    FileName = name,
-                    FileExtension = ext,
-                    Compressed = compressed,
-                    SizeStored = compressedBytes.Length / 1024,
-                    Path = path,
-                    InputDate = DateTime.Now
-                };
-                _db.HostedFiles.Add(file);
-                handled = (_db.SaveChanges() > 0);
-
             }
             catch (Exception e)
             {
-                // Oops, something went wrong, handle the exception
                 ModelState.AddModelError("", e.Message);
-                return false;
             }
-
-            return handled;
+            return Json(new { success = success });
         }
 
+        public static int UploadFile(Stream fileStream, string name, string type, string ext, string path)
+        {
+            try
+            {
+                using (var db = new DbEntities())
+                {
+                    var existingFile = db.HostedFiles.FirstOrDefault(f => f.Path == path);
+                    if (existingFile != null)
+                    {
+                        return existingFile.FileId;
+                    }
+                    else
+                    {
+                        var compressedBytes = Compress(fileStream);
+                        bool compressed;
+                        if (compressedBytes != null)
+                        {
+                            compressed = true;
+                        }
+                        else
+                        {
+                            compressedBytes = new byte[fileStream.Length];
+                            compressed = false;
+                        }
 
-        private static byte[] Compress(Stream input)
+                        //Check the name of the file - append [n] for each duplicate ...
+                        var i = 1;
+                        var existingFileName = db.HostedFiles.FirstOrDefault(f => f.FileName == name);
+                        while (existingFileName != null)
+                        {
+                            name = name.Replace(ext, "");
+                            name = name + "[" + i + "]";
+                            name = name + ext;
+                            existingFileName = db.HostedFiles.FirstOrDefault(f => f.FileName == name);
+                            i++;
+                        }
+
+                        //Save the file (binary data) to the database ...
+                        fileStream.Read(compressedBytes, 0, compressedBytes.Length);
+                        var file = new HostedFile
+                        {
+                            Data = compressedBytes,
+                            FileName = name,
+                            FileExtension = ext,
+                            Compressed = compressed,
+                            SizeStored = compressedBytes.Length / 1024,
+                            Path = path,
+                            InputDate = DateTime.Now
+                        };
+                        db.HostedFiles.Add(file);
+                        db.SaveChanges();
+
+                        //Get the Id of the newly inserted file ...
+                        var fileId = file.FileId;
+                        return fileId;
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                return 0;
+            }
+        }
+
+        public static byte[] Compress(Stream input)
         {
             try
             {
@@ -132,16 +139,12 @@ namespace slls.Areas.LibraryAdmin
                     return compressStream.ToArray();
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 return null;
             }
         }
 
-        //public static double GetFileSize(int FileId)
-        //{
-        //    return 1234.0;
-        //}
 
         [HttpGet]
         public ActionResult Delete(int? id)
@@ -195,7 +198,22 @@ namespace slls.Areas.LibraryAdmin
                     }
                 }
 
-                //Now delete the file itself ...
+                //Next, any order links using this file ...
+                var orderLinks = _db.OrderLinks.Where(l => l.FileId == viewModel.FileId).ToList();
+                foreach (var link in orderLinks)
+                {
+                    try
+                    {
+                        _db.OrderLinks.Remove(link);
+                        _db.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", e.Message);
+                    }
+                }
+
+                //Finally, delete the file itself ...
                 var file = _db.HostedFiles.Find(viewModel.FileId);
                 _db.HostedFiles.Remove(file);
                 _db.SaveChanges();
@@ -207,6 +225,15 @@ namespace slls.Areas.LibraryAdmin
             }
 
             return null;
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _db.Dispose();
+            }
+            base.Dispose(disposing);
         }
     }
 }

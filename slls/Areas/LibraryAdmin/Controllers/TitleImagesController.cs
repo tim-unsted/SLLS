@@ -33,7 +33,7 @@ namespace slls.Areas.LibraryAdmin
             var sources = allSources.Split(',').ToList();
 
             var title = _db.Titles.Find(id);
-            var viewModel = new TitleImageAddViewModel
+            var viewModel = new LinkedFileAddViewModel
             {
                 TitleId = id.Value,
                 Title = title.Title1,
@@ -48,7 +48,7 @@ namespace slls.Areas.LibraryAdmin
 
 
         [HttpPost]
-        public ActionResult Add(TitleImageAddViewModel viewModel, string submit)
+        public ActionResult Add(LinkedFileAddViewModel viewModel, string submit)
         {
             if (!ModelState.IsValid)
             {
@@ -179,7 +179,7 @@ namespace slls.Areas.LibraryAdmin
         }
 
         //This is using AutoCat ...
-        public ActionResult DownloadImageFromAutoCat(TitleImageAddViewModel viewModel, string source)
+        public ActionResult DownloadImageFromAutoCat(LinkedFileAddViewModel viewModel, string source)
         {
             try
             {
@@ -470,7 +470,7 @@ namespace slls.Areas.LibraryAdmin
         {
             var title = _db.Titles.Find(id); 
             var viewModel = title.TitleImages
-                .Select(titleImage => new TitleImageListViewmodel
+                .Select(titleImage => new LinkedFileListViewmodel
                 {
                     TitleImageId = titleImage.TitleImageId,
                     TitleId = titleImage.TitleId,
@@ -499,7 +499,7 @@ namespace slls.Areas.LibraryAdmin
 
             if (id != null)
             {
-                var viewModel = new TitleImageEditViewModel
+                var viewModel = new LinkedFileEditViewModel
                 {
                     ImageId = titleImage.ImageId,
                     Title = titleImage.Title.Title1,
@@ -518,7 +518,7 @@ namespace slls.Areas.LibraryAdmin
         // POST: LibraryAdmin/TitleImages/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "TitleImageId,TitleID,ImageID,Alt,HoverText,IsPrimary")] TitleImageEditViewModel viewModel)
+        public ActionResult Edit(LinkedFileEditViewModel viewModel)
         {
             //Mark all images as Primary = false if we're passing Primary = true; we'll set the value to true for just the image passed
             if (viewModel.IsPrimary)

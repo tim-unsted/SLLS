@@ -34,6 +34,8 @@ namespace slls.DAO
             var data = Cache[key] as List<TEntityType>;
             if (data != null) return data;
             var db = new DbEntities();
+            //var parameters = db.BudgetCodes.ToList();
+
             data = db.Set<TEntityType>().ToList();
             Cache[key] = data;
             return data;

@@ -871,7 +871,7 @@ namespace slls.Models
 
         public System.Data.Entity.DbSet<slls.ViewModels.TitleCustomDataIndexViewModel> TitleCustomDataIndexViewModels { get; set; }
 
-        public System.Data.Entity.DbSet<slls.ViewModels.TitleImageEditViewModel> TitleImageEditViewModels { get; set; }
+        public System.Data.Entity.DbSet<slls.ViewModels.LinkedFileEditViewModel> LinkedFileEditViewModels { get; set; }
 
         public System.Data.Entity.DbSet<slls.ViewModels.OrderDetailsAddViewModel> OrderDetailsAddViewModels { get; set; }
 

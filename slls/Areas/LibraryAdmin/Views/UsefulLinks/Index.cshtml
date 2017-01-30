@@ -1,4 +1,5 @@
 ﻿@using System
+@using slls.Utils.Helpers
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.UsefulLink>
 
@@ -29,7 +30,7 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <p>
-    <a href="@Url.Action("Create", "UsefulLinks")" title="Add new @DbRes.T("Useful_Links.Useful_Link", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+    <a href="@Url.Action("Create", "UsefulLinks")" title="Add new @DbRes.T("Useful_Links.Useful_Link", "FieldDisplayName")" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
 </p>
 
 <table id="usefulLinks" class="table table-hover table-condensed">
@@ -39,10 +40,10 @@
                 @Html.DisplayNameFor(model => model.DisplayText)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LinkAddress)
+                @Html.DisplayNameFor(model => model.Url)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ToolTip)
+                @Html.DisplayNameFor(model => model.HoverTip)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Target)
@@ -58,20 +59,21 @@
         {
             <tr>
                 <td>
-                    @if (String.IsNullOrEmpty(item.DisplayText))
+                    @*@if (String.IsNullOrEmpty(item.DisplayText))
                     {
                         @Html.ActionLink(" ", "Edit", "UsefulLinks", new { id = item.LinkID }, new { @class = "modal-link" })
                     }
                     else
                     {
                         @Html.ActionLink(item.DisplayText, "Edit", "UsefulLinks", new { id = item.LinkID }, new { @class = "modal-link" })
-                    }
+                    }*@
+                    @Html.ResolvedLink(item.Url, item.FileId ?? 0, item.HoverTip, item.DisplayText)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LinkAddress)
+                    @Html.DisplayFor(modelItem => item.Url)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ToolTip)
+                    @Html.DisplayFor(modelItem => item.HoverTip)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Target)
@@ -80,8 +82,8 @@
                     @Html.DisplayFor(modelItem => item.Enabled)
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("Delete", new {id = item.LinkID})" class="btn btn-link modal-link" title="Delete this Useful Link"><span class=" glyphicon glyphicon-trash" /></a>
-                    <a href="@Url.Action("Edit", new {id = item.LinkID})" c class="btn btn-link modal-link" title="Edit this Useful Link"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
+                    <a href="@Url.Action("Delete", new {id = item.LinkID})" class="btn btn-link modal-link" title="Delete this Useful Link"><span class=" glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", new {id = item.LinkID})" c class="btn btn-link modal-link" title="Edit this Useful Link"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                 </td>
             </tr>
         }

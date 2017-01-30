@@ -9,15 +9,17 @@ using slls.Models;
 
 namespace slls.ViewModels
 {
-    public class TitleImageAddViewModel
+    public class LinkedFileAddViewModel
     {
-        public TitleImageAddViewModel()
+        public LinkedFileAddViewModel()
         {
             ExistingFile = 1;
+            PostAction = "PostCreate";
+            PostController = "TitleLinks";
+            AlertText = "Use the form to add a new link to the current item.";
         }
         
         public int TitleId { get; set; }
-
         public int OrderId { get; set; }
 
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
@@ -78,9 +80,16 @@ namespace slls.ViewModels
         public List<string> Sources { get; set; }
 
         public string SupplierName { get; set; }
+
+        public string PostController { get; set; }
+
+        public string PostAction { get; set; }
+
+        [AllowHtml]
+        public string AlertText { get; set; }
     }
 
-    public class TitleImageEditViewModel
+    public class LinkedFileEditViewModel
     {
         [Key]
         public int TitleImageId { get; set; }
@@ -102,9 +111,89 @@ namespace slls.ViewModels
         public bool IsPrimary { get; set; }
 
         public bool Success { get; set; }
+        
+        //[Key]
+        //public int TitleImageId { get; set; }
+        //public int ImageId { get; set; }
+
+        //public int TitleLinkId { get; set; }
+        //public int TitleId { get; set; }
+
+        //public int OrderLinkId { get; set; }
+        //public int OrderId { get; set; }
+
+        //[LocalDisplayName("Titles.Title", "FieldDisplayName")]
+        //public string Title { get; set; }
+
+        //[LocalDisplayName("Order.Order", "FieldDisplayName")]
+        //public string OrderDetails { get; set; }
+
+        ////[Required]
+        //[RegularExpression(@"^(http(s)?://|ftp://|file://|[\w]\:|\\).+$", ErrorMessage = "This URL does not appear to be valid. Are you missing a prefix (e.g. 'http://')?")]
+        //[LocalDisplayName("Links.URL_Path", "FieldDisplayName")]
+        //public string Url { get; set; }
+
+        //[LocalDisplayName("Links.Hover_Tip_Text", "FieldDisplayName")]
+        //public string HoverTip { get; set; }
+
+        //[LocalDisplayName("Links.Hover_Tip_Text", "FieldDisplayName")]
+        //public string HoverText { get; set; }
+
+        //[StringLength(255)]
+        //[LocalDisplayName("Links.Display_Text", "FieldDisplayName")]
+        //public string DisplayText { get; set; }
+
+        //public string Alt { get; set; }
+
+        //[StringLength(70)]
+        //public string Login { get; set; }
+
+        //[StringLength(20)]
+        //public string Password { get; set; }
+
+        //[LocalDisplayName("Titles.ISBN_ISSN", "FieldDisplayName")]
+        //public string Isbn { get; set; }
+
+        //public HttpPostedFileBase File { get; set; }
+
+        //public IEnumerable<HttpPostedFileBase> Files { get; set; }
+
+        ////[Required(ErrorMessage = "An image file is required")]
+        //public string FileName
+        //{
+        //    get
+        //    {
+        //        if (File != null)
+        //            return File.FileName;
+        //        return string.Empty;
+        //    }
+        //}
+
+        //public int ExistingFile { get; set; }
+
+        //public IEnumerable<SelectListItem> ExistingFiles { get; set; }
+
+        //public bool HasAutocat { get; set; }
+
+        //public bool IsPrimary { get; set; }
+
+        //public bool Success { get; set; }
+
+        //public string ErrorMessage { get; set; }
+
+        //public List<string> Sources { get; set; }
+
+        //public string SupplierName { get; set; }
+
+        //public string PostController { get; set; }
+
+        //public string PostAction { get; set; }
+
+        //[AllowHtml]
+        //public string AlertText { get; set; }
     }
 
-    public class TitleImageListViewmodel
+    public class LinkedFileListViewmodel
     {
         public int TitleImageId { get; set; }
         

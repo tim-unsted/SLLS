@@ -2954,7 +2954,7 @@ namespace slls.Areas.LibraryAdmin
             //Get a list of any hosted (i.e. stored in database) files
             var existingFiles = _db.HostedFiles.OrderBy(f => f.FileName).ToList();
 
-            var viewModel = new TitleImageAddViewModel
+            var viewModel = new LinkedFileAddViewModel
             {
                 OrderId = order.OrderID,
                 Title = order.Title.Title1,
@@ -2970,7 +2970,7 @@ namespace slls.Areas.LibraryAdmin
         // POST: LibraryAdmin/OrderDetails/PostAddLink
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult PostAddLink(TitleImageAddViewModel viewModel)
+        public ActionResult PostAddLink(LinkedFileAddViewModel viewModel)
         {
             //Check if we've been passed a URL ...
             if (!string.IsNullOrEmpty(viewModel.Url))

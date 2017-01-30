@@ -56,22 +56,24 @@ namespace slls.Areas.LibraryAdmin
             //Get a list of any hosted (i.e. stored in database) files
             var existingFiles = _db.HostedFiles.OrderBy(f => f.FileName).ToList();
 
-            var viewModel = new TitleImageAddViewModel
+            var viewModel = new LinkedFileAddViewModel
             {
                 TitleId = title.TitleID,
-                Title = title.Title1
+                Title = title.Title1,
+                PostAction = "PostCreate",
+                PostController = "TitleLinks"
             };
 
             ViewBag.ExistingFile = new SelectList(existingFiles, "FileId", "FileName");
             ViewBag.ExistingFileCount = existingFiles.Count();
             ViewBag.Title = "Add New " + DbRes.T("Links.Link", "FieldDisplayName");
-            return PartialView(viewModel);
+            return PartialView("AddLink", viewModel);
         }
 
         // GET: LibraryAdmin/TitleLinks/Create
         public ActionResult Create()
         {
-            var viewModel = new TitleImageAddViewModel();
+            var viewModel = new LinkedFileAddViewModel();
 
             //Get a list of any hosted (i.e. stored in database) files
             var existingFiles = _db.HostedFiles.OrderBy(f => f.FileName).ToList();
@@ -85,7 +87,7 @@ namespace slls.Areas.LibraryAdmin
         // POST: LibraryAdmin/TitleLinks/Create
         [HttpPost]
         //[ValidateAntiForgeryToken]
-        public ActionResult PostCreate(TitleImageAddViewModel viewModel)
+        public ActionResult PostCreate(LinkedFileAddViewModel viewModel)
         {
             //Check if we've been passed a URL ...
             if (!string.IsNullOrEmpty(viewModel.Url))
@@ -123,10 +125,24 @@ namespace slls.Areas.LibraryAdmin
                                 var type = file.ContentType;
                                 var ext = Path.GetExtension(file.FileName);
                                 var path = Path.GetFullPath(file.FileName);
+                                var fileId = HostedFileController.UploadFile(fileStream: file.InputStream, name: name, type: type, ext: ext, path: path);
 
-                                viewModel.Success = HandleUpload(fileStream: file.InputStream, name: name, type: type, path: path, titleId: titleId, ext: ext,
-                                    displayText: viewModel.DisplayText, hoverTip: viewModel.HoverTip, login: viewModel.Login,
-                                    password: viewModel.Password);
+                                if (fileId != 0)
+                                {
+                                    var titleLink = new TitleLink()
+                                    {
+                                        FileId = fileId,
+                                        TitleID = titleId,
+                                        DisplayText = viewModel.DisplayText ?? name,
+                                        HoverTip = viewModel.HoverTip ?? name,
+                                        Login = viewModel.Login,
+                                        Password = viewModel.Password,
+                                        InputDate = DateTime.Now
+                                    };
+                                    _db.TitleLinks.Add(titleLink);
+                                    _db.SaveChanges();
+                                }
+                                viewModel.Success = true;
                             }
                         }
                     }
@@ -157,133 +173,9 @@ namespace slls.Areas.LibraryAdmin
                 return Json(new { success = true });
             }
 
-            return PartialView("Add", viewModel);
+            return Json(new { success = false });
         }
-
-        private bool HandleUpload(Stream fileStream, string name, string type, string ext, string path, int titleId, string displayText, string hoverTip, string login, string password)
-        {
-            var handled = false;
-
-            //Firstly, check to ensure we haven't already got this file by checking the path ...
-            var existingFile = _db.HostedFiles.FirstOrDefault(f => f.Path == path);
-            if (existingFile != null)
-            {
-                try
-                {
-                    //Get the Id of the existing file ...
-                    var existingfileId = existingFile.FileId;
-
-                    var titleLink = new TitleLink()
-                    {
-                        FileId = existingfileId,
-                        TitleID = titleId,
-                        DisplayText = string.IsNullOrEmpty(displayText) ? name : displayText,
-                        HoverTip = string.IsNullOrEmpty(hoverTip) ? name : hoverTip,
-                        Login = login,
-                        Password = password,
-                        InputDate = DateTime.Now
-                    };
-
-                    _db.TitleLinks.Add(titleLink);
-                    handled = (_db.SaveChanges() > 0);
-                }
-                catch (Exception)
-                {
-                    return false;
-                }
-                return handled;
-            }
-
-            //Otherwise ...
-            try
-            {
-                //Attempt to compress the file ...
-                var compressedBytes = Compress(fileStream);
-                bool compressed;
-                if (compressedBytes != null)
-                {
-                    compressed = true;
-                }
-                else
-                {
-                    compressedBytes = new byte[fileStream.Length];
-                    compressed = false;
-                }
-
-                //Check the name of the file - append [n] for each duplicate ...
-                var i = 1;
-                var existingFileName = _db.HostedFiles.FirstOrDefault(f => f.FileName == name);
-                while (existingFileName != null)
-                {
-                    name = name.Replace(ext, "");
-                    name = name + "[" + i + "]";
-                    name = name + ext;
-                    existingFileName = _db.HostedFiles.FirstOrDefault(f => f.FileName == name);
-                    i++;
-                }
-
-                //Save the file (binary data) to the database ...
-                fileStream.Read(compressedBytes, 0, compressedBytes.Length);
-                var file = new HostedFile
-                {
-                    Data = compressedBytes,
-                    FileName = name,
-                    FileExtension = ext,
-                    Compressed = compressed,
-                    SizeStored = compressedBytes.Length / 1024,
-                    Path = path,
-                    InputDate = DateTime.Now
-                };
-                _db.HostedFiles.Add(file);
-                _db.SaveChanges();
-
-                //Get the Id of the newly inserted file ...
-                var fileId = file.FileId;
-
-                var titleLink = new TitleLink()
-                {
-                    FileId = fileId,
-                    TitleID = titleId,
-                    DisplayText = string.IsNullOrEmpty(displayText) ? name : displayText,
-                    HoverTip = string.IsNullOrEmpty(hoverTip) ? name : hoverTip,
-                    Login = login,
-                    Password = password,
-                    InputDate = DateTime.Now
-                };
-
-                _db.TitleLinks.Add(titleLink);
-                handled = (_db.SaveChanges() > 0);
-
-            }
-            catch (Exception e)
-            {
-                // Oops, something went wrong, handle the exception
-                ModelState.AddModelError("", e.Message);
-                return false;
-            }
-
-            return handled;
-        }
-
-        private static byte[] Compress(Stream input)
-        {
-            try
-            {
-                using (var compressStream = new MemoryStream())
-                using (var compressor = new DeflateStream(compressStream, CompressionMode.Compress))
-                {
-                    input.CopyTo(compressor);
-                    compressor.Close();
-                    return compressStream.ToArray();
-                }
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-        }
-
+        
         // GET: LibraryAdmin/TitleLinks/Edit/5  
         public ActionResult Edit(int? id)
         {

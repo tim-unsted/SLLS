@@ -2,7 +2,7 @@
 @using slls.Utils.Helpers
 @using VortexSoft.Bootstrap
 @using Westwind.Globalization
-@model slls.ViewModels.TitleImageAddViewModel
+@model slls.ViewModels.LinkedFileAddViewModel
 
 <script src="~/Scripts/jquery.validate.min.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
@@ -12,7 +12,7 @@
     <h3 class="modal-title" id="titleLabel">@ViewBag.Title</h3>
 </div>
 
-@using (Html.BeginForm("PostCreate", "OrderLinks", FormMethod.Post, new { enctype = "multipart/form-data", id = "myForm" }))
+@using (Html.BeginForm(Model.PostAction, Model.PostController, FormMethod.Post, new { enctype = "multipart/form-data", id = "myForm" }))
 {
     @Html.AntiForgeryToken()
 
@@ -22,10 +22,13 @@
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.OrderId)
+            @Html.HiddenFor(model => model.TitleId)
+            @Html.HiddenFor(model => model.PostAction)
+            @Html.HiddenFor(model => model.PostController)
 
             <div class="alert alert-info" role="alert">
                 <p>
-                    <strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>Use the form to add a new link to the current item.
+                    <strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>@Model.AlertText
                 </p>
                 <p>
                     Links can be to on-line resources (i.e. web pages or externally hosted files - e.g. DropBox, ShareFile, Google Drive, etc.), to files hosted on the SLLS server (i.e. files that have already been uploaded to your database), or to local files stored on your PC/device, network or intranet.
@@ -39,14 +42,28 @@
 
                 using (tabs.BeginPanel())
                 {
-                    <br />
-                    <div class="form-group">
-                        @Html.Label(DbRes.T("Orders.Order", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-9">
-                            <p class="form-control-static">@Html.DisplayFor(model => model.OrderDetails)</p>
-                        </div>
-                    </div>
+                    <br/>
 
+                    if (!string.IsNullOrEmpty(Model.OrderDetails))
+                    {
+                        <div class="form-group">
+                            @Html.Label(DbRes.T("Orders.Order", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-9">
+                                <p class="form-control-static">@Html.DisplayFor(model => model.OrderDetails)</p>
+                            </div>
+                        </div>
+                    }
+
+                    if (!string.IsNullOrEmpty(Model.Title))
+                    {
+                        <div class="form-group">
+                            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-9">
+                                <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                            </div>
+                        </div>
+                    }
+                    
                     <div class="form-group">
                         @Html.Label(DbRes.T("Links.URL_Path", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
@@ -90,12 +107,25 @@
                 {
 
                     <br />
-                    <div class="form-group">
-                        @Html.Label(DbRes.T("Orders.Order", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-9">
-                            <p class="form-control-static">@Html.DisplayFor(model => model.OrderDetails)</p>
+                    if (!string.IsNullOrEmpty(Model.OrderDetails))
+                    {
+                        <div class="form-group">
+                            @Html.Label(DbRes.T("Orders.Order", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-9">
+                                <p class="form-control-static">@Html.DisplayFor(model => model.OrderDetails)</p>
+                            </div>
                         </div>
-                    </div>
+                    }
+
+                    if (!string.IsNullOrEmpty(Model.Title))
+                    {
+                        <div class="form-group">
+                            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-9">
+                                <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                            </div>
+                        </div>
+                    }
 
                     <div class="form-group">
                         @Html.Label(DbRes.T("OrderLinks.Display_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
@@ -107,11 +137,26 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.Label(DbRes.T("Links.Hover_Tip_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                        @Html.Label(DbRes.T("Links.Hover_Tip_Text", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
                         <div class="col-md-9">
-                            @Html.EditorFor(model => model.HoverTip, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.EditorFor(model => model.HoverTip, new {htmlAttributes = new {@class = "form-control"}})
                             @Html.HelpInline("Enter a tool-tip that appears when the mouse is hovered over the link.")
-                            @Html.ValidationMessageFor(model => model.HoverTip, "", new { @class = "text-danger" })
+                            @Html.ValidationMessageFor(model => model.HoverTip, "", new {@class = "text-danger"})
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Login, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-3">
+                            @Html.EditorFor(model => model.Login, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.HelpInline("Optional: This is a default login/username required to access the resource. ")
+                            @Html.ValidationMessageFor(model => model.Login, "", new { @class = "text-danger" })
+                        </div>
+                        @Html.LabelFor(model => model.Password, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-4">
+                            @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.HelpInline("Optional: This is a default password required to access the resource. ")
+                            @Html.ValidationMessageFor(model => model.Password, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 }

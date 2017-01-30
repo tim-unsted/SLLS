@@ -1,4 +1,5 @@
-﻿@using Westwind.Globalization
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
 @model slls.ViewModels.OPACHomePageViewModel
 
 <div class="panel panel-gadget shadowed">
@@ -13,9 +14,9 @@
     </div>
     <div class="panel-body">
         <ul class="list-unstyled">
-            @foreach (var usefulLink in Model.UsefulLinks)
+            @foreach (var item in Model.UsefulLinks)
             {
-                <li><a href="@usefulLink.LinkAddress" title="@usefulLink.ToolTip" target="@usefulLink.Target">@usefulLink.DisplayText</a></li>
+                <li style="word-wrap: break-word;">@Html.ResolvedLink(item.Url, item.FileId ?? 0, item.HoverTip, item.DisplayText)</li>
             }
         </ul>
     </div>

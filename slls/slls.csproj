@@ -321,6 +321,7 @@
     <Compile Include="Controllers\LibraryUserLoansController.cs" />
     <Compile Include="Controllers\LibraryUserSavedSearchesController.cs" />
     <Compile Include="App_Settings\CssManager.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\LinksController.cs" />
     <Compile Include="Controllers\MessagingController.cs" />
     <Compile Include="DAO\DataCaches.cs" />
     <Compile Include="DAO\DataExport.cs" />
@@ -539,7 +540,7 @@
     <Compile Include="ViewModels\TitleAdditionalFieldDefViewModels.cs" />
     <Compile Include="ViewModels\TitleAuthorViewModels.cs" />
     <Compile Include="ViewModels\TitleEditorViewModels.cs" />
-    <Compile Include="ViewModels\TitleImageViewModels.cs" />
+    <Compile Include="ViewModels\LinkedFileViewModels.cs" />
     <Compile Include="ViewModels\OrderLinksViewModels.cs" />
     <Compile Include="ViewModels\TitleLinksViewModels.cs" />
     <Compile Include="ViewModels\TitleReportsViewModels.cs" />
@@ -695,7 +696,6 @@
     <Content Include="Areas\LibraryAdmin\Views\Copies\Bind.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\TitlesNoCopies.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\NewTitles.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Add.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\_ListTitleLinks.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Edit.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\TitleLinks\Index.cshtml" />
@@ -1168,7 +1168,7 @@
     <Content Include="Areas\LibraryAdmin\Views\Loans\Reports\DepartmentBorrowingHistory.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AddLink.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderLinks\_OrderLinkList.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\OrderLinks\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\OrderLinks\Addxxx.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderLinks\Create.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderLinks\Edit.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_ListOrderLinks.cshtml" />
@@ -1602,6 +1602,7 @@
     <Content Include="Views\Shared\CheckInOutMenu.cshtml" />
     <Content Include="Views\Shared\_CheckInOutFooter.cshtml" />
     <Content Include="Views\Shared\Forbidden.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\AddLink.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\CheckInOut\Models\" />
@@ -1609,6 +1610,7 @@
     <Folder Include="Areas\Config\Models\" />
     <Folder Include="Areas\Config\Views\Cache\" />
     <Folder Include="Areas\LibraryAdmin\Models\" />
+    <Folder Include="Areas\LibraryAdmin\Views\Links\" />
     <Folder Include="Services\" />
     <Folder Include="Utils\Mvc\Extensions\" />
     <Folder Include="Utils\Settings\" />

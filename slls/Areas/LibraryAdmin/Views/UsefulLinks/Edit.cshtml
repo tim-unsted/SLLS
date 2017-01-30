@@ -1,4 +1,5 @@
-﻿@using System.Linq
+﻿@using slls.Utils.Helpers
+@using VortexSoft.Bootstrap
 @using Westwind.Globalization
 @model slls.ViewModels.UsefulLinksAddEditViewModel
 
@@ -12,60 +13,78 @@
 
         <div class="form-horizontal">
 
-            @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
-            {
-                <div class="alert alert-danger">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    <h4>Oops!</h4>
-                    @Html.ValidationSummary()
-                </div>
-            }
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.LinkID)
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.LinkAddress, htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-8">
-                    @Html.EditorFor(model => model.LinkAddress, new {htmlAttributes = new {@class = "form-control"}})
-                    @Html.ValidationMessageFor(model => model.LinkAddress, "", new {@class = "text-danger"})
-                </div>
+            <div class="alert alert-info" role="alert">
+                <p>
+                    <strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>Use the form to maintain the current link details.
+                </p>
+                @Html.Raw(Model.InfoMsg)
             </div>
 
-            <div class="form-group">
-                @Html.Label(DbRes.T("Links.Display_Text", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-8">
-                    @Html.EditorFor(model => model.DisplayText, new {htmlAttributes = new {@class = "form-control"}})
-                    @Html.ValidationMessageFor(model => model.DisplayText, "", new {@class = "text-danger"})
-                </div>
-            </div>
+            @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
+            {
+                tabs.Tab("Link Details", "linkdetails");
+                tabs.Tab("More ", "more");
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.ToolTip, htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-8">
-                    @Html.EditorFor(model => model.ToolTip, new {htmlAttributes = new {@class = "form-control"}})
-                    @Html.ValidationMessageFor(model => model.ToolTip, "", new {@class = "text-danger"})
-                </div>
-            </div>
+                using (tabs.BeginPanel())
+                {
+                    <br />
+                    
+                    if (!string.IsNullOrEmpty(Model.Url))
+                    {
+                        <div class="form-group">
+                            @Html.Label(DbRes.T("Links.URL_Path", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-9">
+                                @Html.EditorFor(model => model.Url, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.HelpInline("The web address/Url to an on-line resource (e.g. a webpage or a hosted file). The Url will normally start with 'http://' or 'https://'.")
+                                @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    }
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Target, htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-8">
-                    @Html.DropDownListFor(model => model.Target, new SelectList(ViewBag.Targets, "Key", "Value"), new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Target, "", new { @class = "text-danger" })
-                </div>
-            </div>
+                    if (!string.IsNullOrEmpty(Model.FileName))
+                    {
+                        <div class="form-group">
+                            @Html.Label(DbRes.T("Links.Linked_File", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                            <div class="col-md-9">
+                                <p class="form-control-static">@Html.DisplayFor(model => model.FileName)</p>
+                                @Html.HelpInline("The hosted " + DbRes.T("Links.Linked_File", "FieldDisplayName").ToLower() + " name. Note: The " + DbRes.T("Links.Linked_File", "FieldDisplayName").ToLower() + " cannot be edited here.")
+                            </div>
+                        </div>
+                    }
 
-            <div class="form-group">
-                @Html.LabelFor(model => model.Enabled, htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-8">
-                    <div class="checkbox">
-                        @Html.EditorFor(model => model.Enabled)
-                        @Html.ValidationMessageFor(model => model.Enabled, "", new {@class = "text-danger"})
+                    <div class="form-group">
+                        @Html.Label(DbRes.T("Links.Display_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.DisplayText, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.HelpInline("The friendly text that is displayed in the link in place of the full address or file name.")
+                            @Html.ValidationMessageFor(model => model.DisplayText, "", new { @class = "text-danger" })
+                        </div>
                     </div>
-                </div>
-            </div>
+
+                    <div class="form-group">
+                        @Html.Label(DbRes.T("Links.Hover_Tip_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.HoverTip, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.HelpInline("The tool-tip that appears when the mouse is hovered over the link.")
+                            @Html.ValidationMessageFor(model => model.HoverTip, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                }
+
+                using (tabs.BeginPanel())
+                {
+
+                    
+                }
+            }
         </div>
     </div>
-    @Html.Partial("_ModalEditFooter")
-}
 
+    @Html.Partial("_ModalEditFooter")
+
+}
 

@@ -18,7 +18,7 @@
             "columnDefs": [
                 {
                     "width": "10%",
-                    "orderData": 5,
+                    "orderData": 6,
                     "searchable": false,
                     "sortable": true,
                     "orderSequence": ["desc", "asc"],
@@ -34,13 +34,13 @@
                     "visible": false,
                     "searchable": false,
                     "sortable": false,
-                    "targets": [5]
+                    "targets": [6]
                 },
                 {
                     "width": "10%",
                     "searchable": false,
                     "sortable": false,
-                    "targets": [6]
+                    "targets": [7]
                 }
             ]
         });
@@ -78,6 +78,9 @@
             <th>
                 @DbRes.T("TitleLinks", "EntityType")
             </th>
+            <th>
+                @DbRes.T("OrderLinks", "EntityType")
+            </th>
             <th></th>
             <th></th>
         </tr>
@@ -87,7 +90,6 @@
         {
             <tr>
                 <td>
-                    @*@Html.DisplayFor(modelItem => item.FileName)*@
                     @Html.ResolvedLink(fileId: item.FileId, linkDisplayText: item.FileName, linkTitle: item.FileName)
                 </td>
                 <td>
@@ -103,6 +105,12 @@
                     @if (item.TitleLinks.Any())
                     {
                         <a href="@Url.Action("ByLinkedFile", "Titles", new {id = item.FileId})" title="View all items linked to this @DbRes.T("Hosted_Files.File", "FieldDisplayName")"><span class="badge badge-link">@item.TitleLinks.Count</span></a>
+                    }
+                </td>
+                <td>
+                    @if (item.OrderLinks.Any())
+                    {
+                        <a href="@Url.Action("ByLinkedFile", "OrderDetails", new {id = item.FileId})" title="View all orders linked to this @DbRes.T("Hosted_Files.File", "FieldDisplayName")"><span class="badge badge-link">@item.OrderLinks.Count</span></a>
                     }
                 </td>
                 <td>

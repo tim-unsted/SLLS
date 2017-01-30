@@ -14,14 +14,19 @@ namespace slls.Models
         [Key]
         public int LinkID { get; set; }
 
+        [Column("FileID")]
+        public int? FileId { get; set; }
+
         [LocalDisplayName("Useful_links.Link_Address", "FieldDisplayName")]
-        public string LinkAddress { get; set; }
+        [Column("LinkAddress")]
+        public string Url { get; set; }
 
         [LocalDisplayName("Useful_links.Display_text", "FieldDisplayName")]
         public string DisplayText { get; set; }
 
         [LocalDisplayName("Useful_links.Hover_tip", "FieldDisplayName")]
-        public string ToolTip { get; set; }
+        [Column("ToolTip")]
+        public string HoverTip { get; set; }
 
         [LocalDisplayName("Useful_links.Target", "FieldDisplayName")]
         public string Target { get; set; }
@@ -34,6 +39,8 @@ namespace slls.Models
 
         public bool Deleted { get; set; }
 
-        public bool Enabled { get; set; }   
+        public bool Enabled { get; set; }
+
+        public virtual HostedFile HostedFiles { get; set; }
     }
 }

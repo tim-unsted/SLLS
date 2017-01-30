@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Runtime.InteropServices;
@@ -47,39 +48,110 @@ namespace slls.Areas.LibraryAdmin
         // GET: LibraryAdmin/UsefulLinks/Create
         public ActionResult Create()
         {
-            var viewModel = new UsefulLinksAddEditViewModel()
+            var viewModel = new LinkedFileAddViewModel()
             {
-                Target = "_blank"
+                AlertText = "Use this form to create a new 'Useful link'. These are seen on the OPAC 'Home' page, if enabled. ",
+                PostAction = "PostCreate",
+                PostController = "UsefulLinks"
             };
+            var existingFiles = _db.HostedFiles.OrderBy(f => f.FileName).ToList();
+            ViewBag.ExistingFile = new SelectList(existingFiles, "FileId", "FileName");
+            ViewBag.ExistingFileCount = existingFiles.Count();
             ViewBag.Targets = GetTargets();
             ViewBag.Title = "Add New Useful Link";
-            return PartialView(viewModel);
+            return PartialView("AddLink", viewModel);
         }
 
         // POST: LibraryAdmin/UsefulLinks/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "LinkAddress,DisplayText,ToolTip,Target,Enabled")] UsefulLinksAddEditViewModel viewModel)
+        public ActionResult PostCreate(LinkedFileAddViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            //Check if we've been passed a URL ...
+            if (!string.IsNullOrEmpty(viewModel.Url))
             {
-                var newUsefulLink = new UsefulLink()
+                var newUsefulLink = new UsefulLink
                 {
-                    LinkAddress = viewModel.LinkAddress,
-                    DisplayText = viewModel.DisplayText,
-                    ToolTip = viewModel.ToolTip,
-                    Target = viewModel.Target,
+                    Url = viewModel.Url,
+                    DisplayText = viewModel.DisplayText ?? viewModel.Url,
+                    HoverTip = viewModel.HoverTip ?? viewModel.Url,
+                    Target = "_blank",
                     Enabled = true,
+                    //Login = viewModel.Login,
+                    //Password = viewModel.Password,
                     InputDate = DateTime.Now
                 };
+
                 _db.UsefulLinks.Add(newUsefulLink);
                 _db.SaveChanges();
                 return Json(new { success = true });
-                //return RedirectToAction("Index");
+            }
+            //Otherwise, check if we've been passed any new files ...
+            if (viewModel.Files != null)
+            {
+                if (viewModel.Files.First() != null)
+                {
+                    try
+                    {
+                        //var titleId = viewModel.TitleId;
+
+                        foreach (var file in viewModel.Files)
+                        {
+                            if (file != null && file.ContentLength > 0)
+                            {
+                                var name = Path.GetFileName(file.FileName);
+                                var type = file.ContentType;
+                                var ext = Path.GetExtension(file.FileName);
+                                var path = Path.GetFullPath(file.FileName);
+                                var fileId = HostedFileController.UploadFile(fileStream: file.InputStream, name: name, type: type, ext: ext, path: path);
+
+                                if (fileId != 0)
+                                {
+                                    var usefulLink = new UsefulLink()
+                                    {
+                                        FileId = fileId,
+                                        DisplayText = viewModel.DisplayText ?? name,
+                                        HoverTip = viewModel.HoverTip ?? name,
+                                        //Login = viewModel.Login,
+                                        //Password = viewModel.Password,
+                                        InputDate = DateTime.Now
+                                    };
+                                    _db.UsefulLinks.Add(usefulLink);
+                                    _db.SaveChanges();
+                                }
+                                viewModel.Success = true;
+                            }
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", e.Message);
+                    }
+                    return Json(new { success = true });
+                }
+            }
+            if (viewModel.ExistingFile != 0)
+            {
+                var file = _db.HostedFiles.Find(viewModel.ExistingFile);
+                if (file == null) return null;
+
+                var usefulLink = new UsefulLink()
+                {
+                    FileId = viewModel.ExistingFile,
+                    DisplayText = viewModel.DisplayText ?? file.FileName,
+                    HoverTip = viewModel.HoverTip ?? file.FileName,
+                    //Login = viewModel.Login,
+                    //Password = viewModel.Password,
+                    InputDate = DateTime.Now
+                };
+                _db.UsefulLinks.Add(usefulLink);
+                _db.SaveChanges();
+                return Json(new { success = true });
             }
 
-            return PartialView(viewModel);
+            return Json(new { success = false });
         }
+            
 
         // GET: LibraryAdmin/UsefulLinks/Edit/5
         public ActionResult Edit(int? id)
@@ -97,13 +169,20 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new UsefulLinksAddEditViewModel()
             {
                 LinkID = usefulLink.LinkID,
-                LinkAddress = usefulLink.LinkAddress,
+                Url = usefulLink.Url,
+                FileId = usefulLink.FileId,
+                FileName = (from f in _db.HostedFiles.Where(x => x.FileId == usefulLink.FileId) select f.FileName).FirstOrDefault(),
                 DisplayText = usefulLink.DisplayText,
-                ToolTip = usefulLink.ToolTip,
+                HoverTip = usefulLink.HoverTip,
                 Target = usefulLink.Target,
                 Enabled = usefulLink.Enabled
             };
 
+            if (usefulLink.FileId > 0)
+            {
+                viewModel.InfoMsg =
+                    "<p><strong>Note: </strong>You cannot edit the " + DbRes.T("Links.Linked_File", "FieldDisplayName").ToLower() + " here.  If this is incorrect or requires updating, please delete this link and create a new one to the correct, or updated, file.</p>";
+            }
             ViewBag.Targets = GetTargets();
             ViewBag.Title = "Edit Useful Link";
             return PartialView(viewModel);
@@ -112,7 +191,7 @@ namespace slls.Areas.LibraryAdmin
         // POST: LibraryAdmin/UsefulLinks/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "LinkID,LinkAddress,DisplayText,ToolTip,Target,Enabled")] UsefulLinksAddEditViewModel viewModel)
+        public ActionResult Edit(UsefulLinksAddEditViewModel viewModel)
         {
             if (!ModelState.IsValid) return View(viewModel);
             var usefulLink = _db.UsefulLinks.Find(viewModel.LinkID);
@@ -120,16 +199,15 @@ namespace slls.Areas.LibraryAdmin
             {
                 return HttpNotFound();
             }
-            usefulLink.LinkAddress = viewModel.LinkAddress;
+            usefulLink.Url = viewModel.Url;
             usefulLink.DisplayText = viewModel.DisplayText;
-            usefulLink.ToolTip = viewModel.ToolTip;
+            usefulLink.HoverTip = viewModel.HoverTip;
             usefulLink.Target = viewModel.Target;
             usefulLink.Enabled = viewModel.Enabled;
             usefulLink.LastModified = DateTime.Now;
 
             _db.Entry(usefulLink).State = EntityState.Modified;
             _db.SaveChanges();
-            //return RedirectToAction("Index");
             return Json(new { success = true });
         }
 

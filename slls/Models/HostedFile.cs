@@ -44,6 +44,12 @@ namespace slls.Models
         [LocalDisplayName("TitleLinks", "EntityType")]
         public virtual ICollection<TitleLink> TitleLinks { get; set; }
 
+        [LocalDisplayName("OrderLinks", "EntityType")]
+        public virtual ICollection<OrderLink> OrderLinks { get; set; }
+
+        [LocalDisplayName("Useful_Links", "EntityType")]
+        public virtual ICollection<UsefulLink> UsefulLinks { get; set; }
+
         [LocalDisplayName("Hosted_Files.File_Size", "FieldDisplayName")]
         public double SizeStored { get; set; }
     }

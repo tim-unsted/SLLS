@@ -80,6 +80,10 @@ namespace slls.Models
         [LocalDisplayName("Titles.Published_Year", "FieldDisplayName")]
         public string Year { get; set; }
 
+        public int? PubMonth { get; set; }
+
+        public int? PubDay { get; set; }
+
         [Column(TypeName = "money")]
         [LocalDisplayName("Titles.Price", "FieldDisplayName")]
         public decimal? Price { get; set; }
