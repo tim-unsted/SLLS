@@ -462,7 +462,7 @@ namespace slls.Areas.LibraryAdmin
                     TitleId = titleImage.TitleId,
                     TitleImageId = titleImage.TitleImageId
                 };
-                ViewBag.Title = "Edit " + DbRes.T("Images.Image", "FieldDisplayName") + " Details";
+                ViewBag.Title = "Edit " + DbRes.T("Titles.Title", "FieldDisplayName") + " " + DbRes.T("Images.Image", "FieldDisplayName") + " Details";
                 return PartialView(viewModel);
             }
             return new HttpStatusCodeResult(HttpStatusCode.BadRequest);

@@ -16,16 +16,23 @@
             @Html.HiddenFor(model => model.TitleId)
 
             <div class="form-group">
-                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
                 <div class="col-md-8">
                     <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
                 </div>
             </div>
 
             <div class="form-group">
+                @Html.Label(DbRes.T("Images.Image_ID", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <p class="form-control-static"><a href="@Url.Action("Edit", "Images", new  {id = Model.ImageId})" class="modal-link" data-dismiss="modal">@Model.ImageId</a></p>
+                </div>
+            </div>
+
+            <div class="form-group">
                 <div class="col-md-3">&nbsp;</div>
                 <div class="col-md-8">
-                    <img src="@Url.Action("RenderImage", "TitleImages", new { id = Model.TitleImageId })" alt="@Model.Alt" style="max-width: 100%;">
+                    <img src="@Url.Action("RenderImage", "TitleImages", new { id = Model.ImageId })" alt="@Model.Alt" style="max-width: 100%;">
                 </div>
             </div>
 

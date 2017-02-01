@@ -94,28 +94,28 @@ namespace slls.Areas.LibraryAdmin
                     try
                     {
                         var image = client.DownloadData(url);
-                        var uri = new Uri(url);
-                        url = uri.GetLeftPart(UriPartial.Path);
-                        var fullPath = url;
-                        var name = Path.GetFileName(fullPath) ?? "";
-                        var ext = Path.GetExtension(fullPath) ?? "";
+                        //var uri = new Uri(url);
+                        //url = uri.GetLeftPart(UriPartial.Path);
+                        //var fullPath = url;
+                        //var name = Path.GetFileName(fullPath) ?? "";
+                        //var ext = Path.GetExtension(fullPath) ?? "";
 
-                        //Check the name of the file - append [n] for each duplicate ...
-                        var i = 1;
-                        var existingFileName = db.Images.FirstOrDefault(f => f.Source == name);
-                        while (existingFileName != null)
-                        {
-                            name = name.Replace(ext, "");
-                            name = name + "[" + i + "]";
-                            name = name + ext;
-                            existingFileName = db.Images.FirstOrDefault(f => f.Source == name);
-                            i++;
-                        }
+                        ////Check the name of the file - append [n] for each duplicate ...
+                        //var i = 1;
+                        //var existingFileName = db.Images.FirstOrDefault(f => f.Source == name);
+                        //while (existingFileName != null)
+                        //{
+                        //    name = name.Replace(ext, "");
+                        //    name = name + "[" + i + "]";
+                        //    name = name + ext;
+                        //    existingFileName = db.Images.FirstOrDefault(f => f.Source == name);
+                        //    i++;
+                        //}
 
                         var img = new CoverImage
                         {
                             Image = image,
-                            Name = string.IsNullOrEmpty(name) ? url : name,
+                            Name = url,
                             Source = url,
                             Size = image.Length,
                             Type = image.GetType().ToString(),
@@ -231,6 +231,7 @@ namespace slls.Areas.LibraryAdmin
 
             if (viewModel.IsLogoImage)
             {
+                Settings.UpdateParameter("Styling.LogoImageID", viewModel.ImageId.ToString());
                 CssManager.LogoImageId = viewModel.ImageId;
             }
             return Json(new { success = true });

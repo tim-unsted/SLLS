@@ -21,18 +21,14 @@
                     "targets": [0]
                 },
                 {
-                    "width": "15%",
+                    "width": "10%",
                     "searchable": false,
                     "sortable": false,
                     "targets": [1]
                 },
                 {
-                    "width": "10%",
-                    "targets": [2]
-                },
-                {
-                    "width": "10%",
-                    "targets": [3]
+                    "width": "15%",
+                    "targets": [2, 3]
                 },
                 {
                     "width": "10%",
@@ -132,10 +128,10 @@
                         <a href="@Url.Action("Show", "Images", new {id = image.ImageId})" title="View image" data-toggle="modal" data-target="#stdModal"><img src="@Url.Action("RenderImage", "Images", new {id = image.ImageId})" alt="@image.Source" style="width: 100%;"></a>
                     </div>
                 </td>
-                <td style="vertical-align: top;">
+                <td style="vertical-align:" class="dont-break-out">
                     @Html.DisplayFor(modelItem => image.Name)
                 </td>
-                <td style="vertical-align: top;">
+                <td style="vertical-align: top;" class="dont-break-out">
                     @Html.ResolvedLink(linkDisplayText: image.Name, linkUrl: image.Source)
                 </td>
                 <td style="vertical-align: top;">
