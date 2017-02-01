@@ -1,0 +1,63 @@
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.EditImageViewModel
+
+@Html.Partial("_ModalEditHeader")
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.ImageId)
+
+            <div class="form-group">
+                <div class="col-md-12" style="text-align: center">
+                    <img src="@Url.Action("RenderImage", "Images", new {id = Model.ImageId})" alt="@Model.ImageName" style="max-width: 100%;">
+                </div>
+            </div>
+
+            <hr class="hr-compact"/>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Images.Image_ID", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.ImageId)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Images.Name", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
+                <div class="col-md-8">
+                    @Html.EditorFor(model => model.ImageName, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.ImageName, "", new {@class = "text-danger"})
+                    @Html.HelpInline("Use a suitable name to help you find this image should you need to use it elsewhere.")
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Images.Image_Html", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <p class="form-control-static"><code>@Html.DisplayFor(model => model.ImageSrc)</code></p>
+                    @Html.HelpInline("Copy and paste the above HTML image tag if you want to use this image in any HTML block (e.g. an Announcement).")
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.Label(DbRes.T("Images.Is_Logo", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsLogoImage)
+                        @Html.ValidationMessageFor(model => model.IsLogoImage, "", new { @class = "text-danger" })
+                        @Html.HelpInline("Any image can be used as the site's main logo.")
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Html.Partial("_ModalEditFooter")
+}

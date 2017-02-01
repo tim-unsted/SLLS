@@ -32,6 +32,9 @@ namespace slls.Areas.LibraryAdmin
             var allSources = ConfigurationManager.AppSettings["AutoCatImageSources"];
             var sources = allSources.Split(',').ToList();
 
+            //Get a list of all hosted (i.e. stored in database) images
+            var existingImages = _db.Images.OrderBy(f => f.Source).ToList();
+
             var title = _db.Titles.Find(id);
             var viewModel = new LinkedFileAddViewModel
             {
@@ -42,38 +45,23 @@ namespace slls.Areas.LibraryAdmin
                 HasAutocat = true
             };
 
+            ViewBag.ExistingImage = new SelectList(existingImages, "ImageId", "Source");
+            ViewBag.ExistingImageCount = existingImages.Count();
             ViewBag.Title = "Add New " + DbRes.T("Images.Image", "FieldDisplayName");
             return PartialView(viewModel);
         }
 
 
         [HttpPost]
-        public ActionResult Add(LinkedFileAddViewModel viewModel, string submit)
+        public ActionResult Add(LinkedFileAddViewModel viewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return PartialView("Add", viewModel);
-            }
-
             if (!string.IsNullOrEmpty(viewModel.Url))
             {
-                using (var client = new WebClient())
+                //Download the image from the UTL and return the new ImageID ...
+                var imageId = ImagesController.DownloadImageFromUrl(viewModel.Url);
+
+                if (imageId != 0)
                 {
-                    var image = client.DownloadData(viewModel.Url);
-                    var img = new CoverImage
-                    {
-                        Image = image,
-                        Source = viewModel.Url,
-                        Size = image.Length,
-                        Type = image.GetType().ToString(),
-                        InputDate = DateTime.Now
-                    };
-
-                    _db.Images.Add(img);
-                    _db.SaveChanges();
-
-                    var imageId = img.ImageId;
-
                     var titleImage = new TitleImage
                     {
                         ImageId = imageId,
@@ -90,92 +78,83 @@ namespace slls.Areas.LibraryAdmin
                     CheckForPrimaryImage(viewModel.TitleId);
 
                     return Json(new { success = true });
-                    //return RedirectToAction("Edit", "Titles", new { id = viewModel.TitleId });
+                }
+                return Json(new { success = false });
+            }
+
+            //Upload images from the device/local network ...
+            if (viewModel.Files != null)
+            {
+                if (viewModel.Files.First() != null)
+                {
+                    try
+                    {
+                        foreach (var file in viewModel.Files.ToList())
+                        {
+                            if (file != null && file.ContentLength > 0)
+                            {
+                                var name = Path.GetFileName(file.FileName);
+                                var ext = Path.GetExtension(file.FileName);
+                                var type = file.ContentType;
+                                var imageId = ImagesController.UploadImage(fileStream: file.InputStream, name: name, type: type, ext: ext, source: name);
+
+                                var titleImage = new TitleImage
+                                {
+                                    ImageId = imageId,
+                                    TitleId = viewModel.TitleId,
+                                    Alt = viewModel.Title,
+                                    HoverText = viewModel.Title,
+                                    IsPrimary = viewModel.IsPrimary,
+                                    InputDate = DateTime.Now
+                                };
+                                _db.TitleImages.Add(titleImage);
+                                _db.SaveChanges();
+                            }
+                        }
+                        CheckForPrimaryImage(viewModel.TitleId);
+                        return Json(new { success = true });
+                    }
+                    catch (Exception e)
+                    {
+                        ModelState.AddModelError("", e.Message);
+                        return Json(new { success = false });
+                    }
+                    return Json(new { success = false });
                 }
             }
 
-            if (viewModel.Files != null)
+            // Use an existing image already in the database ...
+            if (viewModel.ExistingImage != 0)
             {
                 try
                 {
-                    var titleId = viewModel.TitleId;
-                    var alt = viewModel.Title;
-                    var hoverText = viewModel.Title;
+                    var image = _db.Images.Find(viewModel.ExistingImage);
+                    if (image == null) return null;
 
-                    foreach (var file in viewModel.Files)
+                    var titleImage = new TitleImage
                     {
-                        if (file != null && file.ContentLength > 0)
-                        {
-                            var name = Path.GetFileName(file.FileName); ;
-                            var size = file.ContentLength;
-                            var type = file.ContentType;
-                            viewModel.Success = HandleUpload(file.InputStream, name, size, type, titleId, alt, hoverText, false);
-                        }
-                    }
-                }
-                catch (Exception e)
-                {
-                    ModelState.AddModelError("", e.Message);
-                }
-
-                CheckForPrimaryImage(viewModel.TitleId);
-
-                return Json(new { success = true });
-                //return RedirectToAction("Edit", "Titles", new { id = viewModel.TitleId });
-            }
-
-            viewModel.Success = false;
-            viewModel.ErrorMessage = "Please browse for an image to upload.";
-            return PartialView("Add", viewModel);
-        }
-
-
-        private bool HandleUpload(Stream fileStream, string name, int size, string type, int titleId, string alt,
-            string hoverText, bool isPrimary)
-        {
-            var handled = false;
-
-            try
-            {
-                var documentBytes = new byte[fileStream.Length];
-                fileStream.Read(documentBytes, 0, documentBytes.Length);
-
-                var img = new CoverImage
-                {
-                    Image = documentBytes,
-                    Source = name,
-                    Size = size,
-                    Type = type,
-                    InputDate = DateTime.Now
-                };
-
-                _db.Images.Add(img);
-                _db.SaveChanges();
-
-                var imageId = img.ImageId;
-
-                var titleImage = new TitleImage
-                    {
-                        ImageId = imageId,
-                        TitleId = titleId,
-                        Alt = alt,
-                        HoverText = hoverText,
-                        IsPrimary = isPrimary,
+                        ImageId = image.ImageId,
+                        TitleId = viewModel.TitleId,
+                        Alt = viewModel.Title,
+                        HoverText = viewModel.Title,
+                        IsPrimary = false,
                         InputDate = DateTime.Now
                     };
 
-                _db.TitleImages.Add(titleImage);
-                handled = (_db.SaveChanges() > 0);
+                    _db.TitleImages.Add(titleImage);
+                    _db.SaveChanges();
 
+                    CheckForPrimaryImage(viewModel.TitleId);
+                    return Json(new { success = true });
+                }
+                catch (Exception)
+                {
+                    return Json(new { success = false });
+                    throw;
+                }
+                return Json(new { success = false });
             }
-            catch (Exception e)
-            {
-                // Oops, something went wrong, handle the exception
-                ModelState.AddModelError("", e.Message);
-                return false;
-            }
-
-            return handled;
+            return Json(new { success = false });
         }
 
         //This is using AutoCat ...
@@ -184,7 +163,7 @@ namespace slls.Areas.LibraryAdmin
             try
             {
                 var isbn = viewModel.Isbn;
-                string url = "";
+                var url = "";
 
                 if (isbn == null)
                 {
@@ -203,32 +182,19 @@ namespace slls.Areas.LibraryAdmin
                 }
 
                 //We've got a URL, now download the image ...
-                using (var client = new WebClient())
+                var imageId = ImagesController.DownloadImageFromUrl(url);
+
+                if (imageId > 0)
                 {
-                    var image = client.DownloadData(url);
-                    var img = new CoverImage
+                    var titleImage = new TitleImage
                     {
-                        Image = image,
-                        Source = viewModel.Url,
-                        Size = image.Length,
-                        Type = image.GetType().ToString(),
+                        ImageId = imageId,
+                        TitleId = viewModel.TitleId,
+                        Alt = viewModel.Title,
+                        HoverText = viewModel.Title,
+                        IsPrimary = false,
                         InputDate = DateTime.Now
                     };
-
-                    _db.Images.Add(img);
-                    _db.SaveChanges();
-
-                    var imageId = img.ImageId;
-
-                    var titleImage = new TitleImage
-                        {
-                            ImageId = imageId,
-                            TitleId = viewModel.TitleId,
-                            Alt = viewModel.Title,
-                            HoverText = viewModel.Title,
-                            IsPrimary = false,
-                            InputDate = DateTime.Now
-                        };
 
                     _db.TitleImages.Add(titleImage);
                     _db.SaveChanges();
@@ -242,12 +208,18 @@ namespace slls.Areas.LibraryAdmin
                         isRedirect = true
                     });
                 }
+
             }
             catch (Exception e)
             {
                 Response.StatusCode = 500;
                 return Json(new { message = e.Message }, JsonRequestBehavior.AllowGet);
             }
+            return Json(new
+            {
+                redirectUrl = Url.Action("Edit", "Titles", new { id = viewModel.TitleId }),
+                isRedirect = true
+            });
         }
 
 
@@ -313,27 +285,11 @@ namespace slls.Areas.LibraryAdmin
 
                         if (url != null)
                         {
-                            using (var client = new WebClient())
+                            var imageId = ImagesController.DownloadImageFromUrl(url);
+
+                            if (imageId > 0)
                             {
-                                var image = client.DownloadData(url);
-
-                                if (image != null)
-                                {
-                                    var img = new CoverImage
-                                    {
-                                        Image = image,
-                                        Source = url,
-                                        Size = image.Length,
-                                        Type = image.GetType().ToString(),
-                                        InputDate = DateTime.Now
-                                    };
-
-                                    _db.Images.Add(img);
-                                    _db.SaveChanges();
-
-                                    var imageId = img.ImageId;
-
-                                    var titleImage = new TitleImage
+                                var titleImage = new TitleImage
                                     {
                                         ImageId = imageId,
                                         TitleId = title.TitleID,
@@ -343,16 +299,13 @@ namespace slls.Areas.LibraryAdmin
                                         InputDate = DateTime.Now
                                     };
 
-                                    _db.TitleImages.Add(titleImage);
-                                    _db.SaveChanges();
-
-
-                                    downloadCount++;
-                                    ProgressHub.SendMessage("Working ... " + downloadCount + " images downloaded.", viewModel.Who);
-                                    break;
-                                }
+                                _db.TitleImages.Add(titleImage);
+                                _db.SaveChanges();
                             }
                         }
+                        downloadCount++;
+                        ProgressHub.SendMessage("Working ... " + downloadCount + " images downloaded.", viewModel.Who);
+                        break;
                     }
                 }
                 var progressPercent = (progress / startCount) * 100;
@@ -468,7 +421,7 @@ namespace slls.Areas.LibraryAdmin
 
         public ActionResult List(int id = 0) //id = TitleID
         {
-            var title = _db.Titles.Find(id); 
+            var title = _db.Titles.Find(id);
             var viewModel = title.TitleImages
                 .Select(titleImage => new LinkedFileListViewmodel
                 {
@@ -484,7 +437,7 @@ namespace slls.Areas.LibraryAdmin
         }
 
 
-        public ActionResult ViewImage(int? id)
+        public ActionResult RenderImage(int? id)
         {
             var coverImage = _db.Images.Find(id);
             var buffer = coverImage.Image;
@@ -573,7 +526,7 @@ namespace slls.Areas.LibraryAdmin
             var titleImage = _db.TitleImages.Find(id);
             var titleId = titleImage.TitleId;
 
-            if (!ModelState.IsValid) return RedirectToAction("Edit", "Titles", new { id = titleImage.TitleId });;
+            if (!ModelState.IsValid) return RedirectToAction("Edit", "Titles", new { id = titleImage.TitleId }); ;
             try
             {
                 _db.TitleImages.Remove(titleImage);

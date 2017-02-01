@@ -38,7 +38,7 @@
                                     }
                                     else
                                     {
-                                        <li style="padding: 3px 10px;"><a href="@Url.Action(l3.Action, l3.Controller, new { area = l3.LinkArea })" class="@l3.Class" data-toggle="@l3.DataToggle" data-target="@l3.DataTarget" target="@l3.Target" title="@l3.HoverTip">@l3.Title</a></li>
+                                        <li style="padding: 3px 10px;"><a href="@Url.Action(l3.Action, l3.Controller, new { area = l3.LinkArea == "OPAC" ? "" : l3.LinkArea })" class="@l3.Class" data-toggle="@l3.DataToggle" data-target="@l3.DataTarget"  title="@l3.HoverTip">@l3.Title</a></li>
                                     }
                                 }
                             }

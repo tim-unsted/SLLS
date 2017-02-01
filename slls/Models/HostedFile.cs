@@ -52,5 +52,11 @@ namespace slls.Models
 
         [LocalDisplayName("Hosted_Files.File_Size", "FieldDisplayName")]
         public double SizeStored { get; set; }
+
+        [NotMapped]
+        public string InputDateSortable
+        {
+            get { return string.Format("{0:yyyy-MM-dd}", InputDate); }
+        }
     }
 }

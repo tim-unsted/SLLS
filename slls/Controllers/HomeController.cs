@@ -1619,7 +1619,7 @@ namespace slls.Controllers
             return PartialView("SaveSearch", viewModel);
         }
 
-        public ActionResult ViewImage(int? id)
+        public ActionResult RenderImage(int? id)
         {
             var coverImage = _db.Images.Find(id);
             var buffer = coverImage.Image;

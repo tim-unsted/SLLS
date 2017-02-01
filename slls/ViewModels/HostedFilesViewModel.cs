@@ -50,8 +50,24 @@ namespace slls.ViewModels
     public class UploadFileViewModel
     {
         public HttpPostedFileBase File { get; set; }
-
         public IEnumerable<HttpPostedFileBase> Files { get; set; }
 
+        [RegularExpression(@"^(http(s)?://|ftp://|file://|[\w]\:|\\).+$", ErrorMessage = "This URL does not appear to be valid. Are you missing a prefix (e.g. 'http://')?")]
+        [LocalDisplayName("Links.URL_Path", "FieldDisplayName")]
+        public string Url { get; set; }
+
+    }
+
+    public class EditImageViewModel
+    {
+        public int ImageId { get; set; }
+        public string ImageName { get; set; }
+        public bool IsLogoImage { get; set; }
+        public string ImageSrc { get; set; }    
+
+        public EditImageViewModel()
+        {
+            IsLogoImage = false;
+        }
     }
 }

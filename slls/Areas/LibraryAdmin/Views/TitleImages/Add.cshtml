@@ -1,4 +1,5 @@
 ﻿@using AutoCat.Hammicks
+@using slls.Utils.Helpers
 @using Westwind.Globalization
 @model slls.ViewModels.LinkedFileAddViewModel
 
@@ -6,40 +7,49 @@
 
 <div class="modal-body">
     <div class="alert alert-info" role="alert">
-        <dl class="dl-horizontal">
-            <dt>
-                @Html.DisplayNameFor(model => model.Title):
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Title)
-            </dd>
-            <dt>
-                @Html.DisplayNameFor(model => model.Isbn):
-            </dt>
-            <dd>
-                @Html.DisplayFor(model => model.Isbn)
-            </dd>
-        </dl>
+        <p>Use this form to add a new image to the current @DbRes.T("Titles.Title", "FieldDisplayName"). There are a number of ways to add a new image:</p>
+        <ul>
+            <li>
+                Use AutoCat to download an image from one of the available sources.
+            </li>
+            <li>
+                Download an image from the internet.
+            </li>
+            <li>
+                Use an existing image stored in the database.
+            </li>
+            <li>
+                Upload a new image from your device or local network.
+            </li>
+        </ul>
     </div>
-</div>
 
-@if (Model.HasAutocat)
-{
-    if (!string.IsNullOrEmpty(Model.Isbn))
+
+    <div class="form-horizontal">
+        <div class="form-group">
+            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+            </div>
+        </div>
+    </div>
+
+    @if (Model.HasAutocat)
     {
-        @*<span style="float: left;"><input type="submit" id="btnAutocat" name="submit" value="Use AutoCat" class="btn btn-primary" /></span>*@
-        using (Ajax.BeginForm("DownloadImageFromAutoCat", "TitleImages", null, new AjaxOptions { HttpMethod = "post", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "autoCat" }))
+        if (!string.IsNullOrEmpty(Model.Isbn))
         {
-            @Html.AntiForgeryToken()
-            <div class="modal-body">
+            @*<span style="float: left;"><input type="submit" id="btnAutocat" name="submit" value="Use AutoCat" class="btn btn-primary" /></span>*@
+            using (Ajax.BeginForm("DownloadImageFromAutoCat", "TitleImages", null, new AjaxOptions { HttpMethod = "post", OnSuccess = "OnSuccess", OnFailure = "OnFailure" }, new { @id = "autoCat" }))
+            {
+                @Html.AntiForgeryToken()
                 @Html.HiddenFor(model => model.TitleId)
                 @Html.HiddenFor(model => model.Isbn)
                 @Html.HiddenFor(model => model.Title)
 
                 <div class="form-horizontal">
                     <div class="form-group">
-                        @Html.Label("Use AutoCat:", htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-8">
+                        @Html.Label("Use AutoCat:", htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
                             <div class="btn-group">
                                 <button class="btn btn btn-primary dropdown-toggle" data-toggle="dropdown">
                                     Download from
@@ -56,98 +66,142 @@
                     </div>
                     <hr />
                 </div>
-            </div>
-        }
-    }
-}
-
-@using (Html.BeginForm("Add", "TitleImages", FormMethod.Post, new { enctype = "multipart/form-data", id="frmUpload" }))
-{
-    @Html.AntiForgeryToken()
-    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-    @Html.ValidationMessageFor(model => model.ErrorMessage)
-    @Html.HiddenFor(model => model.TitleId)
-    @Html.HiddenFor(model => model.Isbn)
-    @Html.HiddenFor(model => model.Title)
-
-    <div class="modal-body">
-        <div class="form-horizontal">
-            <div class="form-group">
-                @Html.Label("Local Image:", new { @class = "control-label col-md-3" })
-                <div class="col-md-8">
-                    @Html.TextBoxFor(model => model.Files, new { type = "file", multiple = "multiple", accept = ".jpg, .jpeg, .png, .gif, .bmp", @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.File, "", new { @class = "text-danger" })
-                    @Html.ValidationMessageFor(model => model.FileName, "", new { @class = "text-danger" })
-                </div>
-            </div>
-            <div class="form-group">
-                @Html.Label("--- Or ---", new { @class = "control-label col-md-3" })
-            </div>
-            <div class="form-group">
-                @Html.Label("Hosted Image:", new { @class = "control-label col-md-3" })
-                <div class="col-md-8">
-                    @Html.TextBoxFor(x => Model.Url, new { @class = "form-control", @placeholder = "Enter a URL to the image ..." })
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="modal-footer">
-        <button type="submit" id="btnUpload" name="submit" value="Upload" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Add Image</button>
-        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
-    </div>
-}
-
-<script type="text/javascript">
-    //$(function () {
-    //    $('frmUpload').submit(function (e) {
-    //        e.preventDefault();
-    //        $.post(this.action, $(this).serialize(), function (response) {
-    //            if (response.error) {
-    //                alert(response.error);
-    //            }
-    //            else {
-                    
-    //                $('#stdModal').modal('hide');
-    //                $('#lrgModal').modal('hide');
-    //                location.reload();
-    //            }
-    //        }, 'json');
-    //    });
-    //});
-    $("#frmUpload").submit(function(e) {
-        e.preventDefault();
-        var formData = new FormData($(this)[0]);
-
-        $.ajax({
-            type: "POST",
-            url: this.action,
-            data: formData,
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                if (data.success) {
-                    $('#stdModal').modal('hide');
-                    location.reload();
-                } else {
-                    alert('Oops! ' + data.success);
-                }
             }
-        });
-        return false;
-    });
-
-    function OnSuccess(json) {
-        if (json.isRedirect) {
-            window.location.href = json.redirectUrl;
         }
     }
 
-    function OnFailure(response) {
-        var obj = $.parseJSON(response.responseText);
-        alert(obj.message);
+    @using (Html.BeginForm("Add", "TitleImages", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmUpload" }))
+    {
+        @Html.AntiForgeryToken()
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.ValidationMessageFor(model => model.ErrorMessage)
+        @Html.HiddenFor(model => model.TitleId)
+        @Html.HiddenFor(model => model.Isbn)
+        @Html.HiddenFor(model => model.Title)
+
+        <div class="form-horizontal">
+
+            <div class="form-group">
+                @Html.Label("Hosted Image:", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => Model.Url, new { @class = "form-control", @placeholder = "Enter a URL to the image ..." })
+                    @Html.HelpInline("Type or paste the web address/Url to an on-line hosted image.")<br />
+                    @Html.HelpInline("<strong>Tip:</strong> If the hosted image is downloadable then right-clicking on the image will often provide a link or an option to 'Copy image address'.")
+                </div>
+            </div>
+
+            @if (ViewBag.ExistingImageCount > 0)
+            {
+                <div class="form-group">
+                    @Html.Label("Existing Image:", new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("ExistingImage", null, "Select an existing hosted image", new { @class = "form-control selectpicker" })
+                        @Html.HelpInline("Or, select an image that has already been uploaded and stored in the database.")
+                        @Html.ValidationMessageFor(model => model.ExistingImages, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                @Html.Label("Local Image:", new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.Files, new { type = "file", multiple = "multiple", accept = ".*", @style = "display: none;" })
+                            </span>
+                        </label>
+                        <input type="text" class="form-control">
+                    </div>
+                    @Html.HelpInline("Or, upload one or images stored on your device or local network.")<br />
+                    @Html.HelpInline("<strong>Tip:</strong> Press and hold the 'Ctrl' button in the pop-up file explorer to pick multiple image files.")
+                </div>
+            </div>
+            @*<div class="form-group">
+                    @Html.Label("--- Or ---", new {@class = "control-label col-md-2"})
+                </div>*@
+
+        </div>
+
+        <div class="modal-footer">
+            <button type="submit" id="btnUpload" name="submit" value="Upload" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Add Image</button>
+            &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+        </div>
     }
 
-</script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.selectpicker').selectpicker({
+                liveSearch: true,
+                showSubtext: true
+            });
+        });
+
+        $("#frmUpload").submit(function (e) {
+            e.preventDefault();
+            var formData = new FormData($(this)[0]);
+
+            $.ajax({
+                type: "POST",
+                url: this.action,
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.success) {
+                        $('#stdModal').modal('hide');
+                        $('#lrgModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert('Oops! ' + data.success);
+                    }
+                }
+            });
+            return false;
+        });
+
+        function OnSuccess(json) {
+            if (json.isRedirect) {
+                window.location.href = json.redirectUrl;
+            }
+        }
+
+        function OnFailure(response) {
+            var obj = $.parseJSON(response.responseText);
+            alert(obj.message);
+        }
+
+    </script>
+
+    <script type="text/javascript">
+        $(function () {
+
+            // We can attach the `fileselect` event to all file inputs on the page
+            $(document).on('change', ':file', function () {
+                var input = $(this),
+                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                input.trigger('fileselect', [numFiles, label]);
+            });
+
+            // We can watch for our custom `fileselect` event like this
+            $(document).ready(function () {
+                $(':file').on('fileselect', function (event, numFiles, label) {
+
+                    var input = $(this).parents('.input-group').find(':text'),
+                        log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                    if (input.length) {
+                        //alert(input.length);
+                        input.val(log);
+                    } else {
+                        if (log) alert(log);
+                    }
+
+                });
+            });
+
+        });
+    </script>

@@ -329,6 +329,35 @@ namespace slls.Areas.LibraryAdmin
             return View(viewModel);
         }
 
+        public ActionResult ByCoverImage(int id)
+        {
+            var viewModel = new TitlesListViewModel
+            {
+                Titles = (from t in _db.Titles
+                          join i in _db.TitleImages on t.TitleID equals i.TitleId
+                          where i.ImageId == id
+                          select t).ToList()
+            };
+
+            if (viewModel.Titles.Count() == 1)
+            {
+                var firstOrDefault = viewModel.Titles.FirstOrDefault();
+                if (firstOrDefault != null)
+                {
+                    var titleId = firstOrDefault.TitleID;
+                    return RedirectToAction("Edit", new { id = titleId });
+                }
+            }
+
+            var coverImages = from i in _db.Images
+                              where i.ImageId == id
+                              select i.Source;
+
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
+            ViewBag.Title = ViewBag.Title + " By Cover Image: " + coverImages.FirstOrDefault();
+            return View(viewModel);
+        }
+
         public ActionResult ByMedia(int id)
         {
             var viewModel = new TitlesListViewModel

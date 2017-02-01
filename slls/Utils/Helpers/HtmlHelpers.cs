@@ -223,11 +223,16 @@ namespace slls.Utils.Helpers
             if (string.IsNullOrEmpty(linkUrl) && fileId == 0) return null;
             if (!string.IsNullOrEmpty(linkUrl))
             {
+                var link = linkUrl;
                 if (Uri.IsWellFormedUriString(linkUrl, UriKind.Absolute))
                 {
-                    var link = "<a href=\"" + linkUrl + "\" title=\"" + linkTitle + "\" target=\"_blank\">" + linkDisplayText + "</a>";
-                    return new MvcHtmlString(link);
+                    link = "<a href=\"" + linkUrl + "\" title=\"" + linkTitle + "\" target=\"_blank\">" + linkDisplayText + "</a>";
                 }
+                else
+                {
+                    link = linkUrl;
+                }
+                return new MvcHtmlString(link);
             }
 
             if (fileId == 0) return null;

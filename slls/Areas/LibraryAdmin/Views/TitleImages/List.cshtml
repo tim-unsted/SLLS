@@ -11,7 +11,7 @@
                 <div class="col-sm-6 col-md-4">
                     <div class="thumbnail">
                         <a href="@Url.Action("Edit", "TitleImages", new {id = item.TitleImageId})" data-toggle="modal" data-target="#stdModal" title="Edit" role="button">
-                            <img src="@Url.Action("ViewImage", "TitleImages", new { id = item.ImageId })" alt="@item.Alt">
+                            <img src="@Url.Action("RenderImage", "TitleImages", new { id = item.ImageId })" alt="@item.Alt">
                         </a>
                         <div class="caption">
                             <h4>@item.Alt</h4>

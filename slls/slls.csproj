@@ -278,6 +278,7 @@
     <Compile Include="Areas\Config\Controllers\PartialMenuController.cs" />
     <Compile Include="Areas\Config\Controllers\SearchConfigController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\HostedFileController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\ImagesController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\LoansBaseController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\OpacAdminBaseController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\OrderLinksController.cs" />
@@ -1171,6 +1172,12 @@
     <Content Include="Areas\LibraryAdmin\Views\OrderLinks\Create.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderLinks\Edit.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_ListOrderLinks.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Images\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Images\Show.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Images\Add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Images\Delete.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Images\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\ByCoverImage.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

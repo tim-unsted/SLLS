@@ -25,7 +25,7 @@ namespace slls.ViewModels
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
         public string Title { get; set; }
 
-        [LocalDisplayName("Order.Order", "FieldDisplayName")]
+        [LocalDisplayName("Orders.Order", "FieldDisplayName")]
         public string OrderDetails { get; set; }
 
         //[Required]
@@ -67,7 +67,11 @@ namespace slls.ViewModels
 
         public int ExistingFile { get; set; }
 
+        public int ExistingImage { get; set; }
+
         public IEnumerable<SelectListItem> ExistingFiles { get; set; }
+
+        public IEnumerable<SelectListItem> ExistingImages { get; set; }
 
         public bool HasAutocat { get; set; }
 
@@ -125,7 +129,7 @@ namespace slls.ViewModels
         //[LocalDisplayName("Titles.Title", "FieldDisplayName")]
         //public string Title { get; set; }
 
-        //[LocalDisplayName("Order.Order", "FieldDisplayName")]
+        //[LocalDisplayName("Orders.Order", "FieldDisplayName")]
         //public string OrderDetails { get; set; }
 
         ////[Required]

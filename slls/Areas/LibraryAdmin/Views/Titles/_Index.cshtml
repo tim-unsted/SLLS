@@ -13,39 +13,41 @@
             "language": {
                 "url": "/DataTables/lang.txt"
             },
-            "order": [0, 'asc'],
+            "order": [9, 'asc'],
             "autoWidth": false,
             "columnDefs": [
                 {
-                    "width": "25%",
-                    "orderData": 8,
-                    "targets": [0],
+                    "width": "10%",
+                    "sortable": false,
+                    "searchable": false,
+                    "targets": [0]
+                },
+                {
+                    "width": "20%",
+                    "orderData": 9,
+                    "targets": [1],
                     "orderSequence": ["desc", "asc"]
-                    //,
-                    //"render": function(data, type, row) {
-                    //    return '<a href="Editx/' + row[7] + '" class="btn-link">' + data + '</a>';
-                    //}
                 },
                 {
                     "width": "10%",
-                    "targets": [1, 3]
+                    "targets": [2, 4]
                 },
                 {
                     "width": "15%",
-                    "targets": [2, 4, 5]
+                    "targets": [3,5,6]
                 },
                 {
                     "width": "10%",
-                    "targets": [6]
+                    "targets": [7]
                 },
                 {
                     "visible": false,
-                    "targets": [7, 8]
+                    "targets": [8,9]
                 },
                 {
                     "sortable": false,
                     "width": "10%",
-                    "targets": [9]
+                    "targets": [10]
                 }
             ],
             initComplete: function() {
@@ -76,6 +78,9 @@
 <table id="titles" class="table table-condensed table-hover">
     <thead>
     <tr>
+        <th>
+            &nbsp;
+        </th>
         <th class="select-filter">
             @Html.DisplayName(DbRes.T("Titles.Title", "FieldDisplayName"))
         </th>
@@ -104,6 +109,7 @@
     </thead>
     <tfoot>
         <tr>
+            <td></td>
             <td class="filter"></td>
             <td class="filter"></td>
             <td class="filter"></td>
@@ -124,8 +130,18 @@
     {
         <tr>
             <td>
-                @*@Html.DisplayFor(modelItem => item.Title1)*@
-                <a href="@Url.Action("Edit", "Titles", new { id = item.TitleID})">@Html.DisplayFor(modelItem => item.Title1)</a>
+                <div class="coverthumbnail">
+                    @{ var image = item.TitleImages.FirstOrDefault(i => i.IsPrimary) ?? item.TitleImages.FirstOrDefault();
+                         if (image != null)
+                         {
+                            <img src="@Url.Action("RenderImage", "Home", new {id = image.ImageId, area = ""})" alt="@item.Title1" style="width: 100%;">
+                         }
+                    }
+                    @*<img src="@Url.Action("RenderImage", "Home", new {id = 3, area = ""})" alt="@item.Title1" style="width: 100%;">*@
+                </div>
+            </td>
+            <td>
+                <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})">@Html.DisplayFor(modelItem => item.Title1)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Isbn)
@@ -149,8 +165,7 @@
                 @if (item.Copies.Any())
                 {
                     <a href="@Url.Action("Edit", "Copies", new {id = item.Copies.FirstOrDefault().CopyID}, null)" class="btn-link" title="View/Edit Copies"><span class="badge badge-link">@item.Copies.Count</span></a><br/>
-                }
-                @*else
+                }@*else
                 {
                     @Html.DisplayFor(modelItem => item.Copies.Count)
                 }*@</td>

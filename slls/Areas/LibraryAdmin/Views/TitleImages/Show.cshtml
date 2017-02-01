@@ -2,13 +2,14 @@
 
 <div class="modal-body">
     <button type="button" class="close" id="btn_Close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <img src="@Url.Action("ViewImage", "TitleImages", new {id = Model.ImageId})" style="width: 100%;">
+    <img src="@Url.Action("RenderImage", "TitleImages", new {id = Model.ImageId})" >
 </div>
 
 <script type="text/javascript">
     $(function () {
         $('#btn_Close').click(function () {
             $('#lrgModal').modal('hide');
+            $('#stdModal').modal('hide');
         });
     });
 </script>
