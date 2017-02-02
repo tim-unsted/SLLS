@@ -68,7 +68,7 @@
                             {
                                 <div class="col-md-2">
                                     <div class="coverthumbnail">
-                                        <img src="@Url.Action("RenderImage", "TitleImages", new {id = item.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId})" alt="@item.TitleImages.FirstOrDefault(i => i.IsPrimary).Alt" width="100%">
+                                        <img src="@Url.Action("RenderImage", "Files", new { id = item.TitleImages.FirstOrDefault(i => i.IsPrimary).ImageId, area = "" })" alt="@item.TitleImages.FirstOrDefault(i => i.IsPrimary).Alt" width="100%">
                                     </div>
                                 </div>
                             }

@@ -1,21 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using slls.App_Settings;
 using slls.Controllers;
-using slls.DAO;
 using slls.Models;
 using slls.ViewModels;
 using Westwind.Globalization;
 
-namespace slls.Areas.LibraryAdmin
+namespace slls.Areas.Config
 {
-    public class ImagesController : AdminBaseController
+    public class ImagesController : ConfigBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         
@@ -36,22 +33,36 @@ namespace slls.Areas.LibraryAdmin
             return PartialView(image);
         }
 
-        public ActionResult Add()
+        public ActionResult Add(bool logo = false)
         {
+            var viewModel = new UploadFileViewModel()
+            {
+                IsLogoImage = logo
+            };
             ViewBag.Title = "Upload Images";
-            return PartialView();
+            return PartialView(viewModel);
         }
         
         [HttpPost]
         public ActionResult PostAdd(UploadFileViewModel viewModel)
         {
-            bool success = false;
+            var imageId = 0;
 
             //Download from Url ...
             if (!string.IsNullOrEmpty(viewModel.Url))
             {
-                success = FilesController.DownloadImageFromUrl(viewModel.Url) > 0;
-                return Json(new { success = success });
+                imageId = FilesController.DownloadImageFromUrl(viewModel.Url);
+
+                if (imageId > 0)
+                {
+                    if (viewModel.IsLogoImage)
+                    {
+                        Settings.UpdateParameter("Styling.LogoImageID", imageId.ToString());
+                        CssManager.LogoImageId = imageId;
+                    }
+                    return Json(new { success = true });
+                }
+                return Json(new { success = true });
             }
 
             //upload from device/local network ...
@@ -67,16 +78,22 @@ namespace slls.Areas.LibraryAdmin
                         var type = file.ContentType;
                         var ext = Path.GetExtension(file.FileName);
                         var path = Path.GetFullPath(file.FileName);
-                        success =
-                            FilesController.UploadImage(fileStream: file.InputStream, name: name, type: type, ext: ext, source: path) > 0;
+                        imageId =
+                            FilesController.UploadImage(fileStream: file.InputStream, name: name, type: type, ext: ext, source: path);
                     }
+                }
+                if (viewModel.IsLogoImage)
+                {
+                    Settings.UpdateParameter("Styling.LogoImageID", imageId.ToString());
+                    CssManager.LogoImageId = imageId;
                 }
             }
             catch (Exception e)
             {
                 ModelState.AddModelError("", e.Message);
+                return Json(new { success = false });
             }
-            return Json(new { success = success });
+            return Json(new { success = true });
         }
 
         
@@ -123,11 +140,11 @@ namespace slls.Areas.LibraryAdmin
             _db.Entry(image).State = EntityState.Modified;
             _db.SaveChanges();
 
-            //if (viewModel.IsLogoImage)
-            //{
-            //    Settings.UpdateParameter("Styling.LogoImageID", viewModel.ImageId.ToString());
-            //    CssManager.LogoImageId = viewModel.ImageId;
-            //}
+            if (viewModel.IsLogoImage)
+            {
+                Settings.UpdateParameter("Styling.LogoImageID", viewModel.ImageId.ToString());
+                CssManager.LogoImageId = viewModel.ImageId;
+            }
             return Json(new { success = true });
         }
 
@@ -183,6 +200,52 @@ namespace slls.Areas.LibraryAdmin
                 throw;
             }
 
+            return Json(new { success = true }); 
+        }
+
+        public ActionResult SetSiteLogo()
+        {
+            var viewModel = new SelectPopupViewModel
+            {
+                PostSelectController = "Images",
+                PostSelectAction = "Post_SetSiteLogo",
+                SelectedItem = "0",
+                HeaderText = "Set your site's logo",
+                DetailsHeader = "<strong><span class=\"glyphicon glyphicon-info-sign\"></span>&nbsp;</strong>Select an exiting image to use as your site's logo, or click on the link at the bottom to upload and use a new image.",
+                SelectLabel = "",
+                SelectText = "Select an image",
+                OkButtonText = "Set Logo",
+                PostSelectId = 0
+            };
+
+            viewModel.AvailableItems =
+                _db.Images
+                    .Select(x => new SelectListItem
+                    {
+                        Value = x.ImageId.ToString(),
+                        Text = x.Name ?? x.Source
+                    }).OrderBy(c => c.Text)
+                    .ToList();
+
+            ViewBag.Title = "Styling: Set Site Logo";
+            return PartialView(viewModel);
+        }
+
+        public ActionResult Post_SetSiteLogo(SelectPopupViewModel viewModel)
+        {
+            if (viewModel.SelectedItem != null)
+            {
+                var imageId = int.Parse(viewModel.SelectedItem);
+                if (imageId != 0)
+                {
+                    var image = _db.Images.Find(imageId);
+                    if (image != null)
+                    {
+                        Settings.UpdateParameter("Styling.LogoImageID", image.ImageId.ToString());
+                        CssManager.LogoImageId = image.ImageId;
+                    }
+                }
+            }
             return Json(new { success = true }); 
         }
     }

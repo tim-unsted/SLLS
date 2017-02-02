@@ -56,6 +56,13 @@ namespace slls.ViewModels
         [LocalDisplayName("Links.URL_Path", "FieldDisplayName")]
         public string Url { get; set; }
 
+        public bool IsLogoImage { get; set; }
+
+        public UploadFileViewModel()
+        {
+            IsLogoImage = false;
+        }
+
     }
 
     public class EditImageViewModel

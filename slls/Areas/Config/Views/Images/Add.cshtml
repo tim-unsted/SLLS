@@ -1,0 +1,149 @@
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
+@model slls.ViewModels.UploadFileViewModel
+
+@Html.Partial("_ModalAddHeader")
+
+@using (Html.BeginForm("PostAdd", "Images", FormMethod.Post, new { enctype = "multipart/form-data", id = "myForm" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="modal-body">
+
+        <div class="form-horizontal">
+
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+            <div class="alert alert-info" role="alert">
+                <p>
+                    <strong><span class="glyphicon glyphicon-info-sign"></span>&nbsp;</strong>Use this tool to add new image files to the database using one of the following methods:
+                </p>
+                <ul>
+                    <li>
+                        Download an image from the internet.
+                    </li>
+                    <li>
+                        Upload one or images from your device or local network.
+                    </li>
+                </ul>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Internet Image:", new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    @Html.TextBoxFor(x => Model.Url, new {@class = "form-control", @placeholder = "Enter a URL to the image ..."})
+                    @Html.HelpInline("Type or paste the web address/Url to an on-line hosted image.")<br />
+                    @Html.HelpInline("<strong>Tip:</strong> If the hosted image is downloadable then right-clicking on the image will often provide a link or an option to 'Copy image address'.")
+                </div>
+            </div>
+
+            <div class="form-group">
+                <span class="control-label col-md-3">--- <em>or</em> ---</span>
+            </div>
+
+            <div class="form-group">
+                @Html.Label("Local Image:", new {@class = "control-label col-md-2"})
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <label class="input-group-btn">
+                            <span class="btn btn-primary">
+                                <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.Files, new {type = "file", multiple = "multiple", accept = ".jpg, .jpeg, .png, .gif, .bmp", @style = "display: none;"})
+                            </span>
+                        </label>
+                        <input type="text" class="form-control">
+                    </div>
+                    @Html.HelpInline("Upload one or images stored on your device or local network.")<br/>
+                    @Html.HelpInline("<strong>Tip:</strong> Press and hold the 'Ctrl' button in the pop-up file explorer to pick multiple image files.")
+                    @Html.ValidationMessageFor(model => model.Files, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+            @Html.Label(DbRes.T("Images.Is_Logo", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.IsLogoImage)
+                    @Html.ValidationMessageFor(model => model.IsLogoImage, "", new { @class = "text-danger" })
+                    @Html.HelpInline("Use this image as the site's main logo.")
+                </div>
+            </div>
+        </div>
+
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" id="btnSave" value="Upload File" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-cloud-upload"></span> Upload Files</button>
+        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+    </div>
+}
+
+<script type="text/javascript">
+
+    $("#myForm").submit(function (e) {
+        e.preventDefault();
+        var formData = new FormData($(this)[0]);
+
+        $.ajax({
+            type: "POST",
+            url: this.action,
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.success) {
+                    $('#stdModal').modal('hide');
+                    $('#lrgModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert('Oops! ' + data.success);
+                }
+            }
+        });
+        return false;
+    });
+
+    function OnSuccess(json) {
+        if (json.isRedirect) {
+            window.location.href = json.redirectUrl;
+        }
+    }
+
+    function OnFailure(response) {
+        var obj = $.parseJSON(response.responseText);
+        alert(obj.message);
+    }
+
+</script>
+
+<script type="text/javascript">
+    $(function () {
+
+        // We can attach the `fileselect` event to all file inputs on the page
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        // We can watch for our custom `fileselect` event like this
+        $(document).ready(function () {
+            $(':file').on('fileselect', function (event, numFiles, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                if (input.length) {
+                    input.val(log);
+                } else {
+                    if (log) alert(log);
+                }
+
+            });
+        });
+
+    });
+</script>

@@ -11,7 +11,7 @@ using slls.ViewModels;
 
 namespace slls.Areas.Config
 {
-    public class IpAddressesController : Controller
+    public class IpAddressesController : ConfigBaseController
     {
         private readonly DbEntities _db = new DbEntities();
         private readonly string _entityName = "IP Address";

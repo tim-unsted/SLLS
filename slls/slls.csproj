@@ -270,6 +270,7 @@
     <Compile Include="Areas\Config\Controllers\ConfigBaseController.cs" />
     <Compile Include="Areas\Config\Controllers\ConnectionController.cs" />
     <Compile Include="Areas\Config\Controllers\HomeController.cs" />
+    <Compile Include="Areas\Config\Controllers\ImagesController.cs" />
     <Compile Include="Areas\Config\Controllers\IpAddressesController.cs" />
     <Compile Include="Areas\Config\Controllers\LibraryUsersController.cs" />
     <Compile Include="Areas\Config\Controllers\LocalizationController.cs" />
@@ -318,6 +319,7 @@
     <Compile Include="ConnectionMapping.cs" />
     <Compile Include="Controllers\BorrowingController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\FilesController.cs" />
     <Compile Include="Controllers\LibraryUserBookmarksController.cs" />
     <Compile Include="Controllers\LibraryUserLoansController.cs" />
     <Compile Include="Controllers\LibraryUserSavedSearchesController.cs" />
@@ -1178,6 +1180,12 @@
     <Content Include="Areas\LibraryAdmin\Views\Images\Delete.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Images\Edit.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\ByCoverImage.cshtml" />
+    <Content Include="Areas\Config\Views\Images\Add.cshtml" />
+    <Content Include="Areas\Config\Views\Images\Delete.cshtml" />
+    <Content Include="Areas\Config\Views\Images\Edit.cshtml" />
+    <Content Include="Areas\Config\Views\Images\Index.cshtml" />
+    <Content Include="Areas\Config\Views\Images\Show.cshtml" />
+    <Content Include="Areas\Config\Views\Images\SetSiteLogo.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -1619,6 +1627,7 @@
     <Folder Include="Services\" />
     <Folder Include="Utils\Mvc\Extensions\" />
     <Folder Include="Utils\Settings\" />
+    <Folder Include="Views\FilesIO\" />
     <Folder Include="Views\Home\EditorTemplates\" />
     <Folder Include="Views\Messaging\" />
     <Folder Include="Views\sllsBase\" />

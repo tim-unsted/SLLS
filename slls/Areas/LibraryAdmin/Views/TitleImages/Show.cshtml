@@ -2,7 +2,7 @@
 
 <div class="modal-body">
     <button type="button" class="close" id="btn_Close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <img src="@Url.Action("RenderImage", "TitleImages", new {id = Model.ImageId})" >
+    <img src="@Url.Action("RenderImage", "Files", new { id = Model.ImageId, area = "" })" >
 </div>
 
 <script type="text/javascript">

@@ -11,8 +11,7 @@
 {
     <div class="modal-body">
 
-        <div class="alert alert-info">
-            <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        <div class="alert alert-info" role="alert">
             <strong>Info: </strong>@Html.DisplayFor(model => model.DetailsText)
         </div>
 
@@ -113,7 +112,7 @@
                 <div class="form-group">
                     @Html.LabelFor(model => model.LocationId, htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-4">
-                        @Html.DropDownListFor(model => model.LocationId, new SelectList(Model.Locations, "LocationID", "Location1"), "Filter by " + DbRes.T("Locations.Location", "FieldDisplayName"), new { @class = "form-control" })
+                        @Html.DropDownListFor(model => model.LocationId, new SelectList(Model.Locations.OrderBy(l=>l.LocationString), "LocationID", "LocationString"), "Filter by " + DbRes.T("Locations.Location", "FieldDisplayName"), new { @class = "form-control" })
                         @Html.ValidationMessageFor(model => model.LocationId, "", new { @class = "text-danger" })
                     </div>
 

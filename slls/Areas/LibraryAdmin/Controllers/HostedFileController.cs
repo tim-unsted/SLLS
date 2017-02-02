@@ -51,7 +51,7 @@ namespace slls.Areas.LibraryAdmin
                         var ext = Path.GetExtension(file.FileName);
                         var path = Path.GetFullPath(file.FileName);
                         success =
-                            UploadFile(fileStream: file.InputStream, name: name, type: type,
+                            FilesController.UploadFile(fileStream: file.InputStream, name: name, type: type,
                                 path: path, ext: ext) > 0;
                     }
                 }
@@ -63,87 +63,7 @@ namespace slls.Areas.LibraryAdmin
             return Json(new { success = success });
         }
 
-        public static int UploadFile(Stream fileStream, string name, string type, string ext, string path)
-        {
-            try
-            {
-                using (var db = new DbEntities())
-                {
-                    var existingFile = db.HostedFiles.FirstOrDefault(f => f.Path == path);
-                    if (existingFile != null)
-                    {
-                        return existingFile.FileId;
-                    }
-                    else
-                    {
-                        var compressedBytes = Compress(fileStream);
-                        bool compressed;
-                        if (compressedBytes != null)
-                        {
-                            compressed = true;
-                        }
-                        else
-                        {
-                            compressedBytes = new byte[fileStream.Length];
-                            compressed = false;
-                        }
-
-                        //Check the name of the file - append [n] for each duplicate ...
-                        var i = 1;
-                        var existingFileName = db.HostedFiles.FirstOrDefault(f => f.FileName == name);
-                        while (existingFileName != null)
-                        {
-                            name = name.Replace(ext, "");
-                            name = name + "[" + i + "]";
-                            name = name + ext;
-                            existingFileName = db.HostedFiles.FirstOrDefault(f => f.FileName == name);
-                            i++;
-                        }
-
-                        //Save the file (binary data) to the database ...
-                        fileStream.Read(compressedBytes, 0, compressedBytes.Length);
-                        var file = new HostedFile
-                        {
-                            Data = compressedBytes,
-                            FileName = name,
-                            FileExtension = ext,
-                            Compressed = compressed,
-                            SizeStored = compressedBytes.Length / 1024,
-                            Path = path,
-                            InputDate = DateTime.Now
-                        };
-                        db.HostedFiles.Add(file);
-                        db.SaveChanges();
-
-                        //Get the Id of the newly inserted file ...
-                        var fileId = file.FileId;
-                        return fileId;
-                    }
-                }
-            }
-            catch (Exception e)
-            {
-                return 0;
-            }
-        }
-
-        public static byte[] Compress(Stream input)
-        {
-            try
-            {
-                using (var compressStream = new MemoryStream())
-                using (var compressor = new DeflateStream(compressStream, CompressionMode.Compress))
-                {
-                    input.CopyTo(compressor);
-                    compressor.Close();
-                    return compressStream.ToArray();
-                }
-            }
-            catch (Exception e)
-            {
-                return null;
-            }
-        }
+        
 
 
         [HttpGet]

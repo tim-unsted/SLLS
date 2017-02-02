@@ -8,6 +8,7 @@ using System.Net;
 using System.Runtime.InteropServices;
 using System.Web;
 using System.Web.Mvc;
+using slls.Controllers;
 using slls.DAO;
 using slls.Models;
 using slls.Utils.Helpers;
@@ -103,7 +104,7 @@ namespace slls.Areas.LibraryAdmin
                                 var type = file.ContentType;
                                 var ext = Path.GetExtension(file.FileName);
                                 var path = Path.GetFullPath(file.FileName);
-                                var fileId = HostedFileController.UploadFile(fileStream: file.InputStream, name: name, type: type, ext: ext, path: path);
+                                var fileId = FilesController.UploadFile(fileStream: file.InputStream, name: name, type: type, ext: ext, path: path);
 
                                 if (fileId != 0)
                                 {

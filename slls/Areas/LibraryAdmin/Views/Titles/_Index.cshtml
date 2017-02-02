@@ -134,10 +134,10 @@
                     @{ var image = item.TitleImages.FirstOrDefault(i => i.IsPrimary) ?? item.TitleImages.FirstOrDefault();
                          if (image != null)
                          {
-                            <img src="@Url.Action("RenderImage", "Home", new {id = image.ImageId, area = ""})" alt="@item.Title1" style="width: 100%;">
+                            <img src="@Url.Action("RenderImage", "Files", new { id = image.ImageId, area = "" })" alt="@item.Title1" style="width: 100%;">
                          }
                     }
-                    @*<img src="@Url.Action("RenderImage", "Home", new {id = 3, area = ""})" alt="@item.Title1" style="width: 100%;">*@
+                    @*<img src="@Url.Action("RenderImage", "Files", new {id = 3, area = ""})" alt="@item.Title1" style="width: 100%;">*@
                 </div>
             </td>
             <td>

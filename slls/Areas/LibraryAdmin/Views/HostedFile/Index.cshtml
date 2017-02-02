@@ -127,7 +127,7 @@
                 </td>
                 <td class="just-right">
                     <a href="@Url.Action("Delete", new {id = item.FileId})" class="btn btn-link modal-link" title="Remove hosted file"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("FileDownload", "Home", new {id = item.FileId, area = ""})" class="btn btn-link" title="View File"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span></a>
+                    <a href="@Url.Action("FileDownload", "Files", new {id = item.FileId, area = ""})" class="btn btn-link" title="View File"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span></a>
                 </td>
             </tr>
         }

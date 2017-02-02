@@ -69,10 +69,11 @@ namespace slls.ViewModels
         // Action to perform after user confirms "Select".
         public string PostSelectAction { get; set; }
         
+        [AllowHtml]
         public string HeaderText { get; set; }
-
+        [AllowHtml]
         public string DetailsHeader { get; set; }
-
+        [AllowHtml]
         public string DetailsText { get; set; }
 
         public string SelectLabel { get; set; }

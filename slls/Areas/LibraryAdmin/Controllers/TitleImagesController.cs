@@ -6,6 +6,7 @@ using System.Net;
 using System.Threading;
 using System.Web.Mvc;
 using slls.App_Settings;
+using slls.Controllers;
 using slls.DAO;
 using slls.Hubs;
 using slls.Models;
@@ -58,7 +59,7 @@ namespace slls.Areas.LibraryAdmin
             if (!string.IsNullOrEmpty(viewModel.Url))
             {
                 //Download the image from the UTL and return the new ImageID ...
-                var imageId = ImagesController.DownloadImageFromUrl(viewModel.Url);
+                var imageId = FilesController.DownloadImageFromUrl(viewModel.Url);
 
                 if (imageId != 0)
                 {
@@ -96,7 +97,7 @@ namespace slls.Areas.LibraryAdmin
                                 var name = Path.GetFileName(file.FileName);
                                 var ext = Path.GetExtension(file.FileName);
                                 var type = file.ContentType;
-                                var imageId = ImagesController.UploadImage(fileStream: file.InputStream, name: name, type: type, ext: ext, source: name);
+                                var imageId = FilesController.UploadImage(fileStream: file.InputStream, name: name, type: type, ext: ext, source: name);
 
                                 var titleImage = new TitleImage
                                 {
@@ -182,7 +183,7 @@ namespace slls.Areas.LibraryAdmin
                 }
 
                 //We've got a URL, now download the image ...
-                var imageId = ImagesController.DownloadImageFromUrl(url);
+                var imageId = FilesController.DownloadImageFromUrl(url);
 
                 if (imageId > 0)
                 {
@@ -285,7 +286,7 @@ namespace slls.Areas.LibraryAdmin
 
                         if (url != null)
                         {
-                            var imageId = ImagesController.DownloadImageFromUrl(url);
+                            var imageId = FilesController.DownloadImageFromUrl(url);
 
                             if (imageId > 0)
                             {
@@ -435,15 +436,6 @@ namespace slls.Areas.LibraryAdmin
 
             return PartialView(viewModel);
         }
-
-
-        public ActionResult RenderImage(int? id)
-        {
-            var coverImage = _db.Images.Find(id);
-            var buffer = coverImage.Image;
-            return File(buffer, "image/jpg", string.Format("{0}.jpg", id));
-        }
-
 
         // GET: LibraryAdmin/TitleImages/Edit/5
         public ActionResult Edit(int? id) // id = TitleImageId

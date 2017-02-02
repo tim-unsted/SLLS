@@ -236,7 +236,7 @@ namespace slls.Utils.Helpers
             }
 
             if (fileId == 0) return null;
-            var actionLink = helper.ActionLink(linkDisplayText, "FileDownload", "Home", new { id = fileId, area = "" }, null);
+            var actionLink = helper.ActionLink(linkDisplayText, "FileDownload", "Files", new { id = fileId, area = "" }, null);
             return actionLink;
         }
 
