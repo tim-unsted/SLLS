@@ -5,83 +5,14 @@
 
 @model slls.ViewModels.MenuViewModel
 
-
-<script type="text/javascript">
-
-    $(document).ready(function () {
-
-        $("#parentArea").change(function () {
-            var select = $("#parentID");
-            select.empty();
-
-            var selectedAreaID = { AreaID: $("#parentArea").val() };
-
-            $.ajax({
-                url: '@Url.Action("GetParents", "MenuBuilder")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedAreaID),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.ParentData, function (index, itemData) {
-                            select.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                            }));
-                        }
-                        );
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
-            });
-        });
-
-        $("#controller").change(function () {
-            var select = $("#action");
-            select.empty();
-
-            var parameters = { controllerName: $("#controller").val(), nameSpace: $("#NameSpace").val() };
-
-            $.ajax({
-                url: '@Url.Action("GetActionNames", "MenuBuilder")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(parameters),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.Actions, function (index, itemData) {
-                            select.append($('<option/>', {
-                                value: itemData.Text,
-                                text: itemData.Text
-                            }));
-                        }
-                        );
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
-            });
-        });
-    });
-
-</script>
-
-
-
 @Html.Partial("_ModalEditHeader")
 
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-
-        <div class="modal-body">
+    <div class="modal-body">
+        <div class="form-horizontal">
 
             @if (ViewData.ModelState.Any(x => x.Value.Errors.Any()))
             {
@@ -115,14 +46,14 @@
                         </div>
 
                         <div class="form-group">
-                            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
+                            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
-                                @Html.EditorFor(model => model.Title, new {htmlAttributes = new {@class = "form-control"}})
-                                @Html.ValidationMessageFor(model => model.Title, "", new {@class = "text-danger"})
+                                @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                                @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
                                 @Html.HelpInline("This the text that will be displayed in the menu.")
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             @Html.LabelFor(model => model.ToolTip, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-8">
@@ -133,19 +64,19 @@
                         </div>
 
                         <div class="form-group">
-                            @Html.LabelFor(model => model.IsSelectable, htmlAttributes: new {@class = "control-label col-md-3"})
+                            @Html.LabelFor(model => model.IsSelectable, htmlAttributes: new { @class = "control-label col-md-3" })
                             <div class="col-md-1">
                                 <div class="checkbox">
                                     @Html.EditorFor(model => model.IsSelectable)
-                                    @Html.ValidationMessageFor(model => model.IsSelectable, "", new {@class = "text-danger"})
+                                    @Html.ValidationMessageFor(model => model.IsSelectable, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
-                            @Html.LabelFor(model => model.IsEnabled, htmlAttributes: new {@class = "control-label col-md-2"})
+                            @Html.LabelFor(model => model.IsEnabled, htmlAttributes: new { @class = "control-label col-md-2" })
                             <div class="col-md-1">
                                 <div class="checkbox">
                                     @Html.EditorFor(model => model.IsEnabled)
-                                    @Html.ValidationMessageFor(model => model.IsEnabled, "", new {@class = "text-danger"})
+                                    @Html.ValidationMessageFor(model => model.IsEnabled, "", new { @class = "text-danger" })
                                 </div>
                             </div>
 
@@ -153,7 +84,7 @@
                             <div class="col-md-1">
                                 <div class="checkbox">
                                     @Html.EditorFor(model => model.IsVisible)
-                                    @Html.ValidationMessageFor(model => model.IsVisible, "", new {@class = "text-danger"})
+                                    @Html.ValidationMessageFor(model => model.IsVisible, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                         </div>
@@ -163,7 +94,7 @@
                             <div class="col-md-9">
                                 <div class="checkbox">
                                     @Html.EditorFor(model => model.IsDivider)
-                                    @Html.ValidationMessageFor(model => model.IsDivider, "", new {@class = "text-danger"})
+                                    @Html.ValidationMessageFor(model => model.IsDivider, "", new { @class = "text-danger" })
                                     @Html.HelpInline("Is this menu item just a horizontal divider?")
                                 </div>
                             </div>
@@ -193,10 +124,10 @@
                             </div>
 
                             <div class="form-group">
-                                @Html.LabelFor(model => model.Key, htmlAttributes: new {@class = "control-label col-md-2"})
+                                @Html.LabelFor(model => model.Key, htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-9">
-                                    @Html.EditorFor(model => model.Key, new {htmlAttributes = new {@class = "form-control"}})
-                                    @Html.ValidationMessageFor(model => model.Key, "", new {@class = "text-danger"})
+                                    @Html.EditorFor(model => model.Key, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Key, "", new { @class = "text-danger" })
                                     @Html.HelpInline("This is a unique name that will help identify the menu item programatically, should the title (above) be changed. PLEASE DO NOT CHANGE")
                                 </div>
                             </div>
@@ -205,13 +136,14 @@
                                 @Html.LabelFor(model => model.Controller, htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-4">
                                     @Html.DropDownListFor(model => model.Controller, new SelectList(ViewBag.Controllers), new { @class = "form-control", @id = "controller" })
-                                    @Html.ValidationMessageFor(model => model.Controller, "", new {@class = "text-danger"})
+                                    @Html.ValidationMessageFor(model => model.Controller, "", new { @class = "text-danger" })
                                     @Html.HelpInline("This is the 'Class' (i.e. module) that holds the required 'Action' (i.e. function to be performed).")
                                 </div>
+                                
                                 @Html.LabelFor(model => model.Action, htmlAttributes: new { @class = "control-label col-md-1" })
                                 <div class="col-md-4">
-                                    @Html.DropDownList("Action", new SelectList(ViewBag.Actions), htmlAttributes: new { @class = "form-control", @id = "action" })
-                                    @Html.ValidationMessageFor(model => model.Action, "", new {@class = "text-danger"})
+                                    @Html.DropDownListFor(model => model.Action, new SelectList(ViewBag.Actions), htmlAttributes: new { @class = "form-control", @id = "controllerAction" })
+                                    @Html.ValidationMessageFor(model => model.Action, "", new { @class = "text-danger" })
                                     @Html.HelpInline("This is the 'Action' (i.e. function) to be performed. This won't necessarily be the name of a page - this is MVC, not ASP!")
                                 </div>
                             </div>
@@ -222,15 +154,15 @@
                                     @Html.DropDownList("ParentArea", null, htmlAttributes: new { @class = "form-control", @id = "parentArea" })
                                     @Html.HelpInline("This is the main menu area under which this menu item will sit.")
                                 </div>
-                                
-                                @Html.Label("Parent", htmlAttributes: new {@class = "control-label col-md-1"})
+
+                                @Html.Label("Parent Item", htmlAttributes: new { @class = "control-label col-md-1" })
                                 <div class="col-md-4">
-                                    @Html.DropDownList("ParentID", null, htmlAttributes: new {@class = "form-control", @id = "parentID"})
-                                    @Html.ValidationMessageFor(model => model.ParentID, "", new {@class = "text-danger"})
-                                    @Html.HelpInline("This is the parent menu item under which this menu item will sit. This parent belongs to the 'Menu Are' above.")
+                                    @Html.DropDownList("ParentID", null, htmlAttributes: new { @class = "form-control", @id = "parentID" })
+                                    @Html.ValidationMessageFor(model => model.ParentID, "", new { @class = "text-danger" })
+                                    @Html.HelpInline("This is the parent menu item under which this menu item will sit. This parent belongs to the 'Menu Area' above.")
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 @Html.LabelFor(model => model.LinkArea, htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-4">
@@ -239,7 +171,7 @@
                                     @Html.HelpInline("This is where the item will take the user. This is normally the same as the 'Menu Area' above.")
                                 </div>
                             </div>
-                            
+
                             <div class="form-group">
                                 @Html.LabelFor(model => model.DataToggle, htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-4">
@@ -265,6 +197,17 @@
                             </div>
                         </div>
                     }
+                }
+                else
+                {
+                    @Html.HiddenFor(model => model.Key)
+                    @Html.HiddenFor(model => model.Controller)
+                    @Html.HiddenFor(model => model.Action)
+                    @Html.HiddenFor(model => model.ParentID)
+                    @Html.HiddenFor(model => model.LinkArea)
+                    @Html.HiddenFor(model => model.DataToggle)
+                    @Html.HiddenFor(model => model.DataTarget)
+                    @Html.HiddenFor(model => model.Groups)
                 }
 
                 using (tabs.BeginPanel())
@@ -304,10 +247,11 @@
                                     {
                                         <li>
                                             <input type="checkbox" name="SelectedRole" value="@item.Value" checked="@item.Selected" />
-                                            @Html.Label(item.Value, new { @class = "control-label" })
+                                            @Html.Label(item.Value, new {@class = "control-label"})
                                         </li>
                                     }
                                 </ul>
+                                @Html.ValidationMessageFor(model => model.Roles, "", new { @class = "text-danger" })
                             </span>
                         </div>
                     </div>
@@ -317,23 +261,69 @@
     </div>
 
     @Html.Partial("_ModalEditFooter")
-
 }
 
 <script type="text/javascript">
-    $(function () {
-        $('form').submit(function (e) {
-            e.preventDefault();
-            $.post(this.action, $(this).serialize(), function (response) {
-                if (response.error) {
-                    alert(response.error);
-                }
-                else {
-                    $('#stdModal').modal('hide');
-                    //Refresh
-                    location.reload();
-                }
-            }, 'json');
+
+    $(document).ready(function () {
+
+        $("#parentArea").change(function () {
+            var select = $("#parentID");
+            select.empty();
+
+            var selectedAreaId = { AreaID: $("#parentArea").val() };
+
+            $.ajax({
+                url: '@Url.Action("GetParents", "MenuBuilder")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedAreaId),
+                success: function (data) {
+                    if (data.success) {
+                        $.each(data.ParentData, function (index, itemData) {
+                            select.append($('<option/>', {
+                                value: itemData.Value,
+                                text: itemData.Text
+                            }));
+                        }
+                        );
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+        });
+
+        $("#controller").change(function () {
+            var select = $("#controllerAction");
+            select.empty();
+
+            var parameters = { controllerName: $("#controller").val(), nameSpace: $("#NameSpace").val() };
+
+            $.ajax({
+                url: '@Url.Action("GetActionNames", "MenuBuilder")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(parameters),
+                success: function (data) {
+                    if (data.success) {
+                        $.each(data.Actions, function (index, itemData) {
+                            select.append($('<option/>', {
+                                value: itemData.Text,
+                                text: itemData.Text
+                            }));
+                        }
+                        );
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
         });
     });
+
 </script>

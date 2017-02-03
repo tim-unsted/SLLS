@@ -56,7 +56,8 @@ namespace slls.Areas.Config
                 {"", "None"},    
                 {"LibraryAdmin", "Admin"},
                 {"Config", "Config"},
-                {"OPAC", "OPAC"}
+                {"OPAC", "OPAC"},
+                {"CheckInOut", "Check-In/Out"}
             };
         }
 
@@ -388,7 +389,7 @@ namespace slls.Areas.Config
             var includedMenuRoles = new List<string> {"System Admin", "Anonymous", "OPAC User"};
 
             //Create a list of menu areas the current use has access to ...
-            var allowedAreas = new List<string> { "Menu", "", "OPAC", "MyLibrary", "Home" };
+            var allowedAreas = new List<string> { "Menu", "", "OPAC", "MyLibrary", "Home", "CheckInOut" };
             
             //Add extra roles and menu area if allowed ...
             if (userRoles.Contains("Bailey Admin"))
@@ -485,6 +486,8 @@ namespace slls.Areas.Config
             ViewBag.Targets = GetTargets();
             ViewBag.MenuAreas = GetMenuAreas();
             ViewBag.Controllers = MvcHelpers.GetControllerShortNames(nameSpace);
+            var actions = ActionNames(viewModel.Controller, nameSpace); // SelectList(ActionNames(viewModel.Controller, nameSpace), "ActionName", null, viewModel.Action);
+            ViewBag.Actions = actions.OrderBy(x => x.ToLowerInvariant());
             ViewBag.DataToggles = GetDataToggles();
             ViewBag.DataTargets = GetDataTargets();
 
@@ -504,13 +507,16 @@ namespace slls.Areas.Config
                     greatGrandParentId = grandParentItem.ParentID;
                 }
             }
+
+            if (greatGrandParentId == null)
+            {
+                greatGrandParentId = grandParentId;
+            }
             
             //Only provide access to certain areas, depending on the user's roles ...
             ViewData["ParentArea"] = new SelectList(_db.Menus.Where(m => m.ParentID == greatGrandParentId && allowedAreas.Contains(m.MenuArea) && m.MenuArea == menuitem.MenuArea).OrderBy(m => m.Title), "ID", "Title", grandParentId);
             ViewData["ParentID"] = new SelectList(_db.Menus.Where(m => m.ParentID == grandParentId && allowedAreas.Contains(m.MenuArea)).OrderBy(m => m.Title), "ID", "Title", menuitem.ParentID);
-            var actions = ActionNames(viewModel.Controller, nameSpace); // SelectList(ActionNames(viewModel.Controller, nameSpace), "ActionName", null, viewModel.Action);
-            ViewBag.Actions = actions.OrderBy(x => x.ToLowerInvariant()).ToList();
-
+            
             ViewBag.Title = "Edit Menu Item";
             return PartialView(viewModel);
         }
