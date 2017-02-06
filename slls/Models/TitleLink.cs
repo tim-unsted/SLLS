@@ -22,18 +22,18 @@ namespace slls.Models
 
         public int? FileId { get; set; }
 
-        [StringLength(1000)]
+        [StringLength(4000)]
         [LocalDisplayName("Links.Hover_Tip_Text", "FieldDisplayName")]
         public string HoverTip { get; set; }
 
-        [StringLength(255)]
+        [StringLength(4000)]
         [LocalDisplayName("Links.Display_Text", "FieldDisplayName")]
         public string DisplayText { get; set; }
 
-        [StringLength(70)]
+        [StringLength(255)]
         public string Login { get; set; }
 
-        [StringLength(20)]
+        [StringLength(255)]
         public string Password { get; set; }
 
         [LocalDisplayName("Links.Is_Valid", "FieldDisplayName")]
