@@ -236,6 +236,20 @@
                                     {
                                         <dd>
                                             @Html.ResolvedLink(link.URL, link.FileId ?? 0, link.HoverTip, link.DisplayText)
+                                            @if (!string.IsNullOrEmpty(link.Login))
+                                            {
+                                                <span class="help-inline">
+                                                    &nbsp;&nbsp;(Login = "@link.Login"
+                                                </span>
+
+                                                if (!string.IsNullOrEmpty(link.Password))
+                                                {
+                                                    <span class="help-inline">
+                                                        ;&nbsp;Password = "@link.Password"
+                                                    </span>
+                                                }
+                                                <span class="help-inline">)</span>
+                                            }
                                         </dd>
                                     }
                                 }
