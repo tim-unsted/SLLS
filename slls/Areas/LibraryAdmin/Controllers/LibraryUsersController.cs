@@ -281,9 +281,35 @@ namespace slls.Areas.LibraryAdmin
 
             //Only Admin users can get this far, so ensure that any lower user type is included by default ...
             userRoles.Add("OPAC User");
+            
+            //Create a list of all default roles that should be selected/ticked when the form opens ...
+            var defaultMenuRoles = new List<string> { "OPAC User" };
 
-            //Get a list of all roles that the library user (the one being edited) has ...
-            var libraryUserRoles = Roles.GetUserRoles(id); ;
+            IEnumerable<SelectListItem> rolesList;
+            if (Roles.IsBaileyAdmin())
+            {
+                rolesList =
+                RoleManager.Roles.Where(r => r.Packages.Contains(_customerPackage))
+                    .ToList()
+                    .Select(x => new SelectListItem
+                    {
+                        Selected = defaultMenuRoles.Contains(x.Name),
+                        Text = x.Name,
+                        Value = x.Name
+                    });
+            }
+            else
+            {
+                rolesList =
+                RoleManager.Roles.Where(r => userRoles.Contains(r.Name) && r.Packages.Contains(_customerPackage))
+                    .ToList()
+                    .Select(x => new SelectListItem
+                    {
+                        Selected = defaultMenuRoles.Contains(x.Name),
+                        Text = x.Name,
+                        Value = x.Name
+                    });
+            }
 
             var viewModel = new LibraryUserEditViewModel()
             {
@@ -298,12 +324,7 @@ namespace slls.Areas.LibraryAdmin
                 SelfLoansAllowed = libraryUser.SelfLoansAllowed,
                 Email = libraryUser.Email,
                 Notes = libraryUser.Notes,
-                RolesList = RoleManager.Roles.Where(r => userRoles.Contains(r.Name) && r.Packages.Contains(_customerPackage)).ToList().Select(x => new SelectListItem
-                {
-                    Selected = libraryUserRoles.Contains(x.Name),
-                    Text = x.Name,
-                    Value = x.Name
-                })
+                RolesList = rolesList
             };
 
             ViewBag.Title = "Edit " + _entityName;
