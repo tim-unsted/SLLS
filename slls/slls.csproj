@@ -458,7 +458,6 @@
     <Compile Include="DAO\GenericRepository.cs" />
     <Compile Include="DAO\IRepository.cs" />
     <Compile Include="ICache.cs" />
-    <Compile Include="LocalCache.cs" />
     <Compile Include="Models\AdminViewModel.cs" />
     <Compile Include="Models\IdentityModels.cs">
       <SubType>Code</SubType>
@@ -621,7 +620,7 @@
     <Content Include="Content\themes\base\tabs.css" />
     <Content Include="Content\themes\base\theme.css" />
     <Content Include="Content\themes\base\tooltip.css" />
-    <Content Include="Customer\Images\slls-logo.png" />
+    <Content Include="Images\slls-logo.png" />
     <Content Include="Scripts\bootstrap-select.js" />
     <Content Include="Scripts\bootstrap-select.min.js" />
     <Content Include="Scripts\google-analytics.js" />
@@ -1624,6 +1623,7 @@
     <Folder Include="Areas\Config\Models\" />
     <Folder Include="Areas\Config\Views\Cache\" />
     <Folder Include="Areas\LibraryAdmin\Models\" />
+    <Folder Include="Customer\Images\" />
     <Folder Include="Services\" />
     <Folder Include="Utils\Mvc\Extensions\" />
     <Folder Include="Utils\Settings\" />

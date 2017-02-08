@@ -209,7 +209,7 @@ namespace slls.Areas.Config
             {
                 PostSelectController = "Images",
                 PostSelectAction = "Post_SetSiteLogo",
-                SelectedItem = "0",
+                SelectedItem = CssManager.LogoImageId.ToString(),
                 HeaderText = "Set your site's logo",
                 DetailsHeader = "<strong><span class=\"glyphicon glyphicon-info-sign\"></span>&nbsp;</strong>Select an exiting image to use as your site's logo, or click on the link at the bottom to upload and use a new image.",
                 SelectLabel = "",

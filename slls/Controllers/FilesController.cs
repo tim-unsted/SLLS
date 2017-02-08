@@ -225,5 +225,16 @@ namespace slls.Controllers
                 return File(buffer, "image/jpg", string.Format("{0}.jpg", id));
             }
         }
+
+        [OutputCache(Duration = 3600, VaryByParam = "imageId")]
+        public ActionResult RenderSiteLogo(int imageId = 0)
+        {
+            using (var db = new DbEntities())
+            {
+                var siteLogo = db.Images.Find(imageId);
+                var buffer = siteLogo.Image;
+                return File(buffer, "image/jpg", string.Format("{0}.jpg", imageId));
+            }
+        }
     }
 }
