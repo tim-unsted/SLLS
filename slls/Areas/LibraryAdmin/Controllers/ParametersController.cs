@@ -29,7 +29,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult Index(string parameterArea = "")
         {
             var userRoles = Roles.GetUserRoles();
-            var allParameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
+            var allParameters = _db.Parameters.Where(p => p.Deleted == false).ToList();
 
             //Only show options that match the logged-in user's roles ...
             var userParameters = (from p in allParameters

@@ -27,8 +27,8 @@ namespace slls.Areas.LibraryAdmin
         // GET: Keywords
         public ActionResult Index(string selectedLetter)
         {
-            var allKeywords = CacheProvider.GetAll<Keyword>("keywords")
-                .Where(k => k.KeywordID > 0).ToList();
+            var allKeywords = _db.Keywords
+                .Where(k => k.KeywordID > 0 && k.Deleted == false).ToList();
 
             var count = allKeywords.Count();
 

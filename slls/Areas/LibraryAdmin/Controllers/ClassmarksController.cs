@@ -25,7 +25,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult Index()
         {
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("authlistsSeeAlso", ControllerContext.RouteData.Values["controller"].ToString(), ControllerContext.RouteData.Values["controller"].ToString());
-            var classmarks = CacheProvider.GetAll<Classmark>("classmarks");
+            var classmarks = _db.Classmarks.Where(c => c.Deleted == false); //CacheProvider.GetAll<Classmark>("classmarks");
             return View(classmarks.OrderBy(x => x.ListPos).ToList());
         }
         

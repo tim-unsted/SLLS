@@ -28,7 +28,7 @@ namespace slls.Areas.LibraryAdmin
         {
             //return View(db.MediaTypes.ToList());
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("authlistsSeeAlso", ControllerContext.RouteData.Values["controller"].ToString(), ControllerContext.RouteData.Values["controller"].ToString());
-            return View(CacheProvider.GetAll<MediaType>("mediatypes").Where(m => m.Deleted == false).OrderBy((m => m.Media)));
+            return View(_db.MediaTypes.Where(m => m.Deleted == false).OrderBy((m => m.Media)));
         }
 
         

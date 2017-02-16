@@ -26,7 +26,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult Index()
         {
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("authlistsSeeAlso", ControllerContext.RouteData.Values["controller"].ToString(), ControllerContext.RouteData.Values["controller"].ToString());
-            return View(CacheProvider.GetAll<Publisher>("publishers").Where(p => p.Deleted == false).OrderBy(p => p.PublisherName));
+            return View(_db.Publishers.Where(p => p.Deleted == false).OrderBy(p => p.PublisherName));
         }
 
         
