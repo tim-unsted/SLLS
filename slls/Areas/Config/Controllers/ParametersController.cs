@@ -28,7 +28,7 @@ namespace slls.Areas.Config
         // GET: Config/Parameters
         public ActionResult Index(string parameterArea = "")
         {
-            var allParameters = CacheProvider.GetAll<Parameter>("parameters").ToList();
+            var allParameters = _db.Parameters.ToList();
             List<Parameter> userParameters;
 
             //If the user is a Bailey Admin then grant them access to everything!
