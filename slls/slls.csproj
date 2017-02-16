@@ -1623,7 +1623,6 @@
     <Folder Include="Areas\Config\Models\" />
     <Folder Include="Areas\Config\Views\Cache\" />
     <Folder Include="Areas\LibraryAdmin\Models\" />
-    <Folder Include="Customer\Images\" />
     <Folder Include="Services\" />
     <Folder Include="Utils\Mvc\Extensions\" />
     <Folder Include="Utils\Settings\" />

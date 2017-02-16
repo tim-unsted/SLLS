@@ -92,7 +92,7 @@ namespace slls.Areas.LibraryAdmin
                             _repository.Insert(si);
                         }
                     }
-
+                    CacheProvider.RemoveCache("keywords");
                     return Json(new { success = true });
                 }
                 catch (Exception e)
@@ -205,6 +205,7 @@ namespace slls.Areas.LibraryAdmin
                 {
                     _db.SubjectIndexes.Remove(item);
                     _db.SaveChanges();
+                    CacheProvider.RemoveCache("keywords");
                     return Json(new { success = true });
                 }
                 catch (Exception e)
