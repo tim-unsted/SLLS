@@ -1,4 +1,5 @@
-﻿@using Westwind.Globalization
+﻿@using slls.Utils.Helpers
+@using Westwind.Globalization
 @model slls.ViewModels.ReportsGeneratorViewModel
 
 <script type="text/javascript">
@@ -23,7 +24,7 @@
         
     <div class="row">
         <div class="col-md-7">
-            <div class="panel panel-info">
+            <div class="panel panel-default">
                 <div class="panel-heading">
                     <span class="">
                         Available Report Types:
@@ -35,46 +36,56 @@
             </div>
         </div>
         <div class="col-md-5">
-            <div id="budgetCodeList" style="display:block;">
-            <div class="panel panel-info">
-                <div class="panel-heading">
-                    <span class="" id="budgetCodesCaption">
-                        Budget Code(s):
-                    </span>
-                </div>
-                <div class="panel-body">
-                    @Html.ListBoxFor(m => m.SelectedBudgetCode, Model.BudgetCodes, new { @class = "form-control", size = 10, @id = "lstBudgetCode" })
-                </div>
-            </div>
-        </div>
-            <div id="accountYearsList" style="display:block;">
-                <div class="panel panel-info">
+
+            <div id="accountYearsList" style="display: block;">
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <span class="" id="accountYearsCaption">
-                            Choose Period:
+                            Time Period:
                         </span>
                     </div>
                     <div class="panel-body">
                         <div class="form-group">
-                            @Html.Label("Account Year:", new { @class = "control-label col-sm-4" })
+                            @Html.Label("Account Year:", new {@class = "control-label col-md-3"})
                             <div class="col-sm-8">
-                                @Html.DropDownListFor(m => m.SelectedAccountYear, Model.AccountYears, new { @class = "form-control", @id = "lstAccountYears" })
+                                @Html.DropDownListFor(m => m.SelectedAccountYear, Model.AccountYears, new {@class = "form-control", @id = "lstAccountYears"})
                             </div>
                         </div>
-                        <div style="padding:30px;">or</div>
+                        <br/>
+
+                        @*<div class="strike">
+                            <span>or</span>
+                        </div>*@
+                        @Html.HorizontalDivider("Or")
+
                         <div class="form-group">
-                            @Html.Label("From:", new { @class = "control-label col-sm-2 just-right" })
+                            @Html.Label("Received between:", new {@class = "control-label col-sm-3"})
                             <div class="col-sm-4">
-                                @Html.EditorFor(x => Model.StartDate, new { @class = "form-control" })
+                                @Html.EditorFor(x => Model.StartDate, new {@class = "form-control"})
                             </div>
-                            @Html.Label("To:", new { @class = "control-label col-sm-2 just-right" })
+                            @Html.Label("and:", new {@class = "control-label col-md-1 just-right"})
                             <div class="col-sm-4">
-                                @Html.EditorFor(x => Model.EndDate, new { @class = "form-control" })
+                                @Html.EditorFor(x => Model.EndDate, new {@class = "form-control"})
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
+
+            <div id="budgetCodeList" style="display:block;">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <span class="" id="budgetCodesCaption">
+                            Budget Code(s):
+                        </span>
+                    </div>
+                    <div class="panel-body">
+                        @Html.ListBoxFor(m => m.SelectedBudgetCode, Model.BudgetCodes, new { @class = "form-control", size = 10, @id = "lstBudgetCode" })
+                    </div>
+                </div>
+            </div>
+
         </div>        
     </div>
     <div class="form-footer">
@@ -82,3 +93,13 @@
         &nbsp;&nbsp;or&nbsp;<a href="@Url.Action("Index")" class="btn-link" title="Cancel">Cancel</a>
     </div>
 }
+
+<script type="text/javascript">
+    //Reset the select Account Year to '0' if the date range is changed at all ...
+    $('#StartDate').change(function () {
+        $("#lstAccountYears option[value='0']").prop('selected', true);
+    });
+    $('#EndDate').change(function () {
+        $("#lstAccountYears option[value='0']").prop('selected', true);
+    });
+</script>

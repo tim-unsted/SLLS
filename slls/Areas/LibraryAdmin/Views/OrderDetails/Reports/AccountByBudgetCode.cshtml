@@ -41,9 +41,17 @@
                 var allocation = budgetCode.AllocationSubs + budgetCode.AllocationOneOffs;
 
                 var orders = from o in budgetCode.OrderDetails
-                             where o.ReceivedDate != null && o.AccountYearID == Model.AccountYearId
+                             where o.ReceivedDate != null
                              select o;
-
+                if (Model.AccountYearId > 0)
+                {
+                    orders = orders.Where(o => o.AccountYearID == Model.AccountYearId);
+                }
+                else
+                {
+                    orders = orders.Where(o => o.ReceivedDate >= Model.StartDate && o.ReceivedDate <= Model.EndDate);
+                }
+                
                 var titles = (from o in orders
                               select o.Title).Distinct();
 

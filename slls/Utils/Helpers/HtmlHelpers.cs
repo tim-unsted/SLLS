@@ -245,5 +245,11 @@ namespace slls.Utils.Helpers
             return new MvcHtmlString(str);
         }
 
+        public static MvcHtmlString HorizontalDivider(this HtmlHelper helper, string text = "")
+        {
+            var str = "<div class=\"strike\"><span><em>" + text + "</em></span></div>";
+            return new MvcHtmlString(str);
+        }
+
     }
 }

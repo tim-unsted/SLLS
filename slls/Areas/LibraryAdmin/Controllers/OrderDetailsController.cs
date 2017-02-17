@@ -1630,7 +1630,7 @@ namespace slls.Areas.LibraryAdmin
 
             var viewModel = new OrderReportsViewModel
             {
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 Copies = cancelledCopies,
                 HasData = cancelledCopies.Any()
             };
@@ -1689,7 +1689,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 OrderCategories = orderCategories,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -1746,7 +1746,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -1803,7 +1803,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -1860,7 +1860,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -1918,7 +1918,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -1979,7 +1979,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 Titles = allTitles,
                 MediaTypes = allMediaTypes,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -2038,7 +2038,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 Titles = allTitles,
                 Suppliers = allSuppliers,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -2095,7 +2095,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -2152,7 +2152,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -2192,12 +2192,6 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            //if (!orders.Any())
-            //{
-            //    TempData["NoData"] = true;
-            //    return RedirectToAction("ReportGenerator");
-            //}
-
             var budgetCodes = (from o in orders
                                where o.BudgetCodeID != null
                                select o.BudgetCode).Distinct();
@@ -2206,10 +2200,9 @@ namespace slls.Areas.LibraryAdmin
 
             var viewModel = new OrderReportsViewModel
             {
-                //Orders = orders,
                 BudgetCodes = budgetCodes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "None selected" : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = budgetCodes.Any()
@@ -2248,12 +2241,6 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            //if (!allOrders.Any())
-            //{
-            //    TempData["NoData"] = true;
-            //    return RedirectToAction("ReportGenerator");
-            //}
-
             var allTitles = (from o in allOrders
                              select o.Title).Distinct();
 
@@ -2268,7 +2255,7 @@ namespace slls.Areas.LibraryAdmin
                 Titles = allTitles,
                 MediaTypes = allMediaTypes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2306,13 +2293,7 @@ namespace slls.Areas.LibraryAdmin
                                 select o;
                 }
             }
-
-            //if (!allOrders.Any())
-            //{
-            //    TempData["NoData"] = true;
-            //    return RedirectToAction("ReportGenerator");
-            //}
-
+            
             var allTitles = (from o in allOrders
                              select o.Title).Distinct();
 
@@ -2327,7 +2308,7 @@ namespace slls.Areas.LibraryAdmin
                 Titles = allTitles,
                 MediaTypes = allMediaTypes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2365,13 +2346,7 @@ namespace slls.Areas.LibraryAdmin
                                 select o;
                 }
             }
-
-            //if (!allOrders.Any())
-            //{
-            //    TempData["NoData"] = true;
-            //    return RedirectToAction("ReportGenerator");
-            //}
-
+            
             var allTitles = (from o in allOrders
                              select o.Title).Distinct();
 
@@ -2386,7 +2361,7 @@ namespace slls.Areas.LibraryAdmin
                 Titles = allTitles,
                 MediaTypes = allMediaTypes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2425,12 +2400,6 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            //if (!allOrders.Any())
-            //{
-            //    TempData["NoData"] = true;
-            //    return RedirectToAction("ReportGenerator");
-            //}
-
             var allTitles = (from o in allOrders
                              select o.Title).Distinct();
 
@@ -2445,7 +2414,7 @@ namespace slls.Areas.LibraryAdmin
                 Titles = allTitles,
                 MediaTypes = allMediaTypes,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2484,12 +2453,6 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            //if (!allOrders.Any())
-            //{
-            //    TempData["NoData"] = true;
-            //    return RedirectToAction("ReportGenerator");
-            //}
-
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
@@ -2500,7 +2463,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 Suppliers = allSuppliers,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2539,12 +2502,6 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            //if (!allOrders.Any())
-            //{
-            //    TempData["NoData"] = true;
-            //    return RedirectToAction("ReportGenerator");
-            //}
-
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
@@ -2555,7 +2512,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 Suppliers = allSuppliers,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2594,12 +2551,6 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            //if (!allOrders.Any())
-            //{
-            //    TempData["NoData"] = true;
-            //    return RedirectToAction("ReportGenerator");
-            //}
-
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
@@ -2610,7 +2561,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 Suppliers = allSuppliers,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2649,12 +2600,6 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            //if (!allOrders.Any())
-            //{
-            //    TempData["NoData"] = true;
-            //    return RedirectToAction("ReportGenerator");
-            //}
-
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
@@ -2665,7 +2610,7 @@ namespace slls.Areas.LibraryAdmin
                 Orders = allOrders,
                 Suppliers = allSuppliers,
                 AccountYearId = accountYearId,
-                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
+                TimeFrameDesc = accountYear == null ? "Received between: " + startDate.ToShortDateString() + " and " + endDate.ToShortDateString() : "Account Year: " + accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
