@@ -33,7 +33,7 @@ namespace slls.ViewModels
         public string BudgetCodeId { get; set; }
         public int AccountYearId { get; set; }
         public string BudgetCode { get; set; }
-        public string AccountYear { get; set; }
+        public string TimeFrameDesc { get; set; }
         public int OrderCategory { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }

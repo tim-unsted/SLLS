@@ -8,7 +8,7 @@
     <h2>@ViewBag.Title</h2>
     <hr/>
 
-    <h3>@Model.AccountYear</h3>
+    <h3>@Model.TimeFrameDesc</h3>
     
     @foreach (var requestor in Model.Requestors.OrderBy(x => x.Lastname).ThenBy(x => x.Firstname))
     {

@@ -1,11 +1,6 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.ReportsGeneratorViewModel
 
-@*<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.js"></script>
-<script src="~/Scripts/DatePickerReady.js"></script>*@
-
 <script type="text/javascript">
 
     $(document).ready(function () {
@@ -20,10 +15,10 @@
 
 @using (Html.BeginForm("PostReportGenerator", "OrderDetails", FormMethod.Post, new { id = "form1" }))
 {
+    @Html.Partial("_PostAlert")
     <div class="alert alert-info">
-        <span class="pull-right" style="padding-left:10px;"><input type="submit" value="View Report" class="btn btn-success" />&nbsp;&nbsp;</span>
-        <span class="help-inline">Use this tool to create the expenditure report you require. Select the basic report from the main list on the left. Then select the appropriate filters/parameters from the boxes displayed on the right.  Once you are happy with your selection, press the 'View Report' button.</span><br />
-        @Html.ValidationMessage("NoData", new { @class = "text-danger" })
+        <span class="pull-right" style="padding-left:10px;"><button type="submit" id="btnView1" value="View" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span> View Report</button>&nbsp;&nbsp;</span>
+        <p><strong><span class="glyphicon glyphicon-info-sign"></span></strong> Use this tool to create the expenditure report you require. Select the basic report from the main list on the left. Then select the appropriate filters/parameters from the boxes displayed on the right.  Once you are happy with your selection, press the 'View Report' button.</p>
     </div>
         
     <div class="row">
@@ -31,9 +26,8 @@
             <div class="panel panel-info">
                 <div class="panel-heading">
                     <span class="">
-                        Available Report Types:&nbsp;
+                        Available Report Types:
                     </span>
-                    @Html.ValidationMessage("NotSelected", new { @class = "text-danger" })
                 </div>
                 <div class="panel-body">
                     @Html.ListBoxFor(m => m.SelectedReport, Model.Reports, new { @class = "form-control", size = 25, @id = "lstReports" })
@@ -84,7 +78,7 @@
         </div>        
     </div>
     <div class="form-footer">
-        <input type="submit" value="View Report" class="btn btn-success" />
+        <button type="submit" id="btnView2" value="View" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span> View Report</button>
         &nbsp;&nbsp;or&nbsp;<a href="@Url.Action("Index")" class="btn-link" title="Cancel">Cancel</a>
     </div>
 }

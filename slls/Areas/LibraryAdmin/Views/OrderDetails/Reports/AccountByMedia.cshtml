@@ -13,7 +13,7 @@
                    select o.Price).Sum();
 }
 
-<h3>@Model.AccountYear<span class="pull-right">Annual Total: @string.Format("{0:C}", @yearSum)</span></h3>
+<h3>@Model.TimeFrameDesc<span class="pull-right">Annual Total: @string.Format("{0:C}", @yearSum)</span></h3>
 
 @foreach (var mediaType in Model.MediaTypes.OrderBy(m => m.Media))
 {

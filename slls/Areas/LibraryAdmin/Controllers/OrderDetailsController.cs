@@ -1438,8 +1438,8 @@ namespace slls.Areas.LibraryAdmin
             {
                 if ((bool)TempData["NoReportSelected"] == true)
                 {
-                    TempData["NoReportSelected"] = false;
-                    ModelState.AddModelError("NotSelected", "No report selected! Please select a report from the list.");
+                    TempData["ErrorMsg"] = "No report selected! Please select a report from the list.";
+                    //ModelState.AddModelError("NotSelected", "No report selected! Please select a report from the list.");
                 }
             }
 
@@ -1447,17 +1447,17 @@ namespace slls.Areas.LibraryAdmin
             {
                 if ((bool)TempData["NoData"] == true)
                 {
-                    TempData["NoData"] = false;
-                    ModelState.AddModelError("NoData", "There is no data for this report! Please select some alternative criteria and try again.");
+                    TempData["NoDataMsg"] = "There is no data for this report! Please select some alternative criteria and try again.";
+                    //ModelState.AddModelError("NoData", "There is no data for this report! Please select some alternative criteria and try again.");
                 }
             }
 
             var viewModel = new ReportsGeneratorViewModel
             {
                 Reports = SelectListHelper.FinanceReportsList(),
-                BudgetCodes = SelectListHelper.BudgetCodesList(addDefault: true, addNew: false, msg: "All"),
-                AccountYears = SelectListHelper.AccountYearsList(addDefault: false, addNew: false, msg: null),
-                OrderCategories = SelectListHelper.OrderCategoriesList(addDefault: true, addNew: false, msg: "All"),
+                BudgetCodes = SelectListHelper.BudgetCodesList(addDefault: true, addNew: false, msg: "All "),
+                AccountYears = SelectListHelper.AccountYearsList(addDefault: true, addNew: false),
+                OrderCategories = SelectListHelper.OrderCategoriesList(addDefault: true, addNew: false, msg: "All "),
                 StartDate = DateTime.Now.AddYears(-1),
                 EndDate = DateTime.Now.Date
             };
@@ -1626,11 +1626,11 @@ namespace slls.Areas.LibraryAdmin
                                   select c;
             }
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 Copies = cancelledCopies,
                 HasData = cancelledCopies.Any()
             };
@@ -1683,13 +1683,13 @@ namespace slls.Areas.LibraryAdmin
             //    return RedirectToAction("ReportGenerator");
             //}
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 OrderCategories = orderCategories,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -1739,14 +1739,14 @@ namespace slls.Areas.LibraryAdmin
                                   where o.BudgetCodeID != null
                                   select o.BudgetCode).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -1796,14 +1796,14 @@ namespace slls.Areas.LibraryAdmin
                                   where o.BudgetCodeID != null
                                   select o.BudgetCode).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -1853,14 +1853,14 @@ namespace slls.Areas.LibraryAdmin
                                   where o.BudgetCodeID != null
                                   select o.BudgetCode).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -1911,14 +1911,14 @@ namespace slls.Areas.LibraryAdmin
                                   where o.BudgetCodeID != null
                                   select o.BudgetCode).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -1972,14 +1972,14 @@ namespace slls.Areas.LibraryAdmin
             var allMediaTypes = (from t in allTitles
                                  select t.MediaType).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 Titles = allTitles,
                 MediaTypes = allMediaTypes,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -2031,14 +2031,14 @@ namespace slls.Areas.LibraryAdmin
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 Titles = allTitles,
                 Suppliers = allSuppliers,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -2088,14 +2088,14 @@ namespace slls.Areas.LibraryAdmin
                                   where o.BudgetCodeID != null
                                   select o.BudgetCode).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -2145,14 +2145,14 @@ namespace slls.Areas.LibraryAdmin
                                   where o.BudgetCodeID != null
                                   select o.BudgetCode).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 BudgetCodes = allBudgetCodes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 BudgetCodeId = budgetCodeId,
                 StartDate = startDate,
                 EndDate = endDate,
@@ -2202,14 +2202,14 @@ namespace slls.Areas.LibraryAdmin
                                where o.BudgetCodeID != null
                                select o.BudgetCode).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 //Orders = orders,
                 BudgetCodes = budgetCodes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "None selected" : accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = budgetCodes.Any()
@@ -2260,7 +2260,7 @@ namespace slls.Areas.LibraryAdmin
             var allMediaTypes = (from t in allTitles
                                  select t.MediaType).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
@@ -2268,7 +2268,7 @@ namespace slls.Areas.LibraryAdmin
                 Titles = allTitles,
                 MediaTypes = allMediaTypes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2319,7 +2319,7 @@ namespace slls.Areas.LibraryAdmin
             var allMediaTypes = (from t in allTitles
                                  select t.MediaType).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
@@ -2327,7 +2327,7 @@ namespace slls.Areas.LibraryAdmin
                 Titles = allTitles,
                 MediaTypes = allMediaTypes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2378,7 +2378,7 @@ namespace slls.Areas.LibraryAdmin
             var allMediaTypes = (from t in allTitles
                                  select t.MediaType).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
@@ -2386,7 +2386,7 @@ namespace slls.Areas.LibraryAdmin
                 Titles = allTitles,
                 MediaTypes = allMediaTypes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2437,7 +2437,7 @@ namespace slls.Areas.LibraryAdmin
             var allMediaTypes = (from t in allTitles
                                  select t.MediaType).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
@@ -2445,7 +2445,7 @@ namespace slls.Areas.LibraryAdmin
                 Titles = allTitles,
                 MediaTypes = allMediaTypes,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2493,14 +2493,14 @@ namespace slls.Areas.LibraryAdmin
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 Suppliers = allSuppliers,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2548,14 +2548,14 @@ namespace slls.Areas.LibraryAdmin
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 Suppliers = allSuppliers,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2603,14 +2603,14 @@ namespace slls.Areas.LibraryAdmin
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 Suppliers = allSuppliers,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2658,14 +2658,14 @@ namespace slls.Areas.LibraryAdmin
             var allSuppliers = (from o in allOrders
                                 select o.Supplier).Distinct();
 
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var viewModel = new OrderReportsViewModel
             {
                 Orders = allOrders,
                 Suppliers = allSuppliers,
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear == null ? "Between " + startDate + " and " + endDate : accountYear.AccountYear1,
                 StartDate = startDate,
                 EndDate = endDate,
                 HasData = allOrders.Any()
@@ -2854,7 +2854,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult OrdersByRequestor_Report(AuthoritySelectorViewModel selectedAccountYear)
         {
             var accountYearId = selectedAccountYear.SelectedValue.FirstOrDefault();
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var allOrders = (from o in _db.OrderDetails
                              where o.AccountYearID == accountYearId && o.RequesterUser != null
@@ -2872,7 +2872,7 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new OrderReportsViewModel()
             {
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear.AccountYear1,
                 Requestors = requestors,
                 Orders = allOrders,
                 HasData = requestors.Any(),
@@ -2887,7 +2887,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult OrdersByAuthoriser_Report(AuthoritySelectorViewModel selectedAccountYear)
         {
             var accountYearId = selectedAccountYear.SelectedValue.FirstOrDefault();
-            var accountYear = _db.AccountYears.Find(accountYearId).AccountYear1;
+            var accountYear = _db.AccountYears.Find(accountYearId);
 
             var allOrders = (from o in _db.OrderDetails
                              where o.AccountYearID == accountYearId && o.AuthoriserUser != null
@@ -2901,7 +2901,7 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new OrderReportsViewModel()
             {
                 AccountYearId = accountYearId,
-                AccountYear = accountYear,
+                TimeFrameDesc = accountYear.AccountYear1,
                 Authorisers = authorisers,
                 Orders = allOrders,
                 HasData = authorisers.Any()
