@@ -56,104 +56,104 @@ namespace slls.Areas.LibraryAdmin
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Classmarks.Classmark", "FieldDisplayName");
-                        var firstOrDefault = _db.Classmarks.Find(value.DefaultValueId).Classmark1;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.Classmarks.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.Classmark1;
                         break;
                     }
                     case "frequencies":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Frequency.Frequency", "FieldDisplayName");
-                        var firstOrDefault = _db.Frequencies.Find(value.DefaultValueId).Frequency1;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.Frequencies.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.Frequency1;
                         break;
                     }
                     case "languages":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Languages.Language", "FieldDisplayName");
-                        var firstOrDefault = _db.Languages.Find(value.DefaultValueId).Language1;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.Languages.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.Language1;
                         break;
                     }
                     case "publishers":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Titles.Publisher", "FieldDisplayName");
-                        var firstOrDefault = _db.Publishers.Find(value.DefaultValueId).PublisherName;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.Publishers.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.PublisherName;
                         break;
                     }
                     case "mediatypes":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("MediaTypes.Media_Type", "FieldDisplayName");
-                        var firstOrDefault = _db.MediaTypes.Find(value.DefaultValueId).Media;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.MediaTypes.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.Media;
                         break;
                     }
                     case "budgetcodes":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Orders.Budget_Code", "FieldDisplayName");
-                        var firstOrDefault = _db.BudgetCodes.Find(value.DefaultValueId).BudgetCode1;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.BudgetCodes.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.BudgetCode1;
                         break;
                     }
                     case "suppliers":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Orders.Supplier", "FieldDisplayName");
-                        var firstOrDefault = _db.Suppliers.Find(value.DefaultValueId).SupplierName;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.Suppliers.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.SupplierName;
                         break;
                     }
                     case "ordercategories":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Orders.Category", "FieldDisplayName");
-                        var firstOrDefault = _db.OrderCategories.Find(value.DefaultValueId).OrderCategory1;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.OrderCategories.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.OrderCategory1;
                         break;
                     }
                     case "locations":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Locations.Location", "FieldDisplayName");
-                        var firstOrDefault = _db.Locations.Find(value.DefaultValueId).Location1;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.Locations.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.Location1;
                         break;
                     }
                     case "statustypes":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Copies.Status", "FieldDisplayName");
-                        var firstOrDefault = _db.StatusTypes.Find(value.DefaultValueId).Status;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.StatusTypes.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.Status;
                         break;
                     }
                     case "circulationmessages":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Circulation.Circulation_Slip_Message", "FieldDisplayName");
-                        var firstOrDefault = _db.CirculationMessages.Find(value.DefaultValueId).CirculationMsg;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.CirculationMessages.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.CirculationMsg;
                         break;
                     }
                     case "departments":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("Departments.Department", "FieldDisplayName");
-                        var firstOrDefault = _db.Departments.Find(value.DefaultValueId).Department1;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.Departments.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.Department1;
                         break;
                     }
                     case "loantypes":
                     {
                         var value = defaultValue;
                         fieldName = DbRes.T("MediaTypes.Loan_Type", "FieldDisplayName");
-                        var firstOrDefault = _db.LoanTypes.Find(value.DefaultValueId).LoanTypeName;
-                        currentValueString = firstOrDefault ?? value.DefaultValueId.ToString();
+                        var firstOrDefault = _db.LoanTypes.Find(value.DefaultValueId);
+                        currentValueString = firstOrDefault == null ? "*** Invalid: Default " + fieldName + " does not exist! ***" : firstOrDefault.LoanTypeName;
                         break;
                     }
                     default:
