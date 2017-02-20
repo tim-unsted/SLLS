@@ -1446,7 +1446,7 @@ namespace slls.Areas.LibraryAdmin
                 TitleAdditionalFieldDatas = title.TitleAdditionalFieldDatas, 
                 SubjectIndexes = title.SubjectIndexes
             };
-            
+
             ViewData["TitleId"] = SelectListHelper.TitlesList(id);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
             ViewBag.SubjectCount = viewModel.SubjectIndexes.Count();
