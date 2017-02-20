@@ -15,16 +15,20 @@
     @Html.HiddenFor(x => x.PostDeleteAction)
     @Html.HiddenFor(x => x.PostDeleteController)
     @Html.HiddenFor(x => x.HeaderText)
-    
-    <div class="modal-body">
+
+    <div class="modal-body" style="padding-top: 5px;">
         <div class="control-group">
-            <p>@Html.DisplayFor(model => model.ConfirmationText) @Html.DisplayFor(model => model.HeaderText)?</p>
+            <div class="alert alert-danger">
+                <span class="glyphicon glyphicon-exclamation-sign"></span> @Html.DisplayFor(model => model.ConfirmationHeaderText) @Html.DisplayFor(model => model.HeaderText)
+            </div>
+
             @if (!Model.DetailsText.IsEmpty())
             {
-                <p><mark><strong>@Html.Raw(Model.DetailsText)</strong></mark>
-                </p>
+                <div class="alert" style="padding:5px;padding-left: 15px;"><strong>@Html.Raw(Model.DetailsText)</strong></div>
             }
+
             @ViewBag.Message
+            <div style="padding-left: 15px;">@Model.ConfirmationFooterText</div>
         </div>
     </div>
 
@@ -32,7 +36,6 @@
         <button id="btnDelete" class="btn @Model.ButtonClass" type="submit"><span aria-hidden="true" class="glyphicon @Model.ButtonGlyphicon"></span> @Html.DisplayFor(model => model.ButtonText)</button>
         &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
     </div>
-    @*@Html.Partial("_ModalDeleteFooter")*@
 }
 
 <script type="text/javascript">

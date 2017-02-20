@@ -25,6 +25,13 @@
         var gaTrackId = '<%=ConfigurationManager.AppSettings["GoogleAnalyticsTrackingId"]%>';
 
         $(document).ready(function () {
+            $(".modal-dialog").draggable({
+                handle: ".modal-header"
+            });
+            $('.modal-dialog').resizable({
+                minHeight: 300,
+                minWidth: 300
+            });
         });
 
         $(function () {
@@ -182,7 +189,7 @@
     </div>
 
     <div id="modalDelete" class="modal fade" tabindex="-1" role="dialog">
-        <div class="modal-dialog">
+        <div class="modal-dialog delete">
             <div class="modal-content">
             </div>
         </div>

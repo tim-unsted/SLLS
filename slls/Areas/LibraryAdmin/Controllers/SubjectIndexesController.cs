@@ -183,7 +183,7 @@ namespace slls.Areas.LibraryAdmin
                 PostDeleteController = "SubjectIndexes",
                 FunctionText = "Remove",
                 ButtonText = "Remove",
-                ConfirmationText = "Are you sure you want to remove the following",
+                ConfirmationHeaderText = "You are about to remove the following",
                 DetailsText = subjectIndex.Keyword.KeywordTerm
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);

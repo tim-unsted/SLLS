@@ -13,7 +13,8 @@ namespace slls.ViewModels
         {
             ButtonText = DbRes.T("Buttons.Confirm_Delete", "Terminology");
             FunctionText = "Confirm Delete";
-            ConfirmationText = "Are you sure you want to delete the following";
+            ConfirmationHeaderText = "You are about to delete the following ";
+            ConfirmationFooterText = "Are you sure you want to continue?";
             ButtonClass = "btn-danger";
             ButtonGlyphicon = "glyphicon-trash";
         }
@@ -51,7 +52,9 @@ namespace slls.ViewModels
 
         public string FunctionText { get; set; }
 
-        public string ConfirmationText { get; set; }
+        public string ConfirmationHeaderText { get; set; }
+
+        public string ConfirmationFooterText { get; set; }
 
         public string ButtonClass { get; set; }
 

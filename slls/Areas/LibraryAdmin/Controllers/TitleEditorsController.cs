@@ -178,7 +178,7 @@ namespace slls.Areas.LibraryAdmin
                 PostDeleteController = "TitleEditors",
                 FunctionText = "Remove",
                 ButtonText = "Remove",
-                ConfirmationText = "Are you sure you want to remove the following",
+                ConfirmationHeaderText = "You are about to remove the following",
                 DetailsText = titleEditor.Author.DisplayName
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);

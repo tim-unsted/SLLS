@@ -276,14 +276,14 @@ namespace slls.Areas.LibraryAdmin
                 return HttpNotFound();
             }
 
-            //Establish what roles the current user has. A user may not grant another user greater permissions than they have themselves ...
+            //Establish what roles the current (i.e. logged-in) user has. A user may not grant another user greater permissions than they have themselves ...
             var userRoles = Roles.GetUserRoles();
+
+            //Establish what roles to user being edited has ...
+            var editUserRoles = UserManager.GetRoles(id);
 
             //Only Admin users can get this far, so ensure that any lower user type is included by default ...
             userRoles.Add("OPAC User");
-            
-            //Create a list of all default roles that should be selected/ticked when the form opens ...
-            var defaultMenuRoles = new List<string> { "OPAC User" };
 
             IEnumerable<SelectListItem> rolesList;
             if (Roles.IsBaileyAdmin())
@@ -293,7 +293,7 @@ namespace slls.Areas.LibraryAdmin
                     .ToList()
                     .Select(x => new SelectListItem
                     {
-                        Selected = defaultMenuRoles.Contains(x.Name),
+                        Selected = editUserRoles.Contains(x.Name),
                         Text = x.Name,
                         Value = x.Name
                     });
@@ -305,7 +305,7 @@ namespace slls.Areas.LibraryAdmin
                     .ToList()
                     .Select(x => new SelectListItem
                     {
-                        Selected = defaultMenuRoles.Contains(x.Name),
+                        Selected = editUserRoles.Contains(x.Name),
                         Text = x.Name,
                         Value = x.Name
                     });
@@ -330,7 +330,7 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.Title = "Edit " + _entityName;
             ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1",
                 libraryUser.DepartmentId);
-            ViewBag.LocationID = SelectListHelper.OfficeLocationList(id:libraryUser.LocationID ?? 0,addDefault:false);//new SelectList(_db.Locations, "LocationID", "Location1", libraryUser.LocationID);
+            ViewBag.LocationID = SelectListHelper.OfficeLocationList(id: libraryUser.LocationID ?? 0, addDefault: false);//new SelectList(_db.Locations, "LocationID", "Location1", libraryUser.LocationID);
             return PartialView(viewModel);
         }
 

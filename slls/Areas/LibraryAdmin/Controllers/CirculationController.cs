@@ -399,7 +399,7 @@ namespace slls.Areas.LibraryAdmin
                 DetailsText = circulation.Copy.Title.Title1 + " - Copy: " + circulation.Copy.CopyNumber,
                 ButtonText = "Confirm",
                 FunctionText = "Confirm Remove Item",
-                ConfirmationText = "Are you sure you want to remove the following item "
+                ConfirmationHeaderText = "You are about to remove the following item "
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);
         }
@@ -427,7 +427,7 @@ namespace slls.Areas.LibraryAdmin
                 DetailsText = "",
                 ButtonText = "Remove",
                 FunctionText = "Remove",
-                ConfirmationText = "Are you sure you want to remove "
+                ConfirmationHeaderText = "You are about to remove "
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);
         }
@@ -475,7 +475,7 @@ namespace slls.Areas.LibraryAdmin
                 DetailsText = copy.Title.Title1 + "- Copy: " + copy.CopyNumber,
                 ButtonText = "Remove",
                 FunctionText = "Remove",
-                ConfirmationText = "Are you sure you want to remove "
+                ConfirmationHeaderText = "You are about to remove "
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);
         }
@@ -520,7 +520,7 @@ namespace slls.Areas.LibraryAdmin
                 DetailsText = "",
                 ButtonText = "Remove",
                 FunctionText = "Remove",
-                ConfirmationText = "Are you sure you want to remove "
+                ConfirmationHeaderText = "You are about to remove "
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);
         }
@@ -781,7 +781,7 @@ namespace slls.Areas.LibraryAdmin
                 DetailsText = copy.Title.Title1 + " - Copy: " + copy.CopyNumber,
                 ButtonText = "Remove",
                 FunctionText = "Remove",
-                ConfirmationText = "Are you sure you want to remove the following"
+                ConfirmationHeaderText = "You are about to remove the following"
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);
         }
@@ -1219,7 +1219,7 @@ namespace slls.Areas.LibraryAdmin
                 PostDeleteController = "Circulation",
                 ButtonText = "Remove",
                 FunctionText = "Remove",
-                ConfirmationText = "Are you sure you want to remove "
+                ConfirmationHeaderText = "You are about to remove "
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);
         }
@@ -1271,7 +1271,7 @@ namespace slls.Areas.LibraryAdmin
                 PostDeleteController = "Circulation",
                 ButtonText = "Clear Slips",
                 FunctionText = "Clear",
-                ConfirmationText = "Are you sure you want to clear "
+                ConfirmationHeaderText = "You are about to clear "
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);
         }

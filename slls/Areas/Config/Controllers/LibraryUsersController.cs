@@ -280,12 +280,12 @@ namespace slls.Areas.Config
             {
                 return HttpNotFound();
             }
-
-            //Create a list of all default roles that should be selected/ticked when the form opens ...
-            var defaultMenuRoles = new List<string> { "OPAC User" };
-
-            //Establish what roles the current user has. A user may not grant another user greater permissions than they have themselves ...
+            
+            //Establish what roles the current (i.e. logged-in) user has. A user may not grant another user greater permissions than they have themselves ...
             var userRoles = Roles.GetUserRoles();
+
+            //Establish what roles to user being edited has ...
+            var editUserRoles = UserManager.GetRoles(id);
 
             //Only Admin users can get this far, so ensure that any lower user type is included by default ...
             userRoles.Add("OPAC User");
@@ -298,7 +298,7 @@ namespace slls.Areas.Config
                     .ToList()
                     .Select(x => new SelectListItem
                     {
-                        Selected = defaultMenuRoles.Contains(x.Name),
+                        Selected = editUserRoles.Contains(x.Name),
                         Text = x.Name,
                         Value = x.Name
                     });
@@ -310,7 +310,7 @@ namespace slls.Areas.Config
                     .ToList()
                     .Select(x => new SelectListItem
                     {
-                        Selected = defaultMenuRoles.Contains(x.Name),
+                        Selected = editUserRoles.Contains(x.Name),
                         Text = x.Name,
                         Value = x.Name
                     });
@@ -331,8 +331,6 @@ namespace slls.Areas.Config
                 Notes = libraryUser.Notes,
                 RolesList = rolesList
             };
-
-            
 
             ViewBag.Title = "Edit " + _entityName;
             ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1",

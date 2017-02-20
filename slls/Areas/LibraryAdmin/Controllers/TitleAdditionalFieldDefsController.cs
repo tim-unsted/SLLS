@@ -273,7 +273,7 @@ namespace slls.Areas.LibraryAdmin
                 PostDeleteController = "TitleAdditionalFieldDefs",
                 FunctionText = "Delete",
                 ButtonText = "Delete",
-                ConfirmationText = "Are you sure you want to delete the following",
+                ConfirmationHeaderText = "You are about to delete the following",
                 DetailsText = fieldDef.FieldName
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);

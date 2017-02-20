@@ -653,7 +653,7 @@ namespace slls.Areas.LibraryAdmin
                 ButtonClass = "btn-success",
                 ButtonGlyphicon = "glyphicon-remove",
                 FunctionText = "Remove",
-                ConfirmationText = "Are you sure you want to remove the following"
+                ConfirmationHeaderText = "You are about to remove the following"
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);
         }

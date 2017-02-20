@@ -1967,7 +1967,7 @@ namespace slls.Areas.LibraryAdmin
                 ButtonText = "Remove",
                 ButtonClass = "btn-success",
                 ButtonGlyphicon = "glyphicon-remove",
-                ConfirmationText = "Are you sure you want to remove the following item from the '" + newTitlesList + "'?",
+                ConfirmationHeaderText = "You are about to remove the following item from the '" + newTitlesList + "'?",
                 PostDeleteController = "Titles",
                 DetailsText = item.Title.Title1 + " - Copy: " + item.CopyNumber
             };
