@@ -10,17 +10,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Simple Little Library System</title>
     @Styles.Render("~/Content/css")
-    <link rel="stylesheet" type="text/css" media="print" href="~/Content/print.css" />
+    <link rel="stylesheet" type="text/css" media="print" href="~/Content/print.css"/>
+
+    <style type="text/css" media="print">
+        html, body {
+            width: 144mm;
+            height: 297mm;
+        }
+    </style>
 </head>
 <body>
 
     <div class="container body-content">
-
-        @*<div>
-                <span class="pull-right">
-                    <button type="button" class="btn btn-primary" onclick="window.print();"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print</button>
-                </span>
-            </div>*@
 
         @Html.Partial("_PrintHeader")
 
@@ -31,43 +32,45 @@
             {
                 last = Model.PartsReceived.Last();
             }
-            
+
         }
 
-        @foreach (var item in Model.PartsReceived)
-        {
-            <div style="padding-left: 20px; padding-right: 20px; padding-bottom: 50px; margin-bottom: 50px; border: 2px solid #000000;">
-                <div class="form-horizontal">
-                    <div class="form-group ">
-                        <div class="col-md-12">
-                            <h3>@Html.DisplayFor(modelItem => item.Copy.Title.Title1)</h3>
+        <div class="row">
+
+            <div class="col-md-7">
+
+                <br />
+
+                @foreach (var item in Model.PartsReceived)
+                {
+                    <div class="keep-together" style="padding-left: 20px; padding-right: 20px; padding-bottom: 50px; margin-bottom: 50px; border: 2px solid #000000;">
+                        <div class="form-horizontal">
+                            <div class="form-group ">
+                                <div class="col-md-12">
+                                    <h3>@Html.DisplayFor(modelItem => item.Copy.Title.Title1)</h3>
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.Label(DbRes.T("Copies.Copy", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.Copy.CopyNumber)
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.Label(DbRes.T("CheckIn.Date_Received", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.DateReceived)
+                                </div>
+                                <div class="col-md-12">
+                                    @Html.Label(DbRes.T("CheckIn.Part", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.PartReceived)
+                                </div>
+                            </div>
                         </div>
-                        <div class="col-md-12">
-                            @Html.Label(DbRes.T("Copies.Copy", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.Copy.CopyNumber)
-                        </div>
-                        <div class="col-md-12">
-                            @Html.Label(DbRes.T("CheckIn.Date_Received", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.DateReceived)
-                        </div>
-                        <div class="col-md-12">
-                            @Html.Label(DbRes.T("CheckIn.Part", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.PartReceived)
-                        </div>
+                        @Html.Action("CirculationSlipRecipients", new { id = item.CopyID })
+                        @Html.DisplayFor(modelItem => item.Copy.CirculationMessage.CirculationMsg)
                     </div>
-                </div>
-                @Html.Action("CirculationSlipRecipients", new { id = item.CopyID })
-                @Html.DisplayFor(modelItem => item.Copy.CirculationMessage.CirculationMsg)
+                    //If this item is the last, just end here ...
+                    if (item.Equals(@last))
+                    {
+                        <div></div>
+                    }
+                }
             </div>
-            //If this item is the last, just end here ...
-            if (item.Equals(@last))
-            {
-                <div></div>
-            }
-            else
-            {
-                // ... otherwise insert a page break
-                <div class="page-break"></div>
-            }
-
-        }
+        </div>
     </div>
 
 </body>

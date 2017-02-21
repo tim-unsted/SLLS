@@ -60,3 +60,8 @@ tfoot {
     display: none;
 }
 
+.keep-together{
+    page-break-inside: avoid;
+}
+
+

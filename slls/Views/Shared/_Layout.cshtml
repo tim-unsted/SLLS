@@ -197,7 +197,7 @@
 
     <div id="AlertDialog" title="Alert!"></div>
 
-    <div class="brand-bar">
+    <div class="brand-bar noprint">
         <div class="container">
             <div class="row">
                 <a href="@Url.Action("Index", "Home", new {area = ""})" title="Home"><span><img src="@Url.Action("RenderSiteLogo", "Files", new { imageId = CssManager.LogoImageId, area = "" })" alt="Logo" class="logo" /></span></a>
@@ -208,7 +208,6 @@
 
     <div class="navbar navbar-inverse">
         <div class="container">
-            @*<div class="row">*@
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                     <span class="icon-bar"></span>
