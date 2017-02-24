@@ -927,6 +927,7 @@ namespace slls.Areas.LibraryAdmin
                 StatusID = Utils.PublicFunctions.GetDefaultValue("Copies", "StatusID"),
                 CirculationMsgID = Utils.PublicFunctions.GetDefaultValue("Copies", "CirculationMsgID"),
                 PrintLabel = true,
+                AcquisitionsList = Settings.GetParameterValue("Catalogue.AddToNewTitlesListOnCreate", "true", "Should new copies be automatically included on the 'New Titles' list when added/created manually or via AutoCat?", "system admin, catalgue admin", "bool") == "true",
                 Commenced = DateTime.Now,
                 InputDate = DateTime.Now
             };
@@ -934,6 +935,7 @@ namespace slls.Areas.LibraryAdmin
             _db.Copies.Add(newCopy);
             _db.SaveChanges();
             var copyId = newCopy.CopyID;
+            CacheProvider.RemoveCache("newtitles");
 
             //Do default volume/label ...
             var newVolume = new Volume

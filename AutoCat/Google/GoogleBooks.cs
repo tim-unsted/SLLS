@@ -58,11 +58,11 @@ namespace AutoCat.Google
 
             if (isbn.Length == 8) //Looks for an ISSN ...
             {
-                googleBooksUrl = baseUrl + "issn" + isbn + "&projection=full";
+                googleBooksUrl = baseUrl + "issn:" + isbn + "&projection=full";
             }
             else // Otherwise look for an ISBN ...
             {
-                googleBooksUrl = baseUrl + "isbn" + isbn + "&projection=full";
+                googleBooksUrl = baseUrl + "isbn:" + isbn + "&projection=full";
             }
 
 

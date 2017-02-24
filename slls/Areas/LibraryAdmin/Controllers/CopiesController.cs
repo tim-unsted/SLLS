@@ -6,6 +6,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
+using slls.App_Settings;
 using slls.DAO;
 using slls.Models;
 using slls.Utils.Helpers;
@@ -145,7 +146,7 @@ namespace slls.Areas.LibraryAdmin
                 }
             };
 
-            //Add the actual locations ...
+            //Add the actual status types ...
             foreach (var item in statustypes)
             {
                 statusList.Add(new SelectListItem
@@ -240,7 +241,7 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new CopiesAddViewModel
             {
                 CopyNumber = 1,
-                AcquisitionsList = true,
+                AcquisitionsList = Settings.GetParameterValue("Catalogue.AddToNewTitlesListOnCreate", "true", "Should new copies be automatically included on the 'New Titles' list when added/created manually or via AutoCat?", "system admin, catalgue admin", "bool") == "true",
                 Step = step
             };
 
@@ -274,7 +275,7 @@ namespace slls.Areas.LibraryAdmin
                 TitleID = id.Value,
                 Title = title.Title1,
                 CopyNumber = title.Copies == null ? 1 : title.Copies.Count + 1,
-                AcquisitionsList = true,
+                AcquisitionsList = Settings.GetParameterValue("Catalogue.AddToNewTitlesListOnCreate","true","Should new copies be automatically included on the 'New Titles' list when added/created manually or via AutoCat?","system admin, catalgue admin", "bool") == "true",
                 Step = step,
                 ReturnController = returnController,
                 ReturnAction = returnAction
@@ -312,6 +313,7 @@ namespace slls.Areas.LibraryAdmin
                 _db.Copies.Add(copy);
                 _db.SaveChanges();
                 var copyId = copy.CopyID;
+                CacheProvider.RemoveCache("newtitles");
                 
                 //Add a volume ...
                 var step = viewModel.Step != 0 ? viewModel.Step + 1 : 0;
