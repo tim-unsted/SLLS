@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Web.Mvc;
 using slls.Localization;
 
 namespace slls.Models
@@ -22,6 +23,7 @@ namespace slls.Models
         public int TitleID { get; set; }
 
         [DisplayName("Text")]
+        [AllowHtml]
         public string FieldData { get; set; }
 
         [Column(TypeName = "smalldatetime")]

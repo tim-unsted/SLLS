@@ -9,17 +9,19 @@
             @Html.HiddenFor(modelItem => item.TitleID)
             @Html.HiddenFor(modelItem => item.FieldID)
             <div class="col-md-12">
-                <div class="thumbnail">
-                    <div class="caption">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
                         <span class="pull-right">
                             <a href="@Url.Action("Edit", "TitleAdditionalFieldData", new {id = item.RecID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
                             <a href="@Url.Action("Delete", "TitleAdditionalFieldData", new {id = item.RecID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
                         </span>
                         <a href="@Url.Action("Edit", "TitleAdditionalFieldData", new {id = item.RecID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit"><strong>@item.TitleAdditionalFieldDef.FieldName</strong></a>
-                        @*<strong>@Html.ActionLink(item.TitleAdditionalFieldDef.FieldName, "Edit", "TitleAdditionalFieldData", new { id = item.RecID })</strong>*@
                     </div>
-                    @(item.TitleAdditionalFieldDef.IsLongText ? Html.TextAreaFor(modelItem => item.FieldData, new { @class = "form-control medium", @readonly = true }) : Html.EditorFor(modelItem => item.FieldData, new { htmlAttributes = new { @class = "form-control", @readonly = true } }))
-                    @Html.ValidationMessageFor(modelItem => item.FieldData, "", new {@class = "text-danger"})
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <span>@Html.Raw(item.FieldData)</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

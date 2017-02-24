@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
+using System.Web.Mvc;
 using slls.Localization;
 
 namespace slls.ViewModels
@@ -38,6 +39,7 @@ namespace slls.ViewModels
         public string FieldName { get; set; }
 
         [DisplayName("Text")]
+        [AllowHtml]
         public string FieldData { get; set; }
 
         [Column(TypeName = "smalldatetime")]
@@ -62,6 +64,7 @@ namespace slls.ViewModels
         public string FieldName { get; set; }
 
         [DisplayName("Text")]
+        [AllowHtml]
         public string FieldData { get; set; }
 
         [Column(TypeName = "smalldatetime")]

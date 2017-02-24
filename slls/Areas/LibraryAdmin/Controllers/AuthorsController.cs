@@ -54,6 +54,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 SelectedLetter = selectedLetter,
                 FirstLetters = allAuthors
+                    .Where(a => !string.IsNullOrEmpty(a.DisplayName))
                     .GroupBy(u => u.DisplayName.Substring(0, 1))
                     .Select(x => x.Key.ToUpper())
                     .ToList()
@@ -70,7 +71,7 @@ namespace slls.Areas.LibraryAdmin
                 {
                     var numbers = Enumerable.Range(0, 10).Select(i => i.ToString());
                     authors = allAuthors
-                        .Where(u => numbers.Contains(u.DisplayName.Substring(0, 1)))
+                        .Where(u => !string.IsNullOrEmpty(u.DisplayName) && numbers.Contains(u.DisplayName.Substring(0, 1)))
                         .ToList();
                 }
                 else if (selectedLetter == "non alpha")
@@ -82,7 +83,7 @@ namespace slls.Areas.LibraryAdmin
                     var nonalpha = nonalpha1.Concat(nonalpha2).Concat(nonalpha3);
 
                     authors = allAuthors
-                        .Where(u => nonalpha.Contains(u.DisplayName.Substring(0, 1)))
+                        .Where(u => string.IsNullOrEmpty(u.DisplayName) || nonalpha.Contains(u.DisplayName.Substring(0, 1)))
                         .ToList();
                 }
                 else
