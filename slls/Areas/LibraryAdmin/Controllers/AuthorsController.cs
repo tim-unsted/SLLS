@@ -89,7 +89,7 @@ namespace slls.Areas.LibraryAdmin
                 else
                 {
                     authors = allAuthors
-                        .Where(u => u.DisplayName.StartsWith(selectedLetter, StringComparison.InvariantCultureIgnoreCase))
+                        .Where(u => !string.IsNullOrEmpty(u.DisplayName) && u.DisplayName.StartsWith(selectedLetter, StringComparison.InvariantCultureIgnoreCase))
                         .ToList();
                 }
             }

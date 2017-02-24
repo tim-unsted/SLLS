@@ -19,9 +19,10 @@
             <tbody>
             @foreach (var newTitle in Model.RecentTitles.OrderByDescending(t => t.DateCatalogued))
             {
+                var title = string.IsNullOrEmpty(newTitle.Title1) ? "[No Title]" : newTitle.Title1;
                 <tr>
                     <td>
-                        <a href="@Url.Action("Edit", "Titles", new {id = newTitle.TitleID})">@newTitle.Title1</a>
+                        <a href="@Url.Action("Edit", "Titles", new {id = newTitle.TitleID})">@title</a>
                     </td>
                 </tr>
             }
