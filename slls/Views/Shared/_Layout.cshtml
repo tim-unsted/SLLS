@@ -18,7 +18,7 @@
     @Scripts.Render("~/bundles/datatables")
     @Scripts.Render("~/bundles/signalR")
     <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>
-    
+
     <script>
         var dateFormat = "@GlobalVariables.DateFormat";
         var popupTimeout = "@GlobalVariables.PopupTimeout";
@@ -236,29 +236,25 @@
             <div id="dialogSuccess" title="Success!">
                 @TempData["SuccessDialogMsg"]
             </div>
-        }
-
-        @*Pop-up to provide an error message*@
+        }@*Pop-up to provide an error message*@
         @if (TempData["ErrorDialogMsg"] != null)
         {
             <div id="dialogError" title="Oops, something went wrong!">
                 @TempData["ErrorDialogMsg"]
             </div>
-        }
-
-        @*Pop-up to provide an information message*@
+        }@*Pop-up to provide an information message*@
         @if (TempData["InfoDialogMsg"] != null)
         {
             <div id="dialogInfo" title="Info">
                 @TempData["InfoDialogMsg"]
             </div>
         }
-
+        
         @RenderBody()
         @RenderPage("_Footer.cshtml")
     </div>
 
-@*@Scripts.Render("~/bundles/bootstrapjs")*@
+    @*@Scripts.Render("~/bundles/bootstrapjs")*@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 
@@ -268,9 +264,9 @@
     <!-- Latest compiled and minified JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
 
-@Scripts.Render("~/bundles/bootstrapextras")
+    @Scripts.Render("~/bundles/bootstrapextras")
     @Scripts.Render("~/bundles/jqueryui")
-    
+
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -1044,8 +1044,14 @@ h5 {
 
 }
 
-
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
     background-color: #d9edf7;
     color: #23527c;
 }
+
+/*@media screen and (min-width:768px)*/
+.container .jumbotron, .container-fluid .jumbotron {
+    padding-right: 60px;
+    padding-left: 0px;
+}
+

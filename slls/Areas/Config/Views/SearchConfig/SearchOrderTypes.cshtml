@@ -32,12 +32,12 @@
     <strong>Info: </strong>Use this page to control the search results sort order options available to the OPAC users. To set the default sort order , <a href="@Url.Action("Searchoptions")" title="Click to set the default sort order">click here.</a>
 </div>
 
-@if (slls.Utils.Helpers.Roles.IsBaileyAdmin())
+@*@if (slls.Utils.Helpers.Roles.IsBaileyAdmin())
 {
     <p>
         <a href="@Url.Action("AddOrderType", "SearchConfig")" title="Add new @DbRes.T("LoanTypes.Loan_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
     </p>
-}
+}*@
 
 <table class="table" id="searchordertypes">
     <thead>

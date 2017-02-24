@@ -1,28 +1,16 @@
 ﻿@model slls.ViewModels.DashboardViewModel
 
-@*
-    This file contains what looks like invalid HTML - i.e. unclosed divs and divs with no opening part.
-    Don't worry, it all renderes correctly!
-*@
-
-@*
-    Close the opened Container div from the _Layout.cshtml ...
-*@
-@*<div class="container">*@
-</div>
-
 @* This next section maybe hidden, depending on the client preferences/site.css ... *@
 @if (Model.ShowWelcomeMessage)
 {
-    <div class="jumbotron">
-        <div class="container">
+    <div class="container">
+        <div class="jumbotron">
             @Html.Raw(Model.WelcomeHeader)
             @Html.Raw(Model.WelcomeMessage)
         </div>
     </div>
 }
 
-@* After the Jumbotron, re-open the Container div that was originally opened in the _Layout.cshtml file ... *@
 <div class="container">
     <div class="row">
         <div class="col-md-3">
@@ -50,3 +38,4 @@
 
         </div>
     </div>
+</div>

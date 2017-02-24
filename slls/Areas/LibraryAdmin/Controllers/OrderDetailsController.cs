@@ -2993,7 +2993,7 @@ namespace slls.Areas.LibraryAdmin
                 return Json(new { success = true });
             }
 
-            return PartialView("Add", viewModel);
+            return PartialView("AddLink", viewModel);
         }
 
         private bool HandleUpload(Stream fileStream, string name, string type, string ext, string path, int titleId, string displayText, string hoverTip, string login, string password)

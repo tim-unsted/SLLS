@@ -1,15 +1,5 @@
 ﻿@model slls.ViewModels.OPACHomePageViewModel
 
-@*
-    This file contains what looks like invalid HTML - i.e. unclosed divs and divs with no opening part.
-    Don't worry, it all renderes correctly!
-*@
-
-@*
-    Close the opened Container div from the _Layout.cshtml ...
-*@
-</div>
-
 @* This next section maybe hidden, depending on the client preferences/site.css ... *@
 @if (Model.ShowWelcomeMessage)
 {
@@ -21,7 +11,6 @@
     </div>
 }
 
-@* After the Jumbotron, re-open the Container div that was originally opened in the _Layout.cshtml file ... *@
 <div class="container">
 
     <div class="row">
@@ -33,7 +22,7 @@
             @Html.Action("RenderGadget", "Home", new { col = 1, row = 5, hasTitles = Model.HasTitles })
         </div>
 
-        <div class="col-md-6">
+        <div class="col-md-5">
             @Html.Action("RenderGadget", "Home", new { col = 2, row = 1, hasTitles = Model.HasTitles })
             @Html.Action("RenderGadget", "Home", new { col = 2, row = 2, hasTitles = Model.HasTitles })
             @Html.Action("RenderGadget", "Home", new { col = 2, row = 3, hasTitles = Model.HasTitles })
@@ -41,7 +30,7 @@
             @Html.Action("RenderGadget", "Home", new { col = 2, row = 5, hasTitles = Model.HasTitles })
         </div>
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             @Html.Action("RenderGadget", "Home", new { col = 3, row = 1, hasTitles = Model.HasTitles })
             @Html.Action("RenderGadget", "Home", new { col = 3, row = 2, hasTitles = Model.HasTitles })
             @Html.Action("RenderGadget", "Home", new { col = 3, row = 3, hasTitles = Model.HasTitles })
@@ -52,4 +41,4 @@
         </div>
     </div>
 
-    @*</div>*@
+</div>
