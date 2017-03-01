@@ -45,27 +45,28 @@
                         </span>
                     </div>
                     <div class="panel-body">
-                        <div class="form-group">
-                            @Html.Label("Account Year:", new {@class = "control-label col-md-3"})
-                            <div class="col-sm-8">
-                                @Html.DropDownListFor(m => m.SelectedAccountYear, Model.AccountYears, new {@class = "form-control", @id = "lstAccountYears"})
+                        <div class="form-horizontal">
+                            <div class="form-group">
+                                @Html.Label("Account Year:", new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.DropDownListFor(m => m.SelectedAccountYear, Model.AccountYears, new { @class = "form-control", @id = "lstAccountYears" })
+                                </div>
                             </div>
-                        </div>
-                        <br/>
 
-                        @*<div class="strike">
-                            <span>or</span>
-                        </div>*@
-                        @Html.HorizontalDivider("Or")
+                            @Html.HorizontalDivider("Or Received Between")
 
-                        <div class="form-group">
-                            @Html.Label("Received between:", new {@class = "control-label col-sm-3"})
-                            <div class="col-sm-4">
-                                @Html.EditorFor(x => Model.StartDate, new {@class = "form-control"})
+                            <div class="form-group">
+                                @Html.Label("Start Date:", new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(x => Model.StartDate, new { @class = "form-control" })
+                                </div>
                             </div>
-                            @Html.Label("and:", new {@class = "control-label col-md-1 just-right"})
-                            <div class="col-sm-4">
-                                @Html.EditorFor(x => Model.EndDate, new {@class = "form-control"})
+
+                            <div class="form-group">
+                                @Html.Label("End Date:", new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(x => Model.EndDate, new { @class = "form-control" })
+                                </div>
                             </div>
                         </div>
                     </div>

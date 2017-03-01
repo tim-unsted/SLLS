@@ -6,6 +6,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using slls.Models;
+using slls.Utils.Helpers;
 
 namespace slls.Controllers
 {
@@ -49,6 +50,7 @@ namespace slls.Controllers
                                         : "";
             var currentUserId = Utils.PublicFunctions.GetUserId(); //User.Identity.GetUserId();
             var user = UserManager.FindById(currentUserId);
+            var userRoles = Roles.GetUserRoles();
 
             var model = new IndexViewModel
             {
@@ -61,7 +63,16 @@ namespace slls.Controllers
                 Username = User.Identity.GetUserName(),
                 Firstname = user.Firstname,
                 Lastname = user.Lastname,
-                HaveExternalLoginProviders = AuthenticationManager.GetExternalAuthenticationTypes().Any()
+                Email = user.Email,
+                HaveExternalLoginProviders = AuthenticationManager.GetExternalAuthenticationTypes().Any(),
+                RolesList = userRoles
+                    .ToList()
+                    .Select(x => new SelectListItem
+                    {
+                        Selected = true,
+                        Text = x.ToString(),
+                        Value = x.ToString()
+                    })
             };
             return View(model);
         }

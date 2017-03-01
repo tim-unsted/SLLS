@@ -4,13 +4,13 @@
 <table id="recipients" class="table">
     <thead>
     <tr>
-        <th style="width: 60%">
+        <th style="width: 50%; vertical-align: top;">
             @Html.Label(DbRes.T("Circulation.Circulate_To", "FieldDisplayName"))
         </th>
-        <th style="width: 20%">
+        <th style="width: 25%; vertical-align: top;">
             @Html.Label(DbRes.T("Circulation.Signed", "FieldDisplayName"))
         </th>
-        <th style="width: 20%">
+        <th style="width: 25%; vertical-align: top;">
             @Html.Label(DbRes.T("Circulation.Date_Passed", "FieldDisplayName"))
         </th>
     </tr>
@@ -19,13 +19,13 @@
         @foreach (var item in Model.CirculationList)
         {
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.RecipientUser.Fullname)
+                <td style="border-bottom: 1px solid #cccccc;">
+                    <h4>@Html.DisplayFor(modelItem => item.RecipientUser.Fullname)</h4>
                 </td>
-                <td>
+                <td style="border-bottom: 1px solid #cccccc;">
                     &nbsp;
                 </td>
-                <td>
+                <td style="border-bottom: 1px solid #cccccc;">
                     &nbsp;
                 </td>
             </tr>

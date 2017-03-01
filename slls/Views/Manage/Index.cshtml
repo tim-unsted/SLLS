@@ -24,17 +24,31 @@
         <dd>
             @Model.Username
         </dd>
-        <dt>@DbRes.T("Users.Password", "FieldDisplayName"):</dt>
+        <dt>@DbRes.T("Users.Email_Address", "FieldDisplayName"):</dt>
         <dd>
-            @if (Model.HasPassword)
-            {
-                @Html.ActionLink("Change your password", "ChangePassword")
-            }
-            else
-            {
-                @Html.ActionLink("Set a password", "SetPassword")
-            }
+            @Model.Email
         </dd>
+        <dt>Roles:</dt>
+        <dd>
+            <ul class="list-unstyled">
+                @foreach (var item in Model.RolesList)
+                {
+                    <li>
+                        @Html.Raw(item.Value)
+                    </li>
+                }
+            </ul>
+
+        </dd>
+
+        @if ((bool) ViewData["WindowsAuth"] == false)
+        {
+            <dt>@DbRes.T("Users.Password", "FieldDisplayName"):</dt>
+            <dd>
+                @(Model.HasPassword ? Html.ActionLink("Change your password", "ChangePassword") : Html.ActionLink("Set a password", "SetPassword"))
+            </dd>
+        }
+        
         @if (Model.HaveExternalLoginProviders)
         {
             <dt>External Logins:</dt>

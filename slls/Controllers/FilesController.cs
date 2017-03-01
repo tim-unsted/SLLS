@@ -212,7 +212,7 @@ namespace slls.Controllers
                 var contentType = MimeMapping.GetMimeMapping(fileName);
 
                 //Finally, return file and provide byte file content and file name
-                return File(memoryStream.GetBuffer(), contentType, fileName);
+                return File(memoryStream.ToArray(), contentType, fileName);
             }
         }
 
