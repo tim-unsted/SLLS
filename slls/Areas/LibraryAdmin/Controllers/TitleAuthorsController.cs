@@ -57,7 +57,7 @@ namespace slls.Areas.LibraryAdmin
                 TitleId = id,
                 Title = title.SingleOrDefault(),
                 SelectedAuthors = null,
-                AvailableAuthors = SelectListHelper.AuthorsList()
+                AvailableAuthors = SelectListHelper.AuthorsList(addNew:false)
             };
 
             //tavm.OrderSeq = 1;

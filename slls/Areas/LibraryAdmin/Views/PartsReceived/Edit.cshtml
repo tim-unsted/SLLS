@@ -7,7 +7,7 @@
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h3 class="modal-title" id="titleLabel"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> @ViewBag.Title</h3>
+    <h3 class="modal-title" id="titleLabel"> @ViewBag.Title</h3>
 </div>
 
 @using (Html.BeginForm())
@@ -36,7 +36,7 @@
             </div>
 
             <div class="form-group">
-                @Html.Label(DbRes.T("CheckIn.Part_Issue_Desc", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
+                @Html.Label("Part/Issue", htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-8">
                     @Html.EditorFor(model => model.PartReceived, new {htmlAttributes = new {@class = "form-control"}})
                     @Html.ValidationMessageFor(model => model.PartReceived, "", new {@class = "text-danger"})
@@ -45,7 +45,7 @@
 
             <div class="form-group">
                 @Html.LabelFor(model => model.DateReceived, htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-3">
+                <div class="col-md-5">
                     @Html.EditorFor(model => model.DateReceived, new {htmlAttributes = new {@class = "form-control"}})
                     @Html.ValidationMessageFor(model => model.DateReceived, "", new {@class = "text-danger"})
                 </div>

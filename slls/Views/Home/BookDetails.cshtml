@@ -10,6 +10,7 @@
 @{
     var colClass = "col-md-12";
     var showBorrower = Settings.GetParameterValue("Borrowing.DisplayBorrowerEmail", "false", "Sets whether OPAC will display borrower's Email address", dataType: "bool") == "true";
+    var showOnLoan = Settings.GetParameterValue("Borrowing.DisplayOnLoanStatus", "true", "Sets whether OPAC will display whether an item is on loan or not", dataType: "bool") == "true";
     var selfLoansAllowed = Settings.GetParameterValue("Borrowing.SelfLoansEnabled", "false", "Tells whether OPAC users can do self-borrowing", dataType: "bool") == "true";
     var selfReturnsAllowed = Settings.GetParameterValue("Borrowing.SelfReturnsEnabled", "false", "Tells whether OPAC users can do self-returns", dataType: "bool") == "true";
     var emailToAddress = Settings.GetParameterValue("EmailSettings.EmailToAddress", "library@mycompany.com", "Sets the email for Ask the Librarian.", dataType: "text");
@@ -248,7 +249,10 @@
                                         <th>@Html.DisplayName(DbRes.T("CopyItems.Barcode", "FieldDisplayName"))</th>
                                         <th>@Html.DisplayName(DbRes.T("CopyItems.Label_Text", "FieldDisplayName"))</th>
                                         <th>@Html.DisplayName(DbRes.T("CopyItems.Is_Ref_Only", "FieldDisplayName"))</th>
-                                        <th>@Html.DisplayName(DbRes.T("CopyItems.Is_On_Loan", "FieldDisplayName"))</th>
+                                        @if (showOnLoan)
+                                        {
+                                            <th>@Html.DisplayName(DbRes.T("CopyItems.Is_On_Loan", "FieldDisplayName"))</th>
+                                        }
                                         @if (itemsOnLoan)
                                         { 
                                             if (showBorrower)
@@ -266,8 +270,12 @@
                                         <td>@Html.DisplayFor(x => volume.Barcode)</td>
                                         <td>@Html.DisplayFor(x => volume.LabelText)</td>
                                         <td>@Html.DisplayFor(x => volume.LoanType.RefOnly)</td>
-                                        <td>@Html.DisplayFor(x => volume.OnLoan)</td>
 
+                                        @if (showOnLoan)
+                                        {
+                                            <td>@Html.DisplayFor(x => volume.OnLoan)</td>
+                                        }
+                                        
                                         @*//Display a link to email the current borrower ...*@
                                         @if (showBorrower && volume.OnLoan)
                                         {

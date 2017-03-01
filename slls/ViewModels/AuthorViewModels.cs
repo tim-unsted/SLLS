@@ -8,6 +8,12 @@ namespace slls.ViewModels
 {
     public class AuthorCreateViewModel
     {
+        public AuthorCreateViewModel()
+        {
+            TitleId = 0;
+            AuthType = "P";
+        }
+        
         [LocalDisplayName("Authors.Title", "FieldDisplayName")]
         public string Title { get; set; }
 
@@ -23,9 +29,13 @@ namespace slls.ViewModels
         [LocalDisplayName("Authors.Author_Type", "FieldDisplayName")]
         public string AuthType { get; set; }
 
+        public int TitleId { get; set; }
+
         [LocalDisplayName("Authors.Notes", "FieldDisplayName")]
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
+
+        
     }
 
     public class AuthorIndexViewModel

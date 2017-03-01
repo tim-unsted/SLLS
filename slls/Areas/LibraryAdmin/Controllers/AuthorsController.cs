@@ -101,11 +101,14 @@ namespace slls.Areas.LibraryAdmin
         
 
         // GET: Authors/Create
-        public ActionResult Create()
+        public ActionResult Create(int titleId = 0)
         {
             ViewBag.Title = "Add New " + _entityName;
             ViewBag.AuthTypes = GetAuthType();
-            var viewModel = new AuthorCreateViewModel();
+            var viewModel = new AuthorCreateViewModel()
+            {
+                TitleId = titleId
+            };
             return PartialView(viewModel);
         }
 
@@ -115,7 +118,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult Create(
             [Bind(
                 Include =
-                    "Title,DisplayName,Firstnames,Lastnames,AuthType,Notes")] AuthorCreateViewModel viewModel)
+                    "Title,DisplayName,Firstnames,Lastnames,AuthType,Notes,TitleId")] AuthorCreateViewModel viewModel)
         {
             var author = new Author
             {
@@ -132,8 +135,29 @@ namespace slls.Areas.LibraryAdmin
             {
                 _repository.Insert(author);
                 CacheProvider.RemoveCache("authors");
+
+                var authorId = author.AuthorID;
+                if (viewModel.TitleId != 0)
+                {
+                    if (authorId > 0)
+                    {
+                        //Check if the author has already been added to the title ...
+                        bool exists = _db.TitleAuthors.Any(a => a.AuthorId == authorId && a.TitleId == viewModel.TitleId);
+
+                        //If not, proceed ...
+                        if (exists == false)
+                        {
+                            var ta = new TitleAuthor
+                            {
+                                TitleId = viewModel.TitleId,
+                                AuthorId = authorId,
+                                InputDate = DateTime.Now
+                            };
+                            _repository.Insert(ta);
+                        }
+                    }
+                }
                 return Json(new { success = true });
-                //return RedirectToAction("Index");
             }
 
             return PartialView(viewModel);
