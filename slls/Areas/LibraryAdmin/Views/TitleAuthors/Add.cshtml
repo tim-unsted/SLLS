@@ -36,7 +36,7 @@
             <div class="form-group">
                 <span class="col-md-2"></span>
                 <div class="col-md-10">
-                    @DbRes.T("Authors.Author", "FieldDisplayName") not listed? <a href="@Url.Action("Create", "Authors", new { titleId = Model.TitleId })" class="modal-link" data-dismiss="modal" title="Add a new @DbRes.T("Authors.Author", "FieldDisplayName")">Click here to add a new @DbRes.T("Authors.Author", "FieldDisplayName")</a>
+                    @DbRes.T("Authors.Author", "FieldDisplayName") not listed? <a href="@Url.Action("Create", "Authors", new { titleId = Model.TitleId, type = "author" })" class="modal-link" data-dismiss="modal" title="Add a new @DbRes.T("Authors.Author", "FieldDisplayName")">Click here to add a new @DbRes.T("Authors.Author", "FieldDisplayName")</a>
                 </div>
             </div>
         </div>

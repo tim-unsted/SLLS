@@ -58,7 +58,7 @@ namespace slls.Areas.LibraryAdmin
                 TitleId = id,
                 Title = title.SingleOrDefault(),
                 SelectedEditors = null,
-                AvailableEditors = SelectListHelper.EditorsList()
+                AvailableEditors = SelectListHelper.EditorsList(addNew:false)
             };
 
             ViewBag.Title = "Add " + DbRes.T("Authors.Editor", "FieldDisplayName") + " to " + DbRes.T("Titles.Title", "FieldDisplayName");

@@ -12,6 +12,7 @@ namespace slls.ViewModels
         {
             TitleId = 0;
             AuthType = "P";
+            Type = "author";
         }
         
         [LocalDisplayName("Authors.Title", "FieldDisplayName")]
@@ -30,6 +31,8 @@ namespace slls.ViewModels
         public string AuthType { get; set; }
 
         public int TitleId { get; set; }
+
+        public string Type { get; set; }
 
         [LocalDisplayName("Authors.Notes", "FieldDisplayName")]
         [DataType(DataType.MultilineText)]

@@ -101,13 +101,14 @@ namespace slls.Areas.LibraryAdmin
         
 
         // GET: Authors/Create
-        public ActionResult Create(int titleId = 0)
+        public ActionResult Create(int titleId = 0, string type = "author")
         {
-            ViewBag.Title = "Add New " + _entityName;
+            ViewBag.Title = type == "author" ? "Create New " + DbRes.T("Authors.Author", "FieldDisplayName") : "Create New " + DbRes.T("Authors.Editor", "FieldDisplayName");
             ViewBag.AuthTypes = GetAuthType();
             var viewModel = new AuthorCreateViewModel()
             {
-                TitleId = titleId
+                TitleId = titleId,
+                Type = type
             };
             return PartialView(viewModel);
         }
@@ -118,7 +119,7 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult Create(
             [Bind(
                 Include =
-                    "Title,DisplayName,Firstnames,Lastnames,AuthType,Notes,TitleId")] AuthorCreateViewModel viewModel)
+                    "Title,DisplayName,Firstnames,Lastnames,AuthType,Notes,TitleId,Type")] AuthorCreateViewModel viewModel)
         {
             var author = new Author
             {
@@ -141,19 +142,39 @@ namespace slls.Areas.LibraryAdmin
                 {
                     if (authorId > 0)
                     {
-                        //Check if the author has already been added to the title ...
-                        bool exists = _db.TitleAuthors.Any(a => a.AuthorId == authorId && a.TitleId == viewModel.TitleId);
-
-                        //If not, proceed ...
-                        if (exists == false)
+                        if (viewModel.Type == "author")
                         {
-                            var ta = new TitleAuthor
+                            //Check if the author has already been added to the title ...
+                            bool exists = _db.TitleAuthors.Any(a => a.AuthorId == authorId && a.TitleId == viewModel.TitleId);
+
+                            //If not, proceed ...
+                            if (exists == false)
                             {
-                                TitleId = viewModel.TitleId,
-                                AuthorId = authorId,
-                                InputDate = DateTime.Now
-                            };
-                            _repository.Insert(ta);
+                                var ta = new TitleAuthor
+                                {
+                                    TitleId = viewModel.TitleId,
+                                    AuthorId = authorId,
+                                    InputDate = DateTime.Now
+                                };
+                                _repository.Insert(ta);
+                            }
+                        }
+                        if (viewModel.Type == "editor")
+                        {
+                            //Check if the editor has already been added to the title ...
+                            bool exists = _db.TitleEditors.Any(e => e.AuthorID == authorId && e.TitleID == viewModel.TitleId);
+
+                            //If not, proceed ...
+                            if (exists == false)
+                            {
+                                var te = new TitleEditor
+                                {
+                                    TitleID = viewModel.TitleId,
+                                    AuthorID = authorId,
+                                    InputDate = DateTime.Now
+                                };
+                                _repository.Insert(te);
+                            }
                         }
                     }
                 }
