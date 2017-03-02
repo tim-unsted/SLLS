@@ -1430,7 +1430,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 return RedirectToAction("Select");
             }
-            var title = _repository.GetById<Title>(id);
+            var title = _db.Titles.Find(id) //_repository.GetById<Title>(id);
             if (title == null)
             {
                 return RedirectToAction("Select");
@@ -1445,7 +1445,8 @@ namespace slls.Areas.LibraryAdmin
                 TitleImages = title.TitleImages,
                 TitleLinks = title.TitleLinks,
                 TitleAdditionalFieldDatas = title.TitleAdditionalFieldDatas, 
-                SubjectIndexes = title.SubjectIndexes
+                SubjectIndexes = title.SubjectIndexes,
+                SelectTitle = title.Title1
             };
 
             //ViewData["TitleId"] = SelectListHelper.TitlesList(id);

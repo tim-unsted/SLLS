@@ -8,8 +8,9 @@
     @Html.AntiForgeryToken()
 
     <div class="row" style="margin-right: 0">
-        <div class="col-md-9">
-            @Html.TextBoxFor(x => x.SelectTitle, new {@placeholder = "View another? Start typing the title you want to view/edit ...", @class = "form-control"})
+        <div class="col-md-9">To view/edit another item, start typing part of the title ...</div>
+        <div class="col-md-9" title="To view/edit another title, start typing ..." >
+            @Html.TextBoxFor(x => x.SelectTitle, new { @class = "form-control" })
         </div>
         <div class="pull-right">
             <div class="btn-group">
@@ -28,6 +29,13 @@
 }
 
 <script type="text/javascript">
+
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
+
+    $('#SelectTitle').click(function () { selectAllText(jQuery(this)) });
 
     $("#SelectTitle").autocomplete({
         //appendTo: ".row",
