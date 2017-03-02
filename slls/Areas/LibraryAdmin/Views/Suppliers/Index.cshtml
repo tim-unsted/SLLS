@@ -20,29 +20,35 @@
                 "targets": [0]
             },
             {
-                "width": "30%",
+                "width": "20%",
                 "searchable": true,
                 "sortable": false,
                 "targets": [1]
             },
             {
-                "width": "20%",
+                "width": "15%",
                 "searchable": true,
                 "sortable": false,
-                "targets": [2]
+                "targets": [2, 3]
             },
+            //{
+            //    "width": "15%",
+            //    "searchable": true,
+            //    "sortable": false,
+            //    "targets": [3]
+            //},
             {
                 "width": "10%",
                 "searchable": false,
                 "sortable": true,
                 "orderSequence": ["desc", "asc"],
-                "targets": [3]
+                "targets": [4]
             },
             {
                 "width": "10%",
                 "searchable": false,
                 "sortable": false,
-                "targets": [4]
+                "targets": [5]
             }
             ]
         });
@@ -71,6 +77,9 @@
                 @Html.DisplayName(DbRes.T("SupplierAddress.Main_Tel", "FieldDisplayName"))
             </th>
             <th>
+                @Html.DisplayName(DbRes.T("SupplierAddress.Account", "FieldDisplayName"))
+            </th>
+            <th>
                 @DbRes.T("Orders", "EntityType")
             </th>
             <th></th>
@@ -95,6 +104,9 @@
                 </td>
                 <td>
                     @Html.Raw(item.TelephoneNumbers)
+                </td>
+                <td>
+                    @Html.Raw(item.Accounts)
                 </td>
                 <td>
                     @if (item.OrderDetails.Any())

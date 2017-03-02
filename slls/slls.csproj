@@ -1224,9 +1224,7 @@
     <Content Include="Areas\LibraryAdmin\Views\Copies\ByLocation.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Copies\_IndexNoLocations.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Copies\_IndexNoStatus.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\SupplierAddresses\Create.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\SupplierAddresses\Edit.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\SupplierAddresses\Index.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Suppliers\Edit.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\SupplierAddresses\List.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\Edit.cshtml" />

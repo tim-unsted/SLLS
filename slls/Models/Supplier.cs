@@ -66,6 +66,19 @@ namespace slls.Models
             }
         }
 
+        [LocalDisplayName("SupplierAddress.Account", "FieldDisplayName")]
+        public string Accounts
+        {
+            get
+            {
+                List<String> accounts =
+                    SupplierAddresses
+                        .Select(x => x.Account)
+                        .ToList();
+                return string.Join("<br />", accounts);
+            }
+        }
+
         [LocalDisplayName("SupplierAddress.Main_Tel", "FieldDisplayName")]
         public string TelephoneNumbers
         {
