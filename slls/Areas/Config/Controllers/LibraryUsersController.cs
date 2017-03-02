@@ -375,6 +375,7 @@ namespace slls.Areas.Config
                 //Update roles/permissions ...
                 var userRoles = await UserManager.GetRolesAsync(viewModel.Id);
                 selectedRoles = selectedRoles ?? new string[] { };
+                Session["UserRoles"] = null;
 
                 result = await UserManager.AddToRolesAsync(viewModel.Id, selectedRoles.Except(userRoles).ToArray());
 

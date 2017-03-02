@@ -213,6 +213,9 @@ namespace slls.ViewModels
         [Required(AllowEmptyStrings = false, ErrorMessage = "A blank title is not allowed. Please enter a valid title.")
         ]
         public string Title1 { get; set; }
+
+        public string SelectTitle { get; set; }
+        public string SelectTitleID { get; set; }
         
         public ICollection<TitleAdditionalFieldData> TitleAdditionalFieldDatas { get; set; }
 

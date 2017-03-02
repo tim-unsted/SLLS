@@ -29,10 +29,15 @@ namespace slls.Utils.Helpers
 
         public static IList<string> GetUserRoles()
         {
+            if (HttpContext.Current.Session["UserRoles"] != null)
+            {
+                return (IList<string>)HttpContext.Current.Session["UserRoles"];
+            }
             var userId = Utils.PublicFunctions.GetUserId();
             if (userId == null) return null;
             var userManager = HttpContext.Current.GetOwinContext().GetUserManager<ApplicationUserManager>();
             var userRoles = userManager.GetRoles(userId);
+            HttpContext.Current.Session["UserRoles"] = userRoles;
             return userRoles;
         }
 

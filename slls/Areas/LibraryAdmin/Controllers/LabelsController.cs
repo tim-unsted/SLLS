@@ -307,17 +307,17 @@ namespace slls.Areas.LibraryAdmin
                 {
                     StringBuilder s = new StringBuilder().Append(volume.LabelText).Append(' ', 15).Append(string.Format("{0}: ", DbRes.T("CopyItems.Barcode", "FieldDisplayName"))).Append(volume.Barcode).AppendLine("");
                     contents.Add(new Chunk(s.ToString(),
-                        new Font(baseFont, 8f)));
+                        new Font(baseFont, 9f, Font.BOLD)));
                 }
                 else if (string.IsNullOrEmpty(volume.LabelText) && !string.IsNullOrEmpty(volume.Barcode))
                 {
                     contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("CopyItems.Barcode", "FieldDisplayName"), volume.Barcode),
-                        new Font(baseFont, 8f)));
+                        new Font(baseFont, 9f, Font.BOLD)));
                 }
                 else if (!string.IsNullOrEmpty(volume.LabelText) && string.IsNullOrEmpty(volume.Barcode))
                 {
                     contents.Add(new Chunk(string.Format("{0}\n", volume.LabelText),
-                        new Font(baseFont, 8f)));
+                        new Font(baseFont, 9f, Font.BOLD)));
                 }
 
                 cell.AddElement(contents);
@@ -509,17 +509,17 @@ namespace slls.Areas.LibraryAdmin
                 {
                     StringBuilder s = new StringBuilder().Append(volume.LabelText).Append(' ', 15).Append(string.Format("{0}: ", DbRes.T("CopyItems.Barcode", "FieldDisplayName"))).Append(volume.Barcode).AppendLine("");
                     contents.Add(new Chunk(s.ToString(),
-                        new Font(baseFont, 8f)));
+                        new Font(baseFont, 9f, Font.BOLD)));
                 }
                 else if (string.IsNullOrEmpty(volume.LabelText) && !string.IsNullOrEmpty(volume.Barcode))
                 {
                     contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("CopyItems.Barcode", "FieldDisplayName"), volume.Barcode),
-                        new Font(baseFont, 8f)));
+                        new Font(baseFont, 9f, Font.BOLD)));
                 }
                 else if (!string.IsNullOrEmpty(volume.LabelText) && string.IsNullOrEmpty(volume.Barcode))
                 {
                     contents.Add(new Chunk(string.Format("{0}\n", volume.LabelText),
-                        new Font(baseFont, 8f)));
+                        new Font(baseFont, 9f, Font.BOLD)));
                 }
 
                 cell.AddElement(contents);

@@ -58,8 +58,8 @@ namespace slls.Areas.LibraryAdmin
 
         public ActionResult _ThumbnailDetails(int id = 0)
         {
-            var titleCopies = _db.Copies.Include(c => c.Volumes).Where(c => c.TitleID == id);
-            ViewData["TitleId"] = SelectListHelper.TitlesWithCopies(id, msg: "Filter by ");
+            var titleCopies = _db.Copies.Where(c => c.TitleID == id);
+            //ViewData["TitleId"] = SelectListHelper.TitlesWithCopies(id, msg: "Filter by ");
             return PartialView(titleCopies);
         }
 

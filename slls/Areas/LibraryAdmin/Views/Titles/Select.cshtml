@@ -8,7 +8,7 @@
 
     <span class="help-block">@Html.Raw(Model.HelpText)</span>
 
-    @using (Html.BeginForm("Select", "Titles", FormMethod.Post))
+    @using (Html.BeginForm("Select", "Titles", FormMethod.Post, new { id = "frmSelect", name = "frmSelect" }))
     {
         @Html.AntiForgeryToken()
 
@@ -16,8 +16,10 @@
         @Html.HiddenFor(model => model.Tab)
 
         <div class="form-group" title="@Model.Message">
-            @Html.DropDownListFor(model => model.TitleID, Model.Titles, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
-            @Html.ValidationMessageFor(model => model.TitleID, "", new { @class = "text-danger" })
+            @*@Html.DropDownListFor(model => model.TitleID, Model.Titles, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })*@
+            @Html.TextBoxFor(x => x.Title, new { @placeholder = "Start typing the term you are looking for ...", @class = "form-control" })
+            @Html.HiddenFor(model => model.TitleID)
+            @*@Html.ValidationMessageFor(model => model.TitleID, "", new { @class = "text-danger" })*@
         </div>
 
         <p>
@@ -37,12 +39,43 @@
 </div>
 
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
-        });
+    //$(document).ready(function () {
+    //    $('.selectpicker').selectpicker({
+    //        liveSearch: true,
+    //        showSubtext: true
+    //    });
+    //});
+
+    $("#Title").autocomplete({
+        //appendTo: "#stdModal",
+        source: function (request, response) {
+            var title = new Array();
+            var urlGetTerms = "@Url.Action("Autocomplete", "Titles")";
+            $.ajax({
+                async: false,
+                cache: false,
+                type: "POST",
+                url: urlGetTerms,
+                data: { "term": request.term },
+                success: function(data) {
+                    for (var i = 0; i < data.length; i++) {
+                        title[i] = { label: data[i].Value, Id: data[i].Key };
+                    }
+                }
+            });
+            response(title);
+        },
+        select: function (event, ui) {
+            if (ui.item) {
+                //alert(ui.item.label);
+                if (ui.item.Id != null) {
+                    $('#TitleID').val(ui.item.Id);
+                    document.frmSelect.submit();
+                }
+            }
+        }
     });
+
     $("#TitleID").change(function () {
         sessionStorage.removeItem('lastTab_EditTitle');
     });

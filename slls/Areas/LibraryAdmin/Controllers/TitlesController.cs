@@ -62,11 +62,10 @@ namespace slls.Areas.LibraryAdmin
                     ViewBag.Title = "View/Edit " + _entityName;
                     viewModel.BtnText = "View/Edit " + _entityName;
                     viewModel.Message = "Select an " + _entityName.ToLower() + " to view/edit";
-                    viewModel.HelpText = "Select the " + _entityName.ToLower() +
-                                         " you wish to view/edit from the dropdown list of available " +
-                                         DbRes.T("Titles", "EntityType").ToLower() + " below.";
+                    viewModel.HelpText = "Start typing the " + _entityName.ToLower() +
+                                         " you wish to view/edit in the box below.";
                     viewModel.ReturnAction = "Edit";
-                    viewModel.Titles = SelectListHelper.TitlesList();
+                    //viewModel.Titles = SelectListHelper.TitlesList();
                     break;
                 }
 
@@ -93,7 +92,7 @@ namespace slls.Areas.LibraryAdmin
                                          " you wish to print from the dropdown list of available " +
                                          DbRes.T("Titles", "EntityType").ToLower() + " below.";
                     viewModel.ReturnAction = "PrintDetails";
-                    viewModel.Titles = SelectListHelper.TitlesList();
+                    //viewModel.Titles = SelectListHelper.TitlesList();
                     break;
                 }
             }
@@ -1449,7 +1448,7 @@ namespace slls.Areas.LibraryAdmin
                 SubjectIndexes = title.SubjectIndexes
             };
 
-            ViewData["TitleId"] = SelectListHelper.TitlesList(id);
+            //ViewData["TitleId"] = SelectListHelper.TitlesList(id);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
             ViewBag.SubjectCount = viewModel.SubjectIndexes.Count();
             ViewBag.CopiesCount = viewModel.Copies.Count();

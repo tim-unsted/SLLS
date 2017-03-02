@@ -59,6 +59,11 @@ namespace slls.Utils
 
         public static string GetUserId()
         {
+            if (HttpContext.Current.Session["currentUserId"] != null)
+            {
+                return HttpContext.Current.Session["currentUserId"].ToString();
+            }
+            
             var context = new ApplicationDbContext();
             System.Security.Principal.IPrincipal user = System.Web.HttpContext.Current.User;
             var userName = Regex.Replace(user.Identity.Name, ".*\\\\(.*)", "$1", RegexOptions.None);
