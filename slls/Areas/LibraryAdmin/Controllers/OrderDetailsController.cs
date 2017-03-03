@@ -1166,9 +1166,9 @@ namespace slls.Areas.LibraryAdmin
                 VAT = orderDetail.VAT,
                 //Titles = new SelectList(_db.Titles, "TitleID", "Title1"),
                 Titles = SelectListHelper.TitlesList(orderDetail.TitleID),
-                Suppliers = new SelectList(_db.Suppliers, "SupplierID", "SupplierName"),
-                RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
-                AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
+                Suppliers = SelectListHelper.SupplierList(id:orderDetail.SupplierID ?? 0),
+                RequestUsers = SelectListHelper.SelectUsersByLastname(),
+                AuthorityUsers = SelectListHelper.SelectUsersByLastname(),
                 CallingAction = "Edit"
             };
 

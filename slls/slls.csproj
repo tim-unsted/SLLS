@@ -361,6 +361,13 @@
     <Compile Include="Models\OrderLink.cs" />
     <Compile Include="Models\UsefulLink.cs" />
     <Compile Include="Models\vwAccountQry.cs" />
+    <Compile Include="Models\vwSelectCopy.cs" />
+    <Compile Include="Models\vwSelectOrder.cs" />
+    <Compile Include="Models\vwSelectSupplier.cs" />
+    <Compile Include="Models\vwSelectTitle.cs" />
+    <Compile Include="Models\vwSelectTitleWithCopy.cs" />
+    <Compile Include="Models\vwSelectUserByFirstname.cs" />
+    <Compile Include="Models\vwSelectUserByLastname.cs" />
     <Compile Include="Models\vwVolumesWithLoans.cs" />
     <Compile Include="Partials\OrderDetails.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

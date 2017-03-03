@@ -368,33 +368,33 @@ namespace slls.Areas.LibraryAdmin
             };
 
             //Get all copies for this title ...
-            var query = from c in _db.Copies
-                where c.TitleID == copy.TitleID
+            var query = from c in _db.vwSelectCopies
+                where c.TitleId == copy.TitleID
                 orderby c.CopyNumber
                 select c;
             
             //Get the index of where the current CopyID is in a list ordered by CopyNumber ASC ..
-            var rowIndex = query.AsEnumerable().Select((x, index) => new {x.CopyID, index}).First(i => i.CopyID == id).index;
+            var rowIndex = query.AsEnumerable().Select((x, index) => new { x.CopyId, index }).First(i => i.CopyId == id).index;
 
             //Get the first CopyID ...
-            var firstId = query.AsEnumerable().Select(i => i.CopyID).First();
+            var firstId = query.AsEnumerable().Select(i => i.CopyId).First();
 
             //Get the last CopyID ...
-            var lastId = query.AsEnumerable().Select(i => i.CopyID).Last();
+            var lastId = query.AsEnumerable().Select(i => i.CopyId).Last();
 
             //Get the next CopyID to move forward to ...
             var nextId = query.AsEnumerable()
                 .OrderBy(i => i.CopyNumber)
-                .SkipWhile(i => i.CopyID != id)
+                .SkipWhile(i => i.CopyId != id)
                 .Skip(1)
-                .Select(i => i.CopyID).FirstOrDefault();
+                .Select(i => i.CopyId).FirstOrDefault();
 
             //Get the previous CopyID to move back to ...
             var previousId = query.AsEnumerable()
                 .OrderByDescending(i => i.CopyNumber)
-                .SkipWhile(i => i.CopyID != id)
+                .SkipWhile(i => i.CopyId != id)
                 .Skip(1)
-                .Select(i => i.CopyID).FirstOrDefault();
+                .Select(i => i.CopyId).FirstOrDefault();
 
             ViewBag.FirstID = firstId;
             ViewBag.LastID = lastId;
@@ -406,8 +406,8 @@ namespace slls.Areas.LibraryAdmin
 
             ViewData["CirculationMsgID"] = SelectListHelper.CirculationMessageList(id: copy.CirculationMsgID ?? 0, msg: null, addDefault: false, addNew: false);
             ViewData["LocationID"] = SelectListHelper.OfficeLocationList(copy.LocationID ?? 0, null, false); 
-            ViewData["StatusID"] = SelectListHelper.StatusList(copy.StatusID ?? 0, null, false, true); 
-            ViewData["CancelledYear"] = new SelectList(_db.AccountYears.OrderBy(y => y.AccountYear1), "AccountYearID", "AccountYear1", copy.AccountYearID);
+            ViewData["StatusID"] = SelectListHelper.StatusList(copy.StatusID ?? 0, null, false, true);
+            ViewData["CancelledYear"] = SelectListHelper.AccountYearsList(id:copy.AccountYearID ?? 0, addNew:false);
             ViewData["CancelledBy"] = new SelectList(_db.Users.Where(u => u.IsLive).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname), "Id", "FullnameRev");
             ViewData["CopyId"] = SelectListHelper.AllCopiesList(id: id, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName"));
             ViewBag.VolumesCount = copy.Volumes.Count();

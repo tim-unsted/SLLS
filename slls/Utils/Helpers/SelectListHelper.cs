@@ -307,12 +307,12 @@ namespace slls.Utils.Helpers
             }
 
             //Add the actual author names ...
-            foreach (var item in db.Titles.Where(t => t.Deleted == false).OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+            foreach (var item in db.vwSelectTitles.OrderBy(t => t.Title.Substring(t.NonFilingChars)))
             {
                 titlesList.Add(new SelectListItem
                 {
-                    Text = string.IsNullOrEmpty(item.Title1) ? "<empty title>" : StringHelper.Truncate(item.Title1, 100),
-                    Value = item.TitleID.ToString()
+                    Text = string.IsNullOrEmpty(item.Title) ? "<empty title>" : StringHelper.Truncate(item.Title, 100),
+                    Value = item.TitleId.ToString()
                 });
             }
 
@@ -334,17 +334,50 @@ namespace slls.Utils.Helpers
                 });
             }
 
-            foreach (var item in db.Titles.Where(t => t.Copies.Any()).OrderBy(t => t.Title1.Substring(t.NonFilingChars)))
+            foreach (var item in db.vwSelectTitlesWithCopies.OrderBy(t => t.Title.Substring(t.NonFilingChars)))
             {
                 titlesList.Add(new SelectListItem
                 {
-                    Text = string.IsNullOrEmpty(item.Title1) ? "<empty title>" : StringHelper.Truncate(item.Title1, 100),
-                    Value = item.TitleID.ToString()
+                    Text = string.IsNullOrEmpty(item.Title) ? "<empty title>" : StringHelper.Truncate(item.Title, 100),
+                    Value = item.TitleId.ToString()
                 });
             }
 
             return titlesList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
         }
+
+
+
+        public static IEnumerable<SelectListItem> SelectCopy(int id = 0, bool addDefault = true, string msg = "Select a ")
+        {
+            DbEntities db = new DbEntities();
+            var copiesList = new List<SelectListItem>();
+
+            //Add a default item ...
+            if (addDefault)
+            {
+                copiesList.Add(new SelectListItem
+                {
+                    Text = msg + DbRes.T("Copies.Copy", "FieldDisplayName"),
+                    Value = "0"
+                });
+            }
+
+            foreach (var item in db.vwSelectCopies.OrderBy(c => c.Title.Substring(c.NonFilingChars)))
+            {
+                copiesList.Add(new SelectListItem
+                {
+                    Text = string.IsNullOrEmpty(item.Title) ? "<empty title>" : StringHelper.Truncate(item.Title, 100) + ": Copy " + item.CopyNumber,
+                    Value = item.TitleId.ToString()
+                });
+            }
+
+            return copiesList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
+        }
+
+
+
+
 
         public static IEnumerable<SelectListItem> TitlesWithVolumes(int id = 0, bool addDefault = true, string msg = "Select a ")
         {
@@ -401,12 +434,12 @@ namespace slls.Utils.Helpers
                 });
             }
 
-            foreach (var item in db.Copies.OrderBy(c => c.Title.Title1.Substring(c.Title.NonFilingChars)).ThenBy(c => c.CopyNumber))
+            foreach (var item in db.vwSelectCopies.OrderBy(c => c.Title.Substring(c.NonFilingChars)).ThenBy(c => c.CopyNumber))
             {
                 copiesList.Add(new SelectListItem
                 {
-                    Text = string.IsNullOrEmpty(item.Title.Title1) ? "<empty title>" : StringHelper.Truncate(item.Title.Title1, 100) + " - Copy: " + item.CopyNumber,
-                    Value = item.CopyID.ToString()
+                    Text = string.IsNullOrEmpty(item.Title) ? "<empty title>" : StringHelper.Truncate(item.Title, 100) + " - Copy: " + item.CopyNumber,
+                    Value = item.CopyId.ToString()
                 });
             }
 
@@ -1029,7 +1062,7 @@ namespace slls.Utils.Helpers
             });
 
             //Add the actual orders ...
-            var validOrders = db.OrderDetails.Where(o => o.Title.Title1 != null);
+            var validOrders = db.vwSelectOrders.Where(o => o.Title != null);
 
             if (filter == "outstanding")
             {
@@ -1041,12 +1074,12 @@ namespace slls.Utils.Helpers
                 validOrders = validOrders.Where(o => o.InvoiceDate == null && o.InvoiceRef == null);
             }
             
-            foreach (var item in validOrders.OrderBy(x => x.Title.Title1.Substring(x.Title.NonFilingChars)).ThenByDescending(x => x.OrderID))
+            foreach (var item in validOrders.OrderBy(x => x.Title.Substring(x.NonFilingChars)).ThenByDescending(x => x.OrderId))
             {
                 ordersList.Add(new SelectListItem
                 {
                     Text = item.SelectOrder,
-                    Value = item.OrderID.ToString()
+                    Value = item.OrderId.ToString()
                 });
             }
 
@@ -1307,6 +1340,58 @@ namespace slls.Utils.Helpers
             }
 
             return list.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
+        }
+
+        public static IEnumerable<SelectListItem> SelectUsersByFirstname(string id = "", string msg = "Select a ")
+        {
+            DbEntities db = new DbEntities();
+            var usersList = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = msg + DbRes.T("Users.User", "FieldDisplayName"),
+                    Value = "0"
+                }
+            };
+
+            //Add the actual users ...
+            var users = db.vwSelectUsersByFirstnames;
+            foreach (var item in users.OrderBy(x => x.FullName))
+            {
+                usersList.Add(new SelectListItem
+                {
+                    Text = string.IsNullOrEmpty(item.FullName) ? "<no name>" : item.FullName,
+                    Value = item.Id
+                });
+            }
+
+            return usersList.Select(x => new SelectListItem { Selected = (x.Value == id.ToString()), Text = x.Text, Value = x.Value });
+        }
+
+        public static IEnumerable<SelectListItem> SelectUsersByLastname(string id = "", string msg = "Select a ")
+        {
+            DbEntities db = new DbEntities();
+            var usersList = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = msg + DbRes.T("Users.User", "FieldDisplayName"),
+                    Value = "0"
+                }
+            };
+
+            //Add the actual users ...
+            var users = db.vwSelectUsersByLastnames;
+            foreach (var item in users.OrderBy(x => x.FullNameRev))
+            {
+                usersList.Add(new SelectListItem
+                {
+                    Text = string.IsNullOrEmpty(item.FullNameRev) ? "<no name>" : item.FullNameRev,
+                    Value = item.Id
+                });
+            }
+
+            return usersList.Select(x => new SelectListItem { Selected = (x.Value == id.ToString()), Text = x.Text, Value = x.Value });
         }
     }
 }

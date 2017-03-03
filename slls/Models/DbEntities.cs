@@ -94,10 +94,19 @@ namespace slls.Models
         //public virtual DbSet<OpacSearchResults> OpacSearchResults { get; set; }
 
         //Views
+        
+        public virtual DbSet<vwVolumesWithLoans> vwVolumesWithLoans { get; set; }
+        public virtual DbSet<vwSelectTitle> vwSelectTitles { get; set; }
+        public virtual DbSet<vwSelectCopy> vwSelectCopies { get; set; }
+        public virtual DbSet<vwSelectTitleWithCopy> vwSelectTitlesWithCopies { get; set; }
+        public virtual DbSet<vwSelectSupplier> vwSelectSuppliers { get; set; }
+        public virtual DbSet<vwSelectOrder> vwSelectOrders { get; set; }
+        public virtual DbSet<vwSelectUserByFirstname> vwSelectUsersByFirstnames { get; set; }
+        public virtual DbSet<vwSelectUserByLastname> vwSelectUsersByLastnames { get; set; }
+
         //public virtual DbSet<vwBinding> vwBinding { get; set; } 
         //public virtual DbSet<vwBorrowing> vwBorrowing { get; set; }
         //public virtual DbSet<vwItemsOnLoan> vwItemsOnLoan { get; set; }
-        public virtual DbSet<vwVolumesWithLoans> vwVolumesWithLoans { get; set; }
         //public virtual DbSet<vwAccountQry> vwAccountQry { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)

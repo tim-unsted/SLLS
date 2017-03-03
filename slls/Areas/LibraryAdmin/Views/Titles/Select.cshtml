@@ -16,10 +16,10 @@
         @Html.HiddenFor(model => model.Tab)
 
         <div class="form-group" title="@Model.Message">
-            @*@Html.DropDownListFor(model => model.TitleID, Model.Titles, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })*@
-            @Html.TextBoxFor(x => x.Title, new { @placeholder = "Start typing the term you are looking for ...", @class = "form-control" })
-            @Html.HiddenFor(model => model.TitleID)
-            @*@Html.ValidationMessageFor(model => model.TitleID, "", new { @class = "text-danger" })*@
+            @*@Html.TextBoxFor(x => x.Title, new { @placeholder = "Start typing the term you are looking for ...", @class = "form-control" })
+            @Html.HiddenFor(model => model.TitleID)*@
+            @Html.DropDownListFor(model => model.TitleID, Model.Titles, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
+            @Html.ValidationMessageFor(model => model.TitleID, "", new { @class = "text-danger" })
         </div>
 
         <p>
@@ -39,14 +39,14 @@
 </div>
 
 <script type="text/javascript">
-    //$(document).ready(function () {
-    //    $('.selectpicker').selectpicker({
-    //        liveSearch: true,
-    //        showSubtext: true
-    //    });
-    //});
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
 
-    $("#Title").autocomplete({
+    @*$("#Title").autocomplete({
         //appendTo: "#stdModal",
         source: function (request, response) {
             var title = new Array();
@@ -74,7 +74,7 @@
                 }
             }
         }
-    });
+    });*@
 
     $("#TitleID").change(function () {
         sessionStorage.removeItem('lastTab_EditTitle');

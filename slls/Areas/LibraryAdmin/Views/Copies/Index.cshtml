@@ -8,7 +8,7 @@
     @using (Html.BeginForm("Index", "Copies", FormMethod.Get))
     {
         <div class="form-group" title="@ViewBag.Message">
-            @Html.DropDownList("id", (IEnumerable<SelectListItem>)ViewData["TitleId"], new { @class = "form-control", onchange = "this.form.submit();" })
+            @Html.DropDownList("id", (IEnumerable<SelectListItem>)ViewData["TitleId"], new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
         </div>
     }
 
@@ -19,3 +19,13 @@
 <div id="TitlesTable">
     @Html.Partial("_Index", Model)
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
+</Script>
+

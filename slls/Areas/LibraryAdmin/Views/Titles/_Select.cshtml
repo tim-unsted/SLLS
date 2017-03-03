@@ -1,17 +1,13 @@
-﻿@model slls.ViewModels.TitleEditViewModel
-@using Westwind.Globalization
+﻿@using Westwind.Globalization
 @*<link href="~/Content/jquery-ui.css" rel="stylesheet" type="text/css" />*@
-@*<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>*@
+<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
 
-@using (Html.BeginForm("Edit", "Titles", FormMethod.Post, new { id = "frmSelect", name = "frmSelect" }))
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "selectTitle" }))
 {
     @Html.AntiForgeryToken()
 
     <div class="row" style="margin-right: 0">
-        <div class="col-md-9">To view/edit another item, start typing part of the title ...</div>
-        <div class="col-md-9" title="To view/edit another title, start typing ..." >
-            @Html.TextBoxFor(x => x.SelectTitle, new { @class = "form-control" })
-        </div>
+        <div class="col-md-9">@Html.DropDownList("TitleId", null, new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control selectpicker" })</div>
         <div class="pull-right">
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -24,47 +20,17 @@
                     <li><a href="@Url.Action("Delete", "Titles", new {id = Model.TitleID})" class="modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;Delete @DbRes.T("Titles.Title", "FieldDisplayName")</a></li>
                 </ul>
             </div>
+            @*<a href="@Url.Action("Delete", new {id = Model.TitleID})" class="btn btn-danger modal-link" title="Delete Title"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>*@
         </div>
     </div>
 }
 
 <script type="text/javascript">
-
-    function selectAllText(textbox) {
-        textbox.focus();
-        textbox.select();
-    }
-
-    $('#SelectTitle').click(function () { selectAllText(jQuery(this)) });
-
-    $("#SelectTitle").autocomplete({
-        //appendTo: ".row",
-        source: function (request, response) {
-            var title = new Array();
-            var urlGetTerms = "@Url.Action("Autocomplete", "Titles")";
-            $.ajax({
-                async: false,
-                cache: false,
-                type: "POST",
-                url: urlGetTerms,
-                data: { "term": request.term },
-                success: function(data) {
-                    for (var i = 0; i < data.length; i++) {
-                        title[i] = { label: data[i].Value, Id: data[i].Key };
-                    }
-                }
-            });
-            response(title);
-        },
-        select: function (event, ui) {
-            if (ui.item) {
-                //alert(ui.item.label);
-                if (ui.item.Id != null) {
-                    var url = '@Url.Action("Edit", "Titles", new { id = "REPLACEME" })';
-                    window.location.href = url.replace('REPLACEME', ui.item.Id);
-                }
-            }
-        }
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
     });
 
     $("#TitleID").change(function () {

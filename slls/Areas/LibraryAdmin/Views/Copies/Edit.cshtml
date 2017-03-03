@@ -33,14 +33,13 @@
     }
 
     <h2>@ViewBag.Title</h2>
-
     <div class="alert alert-info">
 
         @using (Html.BeginForm("Edit", "Copies", FormMethod.Get))
         {
             <div class="row" style="margin-right: 0">
                 <div class="col-md-10">
-                    @Html.DropDownList("id", (IEnumerable<SelectListItem>)ViewData["CopyId"], new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control" })
+                    @Html.DropDownList("CopyId", null, new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control" })
                 </div>
                 <span class="pull-right"><a href="@Url.Action("Add", "Copies", new {id = @Model.TitleId, returnAction = "Edit", returnController = "Copies"})" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a></span>
             </div>

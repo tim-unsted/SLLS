@@ -65,7 +65,7 @@ namespace slls.Areas.LibraryAdmin
                     viewModel.HelpText = "Start typing the " + _entityName.ToLower() +
                                          " you wish to view/edit in the box below.";
                     viewModel.ReturnAction = "Edit";
-                    //viewModel.Titles = SelectListHelper.TitlesList();
+                    viewModel.Titles = SelectListHelper.TitlesList();
                     break;
                 }
 
@@ -92,7 +92,7 @@ namespace slls.Areas.LibraryAdmin
                                          " you wish to print from the dropdown list of available " +
                                          DbRes.T("Titles", "EntityType").ToLower() + " below.";
                     viewModel.ReturnAction = "PrintDetails";
-                    //viewModel.Titles = SelectListHelper.TitlesList();
+                    viewModel.Titles = SelectListHelper.TitlesList();
                     break;
                 }
             }
@@ -1430,7 +1430,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 return RedirectToAction("Select");
             }
-            var title = _db.Titles.Find(id) //_repository.GetById<Title>(id);
+            var title = _repository.GetById<Title>(id);
             if (title == null)
             {
                 return RedirectToAction("Select");
@@ -1449,7 +1449,7 @@ namespace slls.Areas.LibraryAdmin
                 SelectTitle = title.Title1
             };
 
-            //ViewData["TitleId"] = SelectListHelper.TitlesList(id);
+            ViewData["TitleId"] = SelectListHelper.TitlesList(id);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
             ViewBag.SubjectCount = viewModel.SubjectIndexes.Count();
             ViewBag.CopiesCount = viewModel.Copies.Count();
