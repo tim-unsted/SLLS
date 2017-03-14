@@ -1,5 +1,6 @@
 ﻿@using System
 @using System.Linq
+@using slls.App_Settings
 @using Westwind.Globalization
 @model slls.ViewModels.CirculationReportsViewModel
 
@@ -16,6 +17,7 @@
 @{
     //Find the last item in the list ...
     var last = Model.Recipients.Last();
+    var from = Settings.GetParameterValue("Circulation.ReviewMemoFrom", "Library", "Displays the 'from' on the Circulation Review Memo", "System Admin;Serials Admin", "text");
 }
 
 @foreach (var recipient in Model.Recipients)
@@ -29,27 +31,34 @@
                         <div style="border-top: 5px solid #424242; border-bottom: 5px solid #424242; margin-bottom: 10px;">
                             <span class="pull-right"><h3>@DateTime.Now.Date.ToString("dd MMM yyyy")</h3></span>
                             <h2>Memo</h2>
+                            <h3>To: @recipient.Fullname</h3>
+                            <h3>From: @from</h3>
                             <h3>Re: Circulation Lists</h3>
                         </div>
                     </th>
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>
-                        <p>Dear @recipient.Firstname</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <p>@ViewBag.MemoText</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        @Html.Action("_CirculatedItemsByUser", new { id = recipient.Id })
-                    </td>
-                </tr>
+            <tr>
+                <td>
+                    &nbsp;
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>Dear @recipient.Firstname</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <p>@ViewBag.MemoText</p>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    @Html.Action("_CirculatedItemsByUser", new {id = recipient.Id})
+                </td>
+            </tr>
             </tbody>
         </table>
         <div>&nbsp;</div>
