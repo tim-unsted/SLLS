@@ -550,6 +550,10 @@ body.modal-open .datepicker {
     display: none;
     min-width: 160px;
     _width: 160px;
+    max-height: 400px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
     padding: 4px 0;
     margin: 2px 0 0 0;
     list-style: none;
@@ -590,6 +594,21 @@ body.modal-open .datepicker {
     color: #555555;
     white-space: nowrap;
 }
+
+/*.ui-menu-item li span { 
+	float: left;
+	width: 40px;
+}*/
+
+.ui-menu .ui-menu-item {
+    position: relative;
+    margin: 0;
+    padding: 3px 2em 3px 0em;
+    cursor: pointer;
+    min-height: 0px;
+    /*list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");*/
+}
+
 
 .ui-state-hover, .ui-state-active {
     color: #ffffff;
@@ -831,7 +850,16 @@ ul li{
 
 .ui-widget-header {
     border: none;
-    background: #ffffff;
+    background: goldenrod;
+    /*border-top: 1px solid #808080;
+    border-bottom: 1px solid #808080;*/
+    color: white;
+    padding: 3px 15px;
+}
+
+.ui-menu .ui-menu-item {
+    list-style-image: none;
+    border-bottom: 1px solid #fafafa;
 }
 
 .ui-button {

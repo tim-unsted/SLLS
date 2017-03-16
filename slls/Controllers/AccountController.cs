@@ -463,6 +463,12 @@ namespace slls.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut();
+
+            Session["currentUserId"] = null;
+            Session["userFirstName"] = null;
+            Session["userFullName"] = null;
+            Session.Abandon();
+
             return RedirectToAction("Index", "Home");
         }
 

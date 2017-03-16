@@ -64,15 +64,12 @@ namespace slls.Utils
                 return HttpContext.Current.Session["currentUserId"].ToString();
             }
             
-            var context = new ApplicationDbContext();
             System.Security.Principal.IPrincipal user = System.Web.HttpContext.Current.User;
+            if (!user.Identity.IsAuthenticated) return null;
             var userName = Regex.Replace(user.Identity.Name, ".*\\\\(.*)", "$1", RegexOptions.None);
+            var context = new ApplicationDbContext();
             var currentUser = context.Users.FirstOrDefault(u => u.UserName == userName);
-            if (currentUser != null)
-            {
-                return currentUser.Id;
-            }
-            return null;
+            return currentUser != null ? currentUser.Id : null;
         }
     }
 }
