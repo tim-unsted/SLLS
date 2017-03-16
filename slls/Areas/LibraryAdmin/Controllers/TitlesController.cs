@@ -65,7 +65,7 @@ namespace slls.Areas.LibraryAdmin
                     viewModel.HelpText = "Start typing the " + _entityName.ToLower() +
                                          " you wish to view/edit in the box below.";
                     viewModel.ReturnAction = "Edit";
-                    viewModel.Titles = SelectListHelper.TitlesList();
+                    //viewModel.Titles = SelectListHelper.TitlesList();
                     break;
                 }
 
@@ -78,7 +78,7 @@ namespace slls.Areas.LibraryAdmin
                                          " you wish to duplicate from the dropdown list of available " +
                                          DbRes.T("Titles", "EntityType").ToLower() + " below.";
                     viewModel.ReturnAction = "DuplicateTitle";
-                    viewModel.Titles = SelectListHelper.TitlesList();
+                    //viewModel.Titles = SelectListHelper.TitlesList();
                     return View("SelectDuplicate", viewModel);
                     break;
                 }
@@ -92,7 +92,7 @@ namespace slls.Areas.LibraryAdmin
                                          " you wish to print from the dropdown list of available " +
                                          DbRes.T("Titles", "EntityType").ToLower() + " below.";
                     viewModel.ReturnAction = "PrintDetails";
-                    viewModel.Titles = SelectListHelper.TitlesList();
+                    //viewModel.Titles = SelectListHelper.TitlesList();
                     break;
                 }
             }
