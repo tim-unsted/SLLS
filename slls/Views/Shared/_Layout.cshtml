@@ -6,20 +6,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - @GlobalVariables.SiteName</title>
 
-    @*@Styles.Render("~/Content/bootstrap")*@
-
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
-
-    @Styles.Render("~/Content/css")
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/bootstrap.css"/>
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Content/bootstrap-select.min.css"/>
+    <link rel="stylesheet" type="text/css" href="~/Content/datatables.min.css" />
+    <link rel="stylesheet" type="text/css" href="~/Content/site.css" />
+    
     @Scripts.Render("~/bundles/modernizr")
-    @*@Scripts.Render("~/bundles/angular")*@
     @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/datatables")
-    @Scripts.Render("~/bundles/signalR")
-    <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>
+    
 
-    <script>
+    @*Custom (customer) styles ...*@
+    <style type="text/css">
+        body {
+            color: @CssManager.BodyTextColour;
+            background-color: @CssManager.BodyBackgroundColour;
+            font-size: @CssManager.BodyFontSize;
+        }
+
+        .brand-bar {
+            background-color: @CssManager.LogoSectionBackgroundColour;
+            height: @CssManager.LogoSectionHeight;
+        }
+
+        .brand-bar .logo {
+            padding: @CssManager.LogoPadding;
+            float: @CssManager.LogoPosition;
+            width: auto;
+            height: auto;
+            max-height: @CssManager.LogoHeight;
+        }
+
+        .navbar-inverse {
+            background-color: @CssManager.MainMenuBackgroundColour;
+            border-color: @CssManager.MainMenuBorderColour;
+        }
+
+        .navbar-inverse .navbar-nav > li > a { color: @CssManager.MainMenuFontColour; }
+
+        .navbar-inverse .navbar-nav > li > a:focus, .navbar-inverse .navbar-nav > li > a:hover { color: @CssManager.MainMenuHoverFontColour; }
+
+        .navbar-default .navbar-nav > li > a { color: @CssManager.BodyTextColour; }
+
+        .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover { color: @CssManager.AdminMenuHoverFontColour; }
+
+        .dropdown-header {
+            color: @CssManager.BodyTextColour;
+            border-bottom: 2px solid @CssManager.AdminMenuDropdownHeaderUnderlineColour;
+        }
+
+        .modal-header { color: @CssManager.BodyTextColour; }
+
+        .ui-autocomplete > li > a { color: @CssManager.BodyTextColour; }
+
+        .ui-dialog .ui-dialog-title { color: @CssManager.BodyTextColour; }
+
+        .jumbotron {
+            color: @CssManager.JumbotronTextColour;
+            background-color: @CssManager.JumbotronBackgroundColour;
+        }
+
+        a { color: @CssManager.HyperlinkTextColour; }
+
+        a:focus, a:hover { color: @CssManager.HyperlinkHoverColour; }
+
+        .btn-link:focus, .btn-link:hover { color: @CssManager.HyperlinkHoverColour; }
+    </style>
+
+    <!-- Local styling stuff -->
+    <link rel="stylesheet" type="text/css" media="print" href="~/Content/print.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="~/Customer/Styling/customer.css" />
+    
+    <script type="text/javascript">
         var dateFormat = "@GlobalVariables.DateFormat";
         var popupTimeout = "@GlobalVariables.PopupTimeout";
         var gaTrackId = '<%=ConfigurationManager.AppSettings["GoogleAnalyticsTrackingId"]%>';
@@ -90,78 +147,7 @@
 
     </script>
 
-    <link rel="stylesheet" type="text/css" href="~/Content/site.css" />
-
-    @*Custom (customer) styles ...*@
-    <style type="text/css">
-        body {
-            color: @CssManager.BodyTextColour;
-            background-color: @CssManager.BodyBackgroundColour;
-            font-size: @CssManager.BodyFontSize;
-        }
-        .brand-bar {
-            background-color: @CssManager.LogoSectionBackgroundColour;
-            height: @CssManager.LogoSectionHeight;
-        }
-        .brand-bar .logo {
-            padding: @CssManager.LogoPadding;
-            float: @CssManager.LogoPosition;
-            width: auto;
-            height: auto;
-            max-height: @CssManager.LogoHeight;
-        }
-        .navbar-inverse {
-            background-color: @CssManager.MainMenuBackgroundColour;
-            border-color: @CssManager.MainMenuBorderColour;
-        }
-        .navbar-inverse .navbar-nav > li > a {
-            color: @CssManager.MainMenuFontColour;
-        }
-        .navbar-inverse .navbar-nav > li > a:focus, .navbar-inverse .navbar-nav > li > a:hover {
-            color: @CssManager.MainMenuHoverFontColour;
-        }
-        .navbar-default .navbar-nav > li > a {
-            color: @CssManager.BodyTextColour;
-        }
-        .navbar-default .navbar-nav > li > a:focus, .navbar-default .navbar-nav > li > a:hover {
-            color: @CssManager.AdminMenuHoverFontColour;
-        }
-        .dropdown-header {
-            color: @CssManager.BodyTextColour;
-            border-bottom: 2px solid @CssManager.AdminMenuDropdownHeaderUnderlineColour;
-        }
-        .modal-header {
-            color: @CssManager.BodyTextColour;
-        }
-        .ui-autocomplete > li > a {
-            color: @CssManager.BodyTextColour;
-        }
-        .ui-dialog .ui-dialog-title {
-            color: @CssManager.BodyTextColour;
-        }
-        .jumbotron {
-            color: @CssManager.JumbotronTextColour;
-            background-color: @CssManager.JumbotronBackgroundColour;
-        }
-        a {
-            color: @CssManager.HyperlinkTextColour;
-        }
-        a:focus, a:hover {
-            color: @CssManager.HyperlinkHoverColour;
-        }
-        .btn-link:focus, .btn-link:hover {
-            color: @CssManager.HyperlinkHoverColour;
-        }
-    </style>
-
-    <!-- Local styling stuff -->
-    <link rel="stylesheet" type="text/css" media="print" href="~/Content/print.css" />
-    <link rel="stylesheet" type="text/css" media="screen" href="~/Customer/Styling/customer.css" />
-
-    <!-- DataTables.Net for table/list pages ... -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.css" />
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.12/datatables.min.js"></script>
-    <script src="@Url.Content("~/Scripts/google-analytics.js")" type="text/javascript"></script>
+    @*<script src="@Url.Content("~/Scripts/google-analytics.js")" type="text/javascript"></script>*@
 
 </head>
 <body>
@@ -249,23 +235,19 @@
                 @TempData["InfoDialogMsg"]
             </div>
         }
-        
+
         @RenderBody()
         @RenderPage("_Footer.cshtml")
     </div>
 
-    @*@Scripts.Render("~/bundles/bootstrapjs")*@
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/css/bootstrap-select.min.css">
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.1/js/bootstrap-select.min.js"></script>
-
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/datatables")
+    <script src="~/Scripts/datatables.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/bootstrap.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/bootstrap-select.min.js" type="text/javascript"></script>
     @Scripts.Render("~/bundles/bootstrapextras")
     @Scripts.Render("~/bundles/jqueryui")
+    @Scripts.Render("~/bundles/signalR")
 
     @RenderSection("scripts", required: false)
 </body>

@@ -45,9 +45,7 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
-    @*<div class="form-group" title="@ViewBag.Message">*@
-        @Html.Partial("_Select")
-    @*</div>*@
+    @Html.Partial("_Select")
 </div>
 
 @Html.Partial("_PostAlert")
@@ -86,7 +84,7 @@
             <div class="form-group">
                 <div class="col-md-12">
                     <p>
-                        <a href="@Url.Action("Add", "SubjectIndexes", new {id = Model.TitleID})" class="btn btn-primary modal-link" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Keywords.Keyword", "FieldDisplayName")</a>
+                        <a href="@Url.Action("Add", "SubjectIndexes", new {id = Model.TitleID, title = Model.Title1})" class="btn btn-primary modal-link" title="Add new"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Keywords.Keyword", "FieldDisplayName")</a>
                     </p>
                     @if (ViewBag.SubjectCount > 0)
                     {

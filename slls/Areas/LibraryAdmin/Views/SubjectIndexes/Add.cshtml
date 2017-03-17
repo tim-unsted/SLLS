@@ -13,18 +13,18 @@
             @Html.HiddenFor(model => model.TitleId)
 
             <div class="alert alert-info">
-                @if (Model.LargeData)
-                {
+                @*@if (Model.LargeData)
+                {*@
                     <p>
                         <strong><span class="glyphicon glyphicon-info-sign"></span></strong> Start typing the @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() you wish to add in the box below. You can add a new @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() if the one you require does not already exist.
                     </p>
-                }
+                @*}
                 else
                 {
                     <p>
                         <strong><span class="glyphicon glyphicon-info-sign"></span></strong> Select the @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() you wish to add from the drop-down list below.
                     </p>
-                }
+                }*@
             </div>
 
             <div class="form-group">
@@ -34,8 +34,8 @@
                 </div>
             </div>
 
-            @if (Model.LargeData)
-            {
+            @*@if (Model.LargeData)
+            {*@
                 <div class="form-group">
                     @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
                     <div class="input-group col-md-9">
@@ -43,7 +43,7 @@
                         @Html.HiddenFor(model => model.KeywordId)
                     </div>
                 </div>
-            }
+            @*}
             else
             {
                 <div class="form-group">
@@ -53,7 +53,7 @@
                         @Html.ValidationMessageFor(model => model.KeywordId, "", new { @class = "text-danger" })
                     </div>
                 </div>
-            }
+            }*@
         </div>
     </div>
 

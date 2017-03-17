@@ -7,46 +7,35 @@ namespace slls
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.UseCdn = true;
-            BundleTable.EnableOptimizations = true; //force optimization while debugging
+            //bundles.UseCdn = true;
+            //BundleTable.EnableOptimizations = true; //force optimization while debugging
 
             // JQuery ...
-            var jqueryBundle = new ScriptBundle("~/bundles/jquery",
-                "https://ajax.googleapis.com/ajax/libs/jquery/2.2.3/jquery.min.js")
-            {
-                CdnFallbackExpression = "window.jquery"
-            };
-            jqueryBundle.Include("~/Scripts/jquery-2.2.3.min.js");
+            var jqueryBundle = new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-2.2.3.min.js");
             bundles.Add(jqueryBundle);
 
 
             // JQuery Validation ...
             var jqueryValBundle = new ScriptBundle("~/bundles/jqueryval").Include(
                 "~/Scripts/jquery.validate.min.js",
-                "~/Scripts/jquery.validate.unobtrusive.min.js"
+                "~/Scripts/jquery.validate.unobtrusive.min.js",
+                "~/Scripts/jquery.unobtrusive-ajax.min.js"
                 );
             bundles.Add(jqueryValBundle);
 
 
             // Modernizr ...
-            var modernizrBundle = new ScriptBundle("~/bundles/modernizr",
-                "https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js")
-            {
-                CdnFallbackExpression = "window.jquery"
-            };
-            modernizrBundle.Include("~/Scripts/modernizr-2.8.3.js");
+            var modernizrBundle = new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-2.8.3.js");
             bundles.Add(modernizrBundle);
+            
+            // Bootstrap CSS
+            bundles.Add(new StyleBundle("~/Content/css").Include(
+                      "~/Content/bootstrap.css"));
 
 
-            //// Bootstrap JS ...
-            ////var bootstrapJsBundle = new ScriptBundle("~/bundles/bootstrapjs",
-            ////    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
-            ////{
-            ////    CdnFallbackExpression = "window.jquery"
-            ////};
-            ////bootstrapJsBundle.Include("~/Scripts/bootstrap.min.js");
-            //var bootstrapJsBundle = new ScriptBundle("~/bundles/bootstrapjs").Include("~/Scripts/bootstrap.min.js");
-            //bundles.Add(bootstrapJsBundle);
+            // Bootstrap JS ...
+            var bootstrapJsBundle = new ScriptBundle("~/bundles/bootstrapjs").Include("~/Scripts/bootstrap.min.js");
+            bundles.Add(bootstrapJsBundle);
 
 
             // Other Bootstrap and local JS stuff ...
@@ -70,18 +59,7 @@ namespace slls
                 "~/Scripts/jquery-ui-1.12.1.js");
             bundles.Add(jqueryUiBundle);
 
-
-            //// Boostrap CSS ...
-            //var bootstrapCssBundle = new StyleBundle("~/Content/bootstrap",
-            //    "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css")
-            //{
-            //    CdnFallbackExpression = "window.jquery"
-            //};
-            //bootstrapCssBundle.Include("~/Content/bootstrap.min.css");
-            ////var bootstrapCssBundle = new StyleBundle("~/Content/bootstrap").Include("~/Content/bootstrap.min.css");
-            //bundles.Add(bootstrapCssBundle);
-
-
+            
             // Other local CSS stuff ...
             var otherCssBundle = new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap-datepicker.min.css.map",

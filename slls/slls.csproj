@@ -562,6 +562,7 @@
     <Content Include="App_Data\Templates\DefaultEmail.txt" />
     <Content Include="Content\bootstrap-select.css" />
     <Content Include="Content\bootstrap-select.min.css" />
+    <Content Include="Content\datatables.min.css" />
     <Content Include="Customer\Images\slls-logo.png" />
     <Content Include="Images\logo_1x.png" />
     <Content Include="Logs\logErrors.txt" />
@@ -631,6 +632,7 @@
     <Content Include="Images\slls-logo.png" />
     <Content Include="Scripts\bootstrap-select.js" />
     <Content Include="Scripts\bootstrap-select.min.js" />
+    <Content Include="Scripts\datatables.min.js" />
     <Content Include="Scripts\google-analytics.js" />
     <Content Include="Customer\Styling\customer.css" />
     <Content Include="DataTables\autocat.txt" />
@@ -1194,6 +1196,7 @@
     <Content Include="Areas\Config\Views\Images\Index.cshtml" />
     <Content Include="Areas\Config\Views\Images\Show.cshtml" />
     <Content Include="Areas\Config\Views\Images\SetSiteLogo.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Copies\_Select.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

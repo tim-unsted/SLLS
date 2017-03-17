@@ -31,31 +31,30 @@ namespace slls.Areas.LibraryAdmin
 
 
         // GET: LibraryAdmin/SubjectIndexes/Add - when passed a Title ID
-        public ActionResult Add(int id = 0)
+        public ActionResult Add(int id = 0, string title = "")
         {
             var viewModel = new SubjectIndexAddViewModel
             {
                 TitleId = id,
-                Title = (from t in _db.Titles.Where(t => t.TitleID == id)
-                    select t.Title1).FirstOrDefault()
+                Title = title //(from t in _db.Titles.Where(t => t.TitleID == id) select t.Title1).FirstOrDefault()
             };
 
-            var count = _db.Keywords.Count();
-            if (count > 1000)
-            {
-                viewModel.LargeData = true;
-            }
-            else
-            {
-                viewModel.LargeData = false;
-                viewModel.AvailableKeywords = _db.Keywords.Where(k => k.ParentKeywordID != null).Take(100)
-                .Select(x => new SelectListItem
-                {
-                    Value = x.KeywordID.ToString(),
-                    Text = x.KeywordTerm
-                }).OrderBy(item => item.Text)
-                .ToList();
-            }
+            //var count = _db.Keywords.Count();
+            //if (count > 1000)
+            //{
+            //    viewModel.LargeData = true;
+            //}
+            //else
+            //{
+            //    viewModel.LargeData = false;
+            //    viewModel.AvailableKeywords = _db.Keywords.Where(k => k.ParentKeywordID != null).Take(100)
+            //    .Select(x => new SelectListItem
+            //    {
+            //        Value = x.KeywordID.ToString(),
+            //        Text = x.KeywordTerm
+            //    }).OrderBy(item => item.Text)
+            //    .ToList();
+            //}
             
             ViewBag.Msg = "Add " + DbRes.T("Keywords.Keyword", "FieldDisplayName") + " to " + DbRes.T("Titles.Title", "FieldDisplayName");
             ViewBag.Title = "Add " + DbRes.T("Keywords.Keyword", "FieldDisplayName") + " to " + DbRes.T("Titles.Title", "FieldDisplayName");

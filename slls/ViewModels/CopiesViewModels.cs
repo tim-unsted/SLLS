@@ -87,6 +87,8 @@ namespace slls.ViewModels
         
         public int TitleId { get; set; }
 
+        public string SelectCopy { get; set; }
+
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
         [StringLength(450)]
         public string Title { get; set; }

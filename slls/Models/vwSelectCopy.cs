@@ -13,10 +13,15 @@ namespace slls.Models
         [Key]
         [Column("CopyID")]
         public int CopyId { get; set; }
+
         [Column("TitleID")]
         public int TitleId { get; set; }
+
         public int CopyNumber { get; set; }
         public string Title { get; set; }
+        public string Edition { get; set; }
+        public string Year { get; set; }
+        public string AuthorString { get; set; }
         public int NonFilingChars { get; set; }
 
     }

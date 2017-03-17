@@ -1439,6 +1439,7 @@ namespace slls.Areas.LibraryAdmin
             var viewModel = new TitleEditViewModel
             {
                 TitleID = title.TitleID,
+                Title1 = title.Title1,
                 Copies = title.Copies,
                 HasCopies = title.Copies.Any(),
                 OrderDetails = title.OrderDetails,
@@ -1449,7 +1450,7 @@ namespace slls.Areas.LibraryAdmin
                 SelectTitle = title.Title1
             };
 
-            ViewData["TitleId"] = SelectListHelper.TitlesList(id);
+            //ViewData["TitleId"] = SelectListHelper.TitlesList(id);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
             ViewBag.SubjectCount = viewModel.SubjectIndexes.Count();
             ViewBag.CopiesCount = viewModel.Copies.Count();

@@ -364,7 +364,8 @@ namespace slls.Areas.LibraryAdmin
                 Title = copy.Title.Title1,
                 CancelledByUser = copy.CancelledByUser == null ? "" : copy.CancelledByUser.Id,
                 Circulations = copy.Circulations,
-                CirculationMessage = copy.CirculationMessage
+                CirculationMessage = copy.CirculationMessage,
+                SelectCopy = copy.Title.Title1 + " - Copy: " + copy.CopyNumber
             };
 
             //Get all copies for this title ...
@@ -933,6 +934,20 @@ namespace slls.Areas.LibraryAdmin
                 success = true,
                 Exists = copy != null
             });
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult Autocomplete(string term)
+        {
+            //if (term.Length < 3) return null;
+
+            term = " " + term;
+            var titles = (from c in _db.vwSelectCopies
+                          where c.Title.Contains(term)
+                          orderby c.Title.Substring(c.NonFilingChars)
+                          select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title, CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

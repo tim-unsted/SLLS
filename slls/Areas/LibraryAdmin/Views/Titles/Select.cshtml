@@ -2,7 +2,7 @@
 @using Westwind.Globalization
 @model slls.ViewModels.SelectTitleViewmodel
 
-<script src="~/Scripts/jquery.mcautocomplete.js"></script>
+
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
@@ -21,7 +21,7 @@
             @Html.TextBoxFor(x => x.Title, new { @placeholder = "Start typing the term you are looking for ...", @class = "form-control" })
             @Html.HiddenFor(model => model.TitleID)
             @*@Html.DropDownListFor(model => model.TitleID, Model.Titles, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
-            @Html.ValidationMessageFor(model => model.TitleID, "", new { @class = "text-danger" })*@
+                @Html.ValidationMessageFor(model => model.TitleID, "", new { @class = "text-danger" })*@
         </div>
 
         <p>
@@ -36,56 +36,53 @@
             </div>
             &nbsp;&nbsp;or&nbsp;@Html.BackButton()
         </p>
-        
+
     }
 
 </div>
 
-<script type="text/javascript">
-    //$(document).ready(function () {
-    //    $('.selectpicker').selectpicker({
-    //        liveSearch: true,
-    //        showSubtext: true
-    //    });
-    //});
+    @Scripts.Render("~/Scripts/jquery.mcautocomplete.js")
 
-    var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%',valueField: 'year' }, { name: 'Author', minWidth: '20%', valueField: 'authors' }];
+    <script type="text/javascript">
 
-    $("#Title").mcautocomplete({
-        //appendTo: "#stdModal",
-        showHeader: true,
-        columns: columns,
-        source: function (request, response) {
-            var title = new Array();
-            var urlGetTerms = "@Url.Action("Autocomplete", "Titles")";
-            $.ajax({
-                async: false,
-                cache: false,
-                type: "POST",
-                url: urlGetTerms,
-                data: { "term": request.term },
-                success: function(data) {
-                    for (var i = 0; i < data.length; i++) {
-                        title[i] = { Id: data[i].TitleId, title: data[i].Title, edition: data[i].Edition, year: data[i].Year, authors: data[i].Authors };
+        var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '20%', valueField: 'authors' }];
+
+        $("#Title").mcautocomplete({
+            //appendTo: "#stdModal",
+            autoFocus: true,
+            showHeader: true,
+            columns: columns,
+            source: function(request, response) {
+                var title = new Array();
+                var urlGetTerms = "@Url.Action("Autocomplete", "Titles")";
+                $.ajax({
+                    async: false,
+                    cache: false,
+                    type: "POST",
+                    url: urlGetTerms,
+                    data: { "term": request.term },
+                    success: function(data) {
+                        for (var i = 0; i < data.length; i++) {
+                            title[i] = { Id: data[i].TitleId, title: data[i].Title, edition: data[i].Edition, year: data[i].Year, authors: data[i].Authors };
+                        }
+                    }
+                });
+                response(title);
+            },
+            select: function(event, ui) {
+                event.preventDefault();
+                if (ui.item) {
+                    if (ui.item.Id != null) {
+                        $('#Title').val(ui.item.title);
+                        $('#TitleID').val(ui.item.Id);
+                        document.frmSelect.submit();
                     }
                 }
-            });
-            response(title);
-        },
-        select: function (event, ui) {
-            event.preventDefault();
-
-            if (ui.item) {
-                if (ui.item.Id != null) {
-                    $('#Title').val(ui.item.title);
-                    $('#TitleID').val(ui.item.Id);
-                    document.frmSelect.submit();
-                }
+                return true;
             }
-        }
-    });
-
-    $("#TitleID").change(function () {
-        sessionStorage.removeItem('lastTab_EditTitle');
-    });
-</script>
+        });
+        
+        $("#TitleID").change(function() {
+            sessionStorage.removeItem('lastTab_EditTitle');
+        });
+    </script>
