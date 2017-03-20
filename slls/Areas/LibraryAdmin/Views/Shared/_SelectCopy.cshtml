@@ -5,7 +5,7 @@
 {
     @Html.AntiForgeryToken()
     <div class="row" style="margin-right: 0">
-        <div class="col-md-12">@Model.SelectCopyTip</div>
+        <div class="col-md-12" style="margin-bottom: 5px;">@Model.SelectCopyTip</div>
         <div class="col-md-12" title="@Model.SelectCopyTip">
             @Html.TextBoxFor(x => x.SelectCopy, new { @placeholder = @Model.SelectCopyPlaceHolder, @class = "form-control" })
         </div>
@@ -16,47 +16,45 @@
 
 <script type="text/javascript">
 
-        function selectAllText(textbox) {
-            textbox.focus();
-            textbox.select();
-        }
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
 
-        var columns = [{ name: '', minWidth: '0%', valueField: 'CopyId' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Copy', minWidth: '5%', valueField: 'copyNumber' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '15%', valueField: 'authors' }];
+    var columns = [{ name: '', minWidth: '0%', valueField: 'CopyId' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Copy', minWidth: '5%', valueField: 'copyNumber' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '15%', valueField: 'authors' }];
 
-        $('#SelectCopy').click(function () { selectAllText(jQuery(this)) });
+    $('#SelectCopy').click(function () { selectAllText(jQuery(this)) });
 
-        $("#SelectCopy").mcautocomplete({
-            autoFocus: true,
-            showHeader: true,
-            columns: columns,
-            source: function(request, response) {
-                var title = new Array();
-                var urlGetTerms = "@Url.Action("Autocomplete", "Copies")";
-                $.ajax({
-                    async: false,
-                    cache: false,
-                    type: "POST",
-                    url: urlGetTerms,
-                    data: { "term": request.term },
-                    success: function(data) {
-                        for (var i = 0; i < data.length; i++) {
-                            title[i] = { CopyId: data[i].CopyId, title: data[i].Title, copyNumber: data[i].CopyNumber, edition: data[i].Edition, year: data[i].Year, authors: data[i].AuthorString };
-                        }
-                    }
-                });
-                response(title);
-            },
-            select: function (event, ui) {
-                event.preventDefault();
-                if (ui.item) {
-                    if (ui.item.CopyId != null) {
-                        //alert('Here');
-                        $('#SelectCopy').val(ui.item.title + " - Copy: " + ui.item.copyNumber);
-                        @*var url = '@Url.Action("Edit", "Copies", new {id = "REPLACEME"})';
-                        window.location.href = url.replace('REPLACEME', ui.item.CopyId);*@
+    $("#SelectCopy").mcautocomplete({
+        autoFocus: true,
+        showHeader: true,
+        columns: columns,
+        source: function (request, response) {
+            var title = new Array();
+            var urlGetTerms = "@Url.Action("Autocomplete", "Copies")";
+            $.ajax({
+                async: false,
+                cache: false,
+                type: "POST",
+                url: urlGetTerms,
+                data: { "term": request.term },
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        title[i] = { CopyId: data[i].CopyId, title: data[i].Title, copyNumber: data[i].CopyNumber, edition: data[i].Edition, year: data[i].Year, authors: data[i].AuthorString };
                     }
                 }
+            });
+            response(title);
+        },
+        select: function (event, ui) {
+            event.preventDefault();
+            if (ui.item) {
+                if (ui.item.CopyId != null) {
+                    $('#SelectCopy').val(ui.item.title + " - Copy: " + ui.item.copyNumber);
+                    @*var url = '@Url.Action("Edit", "Copies", new {id = "REPLACEME"})';
+                    window.location.href = url.replace('REPLACEME', ui.item.CopyId);*@
+                }
             }
-        });
+        }
+    });
 </script>
-

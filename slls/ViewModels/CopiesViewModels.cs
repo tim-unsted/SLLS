@@ -40,6 +40,8 @@ namespace slls.ViewModels
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
         public string Title { get; set; }
 
+        public string SelectTitle { get; set; }
+
         [LocalDisplayName("Copies.Copy_Number", "FieldDisplayName")]
         [Required(ErrorMessage = "Please provide a Copy Number")]
         public int CopyNumber { get; set; }
@@ -82,7 +84,7 @@ namespace slls.ViewModels
             IsSerialsAdmin = Roles.IsUserInRole("Serials Admin");
             IsLoansAdmin = Roles.IsUserInRole("Loans Admin");
             SelectCopyTip = "To view/edit another copy, start typing part of the title ...";
-            SelectCopyPlaceHolder = "Start typing the term you are looking for ... ...";
+            SelectCopyPlaceHolder = "Start typing the term you are looking for ...";
         }
         
         public int CopyId { get; set; }

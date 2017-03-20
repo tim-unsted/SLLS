@@ -20,7 +20,9 @@
         <div class="form-group">
             @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @Html.DropDownList("TitleID", null, new {@class = "form-control selectpicker"})
+                @*@Html.DropDownList("TitleID", null, new {@class = "form-control selectpicker"})*@
+                @Html.TextBoxFor(x => x.SelectTitle, new { @placeholder = "Start typing part of the title you wish to add, then select it from the drop-down list below ...", @class = "form-control" })
+                @Html.HiddenFor(model => model.TitleID)
                 @Html.ValidationMessageFor(model => model.TitleID, "", new {@class = "text-danger"})
             </div>
         </div>
@@ -64,62 +66,87 @@
     </div>
 }
 
+@Scripts.Render("~/Scripts/jquery.mcautocomplete.js")
+
+<script type="text/javascript">
+
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
+
+    function GetCopyNumber() {
+        var copyNo = $("#CopyNumber");
+
+        var selectedTitleId = { TitleID: $("#TitleID").val() };
+
+        $.ajax({
+            url: '@Url.Action("GetNextCopyNumber", "Copies")',
+            type: 'Post',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(selectedTitleId),
+            success: function (data) {
+                if (data.success) {
+                    copyNo.val(data.CopyNumber);
+                } else {
+                    alert('invalid ID' + data.success);
+                }
+            },
+            async: false
+        });
+    };
+
+    var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '20%', valueField: 'authors' }];
+
+    $('#SelectTitle').click(function () { selectAllText(jQuery(this)) });
+
+    $("#SelectTitle").mcautocomplete({
+        autoFocus: true,
+        showHeader: true,
+        columns: columns,
+        source: function (request, response) {
+            var title = new Array();
+            var urlGetTerms = "@Url.Action("Autocomplete", "Titles")";
+            $.ajax({
+                async: false,
+                cache: false,
+                type: "POST",
+                url: urlGetTerms,
+                data: { "term": request.term },
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        title[i] = { Id: data[i].TitleId, title: data[i].Title, edition: data[i].Edition, year: data[i].Year, authors: data[i].Authors };
+                    }
+                }
+            });
+            response(title);
+        },
+        select: function (event, ui) {
+            event.preventDefault();
+            if (ui.item) {
+                if (ui.item.Id != null) {
+                    $('#SelectTitle').val(ui.item.title);
+                    $('#TitleID').val(ui.item.Id);
+                    GetCopyNumber();
+                }
+            }
+        }
+    });
+
+
+
+</script>
+
 <script type="text/javascript">
 
     $(document).ready(function () {
 
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
-        });
+        //$('.selectpicker').selectpicker({
+        //    liveSearch: true,
+        //    showSubtext: true
+        //});
 
-        $("#TitleID").change(function () {
-            var copyNo = $("#CopyNumber");
-
-            var selectedTitleId = { TitleID: $("#TitleID").val() };
-
-            $.ajax({
-                url: '@Url.Action("GetNextCopyNumber", "Copies")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedTitleId),
-                success: function (data) {
-                    if (data.success) {
-                        copyNo.val(data.CopyNumber);
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
-            });
-        });
-
-        @*$("#CopyNumber").change(function () {
-            var copyNo = $("#CopyNumber");
-            var titleId = $("#TitleID");
-            $.ajax({
-                url: '@Url.Action("CopyNumberExists", "Copies")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({ copyNumber: copyNo.val(), titleId: titleId.val() }),
-                success: function (data) {
-                    if (data.success) {
-                        if (data.Exists === true) {
-                            copyNo.closest('.form-group').removeClass('has-success').addClass('has-error');
-                            $("#warning-msg").show();
-                        } else {
-                            $("#warning-msg").hide();
-                            copyNo.closest('.form-group').removeClass('has-error').addClass('has-success');
-
-                        }
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
-            });
-        });*@
+        
     });
 </script>

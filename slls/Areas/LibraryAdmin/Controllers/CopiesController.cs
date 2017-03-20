@@ -36,17 +36,41 @@ namespace slls.Areas.LibraryAdmin
         // GET: List All Copies
         public ActionResult Index(int id = 0)
         {
-            var copies =
-                _db.Copies
-                    .Include(c => c.Location)
-                    .Include(c => c.StatusType)
-                    .Include(c => c.Title)
-                    .Include(c => c.Volumes)
-                    .Where(c => c.TitleID == id);
+            //var copies =
+            //    _db.Copies
+            //        .Include(c => c.Location)
+            //        .Include(c => c.StatusType)
+            //        .Include(c => c.Title)
+            //        .Include(c => c.Volumes)
+            //        .Where(c => c.TitleID == id);
+
+            var viewModel = new TitleEditViewModel();
+
+            if (id > 0)
+            {
+                var title = _db.Titles.Find(id);
+                if (title != null)
+                {
+                    viewModel.TitleID = title.TitleID;
+                    viewModel.Title1 = title.Title1;
+                    viewModel.Copies = title.Copies;
+                    viewModel.HasCopies = title.Copies.Any();
+                    viewModel.SelectTitle = title.Title1;
+                }
+            }
+
+            //var viewModel = new TitleEditViewModel
+            //{
+            //    TitleID = title.TitleID,
+            //    Title1 = title.Title1,
+            //    Copies = title.Copies,
+            //    HasCopies = title.Copies.Any(),
+            //    SelectTitle = title.Title1
+            //};
 
             ViewBag.Title = DbRes.T("Titles.Title", "FieldDisplayName") + " " + DbRes.T("Copies", "EntityType");
-            ViewData["TitleId"] = SelectListHelper.TitlesWithCopies(id, msg: "Select a ");
-            return View(copies.ToList());
+            //ViewData["TitleId"] = SelectListHelper.TitlesWithCopies(id, msg: "Select a ");
+            return View(viewModel);
         }
 
 

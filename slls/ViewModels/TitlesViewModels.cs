@@ -238,9 +238,15 @@ namespace slls.ViewModels
         
         public bool IsFinanceAdmin { get; set; }
 
+        public string SelectTitleTip { get; set; }
+
+        public string SelectTitlePlaceHolder { get; set; }
+
         public TitleEditViewModel()
         {
             IsFinanceAdmin = Roles.IsUserInRole("Finance Admin");
+            SelectTitleTip = "To view/edit another item, start typing part of the title ...";
+            SelectTitlePlaceHolder = "Start typing the term you are looking for ...";
         }
     }
 
