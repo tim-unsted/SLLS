@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Mvc.Expressions;
 using Microsoft.AspNet.Identity.Owin;
 using slls.App_Settings;
 using slls.DAO;
@@ -370,7 +371,7 @@ namespace slls.Areas.LibraryAdmin
 
             //Get all copies for this title ...
             var query = from c in _db.vwSelectCopies
-                where c.TitleId == copy.TitleID
+                where c.TitleId == copy.TitleID && !copy.Deleted
                 orderby c.CopyNumber
                 select c;
             
@@ -410,7 +411,7 @@ namespace slls.Areas.LibraryAdmin
             ViewData["StatusID"] = SelectListHelper.StatusList(copy.StatusID ?? 0, null, false, true);
             ViewData["CancelledYear"] = SelectListHelper.AccountYearsList(id:copy.AccountYearID ?? 0, addNew:false);
             ViewData["CancelledBy"] = new SelectList(_db.Users.Where(u => u.IsLive).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname), "Id", "FullnameRev");
-            ViewData["CopyId"] = SelectListHelper.AllCopiesList(id: id, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName"));
+            //ViewData["CopyId"] = SelectListHelper.AllCopiesList(id: id, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName"));
             ViewBag.VolumesCount = copy.Volumes.Count();
             ViewBag.PartsCount = copy.PartsReceived.Count();
             ViewBag.LoansCount = copy.Volumes.Count(v => v.OnLoan);
@@ -702,11 +703,55 @@ namespace slls.Areas.LibraryAdmin
                 Title = copy.Title.Title1,
                 Location = copy.Location.Location1,
                 Media = copy.Title.MediaType.Media,
+                Edition = copy.Title.Edition,
+                Year = copy.Title.Year,
                 Status = copy.StatusType.Status,
                 CirculationMsgID = copy.CirculationMsgID,
                 Holdings = copy.Holdings,
                 Notes = copy.Notes
             };
+
+            //Get all copies for this title ...
+            var query = from c in _db.vwSelectCopies
+                        where c.TitleId == copy.TitleID
+                        orderby c.CopyNumber
+                        select c;
+
+            //Get the index of where the current CopyID is in a list ordered by CopyNumber ASC ..
+            var rowIndex = query.AsEnumerable().Select((x, index) => new { x.CopyId, index }).First(i => i.CopyId == id).index;
+
+            //Get the first CopyID ...
+            var firstId = query.AsEnumerable().Select(i => i.CopyId).First();
+
+            //Get the last CopyID ...
+            var lastId = query.AsEnumerable().Select(i => i.CopyId).Last();
+
+            //Get the next CopyID to move forward to ...
+            var nextId = query.AsEnumerable()
+                .OrderBy(i => i.CopyNumber)
+                .SkipWhile(i => i.CopyId != id)
+                .Skip(1)
+                .Select(i => i.CopyId).FirstOrDefault();
+
+            //Get the previous CopyID to move back to ...
+            var previousId = query.AsEnumerable()
+                .OrderByDescending(i => i.CopyNumber)
+                .SkipWhile(i => i.CopyId != id)
+                .Skip(1)
+                .Select(i => i.CopyId).FirstOrDefault();
+
+            ViewBag.CopyId = copy.CopyID;
+            ViewBag.CopyNumber = copy.CopyNumber;
+            ViewBag.FirstID = firstId;
+            ViewBag.LastID = lastId;
+            ViewBag.NextID = nextId;
+            ViewBag.PreviousID = previousId;
+            ViewBag.RowIndex = rowIndex + 1;
+            ViewBag.RecordCount = query.Count();
+            ViewBag.RecordType = "Copy";
+            ViewBag.Controller = "PartsReceived";
+            ViewBag.Action = "QuickCheckIn";
+            
 
             ViewData["CirculationMsgID"] = new SelectList(_db.CirculationMessages, "CirculationMsgID", "CirculationMsg", copy.CirculationMsgID);
             return PartialView(viewModel);

@@ -81,6 +81,8 @@ namespace slls.ViewModels
         {
             IsSerialsAdmin = Roles.IsUserInRole("Serials Admin");
             IsLoansAdmin = Roles.IsUserInRole("Loans Admin");
+            SelectCopyTip = "To view/edit another copy, start typing part of the title ...";
+            SelectCopyPlaceHolder = "Start typing the term you are looking for ... ...";
         }
         
         public int CopyId { get; set; }
@@ -88,6 +90,10 @@ namespace slls.ViewModels
         public int TitleId { get; set; }
 
         public string SelectCopy { get; set; }
+
+        public string SelectCopyTip { get; set; }
+
+        public string SelectCopyPlaceHolder { get; set; }
 
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
         [StringLength(450)]
@@ -191,6 +197,12 @@ namespace slls.ViewModels
 
         [LocalDisplayName("StatusTypes.Status_Type", "FieldDisplayName")]
         public string Status { get; set; }
+
+        [LocalDisplayName("Titles.Edition", "FieldDisplayName")]
+        public string Edition { get; set; }
+
+        [LocalDisplayName("Titles.Year", "FieldDisplayName")]
+        public string Year { get; set; }
 
         [LocalDisplayName("Circulation.Circulation_Slip_Message", "FieldDisplayName")]
         public int? CirculationMsgID { get; set; }

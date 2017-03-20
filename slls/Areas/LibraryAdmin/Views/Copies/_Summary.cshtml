@@ -7,43 +7,64 @@
             <div class="form-group ">
                 @Html.HiddenFor(model => model.CopyId)
 
-                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
-                    <p class="form-control-static"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a>
+                    <p class="form-control-static">
+                        <a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a>
                     </p>
                 </div>
 
-                @Html.LabelFor(model => model.CopyNumber, htmlAttributes: new {@class = "control-label col-md-3"})
+                @Html.LabelFor(model => model.CopyNumber, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
-                    <p class="form-control-static"><a href="@Url.Action("Edit", "Copies", new {id = @Model.CopyId}, null)" title="View/Edit Copy">@Model.CopyNumber</a>
-                    </p>
+                    @if (ViewBag.RecordCount > 1)
+                    {
+                        @Html.Partial("_PaginateCopiesInLine", Model)
+                    }
+                    else
+                    {
+                        <p class="form-control-static">
+                            <a href="@Url.Action("Edit", "Copies", new {id = Model.CopyId}, null)" title="View/Edit Copy">@Model.CopyNumber</a>
+                        </p>
+                    }
                 </div>
 
-                @Html.Label(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
-                <div class="col-md-9">
-                    <p class="form-control-static">@Html.DisplayFor(model => model.Media)</p>
-                </div>
 
-                @Html.LabelFor(model => model.Location, htmlAttributes: new {@class = "control-label col-md-3"})
+                @if (!string.IsNullOrEmpty(Model.Edition))
+                {
+                    @Html.Label(DbRes.T("Titles.Edition", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <p class="form-control-static">@Html.DisplayFor(model => model.Edition)</p>
+                    </div>
+                }
+
+                @if (!string.IsNullOrEmpty(Model.Year))
+                {
+                    @Html.Label(DbRes.T("Titles.Year", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-9">
+                        <p class="form-control-static">@Html.DisplayFor(model => model.Year)</p>
+                    </div>
+                }
+
+                @Html.LabelFor(model => model.Location, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
                     <p class="form-control-static">@Html.DisplayFor(model => model.Location)</p>
                 </div>
 
-                @Html.Label(DbRes.T("StatusTypes.Status_Type", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-3"})
+                @Html.Label(DbRes.T("StatusTypes.Status_Type", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
                     <p class="form-control-static">@Html.DisplayFor(model => model.Status)</p>
                 </div>
 
-                @Html.LabelFor(model => model.CirculationMsgID, htmlAttributes: new {@class = "control-label col-md-3"})
+                @Html.LabelFor(model => model.CirculationMsgID, htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-9">
-                    @Html.DropDownList("CirculationMsgID", null, htmlAttributes: new {@class = "form-control"})
+                    @Html.DropDownList("CirculationMsgID", null, htmlAttributes: new { @class = "form-control" })
                 </div>
             </div>
         </div>
     </div>
 
     @*<div class="col-md-1">
-    </div>*@
+        </div>*@
 
     <div class="col-md-5">
 
@@ -74,7 +95,7 @@
     $("#CirculationMsgID").change(function () {
         var selectedValue = $('#CirculationMsgID').val();
         var copyid = $('#CopyId').val();
-        $.post('@Url.Action("UpdateCircSlipMsg", "Copies")', { copyId: copyid, msgId: selectedValue }, function(data) {
+        $.post('@Url.Action("UpdateCircSlipMsg", "Copies")', { copyId: copyid, msgId: selectedValue }, function (data) {
         });
     });
-</Script>
+</script>

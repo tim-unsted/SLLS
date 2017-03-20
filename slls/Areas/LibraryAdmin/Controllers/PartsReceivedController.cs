@@ -117,9 +117,21 @@ namespace slls.Areas.LibraryAdmin
         }
 
 
-        public ActionResult QuickCheckIn(int selectedCopy = 0, string sortOrder = "t")
+        public ActionResult QuickCheckIn(int id = 0, string sortOrder = "t")
         {
-            var copy = _db.Copies.FirstOrDefault(c => c.CopyID == selectedCopy);
+            var copy = _db.Copies.FirstOrDefault(c => c.CopyID == id);
+
+            var viewModel = new CopyDetailsEditViewModel()
+            {
+                SelectCopyTip = "Start typing the title of the item you wish to check-in ..."
+            };
+
+            if (copy != null)
+            {
+                viewModel.CopyId = id;
+                viewModel.SelectCopy = copy.Title.Title1 + " - Copy: " + copy.CopyNumber;
+                viewModel.SelectCopyTip = "To check-in another item, start typing the item's title ...";
+            }
 
             List<SelectListItem> listOrder = new List<SelectListItem>();
             listOrder.Add(new SelectListItem { Text = "Title", Value = "t" });
@@ -127,11 +139,11 @@ namespace slls.Areas.LibraryAdmin
             listOrder.Add(new SelectListItem { Text = "Date last part received", Value = "r" });
 
             ViewData["SortOrder"] = listOrder;
-            ViewData["SelectedCopy"] = SelectListHelper.AllCopiesList(addAll: false, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
+            //ViewData["SelectedCopy"] = SelectListHelper.AllCopiesList(addAll: false, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("checkInSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "sortOrder");
             ViewBag.Title = "Quick Check-In";
-            ViewData["CopyID"] = selectedCopy;
-            return View(copy);
+            ViewData["CopyID"] = id;
+            return View(viewModel);
         }
 
         public ActionResult _PartsReceivedSubForm(int id = 0)

@@ -1196,7 +1196,8 @@
     <Content Include="Areas\Config\Views\Images\Index.cshtml" />
     <Content Include="Areas\Config\Views\Images\Show.cshtml" />
     <Content Include="Areas\Config\Views\Images\SetSiteLogo.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\Copies\_Select.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_SelectCopy.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_PaginateCopiesInLine.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

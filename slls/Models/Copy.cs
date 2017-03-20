@@ -150,6 +150,9 @@ namespace slls.Models
         public virtual ICollection<vwVolumesWithLoans> VolumesWithLoans { get; set; }
 
         public virtual ApplicationUser CancelledByUser { get; set; }
+
+        //[NotMapped]
+        //public string SelectCopy { get; set; }
         
     }
 }

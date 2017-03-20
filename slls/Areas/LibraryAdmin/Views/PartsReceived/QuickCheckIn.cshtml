@@ -1,19 +1,16 @@
 ﻿@using Westwind.Globalization
-@model slls.Models.Copy
+@model slls.ViewModels.CopyDetailsEditViewModel
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
-    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "quickcheckin" }))
-    {
-        @Html.DropDownList("SelectedCopy", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
-    }
+    @Html.Partial("_SelectCopy")
 </div>
 
 <div id="quickcheckin">
     @if ((int)ViewData["CopyID"] > 0)
     {
-        @Html.Action("_Summary", "Copies", new { id = Model.CopyID })
+        @Html.Action("_Summary", "Copies", new { id = Model.CopyId })
     }
 </div>
 
@@ -24,20 +21,20 @@
 
 <div class="row">
     <div class="col-md-7">
-        @if ((int)ViewData["CopyID"] > 0)
+        @if ((int) ViewData["CopyID"] > 0)
         {
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <span class="panel-title">
                         <span class="pull-right">
-                            <a href="@Url.Action("Create", "PartsReceived", new {id = Model.CopyID})" class="btn btn-success modal-link" style="margin-bottom: 5px;" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
-                            <a href="@Url.Action("PrintCirculationSlip", "Circulation", new {id = Model.CopyID})" class="btn btn-primary" style="margin-bottom: 5px;" target="_blank" title="Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")</a>
+                            <a href="@Url.Action("Create", "PartsReceived", new { id = Model.CopyId })" class="btn btn-success modal-link" style="margin-bottom: 5px;" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span> Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")</a>
+                            <a href="@Url.Action("PrintCirculationSlip", "Circulation", new { id = Model.CopyId })" class="btn btn-primary" style="margin-bottom: 5px;" target="_blank" title="Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print @DbRes.T("Circulation.Circulation_Slip", "FieldDisplayName")</a>
                         </span>
                         <h4>@DbRes.T("CheckIn.Parts_Received", "FieldDisplayName")</h4>
                     </span>
                 </div>
                 <div class="panel-body">
-                    @Html.Action("_PartsReceivedSubForm", "PartsReceived", new { id = Model.CopyID })
+                    @Html.Action("_PartsReceivedSubForm", "PartsReceived", new { id = Model.CopyId })
                 </div>
             </div>
         }
@@ -47,7 +44,7 @@
     </div>*@
 
     <div class="col-md-5">
-        @if ((int)ViewData["CopyID"] > 0)
+        @if ((int) ViewData["CopyID"] > 0)
         {
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -60,7 +57,7 @@
                     </span>
                 </div>
                 <div class="panel-body">
-                    @Html.Action("_CirculationListSubForm", "Circulation", new { id = Model.CopyID })
+                    @Html.Action("_CirculationListSubForm", "Circulation", new { id = Model.CopyId })
                 </div>
             </div>
         }
@@ -68,13 +65,63 @@
 
 </div>
 
+@Scripts.Render("~/Scripts/jquery.mcautocomplete.js")
+
 <script type="text/javascript">
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
-        });
+
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
+
+    var columns = [{ name: '', minWidth: '0%', valueField: 'CopyId' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Copy', minWidth: '5%', valueField: 'copyNumber' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '15%', valueField: 'authors' }];
+
+    $('#SelectCopy').click(function () { selectAllText(jQuery(this)) });
+
+    $("#SelectCopy").mcautocomplete({
+        autoFocus: true,
+        showHeader: true,
+        columns: columns,
+        source: function (request, response) {
+            var title = new Array();
+            var urlGetTerms = "@Url.Action("Autocomplete", "Copies")";
+            $.ajax({
+                async: false,
+                cache: false,
+                type: "POST",
+                url: urlGetTerms,
+                data: { "term": request.term },
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        title[i] = { CopyId: data[i].CopyId, title: data[i].Title, copyNumber: data[i].CopyNumber, edition: data[i].Edition, year: data[i].Year, authors: data[i].AuthorString };
+                    }
+                }
+            });
+            response(title);
+        },
+        select: function (event, ui) {
+            event.preventDefault();
+            if (ui.item) {
+                if (ui.item.CopyId != null) {
+                    //alert('Here');
+                    $('#SelectCopy').val(ui.item.title + " - Copy: " + ui.item.copyNumber);
+                    var url = '@Url.Action("QuickCheckIn", "PartsReceived", new { id = "REPLACEME" })';
+                    window.location.href = url.replace('REPLACEME', ui.item.CopyId);
+                }
+            }
+        }
     });
+</script>
+
+
+
+<script type="text/javascript">
+    //$(document).ready(function () {
+    //    $('.selectpicker').selectpicker({
+    //        liveSearch: true,
+    //        showSubtext: true
+    //    });
+    //});
 
     $('form').submit(function (e) {
         e.preventDefault();

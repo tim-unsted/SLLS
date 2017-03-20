@@ -1,0 +1,45 @@
+﻿<ul class="pagination pagination-sm" style="margin: 0;">
+
+    <li class="paginate_button no-style" style="font-weight: bold;"><a href="@Url.Action("Edit", "Copies", new {id = ViewBag.CopyId}, null)" title="View/Edit Copy">@ViewBag.CopyNumber</a></li>
+
+    @if (ViewBag.PreviousID == 0)
+    {
+        <li class="paginate_button first disabled" id="records_previous">
+            <a href="#"><<</a>
+        </li>
+        <li class="paginate_button previous disabled" id="records_previous">
+            <a href="#"><</a>
+        </li>
+    }
+    else
+    {
+        <li class="paginate_button first" id="records_previous">
+            <a href="@Url.Action(ViewBag.Action, ViewBag.Controller, new {id = ViewBag.FirstID})" title="First Record"><<</a>
+        </li>
+        <li class="paginate_button previous" id="records_previous">
+            <a href="@Url.Action(ViewBag.Action, ViewBag.Controller, new {id = ViewBag.PreviousID})" title="Previous Record"><</a>
+        </li>
+    }
+
+    <li class="paginate_button active"><a tabindex="0" href="@Url.Action("Edit", "Copies", new {id = ViewBag.CopyId}, null)" title="View/Edit Copy">@ViewBag.RecordType @ViewBag.RowIndex of @ViewBag.RecordCount</a></li>
+
+    @if (ViewBag.NextID == 0)
+    {
+        <li class="paginate_button next disabled" id="records_next">
+            <a href="#">></a>
+        </li>
+        <li class="paginate_button last disabled" id="records_next">
+            <a href="#">>></a>
+        </li>
+    }
+    else
+    {
+        <li class="paginate_button next" id="records_next">
+            <a href="@Url.Action(ViewBag.Action, ViewBag.Controller, new {id = ViewBag.NextID})" title="Next Record">></a>
+        </li>
+        <li class="paginate_button last" id="records_next">
+            <a href="@Url.Action(ViewBag.Action, ViewBag.Controller, new {id = ViewBag.LastID})" title="Last Record">>></a>
+        </li>
+    }
+
+</ul>
