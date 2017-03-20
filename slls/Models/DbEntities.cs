@@ -103,6 +103,8 @@ namespace slls.Models
         public virtual DbSet<vwSelectOrder> vwSelectOrders { get; set; }
         public virtual DbSet<vwSelectUserByFirstname> vwSelectUsersByFirstnames { get; set; }
         public virtual DbSet<vwSelectUserByLastname> vwSelectUsersByLastnames { get; set; }
+        public virtual DbSet<vwSelectTitleToBorrow> VwSelectTitlesToBorrow { get; set; }
+        public virtual DbSet<vwSelectTitleToRenewReturn> VwSelectTitlesToRenewReturn { get; set; }
 
         //public virtual DbSet<vwBinding> vwBinding { get; set; } 
         //public virtual DbSet<vwBorrowing> vwBorrowing { get; set; }

@@ -1128,3 +1128,16 @@ h5 {
     padding-left: 0px;
 }
 
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #444444;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    #444444;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    #444444;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    #444444;
+}

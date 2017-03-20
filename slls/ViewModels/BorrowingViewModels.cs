@@ -28,6 +28,8 @@ namespace slls.ViewModels
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
         public string Barcode { get; set; }
 
+        public string SelectTitle { get; set; }
+
         public string SelectBorrowerOption { get; set; }
 
         public bool ShowCheckInOutItemHelper { get; set; }
@@ -77,6 +79,8 @@ namespace slls.ViewModels
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
         public string Barcode { get; set; }
 
+        public string SelectTitle { get; set; }
+
         public string UserID { get; set; }
 
         [LocalDisplayName("Borrowing.Borrowed_By", "FieldDisplayName")]
@@ -109,6 +113,8 @@ namespace slls.ViewModels
         [Required(ErrorMessage = "Please tell us which item you wish to renew!")]
         [LocalDisplayName("CopyItems.Barcode", "FieldDisplayName")]
         public string Barcode { get; set; }
+
+        public string SelectTitle { get; set; }
 
         public string UserID { get; set; }
 

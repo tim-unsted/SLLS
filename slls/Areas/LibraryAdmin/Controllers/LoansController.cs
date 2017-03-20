@@ -187,35 +187,40 @@ namespace slls.Areas.LibraryAdmin
                 });
             
             // Get a list of barcodes for a drop-down list
-            var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID);
-            var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && v.LoanType.RefOnly == false && v.LoanType.LengthDays > 0 && !currentLoans.Contains(v.VolumeID));
-            var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
-            var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
+            //var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID);
+            //var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && v.LoanType.RefOnly == false && v.LoanType.LengthDays > 0 && !currentLoans.Contains(v.VolumeID));
+            //var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
+            //var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
 
-            var volumes = availableVolumes
-                .ToList()
-                .Select(v => new
-                {
-                    v.VolumeID,
-                    v.Barcode
-                });
+            //var volumes = availableVolumes
+            //    .ToList()
+            //    .Select(v => new
+            //    {
+            //        v.VolumeID,
+            //        v.Barcode
+            //    });
 
-            var copies = availableCopies.OrderBy(c => c.CopyNumber)
-                .ToList()
-                .Select(c => new
-                {
-                    c.CopyID,
-                    c.CopyNumber
-                });
+            var volumes = new List<Volume>();
 
-            var titles = availableTitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars))
-                .ToList()
-                .Select(t => new
-                {
-                    t.TitleID,
-                    Title = t.Title1
-                });
 
+            //var copies = availableCopies.OrderBy(c => c.CopyNumber)
+            //    .ToList()
+            //    .Select(c => new
+            //    {
+            //        c.CopyID,
+            //        c.CopyNumber
+            //    });
+
+            var copies = new List<Copy>();
+
+            //var titles = availableTitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars))
+            //    .ToList()
+            //    .Select(t => new
+            //    {
+            //        t.TitleID,
+            //        Title = t.Title1
+            //    });
+            
             var viewModel = new NewLoanViewModel()
             {
                 Borrowed = DateTime.Today,
@@ -223,7 +228,8 @@ namespace slls.Areas.LibraryAdmin
                 Users = new SelectList(users, "Id", "Fullname", userId),
                 Volumes = new SelectList(volumes, "VolumeID", "Barcode"),
                 Copies = new SelectList(copies, "CopyID", "CopyNumber"),
-                Titles = new SelectList(titles, "TitleID", "Title"),
+                //Titles = new SelectList(titles, "TitleID", "Title"),
+                SelectTitle = "",
                 SeeAlso = MenuHelper.SeeAlso("BorrowingSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
@@ -650,7 +656,33 @@ namespace slls.Areas.LibraryAdmin
             return Json(new { success = true });
         }
 
-        //Method used to supply a JSON list of Copies when selecting a Title (Ajax stuf)
+        //Get a list of available titles (Ajax stuff) ...
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult GetAvailableTitles(string term)
+        {
+            term = " " + term;
+            var titles = (from t in _db.VwSelectTitlesToBorrow
+                          where t.Title.Contains(term)
+                          orderby t.Title.Substring(t.NonFilingChars)
+                          select new { Title = t.Title, TitleId = t.TitleId, Year = t.Year, Edition = t.Edition, Authors = t.AuthorString }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
+        }
+
+        //Get a list of titles on-loan (Ajax stuff) ...
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult GetBorrowedTitles(string term)
+        {
+            term = " " + term;
+            var titles = (from t in _db.VwSelectTitlesToRenewReturn
+                          where t.Title.Contains(term)
+                          orderby t.Title.Substring(t.NonFilingChars)
+                          select new { Title = t.Title, TitleId = t.TitleId, Year = t.Year, Edition = t.Edition, Authors = t.AuthorString }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
+        }
+
+        //Method used to supply a JSON list of Copies when selecting a Title (Ajax stuff) ...
         public JsonResult GetAvailableCopies(int titleId = 0)
         {
             var availableCopies = (from c in _db.Copies
@@ -830,12 +862,14 @@ namespace slls.Areas.LibraryAdmin
                 });
             }
 
-            var title = volume.Copy.Title.Title1;
-            var copy = volume.Copy.CopyNumber;
+            var title = volume.Copy.Title;
+            var copy = volume.Copy;
             return Json(new
             {
                 success = true,
-                BarcodeDetails = title + " - Copy " + copy,
+                BarcodeDetails = title.Title1 + " - Copy " + copy.CopyNumber,
+                Author = title.AuthorString,
+                Edition = title.Edition,
                 ReturnDue = DateTime.Today.AddDays(volume.LoanType.LengthDays).ToShortDateString()
             });
         }
@@ -862,8 +896,8 @@ namespace slls.Areas.LibraryAdmin
                 });
             }
 
-            var title = volume.Copy.Title.Title1;
-            var copy = volume.Copy.CopyNumber;
+            var title = volume.Copy.Title;
+            var copy = volume.Copy;
             string origReturnDue = DateTime.Today.ToString("dd-MM-yyyy");
             DateTime newReturnDue = DateTime.Today.AddDays(21);
             string borrowedBy = "";
@@ -882,7 +916,9 @@ namespace slls.Areas.LibraryAdmin
             return Json(new
             {
                 success = true,
-                BarcodeDetails = title + " - Copy " + copy,
+                BarcodeDetails = title.Title1 + " - Copy " + copy.CopyNumber,
+                Author = title.AuthorString,
+                Edition = title.Edition,
                 BorrowedBy = borrowedBy,
                 origReturnDue = origReturnDue,
                 newReturnDue = newReturnDue.Date.ToString("dd/MM/yyyy")

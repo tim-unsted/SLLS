@@ -260,7 +260,8 @@ namespace slls.Areas.LibraryAdmin
         {
             ViewData["LocationID"] = SelectListHelper.OfficeLocationList(Utils.PublicFunctions.GetDefaultValue("Copies", "LocationID")); 
             ViewData["StatusID"] = SelectListHelper.StatusList(Utils.PublicFunctions.GetDefaultValue("Copies", "StatusID"));
-            ViewData["TitleID"] = SelectListHelper.TitlesList();
+            //ViewData["TitleID"] = SelectListHelper.TitlesList();
+
             int step = 1;
 
             var viewModel = new CopiesAddViewModel

@@ -364,6 +364,8 @@
     <Compile Include="Models\vwSelectCopy.cs" />
     <Compile Include="Models\vwSelectOrder.cs" />
     <Compile Include="Models\vwSelectSupplier.cs" />
+    <Compile Include="Models\vwSelectTitleToRenewReturn.cs" />
+    <Compile Include="Models\vwSelectTitleToBorrow.cs" />
     <Compile Include="Models\vwSelectTitle.cs" />
     <Compile Include="Models\vwSelectTitleWithCopy.cs" />
     <Compile Include="Models\vwSelectUserByFirstname.cs" />

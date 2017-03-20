@@ -70,6 +70,12 @@
 
 <script type="text/javascript">
 
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
     function selectAllText(textbox) {
         textbox.focus();
         textbox.select();
@@ -136,17 +142,4 @@
 
 
 
-</script>
-
-<script type="text/javascript">
-
-    $(document).ready(function () {
-
-        //$('.selectpicker').selectpicker({
-        //    liveSearch: true,
-        //    showSubtext: true
-        //});
-
-        
-    });
 </script>

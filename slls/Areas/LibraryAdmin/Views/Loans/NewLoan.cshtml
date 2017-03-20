@@ -1,4 +1,5 @@
-﻿@using Westwind.Globalization
+﻿@using System.Web.Services.Protocols
+@using Westwind.Globalization
 @model slls.ViewModels.NewLoanViewModel
 
 @Html.Partial("_HeaderSeeAlso", Model)
@@ -17,7 +18,7 @@
         }
 
         <div class="well">
-            
+
             <div class="form-group has-feedback" id="barcodeGroup">
                 @Html.Label(DbRes.T("Borrowing.Item_To_Loan", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-4">
@@ -34,11 +35,19 @@
                 </div>
             </div>
 
-            <div id="_barcodeDetails" style="display: none;">
-                <dl class="dl-horizontal">
-                    <dt>@DbRes.T("Titles.Title", "FieldDisplayName")</dt>
-                    <dd><span id="title"></span></dd>
-                </dl>
+            <div class="form-group" id="_barcodeDetails" style="display: none; ">
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-9">
+                    <p class="form-control-static"><span id="title"></span></p>
+                </div>
+                @Html.Label(DbRes.T("Titles.Author", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-9">
+                    <p class="form-control-static"><span id="author"></span></p>
+                </div>
+                @Html.Label(DbRes.T("Titles.Edition", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-9">
+                    <p class="form-control-static"><span id="edition"></span></p>
+                </div>
             </div>
 
             <div class="form-group has-feedback">
@@ -60,14 +69,14 @@
             </div>
 
             <div class="form-group has-feedback">
-                @Html.Label(DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
+                @Html.Label(DbRes.T("Borrowing.Date_Return_Due", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-sm-3">
-                    @Html.EditorFor(model => model.ReturnDue, new {htmlAttributes = new {@class = "form-control"}})
-                    @Html.ValidationMessageFor(model => model.ReturnDue, "", new {@class = "text-danger"})
+                    @Html.EditorFor(model => model.ReturnDue, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ReturnDue, "", new { @class = "text-danger" })
                     <i class="glyphicon glyphicon-calendar form-control-feedback"></i>
                 </div>
             </div>
-            
+
 
             <div class="form-group">
                 <div class="col-md-offset-2 col-md-10">
@@ -88,156 +97,206 @@
         <div class="form-group">
             @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-9">
-                @Html.DropDownList("TitleID", Model.Titles, "1. Select a " + DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "form-control selectpicker" })
+                @*@Html.DropDownList("TitleID", Model.Titles, "1. Select a " + DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "form-control selectpicker" })*@
+                @Html.TextBoxFor(x => x.SelectTitle, new { @placeholder = "1. Start by entering a part of the title you wish to borrow ...", @class = "form-control" })
+                @Html.Hidden("TitleID")
             </div>
         </div>
 
         <div class="form-group">
             @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-3">
-                @Html.DropDownList("CopyID", Model.Copies, "2. Select a " + DbRes.T("Copies.Copy_Number", "FieldDisplayName"), htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("CopyID", Model.Copies, "2. Select a " + DbRes.T("Copies.Copy_Number", "FieldDisplayName") + " ...", htmlAttributes: new { @class = "form-control" })
             </div>
         </div>
 
         <div class="form-group">
             @Html.Label(DbRes.T("CopyItems.Barcode", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-4">
-                @Html.DropDownList("VolumeID", Model.Volumes, "3. Select a " + DbRes.T("CopyItems.Barcode", "FieldDisplayName"), htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("VolumeID", Model.Volumes, "3. Select a " + DbRes.T("CopyItems.Barcode", "FieldDisplayName") + " ...", htmlAttributes: new { @class = "form-control" })
             </div>
         </div>
     </div>
 </div>
 
+@Scripts.Render("~/Scripts/jquery.mcautocomplete.js")
+
 <script type="text/javascript">
 
-    $(document).ready(function () {
+    function selectAllText(textbox) {
+        textbox.focus();
+        textbox.select();
+    }
 
+    $(document).ready(function () {
         $('.selectpicker').selectpicker({
             liveSearch: true,
             showSubtext: true
         });
-        
-        //Get a list of available copies for the selected title ...
-        $("#TitleID").change(function () {
-            var select = $("#CopyID");
-            select.empty();
+    });
 
-            var selectedTitleId = { titleId: $("#TitleID").val() };
+    //Get a list of available copies for the selected title ...
+    function DoCopies() {
+        var select = $("#CopyID");
+        select.empty();
 
-            $.ajax({
-                url: '@Url.Action("GetAvailableCopies", "Loans")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedTitleId),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.AvailableCopies, function (index, itemData) {
-                            select.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                            }));
-                        }
-                        );
-                    } else {
-                        alert('invalid ID' + data.success);
+        var selectedTitleId = { titleId: $("#TitleID").val() };
+
+        $.ajax({
+            url: '@Url.Action("GetAvailableCopies", "Loans")',
+            type: 'Post',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(selectedTitleId),
+            success: function (data) {
+                if (data.success) {
+                    $.each(data.AvailableCopies, function (index, itemData) {
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text
+                        }));
                     }
-                },
-                async: false
-            });
-            var copyId = $('#CopyID option:first-child').val();
-            DoVolumes(copyId);
+                    );
+                } else {
+                    alert('invalid ID' + data.success);
+                }
+            },
+            async: false
         });
+        var copyId = $('#CopyID option:first-child').val();
+        DoVolumes(copyId);
+    };
 
-        //Get a list of available volumes for a selected title/copy ...
-        function DoVolumes(copyId) {
-            var select = $("#VolumeID");
-            var barcodeField = $("#Barcode");
-            select.empty();
+    //Get a list of available volumes for a selected title/copy ...
+    function DoVolumes(copyId) {
+        var select = $("#VolumeID");
+        var barcodeField = $("#Barcode");
+        select.empty();
 
-            var selectedCopyId = { copyId: copyId };
+        var selectedCopyId = { copyId: copyId };
 
-            $.ajax({
-                url: '@Url.Action("GetAvailableVolumes", "Loans")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedCopyId),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.AvailableVolumes, function (index, itemData) {
-                            select.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                            }));
-                        }
-                        );
-                    } else {
-                        alert('invalid ID' + data.success);
+        $.ajax({
+            url: '@Url.Action("GetAvailableVolumes", "Loans")',
+            type: 'Post',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(selectedCopyId),
+            success: function (data) {
+                if (data.success) {
+                    $.each(data.AvailableVolumes, function (index, itemData) {
+                        select.append($('<option/>', {
+                            value: itemData.Value,
+                            text: itemData.Text
+                        }));
                     }
-                },
-                async: false
+                    );
+                } else {
+                    alert('invalid ID' + data.success);
+                }
+            },
+            async: false
+        });
+        //Write the first available barcode in the barcode input field ...
+        var barcode = $('#VolumeID option:first-child').text();
+        barcodeField.val(barcode);
+        doTitleCopyDetails();
+        $("#barcodeInvalid").hide();
+        $("#barcodeGroup").removeClass("has-error");
+        $("#cmdOk").prop('disabled', false);
+    }
+
+    function doTitleCopyDetails() {
+        var details = $("#_barcodeDetails");
+        var title = $("#title");
+        var author = $("#author");
+        var edition = $("#edition");
+        var returnDue = $("#ReturnDue");
+        var errorDiv = $("#_barcodeInvalid");
+        var errorMsg = $("#errMsg");
+        var barcodeGroup = $("#barcodeGroup");
+        var button = $("#cmdOk");
+        var selectedBarcode = { barcode: $("#Barcode").val() };
+
+        $.ajax({
+            url: '@Url.Action("GetBarcodeDetails", "Loans")',
+            type: 'Post',
+            contentType: 'application/json',
+            dataType: 'json',
+            data: JSON.stringify(selectedBarcode),
+            success: function (data) {
+                if (data.success) {
+                    details.show();
+                    title.text(data.BarcodeDetails);
+                    author.text(data.Author);
+                    edition.text(data.Edition);
+                    returnDue.val(data.ReturnDue);
+                    errorDiv.hide();
+                    barcodeGroup.removeClass("has-error");
+                    button.prop('disabled', false);
+
+                } else {
+                    details.hide();
+                    errorMsg.text(data.BarcodeDetails);
+                    errorDiv.show();
+                    barcodeGroup.addClass("has-error ");
+                    button.prop('disabled', true);
+                }
+            },
+            async: false
+        });
+    }
+
+    $("#CopyID").change(function () {
+        DoVolumes($("#CopyID").val());
+    });
+
+    $("#VolumeID").change(function () {
+        var barcode = $("#VolumeID option:selected").text();
+        $("#Barcode").val(barcode);
+        doTitleCopyDetails();
+    });
+
+    //Do something to display the title and copy details of the selected barcode ...
+    $("#Barcode").change(function () {
+        doTitleCopyDetails();
+    });
+
+    var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '20%', valueField: 'authors' }];
+
+    $('#SelectTitle').click(function () { selectAllText(jQuery(this)) });
+
+    $("#SelectTitle").mcautocomplete({
+        autoFocus: true,
+        showHeader: true,
+        columns: columns,
+        source: function (request, response) {
+            var title = new Array();
+            var urlGetTerms = "@Url.Action("GetAvailableTitles", "Loans")";
+            $.ajax({
+                async: false,
+                cache: false,
+                type: "POST",
+                url: urlGetTerms,
+                data: { "term": request.term },
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        title[i] = { Id: data[i].TitleId, title: data[i].Title, edition: data[i].Edition, year: data[i].Year, authors: data[i].Authors };
+                    }
+                }
             });
-            //Write the first available barcode in the barcode input field ...
-            var barcode = $('#VolumeID option:first-child').text();
-            barcodeField.val(barcode);
-            doTitleCopyDetails();
-            $("#barcodeInvalid").hide();
-            $("#barcodeGroup").removeClass("has-error");
-            $("#cmdOk").prop('disabled', false);
+            response(title);
+        },
+        select: function (event, ui) {
+            event.preventDefault();
+            if (ui.item) {
+                if (ui.item.Id != null) {
+                    $('#SelectTitle').val(ui.item.title);
+                    $('#TitleID').val(ui.item.Id);
+                    DoCopies();
+                }
+            }
         }
+    });
 
-        function doTitleCopyDetails() {
-            var details = $("#_barcodeDetails");
-            var title = $("#title");
-            var returnDue = $("#ReturnDue");
-            var errorDiv = $("#_barcodeInvalid");
-            var errorMsg = $("#errMsg");
-            var barcodeGroup = $("#barcodeGroup");
-            var button = $("#cmdOk");
-            var selectedBarcode = { barcode: $("#Barcode").val() };
 
-            $.ajax({
-                url: '@Url.Action("GetBarcodeDetails", "Loans")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedBarcode),
-                success: function (data) {
-                    if (data.success) {
-                        details.show();
-                        title.text(data.BarcodeDetails);
-                        returnDue.val(data.ReturnDue);
-                        errorDiv.hide();
-                        barcodeGroup.removeClass("has-error");
-                        button.prop('disabled', false);
-
-                    } else {
-                        details.hide();
-                        errorMsg.text(data.BarcodeDetails);
-                        errorDiv.show();
-                        barcodeGroup.addClass("has-error ");
-                        button.prop('disabled', true);
-                    }
-                },
-                async: false
-            });
-        }
-
-        $("#CopyID").change(function () {
-            DoVolumes($("#CopyID").val());
-        });
-
-        $("#VolumeID").change(function () {
-            var barcode = $("#VolumeID option:selected").text();
-            $("#Barcode").val(barcode);
-            doTitleCopyDetails();
-        });
-
-        //Do something to display the title and copy details of the selected barcode ...
-        $("#Barcode").change(function () {
-            doTitleCopyDetails();
-        });
-
-    })
 </script>
