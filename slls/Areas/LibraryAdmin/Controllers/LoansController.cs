@@ -186,40 +186,8 @@ namespace slls.Areas.LibraryAdmin
                     Fullname = u.FullnameRev
                 });
             
-            // Get a list of barcodes for a drop-down list
-            //var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID);
-            //var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && v.LoanType.RefOnly == false && v.LoanType.LengthDays > 0 && !currentLoans.Contains(v.VolumeID));
-            //var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
-            //var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
-
-            //var volumes = availableVolumes
-            //    .ToList()
-            //    .Select(v => new
-            //    {
-            //        v.VolumeID,
-            //        v.Barcode
-            //    });
-
             var volumes = new List<Volume>();
-
-
-            //var copies = availableCopies.OrderBy(c => c.CopyNumber)
-            //    .ToList()
-            //    .Select(c => new
-            //    {
-            //        c.CopyID,
-            //        c.CopyNumber
-            //    });
-
             var copies = new List<Copy>();
-
-            //var titles = availableTitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars))
-            //    .ToList()
-            //    .Select(t => new
-            //    {
-            //        t.TitleID,
-            //        Title = t.Title1
-            //    });
             
             var viewModel = new NewLoanViewModel()
             {
@@ -279,40 +247,43 @@ namespace slls.Areas.LibraryAdmin
         //Return Loan
         public ActionResult ReturnLoan(bool success = false)
         {
-            var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID).Distinct();
-            var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && currentLoans.Contains(v.VolumeID));
-            var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
-            var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
+            //var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID).Distinct();
+            //var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && currentLoans.Contains(v.VolumeID));
+            //var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
+            //var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
 
-            var volumes = availableVolumes
-               .ToList()
-               .Select(v => new
-               {
-                   v.VolumeID,
-                   v.Barcode
-               });
+            //var volumes = availableVolumes
+            //   .ToList()
+            //   .Select(v => new
+            //   {
+            //       v.VolumeID,
+            //       v.Barcode
+            //   });
 
-            var copies = availableCopies.OrderBy(c => c.CopyNumber)
-                .ToList()
-                .Select(c => new
-                {
-                    c.CopyID,
-                    c.CopyNumber
-                });
+            //var copies = availableCopies.OrderBy(c => c.CopyNumber)
+            //    .ToList()
+            //    .Select(c => new
+            //    {
+            //        c.CopyID,
+            //        c.CopyNumber
+            //    });
 
-            var titles = availableTitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars))
-                .ToList()
-                .Select(t => new
-                {
-                    t.TitleID,
-                    Title = t.Title1
-                });
+            //var titles = availableTitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars))
+            //    .ToList()
+            //    .Select(t => new
+            //    {
+            //        t.TitleID,
+            //        Title = t.Title1
+            //    });
+
+            var volumes = new List<Volume>();
+            var copies = new List<Copy>();
 
             var viewModel = new ReturnLoanViewModel()
             {
                 Volumes = new SelectList(volumes, "VolumeID", "Barcode"),
                 Copies = new SelectList(copies, "CopyID", "CopyNumber"),
-                Titles = new SelectList(titles, "TitleID", "Title"),
+                //Titles = new SelectList(titles, "TitleID", "Title"),
             };
 
             if (success)
@@ -478,40 +449,14 @@ namespace slls.Areas.LibraryAdmin
         //Renew Loan
         public ActionResult RenewLoan(bool success = false)
         {
-            var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID).Distinct();
-            var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && currentLoans.Contains(v.VolumeID));
-            var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
-            var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
-
-            var volumes = availableVolumes
-               .ToList()
-               .Select(v => new
-               {
-                   v.VolumeID,
-                   v.Barcode
-               });
-
-            var copies = availableCopies.OrderBy(c => c.CopyNumber)
-                .ToList()
-                .Select(c => new
-                {
-                    c.CopyID,
-                    c.CopyNumber
-                });
-
-            var titles = availableTitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars))
-                .ToList()
-                .Select(t => new
-                {
-                    t.TitleID,
-                    Title = t.Title1
-                });
+            var volumes = new List<Volume>();
+            var copies = new List<Copy>();
 
             var viewModel = new RenewLoanViewModel()
             {
                 Volumes = new SelectList(volumes, "VolumeID", "Barcode"),
                 Copies = new SelectList(copies, "CopyID", "CopyNumber"),
-                Titles = new SelectList(titles, "TitleID", "Title"),
+                //Titles = new SelectList(titles, "TitleID", "Title"),
                 ReturnDue = DateTime.Today.AddDays(21),
             };
 
