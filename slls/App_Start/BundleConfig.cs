@@ -7,11 +7,15 @@ namespace slls
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
-            //bundles.UseCdn = true;
-            //BundleTable.EnableOptimizations = true; //force optimization while debugging
+            // Modernizr ...
+            var modernizrBundle = new ScriptBundle("~/bundles/modernizr").Include(
+                "~/Scripts/modernizr-2.8.3.js");
+            bundles.Add(modernizrBundle);
+
 
             // JQuery ...
-            var jqueryBundle = new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-2.2.3.min.js");
+            var jqueryBundle = new ScriptBundle("~/bundles/jquery").Include(
+                "~/Scripts/jquery-2.2.3.min.js");
             bundles.Add(jqueryBundle);
 
 
@@ -24,55 +28,53 @@ namespace slls
             bundles.Add(jqueryValBundle);
 
 
-            // Modernizr ...
-            var modernizrBundle = new ScriptBundle("~/bundles/modernizr").Include("~/Scripts/modernizr-2.8.3.js");
-            bundles.Add(modernizrBundle);
+            // Options for DataTables ...
+            var datatableOptionsBundle = new ScriptBundle("~/bundles/datatables").Include(
+                "~/Scripts/datatables.min.js",
+                "~/DataTables/options.js"
+                );
+            bundles.Add(datatableOptionsBundle);
             
-            // Bootstrap CSS
-            bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css"));
+
+            
+            // Bootstrap CSS, etc ...
+            var cssBundle = new StyleBundle("~/Content/css").Include(
+                "~/Content/bootstrap.css",
+                "~/Content/bootstrap-datepicker.min.css.map",
+                "~/Content/jquery-ui.css",
+                "~/Content/jquery-ui.theme.css",
+                "~/Content/bootstrap-select.min.css",
+                "~/Content/datatables.min.css",
+                "~/Content/site.css"
+                );
+            bundles.Add(cssBundle);
 
 
             // Bootstrap JS ...
-            var bootstrapJsBundle = new ScriptBundle("~/bundles/bootstrapjs").Include("~/Scripts/bootstrap.min.js");
-            bundles.Add(bootstrapJsBundle);
-
-
-            // Other Bootstrap and local JS stuff ...
-            var bootstrapExtrasBundle = new ScriptBundle("~/bundles/bootstrapextras").Include(
+            var bootstrapJsBundle = new ScriptBundle("~/bundles/bootstrapjs").Include(
+                "~/Scripts/bootstrap.min.js",
+                "~/Scripts/bootstrap-select.min.js",
                 "~/Scripts/respond.js",
                 "~/Scripts/bootstrap-datepicker.min.js",
                 "~/Scripts/DatePickerReady.js",
                 "~/Scripts/locales/bootstrap-datepicker.en-GB.min.js",
-                "~/Scripts/modal.min.js");
-            bundles.Add(bootstrapExtrasBundle);
-
-
-            // Options for DataTables ...
-            var datatableOptionsBundle = new ScriptBundle("~/bundles/datatables").Include(
-                "~/DataTables/options.js");
-            bundles.Add(datatableOptionsBundle);
-
+                "~/Scripts/modal.min.js"
+                );
+            bundles.Add(bootstrapJsBundle);
+            
 
             // JQueryUI ...
             var jqueryUiBundle = new ScriptBundle("~/bundles/jqueryui").Include(
-                "~/Scripts/jquery-ui-1.12.1.js");
+                "~/Scripts/jquery-ui-1.12.1.js"
+                );
             bundles.Add(jqueryUiBundle);
 
             
-            // Other local CSS stuff ...
-            var otherCssBundle = new StyleBundle("~/Content/css").Include(
-                "~/Content/bootstrap-datepicker.min.css.map",
-                "~/Content/jquery-ui.css",
-                "~/Content/jquery-ui.theme.css"); 
-                //,"~/Content/site.css");
-            bundles.Add(otherCssBundle);
-
-
             // Microsoft signalR messaging ...
             var signalRBundle = new ScriptBundle("~/bundles/signalR").Include(
                 "~/Scripts/jquery.signalR-2.2.0.min.js",
-                "~/Scripts/signal-r.js");
+                "~/Scripts/signal-r.js"
+                );
             bundles.Add(signalRBundle);
             
         }
