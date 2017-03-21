@@ -29,6 +29,7 @@ namespace slls.App_Settings
         private static string _jumbotronTextColour = "JumbotronTextColour";
         private static string _hyperlinkTextColour = "HyperlinkTextColour";
         private static string _hyperlinkHoverColour = "HyperlinkHoverColour";
+        private static string _selectedTabColour = "SelectedTabColour";
 
         public static string BodyBackgroundColour
         {
@@ -447,6 +448,26 @@ namespace slls.App_Settings
             }
         }
 
+        public static string SelectedTabColour
+        {
+            get
+            {
+                if (HttpContext.Current.Application[_selectedTabColour] == null)
+                {
+                    HttpContext.Current.Application.Lock();
+                    HttpContext.Current.Application[_selectedTabColour] = Settings.GetParameterValue("Styling.SelectedTabColour", "#23527c", "The background colour of the selected tab when tabs are displayed. The default is #C71585 (mediumvioletred). Bear in mind, when choosing an alternative colour, that the text is white.", dataType: "text");
+                    HttpContext.Current.Application.UnLock();
+                }
+                return HttpContext.Current.Application[_selectedTabColour].ToString();
+            }
+            set
+            {
+                HttpContext.Current.Application.Lock();
+                HttpContext.Current.Application[_selectedTabColour] = value;
+                HttpContext.Current.Application.UnLock();
+            }
+        }
+
         public static void LoadCss()
         {
             var db = new DbEntities();
@@ -554,6 +575,11 @@ namespace slls.App_Settings
                     case "Styling.HyperlinkHoverColor":
                     {
                         HyperlinkHoverColour = parm.ParameterValue;
+                        break;
+                    }
+                    case "Styling.SelectedTabColour":
+                    {
+                        SelectedTabColour = parm.ParameterValue;
                         break;
                     }
                 }

@@ -1116,8 +1116,8 @@ h5 {
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-    background-color: mediumvioletred;
-    border-color: darkmagenta;
+    /*background-color: #C71585;
+    border-color: #C71585;*/
     color: #ffffff;
     font-weight: bold;
 }

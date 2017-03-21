@@ -20,7 +20,7 @@
             <div class="form-group has-feedback" id="barcodeGroup">
                 @Html.Label(DbRes.T("Borrowing.Item_To_Renew", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-md-4">
-                    @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode) } })
+                    @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode), title = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode) } })
                     @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
                     <i class="glyphicon glyphicon-barcode form-control-feedback"></i>
                 </div>
@@ -113,6 +113,7 @@
     }
 
     $(document).ready(function () {
+        $('#Barcode').focus();
         $('.selectpicker').selectpicker({
             liveSearch: true,
             showSubtext: true

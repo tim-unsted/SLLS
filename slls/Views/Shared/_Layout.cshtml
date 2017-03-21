@@ -7,6 +7,7 @@
     <title>@ViewBag.Title - @GlobalVariables.SiteName</title>
 
     <link rel="stylesheet" type="text/css" media="screen" href="~/Content/bootstrap.css"/>
+    @Styles.Render("~/Content/css")
     <link rel="stylesheet" type="text/css" media="screen" href="~/Content/bootstrap-select.min.css"/>
     <link rel="stylesheet" type="text/css" href="~/Content/datatables.min.css" />
     <link rel="stylesheet" type="text/css" href="~/Content/site.css" />
@@ -70,6 +71,11 @@
         a:focus, a:hover { color: @CssManager.HyperlinkHoverColour; }
 
         .btn-link:focus, .btn-link:hover { color: @CssManager.HyperlinkHoverColour; }
+
+        .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
+            background-color: #C71585;
+            border-color: #C71585;
+        }
     </style>
 
     <!-- Local styling stuff -->
