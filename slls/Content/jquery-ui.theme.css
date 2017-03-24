@@ -87,14 +87,13 @@
 .ui-state-active,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
-	border: 1px solid #003eff;
+	/*border: 1px solid #007fff;*/
 	background: #007fff;
 	font-weight: normal;
 	color: #ffffff;
 }
 .ui-state-active a,
-.ui-state-active a:link,
-.ui-state-active a:visited {
+.ui-state-active a:link {
 	color: #ffffff;
 	text-decoration: none;
 }

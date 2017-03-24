@@ -7,12 +7,8 @@
     <title>@ViewBag.Title - @GlobalVariables.SiteName</title>
 
     @Scripts.Render("~/bundles/modernizr")
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/jqueryui")
-
     @Styles.Render("~/Content/jqueryuicss")
     @Styles.Render("~/Content/css")
-    @*@Styles.Render("~/Content/sitecss")*@
 
     <script type="text/javascript">
         var dateFormat = "@GlobalVariables.DateFormat";
@@ -259,7 +255,8 @@
         @RenderPage("_Footer.cshtml")
     </div>
 
-    @*@Scripts.Render("~/bundles/jquery")*@
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryui")
     @Scripts.Render("~/bundles/jqueryval")
     @*@Scripts.Render("~/bundles/datatables")*@
     @Scripts.Render("~/bundles/otherjavascripts")

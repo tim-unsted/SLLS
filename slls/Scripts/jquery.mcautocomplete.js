@@ -21,7 +21,7 @@ $.widget('custom.mcautocomplete', $.ui.autocomplete, {
             // Column headers
             $.each(this.options.columns, function (index, item) {
                 var width = item.minWidth;
-                table.append("<span style=\"float:left;min-width:" + width + ";max-width:" + width + " !important;margin-right:5px;overflow:hidden;text-overflow:ellipsis;\">" + item.name + "</span>");
+                table.append("<span style=\"float:left;min-width:" + width + ";max-width:" + width + " !important;margin-right:5px;overflow:hidden;\">" + item.name + "</span>");
             });
 			table.append('<div style="clear: both;"></div>');
             ul.append(table);
