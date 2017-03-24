@@ -25,16 +25,19 @@
     </form>
 }
 
-<script type="text/javascript">
-    $(document).ready(function() {
+@section scripts {
+@Scripts.Render("~/bundles/selectPicker")
+    <script type="text/javascript">
+        $(document).ready(function() {
 
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
+            $('.selectpicker').selectpicker({
+                liveSearch: true,
+                showSubtext: true
+            });
         });
-    });
 
-    $("#selectOrder").change(function () {
-        sessionStorage.removeItem('lastTab_EditOrder');
-    });
-</Script>
+        $("#selectOrder").change(function() {
+            sessionStorage.removeItem('lastTab_EditOrder');
+        });
+    </Script>
+}

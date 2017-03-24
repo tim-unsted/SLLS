@@ -1644,7 +1644,7 @@ namespace slls.Areas.LibraryAdmin
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public JsonResult Autocomplete(string term)
+        public JsonResult AutoComplete(string term)
         {
             //if (term.Length < 3) return null;
 

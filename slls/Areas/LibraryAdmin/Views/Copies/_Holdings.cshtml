@@ -2,7 +2,7 @@
 @model slls.Models.Copy
 
 <div class="form-horizontal">
-    <br />
+    <br/>
 
     <div class="form-group">
         <div class="col-md-12">
@@ -15,7 +15,7 @@
 
     <div class="row">
         <div class="col-md-7">
-            
+
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <span class="panel-title">
@@ -38,14 +38,14 @@
                 <div class="panel-heading">
                     <span class="panel-title">
                         <span class="pull-right">
-                            <a href="@Url.Action("EditHoldings", "Copies", new { id = Model.CopyID })" class="btn btn-primary modal-link" style="margin-bottom: 5px;" title="Add more @DbRes.T("Copies.Holdings", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Edit</a>
+                            <a href="@Url.Action("EditHoldings", "Copies", new {id = Model.CopyID})" class="btn btn-primary modal-link" style="margin-bottom: 5px;" title="Add more @DbRes.T("Copies.Holdings", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Edit</a>
                         </span>
                         <h5>@DbRes.T("Copies.Holdings", "FieldDisplayName") (Copy: @Model.CopyNumber)</h5>
                     </span>
                 </div>
                 <div class="panel-body">
-                    @Html.TextAreaFor(model => model.Holdings, new { rows = "", cols = "", @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.Holdings, "", new { @class = "text-danger" })
+                    @Html.TextAreaFor(model => model.Holdings, new {rows = "", cols = "", @class = "form-control"})
+                    @Html.ValidationMessageFor(model => model.Holdings, "", new {@class = "text-danger"})
                 </div>
             </div>
 
@@ -67,3 +67,8 @@
 
     </div>
 </div>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Circulation/_CirculationListSubForm.js")" type="text/javascript"></script>
+}

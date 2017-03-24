@@ -6,3 +6,8 @@
     @Html.Partial("_ItemsOnLoan", Model)
 </div>
 
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Loans/_ItemsOnLoan.js")" type="text/javascript"></script>
+}
+

@@ -4,29 +4,6 @@
 @using slls.Utils.Helpers
 @model slls.ViewModels.TitleAddViewModel
 
-@section Scripts
-{
-    <script>
-        jQuery(document).ready(function ($) {
-            $('#btnAddAuthor').on('click', function () {
-                var url = '@Url.Action("AddAuthor", "Titles")';
-                $.get(url, function (html) {
-                    $('#authors-list').append(html);
-                });
-            });
-
-            @*$('#btnAddEditor').on('click', function () {
-            //alert('Hello!');
-                var url = '@Url.Action("AddEditor", "Titles")';
-                $.get(url, function (html) {
-                    $('#editors-list').append(html);
-                });
-            });*@
-        });
-    </script>
-}
-
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
@@ -191,89 +168,112 @@
     </div>
 }
 
-
-
 <div id="newAuthorDialog" title="Add New Author"></div>
 
-<script type="text/javascript">
-    $(function () {
-        $('#newAuthorDialog').dialog({
-            open: function () {
-                $(this).closest(".ui-dialog")
-                .find(".ui-dialog-titlebar-close")
-                .removeClass("ui-icon-closethick")
-                .addClass("btn btn-default")
-                .text("X");
-            },
-            autoOpen: false,
-            modal: true,
-            overlay: {
-                backgroundColor: '#000',
-                opacity: 0.5
-            },
-            buttons: [
-                {
-                    text: 'Save',
-                    "class": 'btn btn-success',
-                    click: function () {
-                        var addNewFrm = $('#addAuthorForm');
-                        if (addNewFrm.valid()) {
-                            $.ajax({
-                                url: '@Url.Action("_add", "Authors")',
-                                type: 'Post',
-                                data: addNewFrm.serialize(),
-                                async: false,
-                                success: function (data) {
-                                    if (data.success) {
-                                        var found = $("[id$=_AuthorID]");
-                                        found.append(
+@Html.Hidden("AddClassmarkUrl", @Url.Action("_add", "Classmarks"));
+@Html.Hidden("AddMediaUrl", @Url.Action("_add", "MediaTypes"));
+@Html.Hidden("AddFrequencyUrl", @Url.Action("_add", "Frequencies"));
+@Html.Hidden("AddLanguageUrl", @Url.Action("_add", "Languages"));
+@Html.Hidden("AddPublisherUrl", @Url.Action("_add", "Publishers"));
+@Html.Hidden("IsbnUnique", @Url.Action("IsbnUnique", "Titles"));
+
+@section Scripts{
+@Scripts.Render("~/bundles/jqueryval")
+@Scripts.Render("~/bundles/signalR")
+@Scripts.Render("~/bundles/titlesAddEdit")
+@Scripts.Render("~/bundles/titlesAutoCatPartial")
+<script src="@Html.ResolveUrl("~/signalr/hubs")"></script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function($) {
+            $('#btnAddAuthor').on('click', function() {
+                var url = '@Url.Action("AddAuthor", "Titles")';
+                $.get(url, function(html) {
+                    $('#authors-list').append(html);
+                });
+            });
+        });
+
+        $(function() {
+            $('#newAuthorDialog').dialog({
+                open: function() {
+                    $(this).closest(".ui-dialog")
+                        .find(".ui-dialog-titlebar-close")
+                        .removeClass("ui-icon-closethick")
+                        .addClass("btn btn-default")
+                        .text("X");
+                },
+                autoOpen: false,
+                modal: true,
+                overlay: {
+                    backgroundColor: '#000',
+                    opacity: 0.5
+                },
+                buttons: [
+                    {
+                        text: 'Save',
+                        "class": 'btn btn-success',
+                        click: function() {
+                            var addNewFrm = $('#addAuthorForm');
+                            if (addNewFrm.valid()) {
+                                $.ajax({
+                                    url: '@Url.Action("_add", "Authors")',
+                                    type: 'Post',
+                                    data: addNewFrm.serialize(),
+                                    async: false,
+                                    success: function(data) {
+                                        if (data.success) {
+                                            var found = $("[id$=_AuthorID]");
+                                            found.append(
                                                 $('<option></option>')
-                                                    .val(data.newData.AuthorID)
-                                                    .html(data.newData.DisplayName)
-                                                    .prop('selected', true)
+                                                .val(data.newData.AuthorID)
+                                                .html(data.newData.DisplayName)
+                                                .prop('selected', true)
                                             );
-                                        $('#newAuthorDialog').dialog('close');
-                                    } else {
-                                        alert(data.errMsg);
+                                            $('#newAuthorDialog').dialog('close');
+                                        } else {
+                                            alert(data.errMsg);
+                                        }
+                                    },
+                                    error: function() {
+                                        alert("Oops, there has been an error.");
                                     }
-                                },
-                                error: function () {
-                                    alert("Oops, there has been an error.");
-                                }
-                            });
+                                });
+                            }
+                        }
+                    },
+                    {
+                        text: 'Cancel',
+                        "class": 'btn btn-default',
+                        click: function() {
+                            $('#AuthorID').val(0);
+                            $(this).dialog('close');
                         }
                     }
-                },
-            {
-                text: 'Cancel',
-                "class": 'btn btn-default',
-                click: function () {
-                    $('#AuthorID').val(0);
-                    $(this).dialog('close');
-                }
-            }
-            ]
-        });
-    });
-    $('#addAuthorLink').click(function () {
-        var createFormUrl = $(this).attr('href');
-        $('#newAuthorDialog').html('')
-        .load(createFormUrl, function () {
-            jQuery.validator.unobtrusive.parse('#addAuthorForm');
-            $('#newAuthorDialog').dialog('open');
-        });
-        return false;
-    });
-
-    $('#AuthorID').change(function () {
-        if (this.value === "-1") {
-            var createFormUrl = $('#addAuthorLink').attr('href');
-            $('#newAuthorDialog').html('')
-            .load(createFormUrl, function () {
-                $('#newAuthorDialog').dialog('open');
+                ]
             });
-        }
-        return false;
-    });
+        });
 
-</script>
+        $('#addAuthorLink').click(function() {
+            var createFormUrl = $(this).attr('href');
+            $('#newAuthorDialog').html('')
+                .load(createFormUrl, function() {
+                    jQuery.validator.unobtrusive.parse('#addAuthorForm');
+                    $('#newAuthorDialog').dialog('open');
+                });
+            return false;
+        });
+
+        $('#AuthorID').change(function() {
+            if (this.value === "-1") {
+                var createFormUrl = $('#addAuthorLink').attr('href');
+                $('#newAuthorDialog').html('')
+                    .load(createFormUrl, function() {
+                        $('#newAuthorDialog').dialog('open');
+                    });
+            }
+            return false;
+        });
+
+    </script>
+}

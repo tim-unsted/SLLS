@@ -2,16 +2,6 @@
 @using Westwind.Globalization
 @model slls.ViewModels.ReportsGeneratorViewModel
 
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        //$('#lstReports').removeAttr('multiple');
-        //$('#lstExpenditureTypes').removeAttr('multiple');
-        //$('#lstBudgetCode').removeAttr('multiple');
-    })    
-
-</script>
-
 <h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm("PostReportGenerator", "OrderDetails", FormMethod.Post, new { id = "form1" }))
@@ -95,12 +85,22 @@
     </div>
 }
 
-<script type="text/javascript">
-    //Reset the select Account Year to '0' if the date range is changed at all ...
-    $('#StartDate').change(function () {
-        $("#lstAccountYears option[value='0']").prop('selected', true);
-    });
-    $('#EndDate').change(function () {
-        $("#lstAccountYears option[value='0']").prop('selected', true);
-    });
-</script>
+@section scripts {
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            //$('#lstReports').removeAttr('multiple');
+            //$('#lstExpenditureTypes').removeAttr('multiple');
+            //$('#lstBudgetCode').removeAttr('multiple');
+        });
+
+        //Reset the select Account Year to '0' if the date range is changed at all ...
+        $('#StartDate').change(function() {
+            $("#lstAccountYears option[value='0']").prop('selected', true);
+        });
+
+        $('#EndDate').change(function() {
+            $("#lstAccountYears option[value='0']").prop('selected', true);
+        });
+    </script>
+}

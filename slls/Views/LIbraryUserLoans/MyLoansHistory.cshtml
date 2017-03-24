@@ -2,43 +2,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Borrowing>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#myloans').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [[5, 'desc']],
-            "columnDefs": [{
-                "visible": false,
-                "targets": [4, 5, 6]
-            },
-            {
-                "orderData": [4],
-                "targets": [1]
-            },
-            {
-                "orderData": [5],
-                "targets": [2]
-            },
-            {
-                "orderData": [6],
-                "targets": [3]
-            },
-            {
-                "sortable": false,
-                "searchable": false,
-                "targets": [7]
-            }
-            ]
-        });
-    });
-</script>
-
 @Html.Partial("_HeaderCancel")
 
 <div class="alert alert-info"><strong>Info: </strong>This page show all items you have ever borrowed, descending from most recent to oldest. Click on any of the column headings to re-order the list.</div>
@@ -116,3 +79,43 @@
     </tbody>
 </table>
 
+@section scripts {
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#myloans').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "order": [[5, 'desc']],
+                "columnDefs": [
+                    {
+                        "visible": false,
+                        "targets": [4, 5, 6]
+                    },
+                    {
+                        "orderData": [4],
+                        "targets": [1]
+                    },
+                    {
+                        "orderData": [5],
+                        "targets": [2]
+                    },
+                    {
+                        "orderData": [6],
+                        "targets": [3]
+                    },
+                    {
+                        "sortable": false,
+                        "searchable": false,
+                        "targets": [7]
+                    }
+                ]
+            });
+        });
+    </script>
+}

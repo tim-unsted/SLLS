@@ -1,6 +1,7 @@
 ﻿//http://bootstrap-datepicker.readthedocs.org/en/latest/options.html
 
 $(function () {
+    //alert(dateFormat);
     $.validator.addMethod("date",
     function (value, element) {
         if (this.optional(element)) {

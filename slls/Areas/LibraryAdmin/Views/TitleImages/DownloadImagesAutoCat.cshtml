@@ -2,13 +2,6 @@
 @using slls.Utils.Helpers
 @model slls.ViewModels.DownloadImagesViewmodel
 
-@*<div>
-    <span class="btn-group pull-right">
-        <button type="button" class="btn-link" onclick="window.history.back();">Cancel</button>
-    </span>
-    <h2>@ViewBag.Title</h2>
-</div>*@
-
 @Html.Partial("_HeaderCancel")
 
 <div class="alert alert-info">
@@ -90,117 +83,116 @@
 
 }
 
-<script type="text/javascript">
+@section scripts {
+@Scripts.Render("~/bundles/signalR")
 
-    $(document).ready(function () {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#progress-bar')
+                .css('width', '0%')
+                .attr('aria-valuenow', "0");
+            StartMessaging();
 
-        $('#progress-bar')
-            .css('width', '0%')
-            .attr('aria-valuenow', "0");
-        StartMessaging();
-
-        $('#xxx').submit(function(e) {
-            e.preventDefault();
-            $("#warning-msg").hide();
-            if ($("#xxx input:checkbox:checked").length == 0) {
-                $("#warning-msg").show();
-                return false;
-            } else {
-                return true;
-            }
-        });
-    });
-
-    $.fn.disable = function() {
-        return this.each(function() {
-            if (typeof this.disabled != "undefined") this.disabled = true;
-        });
-    }
-
-    $.fn.enable = function() {
-        return this.each(function() {
-            if (typeof this.disabled != "undefined") this.disabled = false;
-        });
-    }
-
-    function StartMessaging() {
-        var progressNotifier = $.connection.progressHub;
-
-        $.connection.hub.start().done(function () {
-            $("#btnDownload").removeAttr("disabled");
-            DisplayMessage("Ready. Click on 'Start Download' below to find cover images for " + @Model.CountAvailable + " eligible titles ...");
-            if(@Model.CountAvailable > 0)
-            {
-
-            }
+            $('#xxx').submit(function(e) {
+                e.preventDefault();
+                $("#warning-msg").hide();
+                if ($("#xxx input:checkbox:checked").length == 0) {
+                    $("#warning-msg").show();
+                    return false;
+                } else {
+                    return true;
+                }
+            });
         });
 
-        // client-side message functions that will be called from the server-side
+        $.fn.disable = function() {
+            return this.each(function() {
+                if (typeof this.disabled != "undefined") this.disabled = true;
+            });
+        }
 
-        progressNotifier.client.initProgress = function (message) {
-            InitProgress(message, 2);
+        $.fn.enable = function() {
+            return this.each(function() {
+                if (typeof this.disabled != "undefined") this.disabled = false;
+            });
+        }
+
+        function StartMessaging() {
+            var progressNotifier = $.connection.progressHub;
+
+            $.connection.hub.start().done(function() {
+                $("#btnDownload").removeAttr("disabled");
+                DisplayMessage("Ready. Click on 'Start Download' below to find cover images for " + @Model.CountAvailable + " eligible titles ...");
+                if (@Model.CountAvailable > 0) {
+
+                }
+            });
+
+            // client-side message functions that will be called from the server-side
+
+            progressNotifier.client.initProgress = function(message) {
+                InitProgress(message, 2);
+            };
+
+            progressNotifier.client.sendMessage = function(message) {
+                DisplayMessage(message);
+            };
+
+            progressNotifier.client.updateProgress = function(message, count) {
+                UpdateProgress(message, count);
+            };
+
+            progressNotifier.client.clearProgress = function(message) {
+                FinaliseProgress();
+                DisplayMessage(message);
+            };
+
         };
 
-        progressNotifier.client.sendMessage = function (message) {
-            DisplayMessage(message);
-        };
+        function InitProgress(message, count) {
 
-        progressNotifier.client.updateProgress = function (message, count) {
-            UpdateProgress(message, count);
-        };
+            //unhide the progress div...
+            $('.progress').show();
 
-        progressNotifier.client.clearProgress = function (message) {
-            FinaliseProgress();
-            DisplayMessage(message);
-        };
+            $("#btnDownload").disable(); //.attr("disabled", "true");
+            $("#btnCancel").disable(); //.attr("disabled", "true");
+            $(".summary *").disable(); //.attr("disabled", "true");
 
-    };
+            // get the progress bar ...
+            var progress = $('#progress-bar');
+            progress.css('width', count + '%');
+            progress.html('');
 
-    function InitProgress(message, count) {
+            $("#messages").html(message);
+        }
 
-        //unhide the progress div...
-        $('.progress').show();
+        function UpdateProgress(message, count) {
 
-        $("#btnDownload").disable(); //.attr("disabled", "true");
-        $("#btnCancel").disable(); //.attr("disabled", "true");
-        $(".summary *").disable(); //.attr("disabled", "true");
+            // get the progress bar ...
+            var progress = $('#progress-bar');
+            progress.css('width', count + '%');
+            progress.attr('aria-valuenow', count);
+            progress.html(message);
+        }
 
-        // get the progress bar ...
-        var progress = $('#progress-bar');
-        progress.css('width', count + '%');
-        progress.html('');
+        function FinaliseProgress() {
 
-        $("#messages").html(message);
-    }
+            // Clear the progress bar ...
+            $('#progress-bar').html('');
 
-    function UpdateProgress(message, count) {
+            $("#btnDownload").enable(); //.removeAttr("disabled");
+            $("#btnCancel").enable(); //.removeAttr("disabled");
+            $(".summary *").enable(); //.removeAttr("disabled");
 
-        // get the progress bar ...
-        var progress = $('#progress-bar');
-        progress.css('width', count + '%');
-        progress.attr('aria-valuenow', count);
-        progress.html(message);
-    }
+            // hide the progress div...
+            $('.progress').hide();
+        }
 
-    function FinaliseProgress() {
+        function DisplayMessage(message) {
 
-        // Clear the progress bar ...
-        $('#progress-bar').html('');
-
-        $("#btnDownload").enable(); //.removeAttr("disabled");
-        $("#btnCancel").enable(); //.removeAttr("disabled");
-        $(".summary *").enable(); //.removeAttr("disabled");
-
-        // hide the progress div...
-        $('.progress').hide();
-    }
-
-    function DisplayMessage(message) {
-
-        // display the passed message ...
-        $("#messages").html(message);
-    }
-
-
-</script>
+            // display the passed message ...
+            $("#messages").html(message);
+        }
+    </script>
+}
 

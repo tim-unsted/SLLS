@@ -2,15 +2,6 @@
 @using System.Collections.Generic
 @model slls.ViewModels.LocalizationIndexViewModel
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#localizations').DataTable({
-            pageLength: 50,
-            "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]]
-        });
-    });
-</script>
-
 <h2>@ViewBag.Title</h2>
 
 <div class="alert alert-info">
@@ -78,3 +69,15 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#localizations').DataTable({
+                pageLength: 50,
+                "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]]
+            });
+        });
+    </script>
+}

@@ -87,10 +87,11 @@
     </div>
 }
 
-<script type="text/javascript">
-    $('#btnAddMore').click(function () {
-        $('#AddMore').val("True");
-        $('#frmNew').submit();
-    });
- </script>
-
+@section scripts {
+    <script type="text/javascript">
+        $('#btnAddMore').click(function() {
+            $('#AddMore').val("True");
+            $('#frmNew').submit();
+        });
+    </script>
+}

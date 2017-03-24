@@ -2,20 +2,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.CommMethodType>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#commtypes').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            }
-        });
-    });
-</script>
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <p>
@@ -56,3 +42,20 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#commtypes').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                }
+            });
+        });
+    </script>
+}

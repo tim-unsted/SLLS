@@ -6,19 +6,19 @@
         <div class="input-group">
             <input id="searchTerm" type="text" placeholder="Quick find ..." class="form-control  ">
         </div>
-        @Html.DropDownList("SearchWhere", null, new { @class = "form-control" })
+        @Html.DropDownList("SearchWhere", null, new {@class = "form-control"})
     </div>
     @*</div>*@
 </form>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    $('#btnSubmit').on("click", function () {
-        var controller = $('#SearchWhere :selected').text();
-        var urlGoToSelected;
-        switch (controller) {
+        $('#btnSubmit').on("click", function() {
+            var controller = $('#SearchWhere :selected').text();
+            var urlGoToSelected;
+            switch (controller) {
             case 'Titles':
-                urlGoToSelected = '@Url.Action("QuickFind", "Titles", new { searchTerm = "REPLACEME" })';
+                urlGoToSelected = '@Url.Action("QuickFind", "Titles", new {searchTerm = "REPLACEME"})';
                 break;
             @*case 'Barcodes':
                 urlGoToSelected = '@Url.Action("QuickFind", "Volumes", new { searchTerm = "REPLACEME" })';
@@ -30,17 +30,17 @@
                 urlGoToSelected = '@Url.Action("QuickFind", "SupplierPeople", new { searchTerm = "REPLACEME" })';
                 break;*@
             default:
-                urlGoToSelected = '@Url.Action("QuickFind", "Titles", new { searchTerm = "REPLACEME" })';
-        }
-        window.location.href = urlGoToSelected.replace('REPLACEME', $("#searchTerm").val());
-    });
+                urlGoToSelected = '@Url.Action("QuickFind", "Titles", new {searchTerm = "REPLACEME"})';
+            }
+            window.location.href = urlGoToSelected.replace('REPLACEME', $("#searchTerm").val());
+        });
 
-    $("#searchTerm").autocomplete({
-        source: function (request, response) {
-            var title = new Array();
-            var controller = $('#SearchWhere :selected').text();
-            var urlGetTerms;
-            switch (controller) {
+        $("#searchTerm").autocomplete({
+            source: function(request, response) {
+                var title = new Array();
+                var controller = $('#SearchWhere :selected').text();
+                var urlGetTerms;
+                switch (controller) {
                 case 'Titles':
                     urlGetTerms = "@Url.Action("Autocomplete", "Titles")";
                     break;
@@ -55,33 +55,33 @@
                     break;
                 default:
                     urlGetTerms = "@Url.Action("Autocomplete", "Titles")";
-            }
-            $.ajax({
-                async: false,
-                cache: false,
-                type: "POST",
-                url: urlGetTerms,
-                data: { "term": request.term },
-                success: function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        title[i] = { label: data[i].Value, Id: data[i].Key };
+                }
+                $.ajax({
+                    async: false,
+                    cache: false,
+                    type: "POST",
+                    url: urlGetTerms,
+                    data: { "term": request.term },
+                    success: function(data) {
+                        for (var i = 0; i < data.length; i++) {
+                            title[i] = { label: data[i].Value, Id: data[i].Key };
+                        }
                     }
-                }
-            });
-            response(title);
-        },
-        select: function (event, ui) {
-            if (ui.item) {
-                var controller = $('#SearchWhere :selected').text();
-                var urlGoToSelected;
+                });
+                response(title);
+            },
+            select: function(event, ui) {
+                if (ui.item) {
+                    var controller = $('#SearchWhere :selected').text();
+                    var urlGoToSelected;
 
-                if (ui.item.Id === "-1") {
-                    urlGoToSelected = '@Url.Action("AdminSearch", "Searching", new { q = "REPLACEME" })';
-                    window.location.href = urlGoToSelected.replace('REPLACEME', $("#searchTerm").val());
-                    return;
-                }
+                    if (ui.item.Id === "-1") {
+                        urlGoToSelected = '@Url.Action("AdminSearch", "Searching", new {q = "REPLACEME"})';
+                        window.location.href = urlGoToSelected.replace('REPLACEME', $("#searchTerm").val());
+                        return;
+                    }
 
-                switch (controller) {
+                    switch (controller) {
                     case 'Titles':
                         urlGoToSelected = '@Url.Action("Edit", "Titles", new {id = "REPLACEME"})';
                         break;
@@ -96,17 +96,17 @@
                         break;
                     default:
                         urlGoToSelected = '@Url.Action("Edit", "Titles", new {id = "REPLACEME"})';
+                    }
+
+                    window.location.href = urlGoToSelected.replace('REPLACEME', ui.item.Id);
                 }
-
-                window.location.href = urlGoToSelected.replace('REPLACEME', ui.item.Id);
             }
-        }
-    });
+        });
 
-    //$(function () {
-    //    $('#nav li a').click(function () {
-    //        $('#nav li').removeClass();
-    //        $($(this).attr('href')).addClass('active');
-    //    });
-    //});
-</script>
+        //$(function () {
+        //    $('#nav li a').click(function () {
+        //        $('#nav li').removeClass();
+        //        $($(this).attr('href')).addClass('active');
+        //    });
+        //});
+    </script>

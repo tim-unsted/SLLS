@@ -9,26 +9,7 @@
     <h3 class="modal-title" id="titleLabel">@ViewBag.Title</h3>
 </div>
 
-<script type="text/javascript">
-    $(function () {
-        $('#btnCancel').click(function () {
-            $('#lrgModal').modal('hide');
-            $('#stdModal').modal('hide');
-        });
 
-        $('form').submit(function (e) {
-            e.preventDefault();
-            $.post(this.action, $(this).serialize(), function (response) {
-                if (response.error) {
-                    alert(response.error);
-                }
-                else if(response.redirectTo) {
-                    window.location.href = response.redirectTo;
-                }
-            }, 'json');
-        });
-    });
-</script>
 
 @using (Html.BeginForm(Model.PostSelectAction, Model.PostSelectController, FormMethod.Post, new { @class = "form-horizontal", id="frmSelect" }))
 {
@@ -65,4 +46,26 @@
         <button type="submit" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @Html.DisplayFor(model => model.OkButtonText)</button>
         &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
     </div>
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $('#btnCancel').click(function () {
+                $('#lrgModal').modal('hide');
+                $('#stdModal').modal('hide');
+            });
+
+            $('form').submit(function (e) {
+                e.preventDefault();
+                $.post(this.action, $(this).serialize(), function (response) {
+                    if (response.error) {
+                        alert(response.error);
+                    } else if (response.redirectTo) {
+                        window.location.href = response.redirectTo;
+                    }
+                }, 'json');
+            });
+        });
+    </script>
 }

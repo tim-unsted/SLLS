@@ -15,12 +15,14 @@
     @Html.Partial("_IndexNoLocations", Model)
 </div>
 
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
+@section scripts {
+@Scripts.Render("~/bundles/selectPicker")
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.selectpicker').selectpicker({
+                liveSearch: true,
+                showSubtext: true
+            });
         });
-    });
-</script>
+    </script>
+}

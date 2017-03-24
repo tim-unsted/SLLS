@@ -1,42 +1,6 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.SupplierPeopleAddViewModel
 
-<script type="text/javascript">
-
-    $(document).ready(function () {
-
-        $("#SupplierID").change(function () {
-            var select = $("#AddressID");
-            select.empty();
-
-            var selectedSupplierID = { SupplierID: $("#SupplierID").val() };
-
-            $.ajax({
-                url: '@Url.Action("GetSelectedAddresses", "SupplierPeople")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedSupplierID),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.SupplierAddressData, function (index, itemData) {
-                            select.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                            }));
-                        }
-                        );
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
-            });
-        });
-    });
-
-</script>
-
 @Html.Partial("_ModalAddHeader")
 
 @using (Html.BeginForm("PostCreate","SupplierPeople", FormMethod.Post))
@@ -120,4 +84,39 @@
     </div>
 
     @Html.Partial("_ModalAddFooter")
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#SupplierID").change(function () {
+                var select = $("#AddressID");
+                select.empty();
+
+                var selectedSupplierID = { SupplierID: $("#SupplierID").val() };
+
+                $.ajax({
+                    url: '@Url.Action("GetSelectedAddresses", "SupplierPeople")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(selectedSupplierID),
+                    success: function (data) {
+                        if (data.success) {
+                            $.each(data.SupplierAddressData, function (index, itemData) {
+                                select.append($('<option/>', {
+                                    value: itemData.Value,
+                                    text: itemData.Text
+                                }));
+                            }
+                            );
+                        } else {
+                            alert('invalid ID' + data.success);
+                        }
+                    },
+                    async: false
+                });
+            });
+        });
+    </script>
 }

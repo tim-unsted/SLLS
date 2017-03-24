@@ -2,24 +2,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.TitleAdditionalFieldDef>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        var table = $('#fielddefs').DataTable({
-            "dom": '<"inline"i><"inline float-right"f><"clear"><"inline"l><"inline float-right"p>rt<"inline"i><"inline float-right"p><"clear"><"inline"l><"clear">',
-            "oLanguage": {
-                "sLengthMenu": "Items per page _MENU_ ",
-                "sInfo": "Showing _START_ to _END_ of _TOTAL_ items",
-                "sInfoEmpty": "",
-                "sEmptyTable": "No items were found"
-            },
-            "pageLength": 25,
-            "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]]
-        });
-    });
-
-</script>
-
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <p>
@@ -65,3 +47,22 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#fielddefs').DataTable({
+                "dom": '<"inline"i><"inline float-right"f><"clear"><"inline"l><"inline float-right"p>rt<"inline"i><"inline float-right"p><"clear"><"inline"l><"clear">',
+                "oLanguage": {
+                    "sLengthMenu": "Items per page _MENU_ ",
+                    "sInfo": "Showing _START_ to _END_ of _TOTAL_ items",
+                    "sInfoEmpty": "",
+                    "sEmptyTable": "No items were found"
+                },
+                "pageLength": 25,
+                "lengthMenu": [[5, 10, 25, 50, 100, -1], [5, 10, 25, 50, 100, "All"]]
+            });
+        });
+    </script>
+}

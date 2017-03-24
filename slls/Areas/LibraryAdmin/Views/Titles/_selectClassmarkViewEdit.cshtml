@@ -1,14 +1,13 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.TitleDetailsViewModel
 
-@Html.Label(DbRes.T("Classmarks.Classmark", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Content("~/LibraryAdmin/Classmarks/_add")" class="button" id="addClassmarkLink" title="@DbRes.T("Classmarks.Classmark", "FieldDisplayName") not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
+@Html.Label(DbRes.T("Classmarks.Classmark", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Action("_add","Classmarks")" class="button modal-link" id="addClassmarkLink" title="@DbRes.T("Classmarks.Classmark", "FieldDisplayName") not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 @Html.DropDownList("ClassmarkID", null, new { @class = "form-control" })
 @Html.ValidationMessageFor(model => model.ClassmarkID, "", new { @class = "text-danger" })
 
 <div id="newClassmarkDialog" title="Add New @DbRes.T("Classmarks.Classmark", "FieldDisplayName")"></div>
 
-<script type="text/javascript">
-   
+@*<script type="text/javascript">
     $(function () {
         $('#newClassmarkDialog').dialog({
             open: function () {
@@ -69,6 +68,7 @@
     });
 
     $('#addClassmarkLink').click(function () {
+        //alert('Hello');
         var createFormUrl = $(this).attr('href');
         $('#newClassmarkDialog').html('')
             .load(createFormUrl, function () {
@@ -86,7 +86,92 @@
                     jQuery.validator.unobtrusive.parse('#addNewFrm');
                     $('#newClassmarkDialog').dialog('open');
                 });
-        }        
+        }
         return false;
     });
-</script>
+</script>*@
+
+@*@section scripts {
+    <script type="text/javascript">
+        $(function() {
+            $('#newClassmarkDialog').dialog({
+                open: function() {
+                    $(this).closest(".ui-dialog")
+                        .find(".ui-dialog-titlebar-close")
+                        .removeClass("ui-icon-closethick")
+                        .addClass("btn btn-default")
+                        .text("X");
+                },
+                autoOpen: false,
+                modal: true,
+                overlay: {
+                    backgroundColor: '#000',
+                    opacity: 0.5
+                },
+                buttons: [
+                    {
+                        text: 'Save',
+                        "class": 'btn btn-success',
+                        click: function() {
+                            var addNewFrm = $('#addClassmarkForm');
+                            if (addNewFrm.valid()) {
+                                $.ajax({
+                                    url: '@Url.Action("_add", "Classmarks")',
+                                    type: 'Post',
+                                    data: addNewFrm.serialize(),
+                                    async: false,
+                                    success: function(data) {
+                                        if (data.success) {
+                                            $('#ClassmarkID').append(
+                                                $('<option></option>')
+                                                .val(data.newData.ClassmarkID)
+                                                .html(data.newData.Classmark1)
+                                                .prop('selected', true)
+                                            );
+                                            $('#newClassmarkDialog').dialog('close');
+                                        } else {
+                                            alert(data.errMsg);
+                                        }
+                                    },
+                                    error: function() {
+                                        alert("Oops, there has been an error.");
+                                    }
+                                });
+                            }
+                        }
+                    },
+                    {
+                        text: 'Cancel',
+                        "class": 'btn btn-default',
+                        click: function() {
+                            $('#ClassmarkID').val(0);
+                            $(this).dialog('close');
+                        }
+                    }
+                ]
+            });
+        });
+
+        $('#addClassmarkLink').click(function() {
+            var createFormUrl = $(this).attr('href');
+            $('#newClassmarkDialog').html('')
+                .load(createFormUrl, function() {
+                    jQuery.validator.unobtrusive.parse('#addNewFrm');
+                    $('#newClassmarkDialog').dialog('open');
+                });
+            return false;
+        });
+
+        $('#ClassmarkID').change(function() {
+            if (this.value === "-1") {
+                var createFormUrl = $('#addClassmarkLink').attr('href');
+                $('#newClassmarkDialog').html('')
+                    .load(createFormUrl, function() {
+                        jQuery.validator.unobtrusive.parse('#addNewFrm');
+                        $('#newClassmarkDialog').dialog('open');
+                    });
+            }
+            return false;
+        });
+    </script>
+}*@

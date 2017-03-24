@@ -2,50 +2,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Copy>
 
-<script type="text/javascript">
-    
-    $(document).ready(function () {
-        $('#circulateditems').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            
-            "order": [[3, 'asc'], [1, 'asc']],
-            "columnDefs": [
-                {
-                    "data": [0],
-                    "orderData": [3],
-                    "render": function (data, type, row) {
-                        return '<a href="Circulation/CirculationList?copy=' + row[5] + '" class="btn-link">' + data + '</a>';},
-                    "targets": [0]
-                },
-                {
-                    "searchable": false,
-                    "sortable": true,
-                    "orderSequence": [ "desc", "asc" ],
-                    "targets": [2]
-                },
-                {
-                    "visible": false,
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [3, 4, 5]
-                },
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [6]
-                }
-            ]
-        });
-    });
-</script>
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
@@ -56,56 +12,104 @@
 
 <table id="circulateditems" class="table table-condensed table-hover">
     <thead>
-        <tr>
-            <th>
-                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
-            </th>
-            <th>
-                @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
-            </th>
-            <th>
-                @Html.Label(DbRes.T("Circulation.Recipients","FieldDisplayName"))
-            </th>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+        </th>
+        <th>
+            @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
+        </th>
+        <th>
+            @Html.Label(DbRes.T("Circulation.Recipients", "FieldDisplayName"))
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Title.Title1)
-                </td>
-                <td>
-                    @Html.ActionLink(item.CopyNumber.ToString(), "Edit", "Copies", new { id = item.CopyID }, null)
-                </td>
-                <td>
-                    @if(item.Circulations.Any())
-                    {
-                        <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn-link" title="View/Edit Circulation List"><span class="badge badge-link">@item.Circulations.Count</span></a>
-                    }
-                </td>
-                <td>
-                    @Html.Raw(item.Title.FiledTitle)
-                </td>
-                <td>
-                    @Html.Raw(item.Title.TitleID)
-                </td>
-                <td>
-                    @Html.Raw(item.CopyID)
-                </td>
-                <td class="just-right">
-                    @if (item.Circulations.Any())
-                    {
-                        <a href="@Url.Action("EmailAllRecipients", new { id = item.CopyID })" class="modal-link" title="Email All @DbRes.T("Circulation.Recipients", "FieldDisplayName")"><span class="glyphicon glyphicon-envelope"></span></a>
-                    }
-                    <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn btn-link" title="View/Edit Circulation List"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
-                    <a href="@Url.Action("RemoveFromCirculation", new {id = item.CopyID})" class="btn btn-link modal-link" title="Remove from Circulation"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></a>
-                </td>
-            </tr>
-        }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title.Title1)
+            </td>
+            <td>
+                @Html.ActionLink(item.CopyNumber.ToString(), "Edit", "Copies", new {id = item.CopyID}, null)
+            </td>
+            <td>
+                @if (item.Circulations.Any())
+                {
+                    <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn-link" title="View/Edit Circulation List"><span class="badge badge-link">@item.Circulations.Count</span></a>
+                }
+            </td>
+            <td>
+                @Html.Raw(item.Title.FiledTitle)
+            </td>
+            <td>
+                @Html.Raw(item.Title.TitleID)
+            </td>
+            <td>
+                @Html.Raw(item.CopyID)
+            </td>
+            <td class="just-right">
+                @if (item.Circulations.Any())
+                {
+                    <a href="@Url.Action("EmailAllRecipients", new {id = item.CopyID})" class="modal-link" title="Email All @DbRes.T("Circulation.Recipients", "FieldDisplayName")"><span class="glyphicon glyphicon-envelope"></span></a>
+                }
+                <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn btn-link" title="View/Edit Circulation List"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
+                <a href="@Url.Action("RemoveFromCirculation", new {id = item.CopyID})" class="btn btn-link modal-link" title="Remove from Circulation"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></a>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('#circulateditems').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+
+                "order": [[3, 'asc'], [1, 'asc']],
+                "columnDefs": [
+                    {
+                        "data": [0],
+                        "orderData": [3],
+                        "render": function (data, type, row) {
+                            return '<a href="Circulation/CirculationList?copy=' + row[5] + '" class="btn-link">' + data + '</a>';
+                        },
+                        "targets": [0]
+                    },
+                    {
+                        "searchable": false,
+                        "sortable": true,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [2]
+                    },
+                    {
+                        "visible": false,
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [3, 4, 5]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [6]
+                    }
+                ]
+            });
+        });
+    </script>
+}

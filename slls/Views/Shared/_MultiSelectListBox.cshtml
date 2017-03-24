@@ -1,10 +1,6 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.ListBoxViewModel
 
-@*<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h3 class="modal-title">@Html.DisplayFor(model => model.HeaderText)</h3>
-</div>*@
 @Html.Partial("_ModalAddHeader")
 
 @using (Html.BeginForm(Model.PostSelectAction, Model.PostSelectController, FormMethod.Post, new { @class = "form-horizontal", id="MultiSelect" }))
@@ -52,42 +48,44 @@
     </div>
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
 
-        $("#AvailableItemsType").change(function () {
-            var select = $("#SelectedItems");
-            select.empty();
+            $("#AvailableItemsType").change(function() {
+                var select = $("#SelectedItems");
+                select.empty();
 
-            var selectedListType = { listType: $("#AvailableItemsType").val() };
+                var selectedListType = { listType: $("#AvailableItemsType").val() };
 
-            $.ajax({
-                url: '@Url.Action("GetListRows", @Model.PostSelectController)',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedListType),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.AvailableItems, function (index, itemData) {
-                            select.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                            }));
+                $.ajax({
+                    url: '@Url.Action("GetListRows", @Model.PostSelectController)',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(selectedListType),
+                    success: function(data) {
+                        if (data.success) {
+                            $.each(data.AvailableItems, function(index, itemData) {
+                                    select.append($('<option/>', {
+                                        value: itemData.Value,
+                                        text: itemData.Text
+                                    }));
+                                }
+                            );
+                        } else {
+                            alert('Oops!' + data.success);
                         }
-                        );
-                    } else {
-                        alert('Oops!' + data.success);
-                    }
-                },
-                async: false
+                    },
+                    async: false
+                });
             });
         });
-    });
 
-    $(function () {
-        $('#SelectedItems').on('dblclick', function () {
-            $("#MultiSelect").submit();
+        $(function() {
+            $('#SelectedItems').on('dblclick', function() {
+                $("#MultiSelect").submit();
+            });
         });
-    });
-</Script>
+    </Script>
+}

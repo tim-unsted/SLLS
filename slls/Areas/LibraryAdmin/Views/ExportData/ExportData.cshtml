@@ -158,11 +158,4 @@
     </div>
 }
 
-<script type="text/javascript">
-    $(function () {
-        $('form').submit(function (e) {
-            $('#stdModal').modal('hide');
-            $('#lrgModal').modal('hide');
-        });
-    });
-</script>
+@Scripts.Render("~/bundles/modalAddEditHeader")

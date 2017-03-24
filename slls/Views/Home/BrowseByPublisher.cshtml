@@ -14,13 +14,18 @@
     @Html.Partial("_Simpleresults", Model)
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
+@Html.Hidden("SearchResultSize", @Model.SearchResultSize)
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+<script src="@Url.Content("~/DataTables/OPAC/_Simpleresults.js")" type="text/javascript"></script>
+@Scripts.Render("~/bundles/selectPicker")
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.selectpicker').selectpicker({
+                liveSearch: true,
+                showSubtext: true
+            });
         });
-    });
-</script>
-
-
+    </script>
+}

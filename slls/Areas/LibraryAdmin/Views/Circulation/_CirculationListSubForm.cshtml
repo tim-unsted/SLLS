@@ -1,27 +1,6 @@
 ﻿@using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Circulation>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#circulationlist').DataTable({
-            "dom": 'rt<"inline"i><"inline float-right"p><"clear">',
-            "order": [[1, 'asc']],
-            "pageLength": 10,
-            "columnDefs": [
-                {
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [1,2]
-                },
-                {
-                    "visible": false,
-                    "targets":[1]
-                }
-            ]
-        });
-    });
-</script>
-
 <table id="circulationlist" class="table table-condensed table-bordered-outeronly table-hover" style="width: 100%;">
     <thead>
     <tr>
@@ -51,3 +30,4 @@
     }
     </tbody>
 </table>
+

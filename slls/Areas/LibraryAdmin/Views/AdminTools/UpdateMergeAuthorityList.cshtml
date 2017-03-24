@@ -1,9 +1,6 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.MergeAuthorityListViewModel
 
-@*<script src="~/Scripts/jquery.validate.min.js"></script>
-    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>*@
-
 @Html.Partial("_HeaderCancel")
 
 @using (Html.BeginForm("PostUpdateMergeAuthorityList", "AdminTools", FormMethod.Post, new { @class = "form-horizontal", id = "mergeAuthValues", name = "mergeAuthValues" }))
@@ -69,114 +66,116 @@
     </p>
 </div>
 
-<script type="text/javascript">
+@section scripts {
+    <script type="text/javascript">
 
-    $(document).ready(function () {
+        $(document).ready(function() {
 
-        $('#confirmDialog').dialog({
-            dialogClass: "no-close",
-            autoOpen: false,
-            width: 700,
-            modal: true,
-            resizable: false,
-            buttons: [{
-                text: 'Continue',
-                "class": 'btn btn-success',
-                click: function () {
-                    document.mergeAuthValues.submit();
-                }
-            },
-            {
-                text: 'Cancel',
-                "class": 'btn btn-default',
-                click: function () {
-                    $(this).dialog("close");
-                }
-            }]
-        });
-
-        $('#mergeAuthValues').submit(function (e) {
-            e.preventDefault();
-            
-            if ($(this).valid()) {
-                var field;
-                var confirmDiv;
-                $("#warning-msg").hide();
-
-                //Check that an existing or new value has been specified to accept the move/merger ...
-                if ($('#NewValue').val() == '' && $("#NewId option:selected").index() == 0) {
-                    $("#warning-msg").show();
-                    return false;
-                }
-
-                //Show selected Authority list ...
-                field = $('#AuthorityList');
-                confirmDiv = $('#confirmAuthorityList');
-                confirmDiv.parent().show();
-                confirmDiv.html(field.val());
-
-                //Show selected values to move/merge ...
-                confirmDiv = $('#confirmSelectedValues');
-                var selectedVal = [];
-                $('#SelectedIds :selected').each(function (i, selected) {
-                    selectedVal[i] = $(selected).text() + '; ';
-                });
-                confirmDiv.parent().show();
-                confirmDiv.html(selectedVal);
-
-                //Show selected value or new value to accept move/merger ...
-                confirmDiv = $('#confirmNewValue');
-                field = $('#NewValue');
-                if (field.val() == '') {
-                    confirmDiv.html($('#NewId option:selected').text());
-                } else {
-                    confirmDiv.html(field.val() + " (New value)");
-                }
-                confirmDiv.parent().show();
-
-                $('#confirmDialog').dialog("open");
-            }
-
-            return false;
-        });
-
-        $("#AuthorityList").change(function () {
-            var list1 = $("#SelectedIds");
-            var select1 = $("#NewId");
-            list1.empty();
-            select1.empty();
-
-            var authList = { AuthList: $("#AuthorityList").val() };
-
-            $.ajax({
-                url: '@Url.Action("GetAuthorityValues", "AdminTools")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(authList),
-                success: function (data) {
-                    if (data.success) {
-                        select1.append($('<option/>', { value: "0", text: "Select a value to accept move/merger" }));
-                        $.each(data.AuthorityListData, function (index, itemData) {
-                            list1.append($('<option/>', { value: itemData.Value, text: itemData.Text }));
-                            select1.append($('<option/>', { value: itemData.Value, text: itemData.Text }));
+            $('#confirmDialog').dialog({
+                dialogClass: "no-close",
+                autoOpen: false,
+                width: 700,
+                modal: true,
+                resizable: false,
+                buttons: [
+                    {
+                        text: 'Continue',
+                        "class": 'btn btn-success',
+                        click: function() {
+                            document.mergeAuthValues.submit();
                         }
-                        );
-                    } else {
-                        alert('invalid ID' + data.success);
+                    },
+                    {
+                        text: 'Cancel',
+                        "class": 'btn btn-default',
+                        click: function() {
+                            $(this).dialog("close");
+                        }
                     }
-                },
-                async: false
+                ]
+            });
+
+            $('#mergeAuthValues').submit(function(e) {
+                e.preventDefault();
+
+                if ($(this).valid()) {
+                    var field;
+                    var confirmDiv;
+                    $("#warning-msg").hide();
+
+                    //Check that an existing or new value has been specified to accept the move/merger ...
+                    if ($('#NewValue').val() == '' && $("#NewId option:selected").index() == 0) {
+                        $("#warning-msg").show();
+                        return false;
+                    }
+
+                    //Show selected Authority list ...
+                    field = $('#AuthorityList');
+                    confirmDiv = $('#confirmAuthorityList');
+                    confirmDiv.parent().show();
+                    confirmDiv.html(field.val());
+
+                    //Show selected values to move/merge ...
+                    confirmDiv = $('#confirmSelectedValues');
+                    var selectedVal = [];
+                    $('#SelectedIds :selected').each(function(i, selected) {
+                        selectedVal[i] = $(selected).text() + '; ';
+                    });
+                    confirmDiv.parent().show();
+                    confirmDiv.html(selectedVal);
+
+                    //Show selected value or new value to accept move/merger ...
+                    confirmDiv = $('#confirmNewValue');
+                    field = $('#NewValue');
+                    if (field.val() == '') {
+                        confirmDiv.html($('#NewId option:selected').text());
+                    } else {
+                        confirmDiv.html(field.val() + " (New value)");
+                    }
+                    confirmDiv.parent().show();
+
+                    $('#confirmDialog').dialog("open");
+                }
+
+                return false;
+            });
+
+            $("#AuthorityList").change(function() {
+                var list1 = $("#SelectedIds");
+                var select1 = $("#NewId");
+                list1.empty();
+                select1.empty();
+
+                var authList = { AuthList: $("#AuthorityList").val() };
+
+                $.ajax({
+                    url: '@Url.Action("GetAuthorityValues", "AdminTools")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(authList),
+                    success: function(data) {
+                        if (data.success) {
+                            select1.append($('<option/>', { value: "0", text: "Select a value to accept move/merger" }));
+                            $.each(data.AuthorityListData, function(index, itemData) {
+                                    list1.append($('<option/>', { value: itemData.Value, text: itemData.Text }));
+                                    select1.append($('<option/>', { value: itemData.Value, text: itemData.Text }));
+                                }
+                            );
+                        } else {
+                            alert('invalid ID' + data.success);
+                        }
+                    },
+                    async: false
+                });
             });
         });
-    });
 
-</script>
-
-<script type="text/javascript">
-    $(function () {
-        $('#SelectedItem').on('dblclick', function () {
-            $("#frmSelect").submit();
+        $(function () {
+            $('#SelectedItem').on('dblclick', function () {
+                $("#frmSelect").submit();
+            });
         });
-    });
-</script>
+
+    </script>
+}

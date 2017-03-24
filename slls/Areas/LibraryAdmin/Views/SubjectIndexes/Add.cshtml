@@ -63,42 +63,44 @@
     </div>
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
+@section scripts {
+@Scripts.Render("~/bundles/selectPicker")
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.selectpicker').selectpicker({
+                liveSearch: true,
+                showSubtext: true
+            });
         });
-    });
 
-    $("#Keyword").autocomplete({
-        appendTo: "#stdModal",
-        source: function (request, response) {
-            var title = new Array();
-            var urlGetTerms = "@Url.Action("Autocomplete", "Keywords")";
-            $.ajax({
-                async: false,
-                cache: false,
-                type: "POST",
-                url: urlGetTerms,
-                data: { "term": request.term },
-                success: function(data) {
-                    for (var i = 0; i < data.length; i++) {
-                        title[i] = { label: data[i].Value, Id: data[i].Key };
+        $("#Keyword").autocomplete({
+            appendTo: "#stdModal",
+            source: function(request, response) {
+                var title = new Array();
+                var urlGetTerms = "@Url.Action("Autocomplete", "Keywords")";
+                $.ajax({
+                    async: false,
+                    cache: false,
+                    type: "POST",
+                    url: urlGetTerms,
+                    data: { "term": request.term },
+                    success: function(data) {
+                        for (var i = 0; i < data.length; i++) {
+                            title[i] = { label: data[i].Value, Id: data[i].Key };
+                        }
+                    }
+                });
+                response(title);
+            },
+            select: function(event, ui) {
+                if (ui.item) {
+                    //alert(ui.item.label);
+                    if (ui.item.Id != null) {
+                        $('#KeywordId').val(ui.item.Id);
                     }
                 }
-            });
-            response(title);
-        },
-        select: function (event, ui) {
-            if (ui.item) {
-                //alert(ui.item.label);
-                if (ui.item.Id != null) {
-                    $('#KeywordId').val(ui.item.Id);
-                } 
             }
-        }
-    });
-
-</script>
+        });
+    </script>
+}
 

@@ -22,48 +22,51 @@ thead input {
 
 </style>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-    
-        // Setup - add a text input to each header cell
-        $('#accountyears tfoot th').each(function () {
-            var title = $('#accountyears thead th').eq($(this).index()).text();
-            $(this).html('<input type="text" placeholder="Search ' + title + '" />');
-        });
-
-
-        // DataTable
-        var table = $('#accountyears').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [[3, 'asc'],[0, 'desc']],
-            "columnDefs": [{
-                "visible": false,
-                "targets": [3]
-            }]
-        });
-        
-
-        // Apply the search
-        table.columns().eq(0).each(function (colIdx) {
-            $('input', table.column(colIdx).footer()).on('keyup change', function () {
-                table
-                    .column(colIdx)
-                    .search(this.value)
-                    .draw();
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // Setup - add a text input to each header cell
+            $('#accountyears tfoot th').each(function() {
+                var title = $('#accountyears thead th').eq($(this).index()).text();
+                $(this).html('<input type="text" placeholder="Search ' + title + '" />');
             });
 
-            $('input', table.column(colIdx).footer()).on('click', function (e) {
-                e.stopPropagation();
+            // DataTable
+            var table = $('#accountyears').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "order": [[3, 'asc'], [0, 'desc']],
+                "columnDefs": [
+                    {
+                        "visible": false,
+                        "targets": [3]
+                    }
+                ]
+            });
+
+
+            // Apply the search
+            table.columns().eq(0).each(function(colIdx) {
+                $('input', table.column(colIdx).footer()).on('keyup change', function() {
+                    table
+                        .column(colIdx)
+                        .search(this.value)
+                        .draw();
+                });
+
+                $('input', table.column(colIdx).footer()).on('click', function(e) {
+                    e.stopPropagation();
+                });
             });
         });
-    });
-</script>
+    </script>
+}
 
 <div class="container">
 

@@ -6,7 +6,7 @@
 @Html.HiddenFor(x => Model.IsActualSearch)
 @Html.HiddenFor(x => Model.OrderBy)
 
-@using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm" }))
+@using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm", defaultbutton = "btnSubmit" }))
 {
     if (TempData["NoData"] != null)
     {
@@ -32,72 +32,7 @@
             <a class="close" onclick="$('#helpAlert').hide()">×</a>
             <h4><span aria-hidden="true" class="glyphicon glyphicon-info-sign"></span> Searching Tips</h4>
             @Html.Raw(ViewBag.SearchTips)
-            @*<h5>
-                    This search works in a similar way to Google. Search for specific words or "phrases", optionally excluding others.
-                    Here are some searching examples:
-                </h5>
-                <table class="table table-compact table-no-border">
-                    <tr>
-                        <td>
-                            apple banana (default)
-                        </td>
-                        <td>
-                            finds records that contain <strong><i>both</i></strong> words, anywhere and in any order. This is the default "AND" search.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            apple <span style="color: red">AND</span> banana
-                        </td>
-                        <td>
-                            same as above. Finds records that contain <strong><i>both</i></strong> words, anywhere and in any order. However, there is no need to include "AND" operator between words.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            apple<span style="color: red; font-weight: bold">*</span> (default)
-                        </td>
-                        <td>
-                            finds "apple", "apples", "applesauce", and "applet". There is no need to append the "<strong> * </strong>" wild-card suffix in your searches.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <span style="color: red; font-weight: bold">"</span>some words<span style="color: red; font-weight: bold">"</span>
-                        </td>
-                        <td>
-                            wrapping your search words in quotation marks treats them as an entire phrase. Finds records that contain "<strong>some words</strong> of wisdom", but not "<strong>some</strong> strange <strong>words</strong>".
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>
-                            apple <span style="color: red">OR</span> juice
-                        </td>
-                        <td>
-                            finds records that contain either of these words, or both. Using the "OR" operator will return more results than the default "AND" search.
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            apple <span style="color: red; font-weight: bold">-</span>macintosh
-                        </td>
-                        <td>
-                            optionally exclude certain words. Finds records with "apple" but not "macintosh".
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            apple <span style="color: red">NOT</span> macintosh
-                        </td>
-                        <td>
-                            same as using "-", finds records with "apple" but not "macintosh".
-                        </td>
-                    </tr>
-                </table>
-                <p>
-                    <strong>Note: </strong>There are several commonly words that will be ignored in a search. These words are called "Stop Words" and offer little or no benefit to a search. Stop words include "A", "An", "And", "For", "Has", "He, "Her", The", "Them", etc.
-                </p>*@
+            
         </div>
     </div>
 
@@ -150,9 +85,23 @@
     }
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#MainSearchString').focus();
-    });
-</script>
+@Html.Hidden("SearchResultSize", Model.SearchResultSize)
+@Html.Hidden("OrderBy", Model.OrderBy)
+
+@section scripts {
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/OPAC/_Simpleresults.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#MainSearchString').focus();
+
+            $(function () {
+                $("input[type='checkbox']").change(function () {
+                    $(this).closest("form").submit();
+                });
+            });
+        });
+       
+    </script>
+}
 

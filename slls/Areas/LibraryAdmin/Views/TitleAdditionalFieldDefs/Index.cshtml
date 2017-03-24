@@ -2,22 +2,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.TitleAdditionalFieldDef>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        var table = $('#fielddefs').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            }
-        });
-    });
-
-</script>
-
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="btn-group">
@@ -94,3 +78,20 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#fielddefs').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                }
+            });
+        });
+    </script>
+}

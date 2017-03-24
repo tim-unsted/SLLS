@@ -2,7 +2,7 @@
 @using Westwind.Globalization
 @model slls.ViewModels.SelectTitleViewmodel
 
-<script src="~/Scripts/jquery.mcautocomplete.js"></script>
+
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
@@ -53,9 +53,11 @@
     </dl>
 </div>
 
-<script type="text/javascript">
+@section Scripts{
+    <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+    <script type="text/javascript">
 
-    //$(document).ready(function () {
+        //$(document).ready(function () {
 
         $('#confirmDialog').dialog({
             dialogClass: "no-close",
@@ -63,23 +65,25 @@
             width: 700,
             modal: true,
             resizable: false,
-            buttons: [{
-                text: 'Continue',
-                "class": 'btn btn-success',
-                click: function () {
-                    document.duplicateTitle.submit();
+            buttons: [
+                {
+                    text: 'Continue',
+                    "class": 'btn btn-success',
+                    click: function() {
+                        document.duplicateTitle.submit();
+                    }
+                },
+                {
+                    text: 'Cancel',
+                    "class": 'btn btn-default',
+                    click: function() {
+                        $(this).dialog("close");
+                    }
                 }
-            },
-            {
-                text: 'Cancel',
-                "class": 'btn btn-default',
-                click: function () {
-                    $(this).dialog("close");
-                }
-            }]
+            ]
         });
 
-        $('#duplicateTitle').submit(function (e) {
+        $('#duplicateTitle').submit(function(e) {
             e.preventDefault();
             if ($(this).valid()) {
                 $('#confirmDialog').dialog("open");
@@ -102,7 +106,7 @@
                 contentType: 'application/json',
                 dataType: 'json',
                 data: JSON.stringify(selectedTitle),
-                success: function (data) {
+                success: function(data) {
                     if (data.success) {
                         confirmTitle.text(data.Title);
                         //alert(data.Title);
@@ -119,46 +123,44 @@
         //$("#TitleID").change(function () {
         //    doTitleDetails();
         //});
-    //});
+        //});
 
-    var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%',valueField: 'year' }, { name: 'Author', minWidth: '20%', valueField: 'authors' }];
+        var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '20%', valueField: 'authors' }];
 
-    $("#Title").mcautocomplete({
-        //appendTo: "#stdModal",
-        autoFocus: true,
-        showHeader: true,
-        columns: columns,
-        source: function (request, response) {
-            var title = new Array();
-            var urlGetTerms = "@Url.Action("Autocomplete", "Titles")";
-            $.ajax({
-                async: false,
-                cache: false,
-                type: "POST",
-                url: urlGetTerms,
-                data: { "term": request.term },
-                success: function(data) {
-                    for (var i = 0; i < data.length; i++) {
-                        title[i] = { Id: data[i].TitleId, title: data[i].Title, edition: data[i].Edition, year: data[i].Year, authors: data[i].Authors };
+        $("#Title").mcautocomplete({
+            //appendTo: "#stdModal",
+            autoFocus: true,
+            showHeader: true,
+            columns: columns,
+            source: function(request, response) {
+                var title = new Array();
+                var urlGetTerms = "@Url.Action("Autocomplete", "Titles")";
+                $.ajax({
+                    async: false,
+                    cache: false,
+                    type: "POST",
+                    url: urlGetTerms,
+                    data: { "term": request.term },
+                    success: function(data) {
+                        for (var i = 0; i < data.length; i++) {
+                            title[i] = { Id: data[i].TitleId, title: data[i].Title, edition: data[i].Edition, year: data[i].Year, authors: data[i].Authors };
+                        }
+                    }
+                });
+                response(title);
+            },
+            select: function(event, ui) {
+                event.preventDefault();
+
+                if (ui.item) {
+                    if (ui.item.Id != null) {
+                        $('#Title').val(ui.item.title);
+                        $('#TitleID').val(ui.item.Id);
+                        doTitleDetails();
                     }
                 }
-            });
-            response(title);
-        },
-        select: function (event, ui) {
-            event.preventDefault();
-
-            if (ui.item) {
-                if (ui.item.Id != null) {
-                    $('#Title').val(ui.item.title);
-                    $('#TitleID').val(ui.item.Id);
-                    doTitleDetails();
-                }
             }
-        }
-    });
+        });
 
-</script>
-
-
-
+    </script>
+}

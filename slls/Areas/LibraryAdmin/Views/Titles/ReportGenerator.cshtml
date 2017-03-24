@@ -1,274 +1,10 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.ReportsGeneratorViewModel
 
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.js"></script>
-<script src="~/Scripts/DatePickerReady.js"></script>
-
-<script type="text/javascript">
-
-    $(document).ready(function() {
-
-        $('#lstReports').removeAttr('multiple');
-        $('#lstClassmarks').removeAttr('multiple');
-        $('#lstMediaTypes').removeAttr('multiple');
-        $('#lstOffices').removeAttr('multiple');
-        $('#lstPublishers').removeAttr('multiple');
-        $('#lstKeywords').removeAttr('multiple');
-
-        $("#form1").submit(function() {
-            if ($('#lstReports').val() == null) {
-                alert('Please select the report you require!');
-                return false;
-            }
-            if ($('#classmarksList').is(':visible')) {
-                if ($('#lstClassmarks').val() == null) {
-                    alert('Please select a classmark!');
-                    return false;
-                }
-            }
-            if ($('#keywordsList').is(':visible')) {
-                if ($('#lstKeywords').val() == null) {
-                    alert('Please select a subject/keyword!');
-                    return false;
-                }
-            }
-            if ($('#mediaTypesList').is(':visible')) {
-                if ($('#lstMediaTypes').val() == null) {
-                    alert('Please select a media type!');
-                    return false;
-                }
-            }
-            if ($('#locationsList').is(':visible')) {
-                if ($('#lstLocations').val() == null) {
-                    alert('Please select a location!');
-                    return false;
-                }
-            }
-            if ($('#publishersList').is(':visible')) {
-                if ($('#lstPublishers').val() == null) {
-                    alert('Please select a publisher!');
-                    return false;
-                }
-            }
-            if ($('#officesList').is(':visible')) {
-                if ($('#lstOffices').val() == null) {
-                    alert('Please select an office!');
-                    return false;
-                }
-            }
-            if ($('#timespan').is(':visible')) {
-                if ($('#StartDate').val() == null) {
-                    alert('Please select a Start Date!');
-                    return false;
-                }
-                if ($('#EndDate').val() == null) {
-                    alert('Please select a End Date!');
-                    return false;
-                }
-            }
-            if ($('#statusTypes').children().children(':checked').length === 0) {
-                alert('Please tick at least one status type!');
-                return false;
-            }
-            
-        });
-        
-        function countCopies() {
-            var label = $("#noCopiesAdded");
-            var d1 = $("#StartDate").val();
-            var d2 = $("#EndDate").val();
-            var sList = "";
-            $('#statusTypes').children().children(':checked').each(function () {
-                var sThisVal = $(this).val();
-                sList += (sList == "" ? sThisVal : "," + sThisVal);
-            });
-
-            $.ajax({
-                url: '@Url.Action("CountCopiesAdded", "Titles")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify({ startDate: d1, endDate: d2, statusIdString: sList }),
-                success: function (data) {
-                    if (data.success) {
-                        label.text(data.Count);
-                    };
-                },
-                async: false
-            });
-        }
-
-        $("#StartDate").change(function () {
-            countCopies();
-        });
-
-        $("#EndDate").change(function () {
-            countCopies();
-        });
-        
-
-        $("#lstReports").change(function () {
-            var classmarks = $("#classmarksList");
-            var keywords = $("#keywordsList");
-            var mediaTypes = $("#mediaTypesList");
-            var locations = $("#locationsList");
-            var publishers = $("#publishersList");
-            var offices = $("#officesList");
-            var timespan = $('#timeSpan');
-
-            var selectedReportId = $("#lstReports").val();
-            selectedReportId = parseInt(selectedReportId);
-
-            switch (selectedReportId) {
-                case 13:
-                case 14:
-                    keywords.show(400);
-                    classmarks.hide(400);
-                    mediaTypes.hide(400);
-                    locations.hide(400);
-                    publishers.hide(400);
-                    offices.hide(400);
-                    timespan.hide(400);
-                    $('#lstLocations').removeAttr('multiple');
-                    $('#lstClassmarks').removeAttr('multiple');
-                    $('#lstMediaTypes').removeAttr('multiple');
-                    $('#keywordsCaption').text("Available Keywords - select one only");
-                    break;
-
-                case 15:
-                case 16:
-                    classmarks.show(400);
-                    keywords.hide(400);
-                    publishers.hide(400);
-                    mediaTypes.hide(400);
-                    locations.hide(400);
-                    offices.hide(400);
-                    timespan.hide(400);
-                    $('#lstLocations').removeAttr('multiple');
-                    $('#lstMediaTypes').removeAttr('multiple');
-                    $('#lstClassmarks').attr('multiple', true);
-                    $('#classmarksCaption').text("Available Classmarks - select one or more");
-                    break;
-
-                case 17:
-                case 18:
-                case 19:
-                    mediaTypes.show(400);
-                    classmarks.hide(400);
-                    keywords.hide(400);
-                    publishers.hide(400);
-                    locations.hide(400);
-                    offices.hide(400);
-                    timespan.hide(400);
-                    $('#lstLocations').removeAttr('multiple');
-                    $('#lstClassmarks').removeAttr('multiple');
-                    $('#lstMediaTypes').attr('multiple', true);
-                    $('#mediaTypesCaption').text("Available Media Types - select one or more");
-                    break;
-
-                case 20:
-                case 21:
-                case 22:
-                case 30:
-                    offices.show(400);
-                    classmarks.hide(400);
-                    keywords.hide(400);
-                    publishers.hide(400);
-                    mediaTypes.hide(400);
-                    locations.hide(400);
-                    timespan.hide(400);
-                    $('#lstMediaTypes').removeAttr('multiple');
-                    $('#lstLocations').removeAttr('multiple');
-                    $('#lstClassmarks').removeAttr('multiple');
-                    $('#officesCaption').text("Available Offices - select one only");
-                    break;
-
-                case 23:
-                case 24:
-                case 25:
-                    locations.show(400);
-                    classmarks.hide(400);
-                    keywords.hide(400);
-                    publishers.hide(400);
-                    mediaTypes.hide(400);
-                    offices.hide(400);
-                    timespan.hide(400);
-                    $('#lstClassmarks').removeAttr('multiple');
-                    $('#lstMediaTypes').removeAttr('multiple');
-                    $('#lstLocations').removeAttr('multiple');
-                    $('#locationsCaption').text("Available Locations - select one only");
-                    break;
-
-                case 29:
-                    locations.show(400);
-                    classmarks.hide(400);
-                    keywords.hide(400);
-                    publishers.hide(400);
-                    mediaTypes.hide(400);
-                    offices.hide(400);
-                    timespan.hide(400);
-                    $('#lstMediaTypes').removeAttr('multiple');
-                    $('#lstClassmarks').removeAttr('multiple');
-                    $('#lstLocations').attr('multiple', true);
-                    $('#locationsCaption').text("Available Locations - select one or more");
-                    break;
-
-                case 26:
-                case 27:
-                case 28:
-                    publishers.show(400);
-                    classmarks.hide(400);
-                    keywords.hide(400);
-                    mediaTypes.hide(400);
-                    locations.hide(400);
-                    offices.hide(400);
-                    timespan.hide(400);
-                    $('#lstMediaTypes').removeAttr('multiple');
-                    $('#lstLocations').removeAttr('multiple');
-                    $('#lstClassmarks').removeAttr('multiple');
-                    $('#publishersCaption').text("Available Publishers - select one only");
-                    break;
-
-                case 31:
-                    publishers.hide(400);
-                    classmarks.hide(400);
-                    keywords.hide(400);
-                    mediaTypes.hide(400);
-                    locations.hide(400);
-                    offices.hide(400);
-                    timespan.show(400);
-                    countCopies();
-                    break;
-
-                default:
-                    keywords.hide(400);
-                    classmarks.hide(400);
-                    mediaTypes.hide(400);
-                    locations.hide(400);
-                    publishers.hide(400);
-                    offices.hide(400);
-                    timespan.hide(400);
-                    $('#lstMediaTypes').removeAttr('multiple');
-                    $('#lstLocations').removeAttr('multiple');
-                    $('#lstClassmarks').removeAttr('multiple');
-                    $('#publishersCaption').text("Available Publishers - select one only");
-                    $('#locationsCaption').text("Available Locations - select one only");
-                    $('#officesCaption').text("Available Offices - select one only");
-                    $('#mediaTypesCaption').text("Available Media Types - select one only");
-                    $('#keywordsCaption').text("Available Keywords - select one only");
-                    $('#classmarksCaption').text("Available Classmarks - select one only");
-            }
-
-        });
-    });
-
-</script>
 
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm("PostReportGenerator", "Titles", FormMethod.Post, new {id = "form1"}))
+@using (Html.BeginForm("PostReportGenerator", "Titles", FormMethod.Post, new { id = "form1" }))
 {
     <div class="alert alert-info">
         <span class="pull-right" style="padding-left: 10px;"><button type="submit" value="View Report" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-sunglasses"></span> View Report</button>&nbsp;&nbsp;</span>
@@ -419,5 +155,271 @@
         <button type="submit" value="View Report" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-sunglasses"></span> View Report</button>
         &nbsp;&nbsp;or&nbsp;<a href="@Url.Action("Index")" class="btn-link" title="Cancel">Cancel</a>
     </div>
-    
+
+}
+
+@section Scripts{
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.js"></script>
+    <script src="~/Scripts/DatePickerReady.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('#lstReports').removeAttr('multiple');
+            $('#lstClassmarks').removeAttr('multiple');
+            $('#lstMediaTypes').removeAttr('multiple');
+            $('#lstOffices').removeAttr('multiple');
+            $('#lstPublishers').removeAttr('multiple');
+            $('#lstKeywords').removeAttr('multiple');
+
+            $("#form1").submit(function () {
+                if ($('#lstReports').val() == null) {
+                    alert('Please select the report you require!');
+                    return false;
+                }
+                if ($('#classmarksList').is(':visible')) {
+                    if ($('#lstClassmarks').val() == null) {
+                        alert('Please select a classmark!');
+                        return false;
+                    }
+                }
+                if ($('#keywordsList').is(':visible')) {
+                    if ($('#lstKeywords').val() == null) {
+                        alert('Please select a subject/keyword!');
+                        return false;
+                    }
+                }
+                if ($('#mediaTypesList').is(':visible')) {
+                    if ($('#lstMediaTypes').val() == null) {
+                        alert('Please select a media type!');
+                        return false;
+                    }
+                }
+                if ($('#locationsList').is(':visible')) {
+                    if ($('#lstLocations').val() == null) {
+                        alert('Please select a location!');
+                        return false;
+                    }
+                }
+                if ($('#publishersList').is(':visible')) {
+                    if ($('#lstPublishers').val() == null) {
+                        alert('Please select a publisher!');
+                        return false;
+                    }
+                }
+                if ($('#officesList').is(':visible')) {
+                    if ($('#lstOffices').val() == null) {
+                        alert('Please select an office!');
+                        return false;
+                    }
+                }
+                if ($('#timespan').is(':visible')) {
+                    if ($('#StartDate').val() == null) {
+                        alert('Please select a Start Date!');
+                        return false;
+                    }
+                    if ($('#EndDate').val() == null) {
+                        alert('Please select a End Date!');
+                        return false;
+                    }
+                }
+                if ($('#statusTypes').children().children(':checked').length === 0) {
+                    alert('Please tick at least one status type!');
+                    return false;
+                }
+
+            });
+
+            function countCopies() {
+                var label = $("#noCopiesAdded");
+                var d1 = $("#StartDate").val();
+                var d2 = $("#EndDate").val();
+                var sList = "";
+                $('#statusTypes').children().children(':checked').each(function () {
+                    var sThisVal = $(this).val();
+                    sList += (sList == "" ? sThisVal : "," + sThisVal);
+                });
+
+                $.ajax({
+                    url: '@Url.Action("CountCopiesAdded", "Titles")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify({ startDate: d1, endDate: d2, statusIdString: sList }),
+                    success: function (data) {
+                        if (data.success) {
+                            label.text(data.Count);
+                        };
+                    },
+                    async: false
+                });
+            }
+
+            $("#StartDate").change(function () {
+                countCopies();
+            });
+
+            $("#EndDate").change(function () {
+                countCopies();
+            });
+
+
+            $("#lstReports").change(function () {
+                var classmarks = $("#classmarksList");
+                var keywords = $("#keywordsList");
+                var mediaTypes = $("#mediaTypesList");
+                var locations = $("#locationsList");
+                var publishers = $("#publishersList");
+                var offices = $("#officesList");
+                var timespan = $('#timeSpan');
+
+                var selectedReportId = $("#lstReports").val();
+                selectedReportId = parseInt(selectedReportId);
+
+                switch (selectedReportId) {
+                    case 13:
+                    case 14:
+                        keywords.show(400);
+                        classmarks.hide(400);
+                        mediaTypes.hide(400);
+                        locations.hide(400);
+                        publishers.hide(400);
+                        offices.hide(400);
+                        timespan.hide(400);
+                        $('#lstLocations').removeAttr('multiple');
+                        $('#lstClassmarks').removeAttr('multiple');
+                        $('#lstMediaTypes').removeAttr('multiple');
+                        $('#keywordsCaption').text("Available Keywords - select one only");
+                        break;
+
+                    case 15:
+                    case 16:
+                        classmarks.show(400);
+                        keywords.hide(400);
+                        publishers.hide(400);
+                        mediaTypes.hide(400);
+                        locations.hide(400);
+                        offices.hide(400);
+                        timespan.hide(400);
+                        $('#lstLocations').removeAttr('multiple');
+                        $('#lstMediaTypes').removeAttr('multiple');
+                        $('#lstClassmarks').attr('multiple', true);
+                        $('#classmarksCaption').text("Available Classmarks - select one or more");
+                        break;
+
+                    case 17:
+                    case 18:
+                    case 19:
+                        mediaTypes.show(400);
+                        classmarks.hide(400);
+                        keywords.hide(400);
+                        publishers.hide(400);
+                        locations.hide(400);
+                        offices.hide(400);
+                        timespan.hide(400);
+                        $('#lstLocations').removeAttr('multiple');
+                        $('#lstClassmarks').removeAttr('multiple');
+                        $('#lstMediaTypes').attr('multiple', true);
+                        $('#mediaTypesCaption').text("Available Media Types - select one or more");
+                        break;
+
+                    case 20:
+                    case 21:
+                    case 22:
+                    case 30:
+                        offices.show(400);
+                        classmarks.hide(400);
+                        keywords.hide(400);
+                        publishers.hide(400);
+                        mediaTypes.hide(400);
+                        locations.hide(400);
+                        timespan.hide(400);
+                        $('#lstMediaTypes').removeAttr('multiple');
+                        $('#lstLocations').removeAttr('multiple');
+                        $('#lstClassmarks').removeAttr('multiple');
+                        $('#officesCaption').text("Available Offices - select one only");
+                        break;
+
+                    case 23:
+                    case 24:
+                    case 25:
+                        locations.show(400);
+                        classmarks.hide(400);
+                        keywords.hide(400);
+                        publishers.hide(400);
+                        mediaTypes.hide(400);
+                        offices.hide(400);
+                        timespan.hide(400);
+                        $('#lstClassmarks').removeAttr('multiple');
+                        $('#lstMediaTypes').removeAttr('multiple');
+                        $('#lstLocations').removeAttr('multiple');
+                        $('#locationsCaption').text("Available Locations - select one only");
+                        break;
+
+                    case 29:
+                        locations.show(400);
+                        classmarks.hide(400);
+                        keywords.hide(400);
+                        publishers.hide(400);
+                        mediaTypes.hide(400);
+                        offices.hide(400);
+                        timespan.hide(400);
+                        $('#lstMediaTypes').removeAttr('multiple');
+                        $('#lstClassmarks').removeAttr('multiple');
+                        $('#lstLocations').attr('multiple', true);
+                        $('#locationsCaption').text("Available Locations - select one or more");
+                        break;
+
+                    case 26:
+                    case 27:
+                    case 28:
+                        publishers.show(400);
+                        classmarks.hide(400);
+                        keywords.hide(400);
+                        mediaTypes.hide(400);
+                        locations.hide(400);
+                        offices.hide(400);
+                        timespan.hide(400);
+                        $('#lstMediaTypes').removeAttr('multiple');
+                        $('#lstLocations').removeAttr('multiple');
+                        $('#lstClassmarks').removeAttr('multiple');
+                        $('#publishersCaption').text("Available Publishers - select one only");
+                        break;
+
+                    case 31:
+                        publishers.hide(400);
+                        classmarks.hide(400);
+                        keywords.hide(400);
+                        mediaTypes.hide(400);
+                        locations.hide(400);
+                        offices.hide(400);
+                        timespan.show(400);
+                        countCopies();
+                        break;
+
+                    default:
+                        keywords.hide(400);
+                        classmarks.hide(400);
+                        mediaTypes.hide(400);
+                        locations.hide(400);
+                        publishers.hide(400);
+                        offices.hide(400);
+                        timespan.hide(400);
+                        $('#lstMediaTypes').removeAttr('multiple');
+                        $('#lstLocations').removeAttr('multiple');
+                        $('#lstClassmarks').removeAttr('multiple');
+                        $('#publishersCaption').text("Available Publishers - select one only");
+                        $('#locationsCaption').text("Available Locations - select one only");
+                        $('#officesCaption').text("Available Offices - select one only");
+                        $('#mediaTypesCaption').text("Available Media Types - select one only");
+                        $('#keywordsCaption').text("Available Keywords - select one only");
+                        $('#classmarksCaption').text("Available Classmarks - select one only");
+                }
+
+            });
+        });
+
+    </script>
 }

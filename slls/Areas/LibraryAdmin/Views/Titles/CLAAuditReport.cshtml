@@ -1,39 +1,6 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.CLAAuditReportViewModel
 
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.js"></script>
-<script src="~/Scripts/DatePickerReady.js"></script>
-
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        var optReport = $('#reportTypes').val();
-        var opt = $('#optUseDates input:radio:checked').val();
-        $("#expenditureTypes").prop("disabled", optReport === "1");
-        $("#datePicker :input").attr("disabled", opt === "False");
-        //$('#lstMediaTypes').val("-1");
-
-        $("#optUseDates").change(function () {
-            opt = $('#optUseDates input:radio:checked').val();
-            $("#datePicker :input").attr("disabled", opt === "False");
-        });
-
-        $('#reportTypes').change(function () {
-            optReport = $('#reportTypes').val();
-            if (optReport === "1") {
-                $("#expenditureTypes").val("0");
-                $("#expenditureTypes").prop("disabled", true);
-            } else {
-                $("#expenditureTypes").prop("disabled", false);
-            }
-        });
-        return true;
-    });
-
-</script>
-
 <h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm("CLAAuditReport", "Titles", FormMethod.Post, new { id = "form1" }))
@@ -163,4 +130,37 @@
         <button type="submit" value="View Report" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-sunglasses"></span> View Report</button>
         &nbsp;or&nbsp;<a href="@Url.Action("Index","Home")" class="btn-link" title="Cancel">Cancel</a>
     </div>
+}
+
+@section scripts {
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.bootstrap.js"></script>
+    <script src="~/Scripts/DatePickerReady.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var optReport = $('#reportTypes').val();
+            var opt = $('#optUseDates input:radio:checked').val();
+            $("#expenditureTypes").prop("disabled", optReport === "1");
+            $("#datePicker :input").attr("disabled", opt === "False");
+            //$('#lstMediaTypes').val("-1");
+
+            $("#optUseDates").change(function () {
+                opt = $('#optUseDates input:radio:checked').val();
+                $("#datePicker :input").attr("disabled", opt === "False");
+            });
+
+            $('#reportTypes').change(function () {
+                optReport = $('#reportTypes').val();
+                if (optReport === "1") {
+                    $("#expenditureTypes").val("0");
+                    $("#expenditureTypes").prop("disabled", true);
+                } else {
+                    $("#expenditureTypes").prop("disabled", false);
+                }
+            });
+            return true;
+        });
+
+    </script>
 }

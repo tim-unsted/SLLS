@@ -9,3 +9,8 @@
 <div>
     @Html.Partial("_IndexNoIsbn", Model)
 </div>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Titles/_IndexNoIsbn.js")" type="text/javascript"></script>
+}

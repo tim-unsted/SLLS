@@ -2,45 +2,6 @@
 @using slls.Utils.Helpers
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Copy>
-           
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#copies').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "columnDefs": [
-            {
-                "width": "30%",
-                "orderData": 5,
-                "targets": 0
-            },
-            {
-                "width": "10%",
-                "targets": [1]
-            },
-            {
-                "width": "20%",
-                "targets": [2, 3]
-            },
-            {
-                "visible": false,
-                "targets": [5]
-            },
-            {
-                "width": "10%",
-                "searchable": false,
-                "sortable": false,
-                "targets": [6]
-            }
-            ]
-        });
-    });
-</script>
 
 <table id="copies" class="table table-hover">
     <thead>
@@ -112,3 +73,44 @@
     </tbody>
 </table>
 
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#copies').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "columnDefs": [
+                    {
+                        "width": "30%",
+                        "orderData": 5,
+                        "targets": 0
+                    },
+                    {
+                        "width": "10%",
+                        "targets": [1]
+                    },
+                    {
+                        "width": "20%",
+                        "targets": [2, 3]
+                    },
+                    {
+                        "visible": false,
+                        "targets": [5]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [6]
+                    }
+                ]
+            });
+        });
+    </script>
+}

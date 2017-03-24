@@ -154,13 +154,14 @@
 
 }
 
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $(".cssselector").datepicker({ dateFormat: 'dd/mm/yy' });
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $(".cssselector").datepicker({ dateFormat: 'dd/mm/yy' });
-
-        $("#Circulated").change(function () {
-            $("#circulationFields").toggle();
+            $("#Circulated").change(function() {
+                $("#circulationFields").toggle();
+            });
         });
-    });
-</script>
+    </script>
+}

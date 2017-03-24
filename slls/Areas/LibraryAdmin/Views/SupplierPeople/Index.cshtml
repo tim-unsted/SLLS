@@ -4,31 +4,6 @@
 @using Westwind.Globalization
 @model slls.ViewModels.SupplierPeopleListViewModel
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#contacts').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "columnDefs": [
-                {
-                    "visible": false,
-                    "targets": [4]
-                },
-                {
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [5]
-                }
-            ]
-        });
-    });
-</script>
-
 <h2>@ViewBag.Title</h2>
 
 <div class="alert alert-info">
@@ -98,3 +73,31 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#contacts').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "columnDefs": [
+                    {
+                        "visible": false,
+                        "targets": [4]
+                    },
+                    {
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [5]
+                    }
+                ]
+            });
+        });
+    </script>
+}

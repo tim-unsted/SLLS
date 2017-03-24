@@ -3,78 +3,6 @@
 @using Westwind.Globalization
 @model slls.ViewModels.TitlesListViewModel
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#titles').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [9, 'asc'],
-            "autoWidth": false,
-            "columnDefs": [
-                {
-                    "width": "10%",
-                    "sortable": false,
-                    "searchable": false,
-                    "targets": [0]
-                },
-                {
-                    "width": "20%",
-                    "orderData": 9,
-                    "targets": [1],
-                    "orderSequence": ["desc", "asc"]
-                },
-                {
-                    "width": "10%",
-                    "targets": [2, 4]
-                },
-                {
-                    "width": "15%",
-                    "targets": [3,5,6]
-                },
-                {
-                    "width": "10%",
-                    "targets": [7]
-                },
-                {
-                    "visible": false,
-                    "targets": [8,9]
-                },
-                {
-                    "sortable": false,
-                    "width": "10%",
-                    "targets": [10]
-                }
-            ],
-            initComplete: function() {
-                var api = this.api();
-                this.api().columns('.select-filter').every(function() {
-                    var column = this;
-                    var select = $('<select class="form-control" style="width:100%;"><option value=""></option></select>')
-                        .appendTo($(column.footer()))
-                        .on('change', function() {
-                            var val = $.fn.dataTable.util.escapeRegex(
-                                $(this).val()
-                            );
-
-                            column
-                                .search(val ? '^' + val + '$' : '', true, false)
-                                .draw();
-                        });
-
-                    column.data().unique().sort().each(function(d, j) {
-                        select.append('<option value="' + d + '">' + d + '</option>');
-                    });
-                });
-            }
-        });
-    });
-</script>
-
 <table id="titles" class="table table-condensed table-hover">
     <thead>
     <tr>
@@ -108,84 +36,84 @@
     </tr>
     </thead>
     <tfoot>
-        <tr>
-            <td></td>
-            <td class="filter"></td>
-            <td class="filter"></td>
-            <td class="filter"></td>
-            <td class="filter"></td>
-            <td class="filter"></td>
-            <td class="filter"></td>
-            <td class="filter"></td>
-            <td class="filter"></td>
-            <td class="filter"></td>
-            <td></td>
-        </tr>
+    <tr>
+        <td></td>
+        <td class="filter"></td>
+        <td class="filter"></td>
+        <td class="filter"></td>
+        <td class="filter"></td>
+        <td class="filter"></td>
+        <td class="filter"></td>
+        <td class="filter"></td>
+        <td class="filter"></td>
+        <td class="filter"></td>
+        <td></td>
+    </tr>
     </tfoot>
 
     <tbody>
     @if (Model.Titles.Any())
-    { 
-    foreach (var item in Model.Titles)
     {
-        <tr>
-            <td>
-                <div class="coverthumbnail">
-                    @{ var image = item.TitleImages.FirstOrDefault(i => i.IsPrimary) ?? item.TitleImages.FirstOrDefault();
-                         if (image != null)
-                         {
-                            <img src="@Url.Action("RenderImage", "Files", new { id = image.ImageId, area = "" })" alt="@item.Title1" style="width: 100%;">
-                         }
+        foreach (var item in Model.Titles)
+        {
+            <tr>
+                <td>
+                    <div class="coverthumbnail">
+                        @{
+                            var image = item.TitleImages.FirstOrDefault(i => i.IsPrimary) ?? item.TitleImages.FirstOrDefault();
+                            if (image != null)
+                            {
+                                <img src="@Url.Action("RenderImage", "Files", new {id = image.ImageId, area = ""})" alt="@item.Title1" style="width: 100%;">
+                            }
+                        }
+                        @*<img src="@Url.Action("RenderImage", "Files", new {id = 3, area = ""})" alt="@item.Title1" style="width: 100%;">*@
+                    </div>
+                </td>
+                <td>
+                    <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})">@Html.DisplayFor(modelItem => item.Title1)</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Isbn)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Publisher.PublisherName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Edition)
+                </td>
+                <td>
+                    @foreach (var author in item.TitleAuthors)
+                    {
+                        <a href="@Url.Action("Edit", "Authors", new {id = author.AuthorId}, null)" class="modal-link" title="View/Edit Author">@author.Author.DisplayName</a><br/>
                     }
-                    @*<img src="@Url.Action("RenderImage", "Files", new {id = 3, area = ""})" alt="@item.Title1" style="width: 100%;">*@
-                </div>
-            </td>
-            <td>
-                <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})">@Html.DisplayFor(modelItem => item.Title1)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Isbn)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Publisher.PublisherName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Year)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Edition)
-            </td>
-            <td>
-                @foreach (var author in item.TitleAuthors)
-                {
-                    <a href="@Url.Action("Edit", "Authors", new {id = author.AuthorId}, null)" class="modal-link" title="View/Edit Author">@author.Author.DisplayName</a><br/>
-                }
-            </td>
-            <td>
-                @if (item.Copies.Any())
-                {
-                    <a href="@Url.Action("Edit", "Copies", new {id = item.Copies.FirstOrDefault().CopyID}, null)" class="btn-link" title="View/Edit Copies"><span class="badge badge-link">@item.Copies.Count</span></a><br/>
-                }@*else
+                </td>
+                <td>
+                    @if (item.Copies.Any())
+                    {
+                        <a href="@Url.Action("Edit", "Copies", new {id = item.Copies.FirstOrDefault().CopyID}, null)" class="btn-link" title="View/Edit Copies"><span class="badge badge-link">@item.Copies.Count</span></a><br/>
+                    }@*else
                 {
                     @Html.DisplayFor(modelItem => item.Copies.Count)
                 }*@</td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TitleID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.FiledTitle)
-            </td>
-            <td class="just-right">
-                <a href="@Url.Action("Edit", new {id = item.TitleID})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                <a href="@Url.Action("Delete", new {id = item.TitleID})" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
-                @if (@Html.CurrentViewName() == "TitlesNoCopies")
-                {
-                    <a href="@Url.Action("Add", "Copies", new {id = item.TitleID})" class="btn btn-link" title="Add @DbRes.T("Copies.Copy", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
-                }
-            </td>
-        </tr>
-    }
+                <td>
+                    @Html.DisplayFor(modelItem => item.TitleID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FiledTitle)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Edit", new {id = item.TitleID})" class="btn btn-link" title="Edit @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", new {id = item.TitleID})" class="btn btn-link modal-link" title="Delete @DbRes.T("Titles.Title", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    @if (@Html.CurrentViewName() == "TitlesNoCopies")
+                    {
+                        <a href="@Url.Action("Add", "Copies", new {id = item.TitleID})" class="btn btn-link" title="Add @DbRes.T("Copies.Copy", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
+                    }
+                </td>
+            </tr>
+        }
     }
     </tbody>
-
 </table>

@@ -28,16 +28,3 @@
         }
     </div>
 </div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $("#searchForm").keypress(function (e) {
-            kCode = e.keyCode || e.charCode; //for cross browser
-            if (kCode === 13) {
-                var defaultbtn = $(this).attr("DefaultButton");
-                $("#" + defaultbtn).click();
-                return false;
-            }
-        });
-    });
-</script>

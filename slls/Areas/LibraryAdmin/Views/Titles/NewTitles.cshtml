@@ -1,48 +1,11 @@
-﻿@*@model slls.ViewModels.NewTitlesListViewModel*@
-@using System.Linq
+﻿@using System.Linq
 @using Westwind.Globalization
-@model System.Collections.Generic.IEnumerable<slls.ViewModels.NewTitlesListViewModel>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#newtitles').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [0, 'asc'],
-            "autoWidth": true,
-            "columnDefs": [
-                {
-                    "render": function (data, type, row) {
-                        return '<a href="Edit/' + row[9] + '" class="btn-link">' + data + '</a>';
-                    },
-                    "targets": [0]
-                },
-                {
-                    "visible": false,
-                    "targets": [3, 9, 10]
-                },
-                {
-                    "sortable": false,
-                    "targets": [9, 10, 11]
-                },
-                {
-                    "width": "10%",
-                    "targets": [11]
-                }
-            ]
-        });
-    });
-</script>
+@model IEnumerable<slls.ViewModels.NewTitlesListViewModel>
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
-    <span class="help-block"><strong>Info: </strong>This page lists all catalogue items that are currently flagged to appear on the '@DbRes.T("NewTitlesList","EntityType")' (viewable on the OPAC). You may use this page to remove an item from the list, or to add new items.</span>
+    <span class="help-block"><strong>Info: </strong>This page lists all catalogue items that are currently flagged to appear on the '@DbRes.T("NewTitlesList", "EntityType")' (viewable on the OPAC). You may use this page to remove an item from the list, or to add new items.</span>
     <a href="@Url.Action("AddToNewTitlesList", "Titles")" title="Add item(s) to list" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add item(s) to list</a>
     @if (Model.Any())
     {
@@ -50,93 +13,124 @@
     }
 </div>
 
-    @*<hr />*@
+@*<hr />*@
 
-    <table id="newtitles" class="table table-condensed table-hover">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Title)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Author)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Edition)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Publisher)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.ISBN)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Year)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Copy)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Location)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateAdded)
-                </th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Title)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Author)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Edition)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Publisher)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ISBN)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Year)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Copy)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Location)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateAdded)
-                    </td>
-                    <td>
-                        @Html.Raw(item.TitleId)
-                    </td>
-                    <td>
-                        @Html.Raw(item.CopyId)
-                    </td>
-                    <td class="just-right">
-                        <a href="@Url.Action("Edit", "Copies", new { id = item.CopyId })" class="btn btn-link" title="Edit this Copy"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="@Url.Action("RemoveFromNewTitlesList", "Titles", new { id = item.CopyId })" class="btn btn-link modal-link" title="Remove this item from the New Titles list"><span class=" glyphicon glyphicon-remove"></span></a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+<table id="newtitles" class="table table-condensed table-hover">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Title)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Author)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Edition)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Publisher)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ISBN)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Year)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Copy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Location)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.DateAdded)
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Author)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Edition)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Publisher)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ISBN)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Year)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Copy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Location)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateAdded)
+            </td>
+            <td>
+                @Html.Raw(item.TitleId)
+            </td>
+            <td>
+                @Html.Raw(item.CopyId)
+            </td>
+            <td class="just-right">
+                <a href="@Url.Action("Edit", "Copies", new {id = item.CopyId})" class="btn btn-link" title="Edit this Copy"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("RemoveFromNewTitlesList", "Titles", new {id = item.CopyId})" class="btn btn-link modal-link" title="Remove this item from the New Titles list"><span class=" glyphicon glyphicon-remove"></span></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
 
-
-    @*<div>
-        @if (Model.Any())
-        {
-            <a href="@Url.Action("ClearNewTitles", "Titles")" title="Clear New @DbRes.T("Titles.Title", "FieldDisplayName")s List" class="modal-link">Clear New @DbRes.T("Titles.Title", "FieldDisplayName")s List <span aria-hidden="true" class="glyphicon glyphicon-remove" /></a>
-        }
-    </div>*@
+@section Scripts{
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#newtitles').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "order": [0, 'asc'],
+                "autoWidth": true,
+                "columnDefs": [
+                    {
+                        "render": function (data, type, row) {
+                            return '<a href="Edit/' + row[9] + '" class="btn-link">' + data + '</a>';
+                        },
+                        "targets": [0]
+                    },
+                    {
+                        "visible": false,
+                        "targets": [3, 9, 10]
+                    },
+                    {
+                        "sortable": false,
+                        "targets": [9, 10, 11]
+                    },
+                    {
+                        "width": "10%",
+                        "targets": [11]
+                    }
+                ]
+            });
+        });
+    </script>
+}

@@ -1,20 +1,6 @@
 ﻿@using System.Linq
 @model slls.ViewModels.ParameterIndexViewModel
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#parameters').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": 100,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            }
-        });
-    });
-</script>
-
 <table class="table" id="parameters">
     <thead>
         <tr>
@@ -58,3 +44,4 @@
         }
     </tbody>
 </table>
+

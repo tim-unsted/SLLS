@@ -39,17 +39,18 @@
     </div>
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
+@Scripts.Render("~/bundles/selectPicker")
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.selectpicker').selectpicker({
+                liveSearch: true,
+                showSubtext: true
+            });
         });
-    });
 
-    $(function () {
-        $('#SelectedItem').on('dblclick', function () {
-            $("#frmSelect").submit();
+        $(function() {
+            $('#SelectedItem').on('dblclick', function() {
+                $("#frmSelect").submit();
+            });
         });
-    });
-</Script>
+    </Script>

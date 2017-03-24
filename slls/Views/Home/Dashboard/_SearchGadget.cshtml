@@ -8,7 +8,7 @@
         </span>
     </div>
     <div class="panel-body">
-    @using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm", role = "search" }))
+    @using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm", role = "search", defaultbutton = "btnSubmit" }))
     {
         <div class="form-horizontal">
             <div class="form-group">

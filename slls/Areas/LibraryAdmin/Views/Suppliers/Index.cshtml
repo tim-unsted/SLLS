@@ -4,57 +4,6 @@
 @using Westwind.Globalization
 @model slls.ViewModels.SuppliersListViewModel
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#companies').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "columnDefs": [
-            {
-                "width": "30%",
-                "targets": [0]
-            },
-            {
-                "width": "20%",
-                "searchable": true,
-                "sortable": false,
-                "targets": [1]
-            },
-            {
-                "width": "15%",
-                "searchable": true,
-                "sortable": false,
-                "targets": [2, 3]
-            },
-            //{
-            //    "width": "15%",
-            //    "searchable": true,
-            //    "sortable": false,
-            //    "targets": [3]
-            //},
-            {
-                "width": "10%",
-                "searchable": false,
-                "sortable": true,
-                "orderSequence": ["desc", "asc"],
-                "targets": [4]
-            },
-            {
-                "width": "10%",
-                "searchable": false,
-                "sortable": false,
-                "targets": [5]
-            }
-            ]
-        });
-    });
-</script>
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
@@ -125,3 +74,57 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#companies').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "columnDefs": [
+                    {
+                        "width": "30%",
+                        "targets": [0]
+                    },
+                    {
+                        "width": "20%",
+                        "searchable": true,
+                        "sortable": false,
+                        "targets": [1]
+                    },
+                    {
+                        "width": "15%",
+                        "searchable": true,
+                        "sortable": false,
+                        "targets": [2, 3]
+                    },
+                    //{
+                    //    "width": "15%",
+                    //    "searchable": true,
+                    //    "sortable": false,
+                    //    "targets": [3]
+                    //},
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": true,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [4]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [5]
+                    }
+                ]
+            });
+        });
+    </script>
+}

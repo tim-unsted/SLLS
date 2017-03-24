@@ -5,71 +5,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.CoverImage>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#files').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": 25,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "columnDefs": [
-                {
-                    "width": "5%",
-                    "targets": [0]
-                },
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [1]
-                },
-                {
-                    "width": "15%",
-                    "targets": [2, 3]
-                },
-                {
-                    "width": "10%",
-                    "targets": [4,5]
-                },
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": true,
-                    "targets": [6]
-                },
-                {
-                    "width": "10%",
-                    "orderData": 8,
-                    "searchable": false,
-                    "sortable": true,
-                    "orderSequence": ["desc", "asc"],
-                    "targets": [4]
-                },
-                {
-                    "orderData": 7,
-                    "orderSequence": ["desc", "asc"],
-                    "targets": [5]
-                },
-                {
-                    "visible": false,
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [7,8]
-                },
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [9]
-                }
-            ]
-        });
-    });
-</script>
-
 <h2>@ViewBag.Title</h2>
 
 <div class="alert alert-info">
@@ -79,9 +14,7 @@
     <p>
         Use the tools on this page to manage your @DbRes.T("Hosted_Images", "EntityType").ToLower() and check which catalogue items that are using them.
     </p>
-    
 </div>
-
 
 <p>
     <a href="@Url.Action("Add", "Images")" title="Upload new images" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-cloud-upload"></span> Upload Images</a>
@@ -89,74 +22,144 @@
 
 <table id="files" class="table table-hover">
     <thead>
-        <tr>
-            <th>
-                @DbRes.T("Images.Image_ID", "FieldDisplayName")
-            </th>
-            <th>
-                @DbRes.T("Images.Image", "FieldDisplayName")
-            </th>
-            <th>
-                @DbRes.T("Images.Name", "FieldDisplayName")
-            </th>
-            <th>
-                @DbRes.T("Images.Source", "FieldDisplayName")
-            </th>
-            <th>
-                @DbRes.T("Images.Size", "FieldDisplayName")
-            </th>
-            <th>
-                @DbRes.T("Images.Date_Uploaded", "FieldDisplayName")
-            </th>
-            <th>
-                @DbRes.T("Images.Titles", "FieldDisplayName")
-            </th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @DbRes.T("Images.Image_ID", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("Images.Image", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("Images.Name", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("Images.Source", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("Images.Size", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("Images.Date_Uploaded", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("Images.Titles", "FieldDisplayName")
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var image in Model)
-        {
-            <tr>
-                <td style="vertical-align: top;">
-                    <a href="@Url.Action("Edit", new { id = image.ImageId })" class="btn btn-link modal-link" title="Edit">@Html.DisplayFor(modelItem => image.ImageId)</a>
-                </td>
-                <td style="vertical-align: top;">
-                    <div class="coverthumbnail">
-                        <a href="@Url.Action("Show", "Images", new {id = image.ImageId})" title="View image" data-toggle="modal" data-target="#stdModal"><img src="@Url.Action("RenderImage", "Files", new { id = image.ImageId, area = "" })" alt="@image.Source" style="width: 100%;"></a>
-                    </div>
-                </td>
-                <td style="vertical-align:" class="dont-break-out">
-                    @Html.DisplayFor(modelItem => image.Name)
-                </td>
-                <td style="vertical-align: top;" class="dont-break-out">
-                    @Html.ResolvedLink(linkDisplayText: image.Name, linkUrl: image.Source)
-                </td>
-                <td style="vertical-align: top;">
-                    @Html.Raw(Convert.ToDecimal(image.Size).ToString("#,##0"))<span> KB</span>
-                </td>
-                <td style="vertical-align: top;">
-                    @Html.DisplayFor(modelItem => image.InputDate)
-                </td>
-                <td style="vertical-align: top;">
-                    @if (image.TitleImages.Any())
-                    {
-                        <a href="@Url.Action("ByCoverImage", "Titles", new {id = image.ImageId})" title="View all catalogue items using this @DbRes.T("Images.Image", "FieldDisplayName").ToLower()"><span class="badge badge-link">@image.TitleImages.Count</span></a>
-                    }
-                </td>
-                <td>
-                    @Html.Raw(image.InputDateSortable)
-                </td>
-                <td>
-                    @Html.Raw(image.Size)
-                </td>
-                <td class="just-right" style="vertical-align: top;">
-                    <a href="@Url.Action("Delete", new {id = image.ImageId})" class="btn btn-link modal-link" title="Remove hosted file"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("Edit", new { id = image.ImageId })" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                </td>
-            </tr>
-        }
+    @foreach (var image in Model)
+    {
+        <tr>
+            <td style="vertical-align: top;">
+                <a href="@Url.Action("Edit", new {id = image.ImageId})" class="btn btn-link modal-link" title="Edit">@Html.DisplayFor(modelItem => image.ImageId)</a>
+            </td>
+            <td style="vertical-align: top;">
+                <div class="coverthumbnail">
+                    <a href="@Url.Action("Show", "Images", new {id = image.ImageId})" title="View image" data-toggle="modal" data-target="#stdModal"><img src="@Url.Action("RenderImage", "Files", new {id = image.ImageId, area = ""})" alt="@image.Source" style="width: 100%;"></a>
+                </div>
+            </td>
+            <td style="vertical-align: " class="dont-break-out">
+                @Html.DisplayFor(modelItem => image.Name)
+            </td>
+            <td style="vertical-align: top;" class="dont-break-out">
+                @Html.ResolvedLink(linkDisplayText: image.Name, linkUrl: image.Source)
+            </td>
+            <td style="vertical-align: top;">
+                @Html.Raw(Convert.ToDecimal(image.Size).ToString("#,##0"))<span> KB</span>
+            </td>
+            <td style="vertical-align: top;">
+                @Html.DisplayFor(modelItem => image.InputDate)
+            </td>
+            <td style="vertical-align: top;">
+                @if (image.TitleImages.Any())
+                {
+                    <a href="@Url.Action("ByCoverImage", "Titles", new {id = image.ImageId})" title="View all catalogue items using this @DbRes.T("Images.Image", "FieldDisplayName").ToLower()"><span class="badge badge-link">@image.TitleImages.Count</span></a>
+                }
+            </td>
+            <td>
+                @Html.Raw(image.InputDateSortable)
+            </td>
+            <td>
+                @Html.Raw(image.Size)
+            </td>
+            <td class="just-right" style="vertical-align: top;">
+                <a href="@Url.Action("Delete", new {id = image.ImageId})" class="btn btn-link modal-link" title="Remove hosted file"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                <a href="@Url.Action("Edit", new {id = image.ImageId})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#files').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": 25,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "columnDefs": [
+                    {
+                        "width": "5%",
+                        "targets": [0]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [1]
+                    },
+                    {
+                        "width": "15%",
+                        "targets": [2, 3]
+                    },
+                    {
+                        "width": "10%",
+                        "targets": [4, 5]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": true,
+                        "targets": [6]
+                    },
+                    {
+                        "width": "10%",
+                        "orderData": 8,
+                        "searchable": false,
+                        "sortable": true,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [4]
+                    },
+                    {
+                        "orderData": 7,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [5]
+                    },
+                    {
+                        "visible": false,
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [7, 8]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [9]
+                    }
+                ]
+            });
+        });
+    </script>
+}
+
+

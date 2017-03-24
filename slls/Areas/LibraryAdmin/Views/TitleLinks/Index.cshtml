@@ -3,44 +3,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.TitleLink>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#titlelinks').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "columnDefs": [
-                {
-                    "orderData": 3,
-                    "targets": [0],
-                    "orderSequence": ["desc", "asc"]
-                },
-                {
-                    "width": "40%",
-                    "targets": [0,1]
-                },
-                {
-                    "width": "10%",
-                    "targets": [2]
-                },
-                {
-                    "visible": false,
-                    "targets": [3]
-                },
-                {
-                    "sortable": false,
-                    "width": "10%",
-                    "targets": [4]
-                }
-            ]
-        });
-    });
-</script>
-
 <h2>@ViewBag.Title</h2>
 
 <p>
@@ -88,3 +50,44 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#titlelinks').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "columnDefs": [
+                    {
+                        "orderData": 3,
+                        "targets": [0],
+                        "orderSequence": ["desc", "asc"]
+                    },
+                    {
+                        "width": "40%",
+                        "targets": [0, 1]
+                    },
+                    {
+                        "width": "10%",
+                        "targets": [2]
+                    },
+                    {
+                        "visible": false,
+                        "targets": [3]
+                    },
+                    {
+                        "sortable": false,
+                        "width": "10%",
+                        "targets": [4]
+                    }
+                ]
+            });
+        });
+    </script>
+}

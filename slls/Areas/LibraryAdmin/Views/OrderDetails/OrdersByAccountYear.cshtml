@@ -16,6 +16,11 @@
     @Html.Partial("_Index", Model)
 </div>
 
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/OrderDetails/_Index.js")" type="text/javascript"></script>
+}
+
 
 
 

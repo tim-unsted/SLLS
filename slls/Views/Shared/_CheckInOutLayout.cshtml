@@ -12,73 +12,75 @@
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/jqueryval")
-    @Scripts.Render("~/bundles/datatables")
+    @*@Scripts.Render("~/bundles/datatables")*@
     @Scripts.Render("~/bundles/signalR")
     <script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")" type="text/javascript"></script>
-    
-    <script>
-        var dateFormat = "@GlobalVariables.DateFormat";
-        var popupTimeout = "@GlobalVariables.PopupTimeout";
-        var gaTrackId = '<%=ConfigurationManager.AppSettings["GoogleAnalyticsTrackingId"]%>';
 
-        $(document).ready(function () {
-        });
+    @section scripts {
+        <script>
+            var dateFormat = "@GlobalVariables.DateFormat";
+            var popupTimeout = "@GlobalVariables.PopupTimeout";
+            var gaTrackId = '<%=ConfigurationManager.AppSettings["GoogleAnalyticsTrackingId"]%>';
 
-        $(function () {
-            $("#dialogSuccess").dialog({
-                dialogClass: "no-close",
-                modal: true,
-                buttons: [
-                    {
-                        text: 'OK',
-                        open: function (event, ui) {
-                            setTimeout("$('#dialogSuccess').dialog('close')", popupTimeout);
-                        },
-                        click: function () {
-                            $(this).dialog('close');
-                        }
-                    }
-                ]
+            $(document).ready(function() {
             });
-        });
 
-        $(function () {
-            $("#dialogError").dialog({
-                dialogClass: "no-close",
-                modal: true,
-                buttons: [
-                    {
-                        text: 'OK',
-                        open: function (event, ui) {
-                            setTimeout("$('#dialogError').dialog('close')", popupTimeout);
-                        },
-                        click: function () {
-                            $(this).dialog('close');
+            $(function() {
+                $("#dialogSuccess").dialog({
+                    dialogClass: "no-close",
+                    modal: true,
+                    buttons: [
+                        {
+                            text: 'OK',
+                            open: function(event, ui) {
+                                setTimeout("$('#dialogSuccess').dialog('close')", popupTimeout);
+                            },
+                            click: function() {
+                                $(this).dialog('close');
+                            }
                         }
-                    }
-                ]
+                    ]
+                });
             });
-        });
 
-        $(function () {
-            $("#dialogInfo").dialog({
-                dialogClass: "no-close",
-                modal: true,
-                buttons: [
-                    {
-                        text: 'OK',
-                        open: function (event, ui) {
-                            setTimeout("$('#dialogInfo').dialog('close')", popupTimeout);
-                        },
-                        click: function () {
-                            $(this).dialog('close');
+            $(function() {
+                $("#dialogError").dialog({
+                    dialogClass: "no-close",
+                    modal: true,
+                    buttons: [
+                        {
+                            text: 'OK',
+                            open: function(event, ui) {
+                                setTimeout("$('#dialogError').dialog('close')", popupTimeout);
+                            },
+                            click: function() {
+                                $(this).dialog('close');
+                            }
                         }
-                    }
-                ]
+                    ]
+                });
             });
-        });
 
-    </script>
+            $(function() {
+                $("#dialogInfo").dialog({
+                    dialogClass: "no-close",
+                    modal: true,
+                    buttons: [
+                        {
+                            text: 'OK',
+                            open: function(event, ui) {
+                                setTimeout("$('#dialogInfo').dialog('close')", popupTimeout);
+                            },
+                            click: function() {
+                                $(this).dialog('close');
+                            }
+                        }
+                    ]
+                });
+            });
+
+        </script>
+    }
 
     <link rel="stylesheet" type="text/css" href="~/Content/site.css" />
 

@@ -51,25 +51,4 @@
     </div>
 }
 
-<script type="text/javascript">
-    $(function () {
-        $('#SelectedItem').on('dblclick', function () {
-            $("#frmSelect").submit();
-        });
-
-        $('form').submit(function (e) {
-            e.preventDefault();
-            $.post(this.action, $(this).serialize(), function (response) {
-                if (response.error) {
-                    alert(response.error);
-                }
-                else {
-                    $('#stdModal').modal('hide');
-                    $('#lrgModal').modal('hide');
-                    //Refresh
-                    location.reload();
-                }
-            }, 'json');
-        });
-    });
-</script>
+@Scripts.Render("~/bundles/modalAddEditHeader")

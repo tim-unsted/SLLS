@@ -49,19 +49,18 @@
 }
 
 <script type="text/javascript">
-    $(function () {
-        $('#btnSave').click(function () {
+    $(function() {
+        $('#btnSave').click(function() {
             $('#stdModal').modal('hide');
         });
 
-        $('form').submit(function (e) {
+        $('form').submit(function(e) {
             e.preventDefault();
-            $.post(this.action, $(this).serialize(), function (response) {
+            $.post(this.action, $(this).serialize(), function(response) {
                 if (response.error) {
                     alert(response.error);
-                }
-                else {
-                    $('body').on('hidden.bs.modal', '.modal', function () {
+                } else {
+                    $('body').on('hidden.bs.modal', '.modal', function() {
                         $(this).removeData('bs.modal');
                     });
                 }

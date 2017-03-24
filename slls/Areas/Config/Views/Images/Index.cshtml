@@ -5,71 +5,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.CoverImage>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#files').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": 25,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "columnDefs": [
-                {
-                    "width": "5%",
-                    "targets": [0]
-                },
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [1]
-                },
-                {
-                    "width": "15%",
-                    "targets": [2, 3]
-                },
-                {
-                    "width": "10%",
-                    "targets": [4,5]
-                },
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": true,
-                    "targets": [6]
-                },
-                {
-                    "width": "10%",
-                    "orderData": 8,
-                    "searchable": false,
-                    "sortable": true,
-                    "orderSequence": ["desc", "asc"],
-                    "targets": [4]
-                },
-                {
-                    "orderData": 7,
-                    "orderSequence": ["desc", "asc"],
-                    "targets": [5]
-                },
-                {
-                    "visible": false,
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [6,7,8]
-                },
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [9]
-                }
-            ]
-        });
-    });
-</script>
-
 <h2>@ViewBag.Title</h2>
 
 <div class="alert alert-info">
@@ -160,3 +95,71 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#files').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": 25,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "columnDefs": [
+                    {
+                        "width": "5%",
+                        "targets": [0]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [1]
+                    },
+                    {
+                        "width": "15%",
+                        "targets": [2, 3]
+                    },
+                    {
+                        "width": "10%",
+                        "targets": [4, 5]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": true,
+                        "targets": [6]
+                    },
+                    {
+                        "width": "10%",
+                        "orderData": 8,
+                        "searchable": false,
+                        "sortable": true,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [4]
+                    },
+                    {
+                        "orderData": 7,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [5]
+                    },
+                    {
+                        "visible": false,
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [6, 7, 8]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [9]
+                    }
+                ]
+            });
+        });
+    </script>
+}

@@ -80,28 +80,7 @@
     @Html.Partial("_ModalEditFooter")
 }
 
-<script type="text/javascript">
-    function onDropdownChange() {
-        $('#personalFields').toggle();
-        return false;
-    }
-</script>
-
-<script>
-    $(".validation-summary-errors").removeClass("validation-summary-errors");
-    $(".input-validation-error").removeClass("input-validation-error").parent().addClass("has-error");
-
-    $('#body-content').on('change keyup keydown', 'input, textarea, select', function (e) {
-        $(this).addClass('changed-input');
-    });
-
-    $(window).on('beforeunload', function () {
-        if ($('.changed-input').length) {
-            return 'You haven\'t saved your changes.';
-            }
-        });
-
-</script>
+@Scripts.Render("~/bundles/modalAddEditHeader")
 
 
 

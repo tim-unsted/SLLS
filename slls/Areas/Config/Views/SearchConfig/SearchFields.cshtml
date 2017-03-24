@@ -3,29 +3,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.SearchField>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#searchfields').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [1, 'asc'],
-            "columnDefs": [
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [3]
-                }
-            ]
-        });
-    });
-</script>
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
@@ -78,3 +55,29 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#searchfields').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "order": [1, 'asc'],
+                "columnDefs": [
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [3]
+                    }
+                ]
+            });
+        });
+    </script>
+}

@@ -49,17 +49,17 @@
     </div>
 }
 
-<script type="text/javascript">
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //REM: go to the required tab, if it exists ...
+            var goToTab = "@Model.SelectedTab";
+            $('#orderTabs a[href="' + goToTab + '"]').tab('show'); // Select tab by name
 
-    $(document).ready(function () {
-        //REM: go to the required tab, if it exists ...
-        var goToTab = "@Model.SelectedTab";
-        $('#orderTabs a[href="'+ goToTab + '"]').tab('show'); // Select tab by name
-
-        //REM: Hide the 'success' alert after x seconds ...
-        setTimeout(function () {
-            $(".alert-success").alert('close');
-        }, 6000);
-    });
-    
-</script>
+            //REM: Hide the 'success' alert after x seconds ...
+            setTimeout(function() {
+                $(".alert-success").alert('close');
+            }, 6000);
+        });
+    </script>
+}

@@ -4,8 +4,6 @@
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
-<script src="@Html.ResolveUrl("~/signalr/hubs")"></script>
-
 
 @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
 {
@@ -27,26 +25,30 @@
     }
 }
 
-<script type="text/javascript">
-    $(function() {
-        var pageName = "AutoCat";
-        $('a[data-toggle="tab"]').on('click', function(e) {
-            //save the latest tab ...
-            var target = e.target.attributes.href.value;
-            sessionStorage.setItem('lastTab_' + pageName, target);
-            
-            if (target === "#copac") {
-                //alert('Copac');
-            } else {
-                $(target + ' input').focus();
-                //$('#IsbnInput').focus();
+@section scripts {
+    @Scripts.Render("~/bundles/signalR")
+    <script src="@Html.ResolveUrl("~/signalr/hubs")"></script>
+    <script type="text/javascript">
+        $(function() {
+            var pageName = "AutoCat";
+            $('a[data-toggle="tab"]').on('click', function(e) {
+                //save the latest tab ...
+                var target = e.target.attributes.href.value;
+                sessionStorage.setItem('lastTab_' + pageName, target);
+
+                if (target === "#copac") {
+                    //alert('Copac');
+                } else {
+                    $(target + ' input').focus();
+                    //$('#IsbnInput').focus();
+                }
+            });
+
+            //go to the latest tab, if it exists:
+            var lastTab = sessionStorage.getItem('lastTab_' + pageName);
+            if (lastTab) {
+                $('a[href="' + lastTab + '"]').click();
             }
         });
-
-        //go to the latest tab, if it exists:
-        var lastTab = sessionStorage.getItem('lastTab_' + pageName);
-        if (lastTab) {
-            $('a[href="' + lastTab + '"]').click();
-        }
-    });
-</script>
+    </script>
+}

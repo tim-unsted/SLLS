@@ -48,50 +48,52 @@
     </div>
 }
 
+@Scripts.Render("~/bundles/modalAddEditHeader")
+
 <script type="text/javascript">
 
-    $("#myForm").submit(function (e) {
-        e.preventDefault();
-        var formData = new FormData($(this)[0]);
+        $("#myForm").submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData($(this)[0]);
 
-        $.ajax({
-            type: "POST",
-            url: this.action,
-            data: formData,
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                if (data.success) {
-                    $('#stdModal').modal('hide');
-                    location.reload();
-                } else {
-                    alert('Oops! ' + data.success);
+            $.ajax({
+                type: "POST",
+                url: this.action,
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if (data.success) {
+                        $('#stdModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert('Oops! ' + data.success);
+                    }
                 }
-            }
+            });
+            return false;
         });
-        return false;
-    });
 
-    function OnSuccess(json) {
-        if (json.isRedirect) {
-            window.location.href = json.redirectUrl;
+        function OnSuccess(json) {
+            if (json.isRedirect) {
+                window.location.href = json.redirectUrl;
+            }
         }
-    }
 
-    function OnFailure(response) {
-        var obj = $.parseJSON(response.responseText);
-        alert(obj.message);
-    }
+        function OnFailure(response) {
+            var obj = $.parseJSON(response.responseText);
+            alert(obj.message);
+        }
 
-</script>
+    </script>
 
 <script type="text/javascript">
-    $(function () {
+    $(function() {
 
         // We can attach the `fileselect` event to all file inputs on the page
-        $(document).on('change', ':file', function () {
+        $(document).on('change', ':file', function() {
             var input = $(this),
                 numFiles = input.get(0).files ? input.get(0).files.length : 1,
                 label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
@@ -99,8 +101,8 @@
         });
 
         // We can watch for our custom `fileselect` event like this
-        $(document).ready(function () {
-            $(':file').on('fileselect', function (event, numFiles, label) {
+        $(document).ready(function() {
+            $(':file').on('fileselect', function(event, numFiles, label) {
 
                 var input = $(this).parents('.input-group').find(':text'),
                     log = numFiles > 1 ? numFiles + ' files selected' : label;
@@ -116,3 +118,4 @@
 
     });
 </script>
+

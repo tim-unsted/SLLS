@@ -3,34 +3,6 @@
 @using Westwind.Globalization
 @model slls.ViewModels.TitlesListViewModel
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#titles').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [1, 'asc'],
-            "columnDefs": [
-                {
-                    "orderData": 1,
-                    "orderSequence": ["desc", "asc"],
-                    "targets": [0]
-                },
-                {
-                    "visible": false,
-                    "sortable": false,
-                    "targets": [1]
-                }
-            ]
-        });
-    });
-</script>
-
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="well well-default">
@@ -160,5 +132,34 @@
             </tr>
         }
     </tbody>
-
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#titles').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "order": [1, 'asc'],
+                "columnDefs": [
+                    {
+                        "orderData": 1,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [0]
+                    },
+                    {
+                        "visible": false,
+                        "sortable": false,
+                        "targets": [1]
+                    }
+                ]
+            });
+        });
+    </script>
+}

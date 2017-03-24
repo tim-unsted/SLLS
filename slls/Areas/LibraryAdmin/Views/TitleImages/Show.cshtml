@@ -5,11 +5,13 @@
     <img src="@Url.Action("RenderImage", "Files", new { id = Model.ImageId, area = "" })" >
 </div>
 
-<script type="text/javascript">
-    $(function () {
-        $('#btn_Close').click(function () {
-            $('#lrgModal').modal('hide');
-            $('#stdModal').modal('hide');
+@section scripts {
+    <script type="text/javascript">
+        $(function() {
+            $('#btn_Close').click(function() {
+                $('#lrgModal').modal('hide');
+                $('#stdModal').modal('hide');
+            });
         });
-    });
-</script>
+    </script>
+}

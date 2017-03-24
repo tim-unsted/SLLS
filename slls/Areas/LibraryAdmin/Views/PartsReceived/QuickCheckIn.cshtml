@@ -14,10 +14,8 @@
     }
 </div>
 
-@*<hr />*@
 <br />
 <br />
-
 
 <div class="row">
     <div class="col-md-7">
@@ -39,10 +37,7 @@
             </div>
         }
     </div>
-
-    @*<div class="col-md-1">
-    </div>*@
-
+    
     <div class="col-md-5">
         @if ((int) ViewData["CopyID"] > 0)
         {
@@ -65,74 +60,66 @@
 
 </div>
 
-@Scripts.Render("~/Scripts/jquery.mcautocomplete.js")
+@section scripts {
+    <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+@*@Scripts.Render("~/bundles/datatables")*@
+<script src="@Url.Content("~/DataTables/LibraryAdmin/Circulation/_CirculationListSubForm.js")" type="text/javascript"></script>
 
-<script type="text/javascript">
+    <script type="text/javascript">
 
-    function selectAllText(textbox) {
-        textbox.focus();
-        textbox.select();
-    }
+        function selectAllText(textbox) {
+            textbox.focus();
+            textbox.select();
+        }
 
-    var columns = [{ name: '', minWidth: '0%', valueField: 'CopyId' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Copy', minWidth: '5%', valueField: 'copyNumber' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '15%', valueField: 'authors' }];
+        var columns = [{ name: '', minWidth: '0%', valueField: 'CopyId' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Copy', minWidth: '5%', valueField: 'copyNumber' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '15%', valueField: 'authors' }];
 
-    $('#SelectCopy').click(function () { selectAllText(jQuery(this)) });
+        $('#SelectCopy').click(function() { selectAllText(jQuery(this)) });
 
-    $("#SelectCopy").mcautocomplete({
-        autoFocus: true,
-        showHeader: true,
-        columns: columns,
-        source: function (request, response) {
-            var title = new Array();
-            var urlGetTerms = "@Url.Action("Autocomplete", "Copies")";
-            $.ajax({
-                async: false,
-                cache: false,
-                type: "POST",
-                url: urlGetTerms,
-                data: { "term": request.term },
-                success: function (data) {
-                    for (var i = 0; i < data.length; i++) {
-                        title[i] = { CopyId: data[i].CopyId, title: data[i].Title, copyNumber: data[i].CopyNumber, edition: data[i].Edition, year: data[i].Year, authors: data[i].AuthorString };
+        $("#SelectCopy").mcautocomplete({
+            autoFocus: true,
+            showHeader: true,
+            columns: columns,
+            source: function(request, response) {
+                var title = new Array();
+                var urlGetTerms = "@Url.Action("Autocomplete", "Copies")";
+                $.ajax({
+                    async: false,
+                    cache: false,
+                    type: "POST",
+                    url: urlGetTerms,
+                    data: { "term": request.term },
+                    success: function(data) {
+                        for (var i = 0; i < data.length; i++) {
+                            title[i] = { CopyId: data[i].CopyId, title: data[i].Title, copyNumber: data[i].CopyNumber, edition: data[i].Edition, year: data[i].Year, authors: data[i].AuthorString };
+                        }
+                    }
+                });
+                response(title);
+            },
+            select: function(event, ui) {
+                event.preventDefault();
+                if (ui.item) {
+                    if (ui.item.CopyId != null) {
+                        //alert('Here');
+                        $('#SelectCopy').val(ui.item.title + " - Copy: " + ui.item.copyNumber);
+                        var url = '@Url.Action("QuickCheckIn", "PartsReceived", new {id = "REPLACEME"})';
+                        window.location.href = url.replace('REPLACEME', ui.item.CopyId);
                     }
                 }
-            });
-            response(title);
-        },
-        select: function (event, ui) {
-            event.preventDefault();
-            if (ui.item) {
-                if (ui.item.CopyId != null) {
-                    //alert('Here');
-                    $('#SelectCopy').val(ui.item.title + " - Copy: " + ui.item.copyNumber);
-                    var url = '@Url.Action("QuickCheckIn", "PartsReceived", new { id = "REPLACEME" })';
-                    window.location.href = url.replace('REPLACEME', ui.item.CopyId);
+            }
+        });
+
+        $('form').submit(function(e) {
+            e.preventDefault();
+            $.post(this.action, $(this).serialize(), function(response) {
+                if (response.error) {
+                    alert(response.error);
+                } else {
+                    //Refresh
+                    location.reload();
                 }
-            }
-        }
-    });
-</script>
-
-
-
-<script type="text/javascript">
-    //$(document).ready(function () {
-    //    $('.selectpicker').selectpicker({
-    //        liveSearch: true,
-    //        showSubtext: true
-    //    });
-    //});
-
-    $('form').submit(function (e) {
-        e.preventDefault();
-        $.post(this.action, $(this).serialize(), function (response) {
-            if (response.error) {
-                alert(response.error);
-            }
-            else {
-                //Refresh
-                location.reload();
-            }
-        }, 'json');
-    });
-</script>
+            }, 'json');
+        });
+    </script>
+}

@@ -5,7 +5,7 @@
 <div class="alert alert-info">
     <form class="navbar-form form-search" role="search">
         <div class="form-group">
-            @using (Html.BeginForm("AdminSearch", "Searching", FormMethod.Get, new { id = "searchForm" }))
+            @using (Html.BeginForm("AdminSearch", "Searching", FormMethod.Get, new { id = "searchForm", defaultbutton = "btnSubmit" }))
             {
                 @Html.Label("Search for: ")
                 <input id="searchTerm" name="q" type="text" placeholder="Find ..." class="form-control" value="@ViewBag.SearchTerm">

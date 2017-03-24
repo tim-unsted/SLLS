@@ -1,33 +1,6 @@
 ﻿@using System.Linq
 @model AutoCat.ViewModels.CopacSearchResults
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#copacResults').DataTable({
-            "dom": '<"inline"i><"inline float-right"l><"clear">rt<"inline float-right"p><"clear">',
-            "pagingType": sPagingType,
-            "pageLength": 10,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [1, 'asc'],
-            "columnDefs": [
-                {
-                    "sortable": true,
-                    "orderSequence": ["desc", "asc"],
-                    "targets": [1]
-                },
-                {
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [0]
-                }
-            ]
-        });
-    });
-</script>
-
 @using (Html.BeginForm("_CopacResults", "Titles", "Post"))
 {
 
@@ -105,3 +78,32 @@
     </div>
 }
 
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#copacResults').DataTable({
+                "dom": '<"inline"i><"inline float-right"l><"clear">rt<"inline float-right"p><"clear">',
+                "pagingType": sPagingType,
+                "pageLength": 10,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "order": [1, 'asc'],
+                "columnDefs": [
+                    {
+                        "sortable": true,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [1]
+                    },
+                    {
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [0]
+                    }
+                ]
+            });
+        });
+    </script>
+}

@@ -1,42 +1,6 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.VolumesEditViewModel
 
-<script type="text/javascript">
-
-    $(document).ready(function () {
-
-        $("#TitleID").change(function () {
-            var select = $("#CopyID");
-            select.empty();
-
-            var selectedTitleId = { TitleID: $("#TitleID").val() };
-
-            $.ajax({
-                url: '@Url.Action("GetTitleCopies", "Titles")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedTitleId),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.TitleCopyData, function (index, itemData) {
-                            select.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                            }));
-                        }
-                        );
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
-            });
-        });
-    });
-
-</script>
-
 @Html.Partial("_ModalEditHeader")
 
 @using (Html.BeginForm("Edit", "Volumes", FormMethod.Post))
@@ -128,3 +92,37 @@
 
     @Html.Partial("_ModalEditFooter")
 }
+
+@Scripts.Render("~/bundles/modalAddEditHeader")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#TitleID").change(function () {
+                var select = $("#CopyID");
+                select.empty();
+
+                var selectedTitleId = { TitleID: $("#TitleID").val() };
+
+                $.ajax({
+                    url: '@Url.Action("GetTitleCopies", "Titles")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(selectedTitleId),
+                    success: function (data) {
+                        if (data.success) {
+                            $.each(data.TitleCopyData, function (index, itemData) {
+                                select.append($('<option/>', {
+                                    value: itemData.Value,
+                                    text: itemData.Text
+                                }));
+                            }
+                            );
+                        } else {
+                            alert('invalid ID' + data.success);
+                        }
+                    },
+                    async: false
+                });
+            });
+        });
+    </script>

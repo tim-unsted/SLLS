@@ -608,6 +608,32 @@ namespace slls.Controllers
             return Json(new { success = true });
         }
 
+        //Get a list of available titles (Ajax stuff) ...
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult GetAvailableTitles(string term)
+        {
+            term = " " + term;
+            var titles = (from t in _db.VwSelectTitlesToBorrow
+                          where t.Title.Contains(term)
+                          orderby t.Title.Substring(t.NonFilingChars)
+                          select new { Title = t.Title, TitleId = t.TitleId, Year = t.Year, Edition = t.Edition, Authors = t.AuthorString }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
+        }
+
+        //Get a list of titles on-loan (Ajax stuff) ...
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult GetBorrowedTitles(string term)
+        {
+            term = " " + term;
+            var titles = (from t in _db.VwSelectTitlesToRenewReturn
+                          where t.Title.Contains(term)
+                          orderby t.Title.Substring(t.NonFilingChars)
+                          select new { Title = t.Title, TitleId = t.TitleId, Year = t.Year, Edition = t.Edition, Authors = t.AuthorString }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
+        }
+
         //Method used to supply a JSON list of Copies when selecting a Title (Ajax stuf)
         public JsonResult GetAvailableCopies(int titleId = 0)
         {

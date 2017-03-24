@@ -9,3 +9,8 @@
 </div>
 
 @Html.Partial("_IndexPartsExpected")
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/PartsReceived/_IndexPartsExpected.js")" type="text/javascript"></script>
+}

@@ -53,7 +53,7 @@ namespace slls.ViewModels
         public string OrderNo { get; set; }
 
         [Required(ErrorMessage = "An Order Date is required!")]
-        [Column(TypeName = "smalldatetime")]
+        //[Column(TypeName = "smalldatetime")]
         [LocalDisplayName("Orders.Date_Ordered", "FieldDisplayName")]
         public DateTime? OrderDate { get; set; }
 

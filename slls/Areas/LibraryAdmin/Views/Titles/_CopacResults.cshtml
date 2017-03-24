@@ -1,32 +1,5 @@
 ﻿@model AutoCat.ViewModels.CopacSearchResults
 
-@*Some javascript to dispay the results nicely using DataTables.net*@
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#copacResults').DataTable({
-            "dom": '<"inline"i>',
-            "pageLength": 100,
-            "language": {
-                "url": "/DataTables/autocat.txt"
-            },
-            "order": [2, 'asc'],
-            "columnDefs": [
-                {
-                    "sortable": true,
-                    "orderSequence": ["desc", "asc"],
-                    "targets": [1]
-                },
-                {
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [0, 5]
-                }
-            ]
-        });
-    });
-</script>
-
-
 @using (Html.BeginForm("_CopacResults", "Titles", "Post"))
 {
     <hr />
@@ -57,11 +30,3 @@
         @Html.ValidationMessage("NotSelected", new { @class = "text-danger" })
     </div>
 }
-
-<script type="text/javascript">
-    
-    $('#submit').on("click", function () {
-        $(document.body).css({ 'cursor': 'wait' });
-    });
-
-</script>

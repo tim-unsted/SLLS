@@ -78,10 +78,12 @@
     }
 </div>
 
-<script type="text/javascript">
-    $(function () {
-        $('#btn_Delete').click(function () {
-            $('#stdModal').modal('hide');
+@section scripts {
+    <script type="text/javascript">
+        $(function() {
+            $('#btn_Delete').click(function() {
+                $('#stdModal').modal('hide');
+            });
         });
-    });
-</script>
+    </script>
+}

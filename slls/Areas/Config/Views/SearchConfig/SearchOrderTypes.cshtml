@@ -3,72 +3,68 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.SearchOrderType>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#searchordertypes').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [1, 'asc'],
-            "columnDefs": [
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [2]
-                }
-            ]
-        });
-    });
-</script>
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
     <strong>Info: </strong>Use this page to control the search results sort order options available to the OPAC users. To set the default sort order , <a href="@Url.Action("Searchoptions")" title="Click to set the default sort order">click here.</a>
 </div>
 
-@*@if (slls.Utils.Helpers.Roles.IsBaileyAdmin())
-{
-    <p>
-        <a href="@Url.Action("AddOrderType", "SearchConfig")" title="Add new @DbRes.T("LoanTypes.Loan_Type", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
-    </p>
-}*@
-
 <table class="table" id="searchordertypes">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(m => m.OrderTypeFriendly)
-            </th>
-            <th>
-                @Html.DisplayNameFor(m => m.Display)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(m => m.OrderTypeFriendly)
+        </th>
+        <th>
+            @Html.DisplayNameFor(m => m.Display)
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.OrderBy(m => m.Display).ThenBy(m => m.OrderTypeFriendly))
-        {
-            <tr>
-                <td>
-                    <a href="@Url.Action("EditOrderType", new {id = item.OrderTypeID})" class="btn btn-link modal-link" title="Edit">@Html.DisplayFor(modelItem => item.OrderTypeFriendly)</a>
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Display)
-                </td>
-                <td class="just-right">
-                    <a href="@Url.Action("EditOrderType", new {id = item.OrderTypeID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="@Url.Action("MoveUp", new { id = item.OrderTypeID })" class="btn btn-link" title="Move selected item up one place"><span aria-hidden="true" class="glyphicon glyphicon-arrow-up"></span></a>
-                    <a href="@Url.Action("MoveDown", new { id = item.OrderTypeID })" class="btn btn-link" title="Move selected item down one place"><span aria-hidden="true" class="glyphicon glyphicon-arrow-down"></span></a>
+    @foreach (var item in Model.OrderBy(m => m.Display).ThenBy(m => m.OrderTypeFriendly))
+    {
+        <tr>
+            <td>
+                <a href="@Url.Action("EditOrderType", new {id = item.OrderTypeID})" class="btn btn-link modal-link" title="Edit">@Html.DisplayFor(modelItem => item.OrderTypeFriendly)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Display)
+            </td>
+            <td class="just-right">
+                <a href="@Url.Action("EditOrderType", new {id = item.OrderTypeID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("MoveUp", new {id = item.OrderTypeID})" class="btn btn-link" title="Move selected item up one place"><span aria-hidden="true" class="glyphicon glyphicon-arrow-up"></span></a>
+                <a href="@Url.Action("MoveDown", new {id = item.OrderTypeID})" class="btn btn-link" title="Move selected item down one place"><span aria-hidden="true" class="glyphicon glyphicon-arrow-down"></span></a>
 
-                </td>
+            </td>
 
-            </tr>
-        }
+        </tr>
+    }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#searchordertypes').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "order": [1, 'asc'],
+                "columnDefs": [
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [2]
+                    }
+                ]
+            });
+        });
+    </script>
+}

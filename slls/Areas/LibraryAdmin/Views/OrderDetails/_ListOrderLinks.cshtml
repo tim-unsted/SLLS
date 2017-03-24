@@ -1,7 +1,7 @@
 ﻿@using System.Linq
 @using slls.Utils.Helpers
 @using Westwind.Globalization
-@model System.Collections.Generic.IEnumerable<slls.Models.OrderLink>
+@model IEnumerable<slls.Models.OrderLink>
 
 <div class="panel listpanel">
 
@@ -23,20 +23,5 @@
         </table>
     }
 </div>
-
-@*<div class="well-control">
-    <ul class="list-unstyled">
-        @foreach (var item in Model.OrderBy(l => l.DisplayText))
-        {
-            <li>
-                @Html.ResolvedLink(item.URL, item.FileId ?? 0, item.HoverTip, item.DisplayText)
-                <span>
-                    &nbsp;&nbsp;&nbsp;&nbsp;<a href="@Url.Action("Edit", "OrderLinks", new {id = item.OrderLinkID})" class="btn btn-link" data-toggle="modal" data-target="#lrgModal" title="Edit @DbRes.T("Links.Link", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="@Url.Action("Delete", "OrderLinks", new {id = item.OrderLinkID})" class="btn btn-link modal-link" title="Remove @DbRes.T("Links.Link", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
-                </span>
-            </li>
-        }
-    </ul>
-</div>*@
 
 

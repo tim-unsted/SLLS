@@ -1,19 +1,6 @@
-﻿@using Westwind.Globalization
+﻿@using System.Collections.Generic
+@using Westwind.Globalization
 @model slls.ViewModels.ParameterIndexViewModel
-
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#parameters').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": 100,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            }
-        });
-    });
-</script>
 
 <h2>@ViewBag.Title</h2>
 
@@ -42,45 +29,21 @@
 
 <hr/>
 
-<table class="table" id="parameters">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Parameters.FirstOrDefault().ParameterID)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Parameters.FirstOrDefault().ParameterValue)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Parameters.FirstOrDefault().ParamUsage)
-        </th>
+@Html.Partial("_index")
 
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Parameters)
-        {
-            <tr>
-                <td>
-                    @Html.ActionLink(item.ParameterName, "Edit", "Parameters", new { id = item.RecID }, new { @class = "modal-link" })
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ParameterValue)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ParamUsage)
-                </td>
-
-                <td class="just-right">
-                    @if (item.CanDelete && Model.IsBaileyAdmin)
-                    {
-                        <a href="@Url.Action("Delete", new {id = item.RecID})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
-                    }
-                    <a href="@Url.Action("Edit", new {id = item.RecID})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                </td>
-
-            </tr>
-        }
-    </tbody>
-</table>
+@section scripts {
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#parameters').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": 100,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                }
+            });
+        });
+    </script>
+}

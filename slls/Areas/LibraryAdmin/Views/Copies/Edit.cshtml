@@ -3,9 +3,6 @@
 @using Westwind.Globalization
 @model slls.ViewModels.CopyDetailsEditViewModel
 
-<script src="~/Scripts/DatePickerReady.js"></script>
-<link href="~/Content/bootstrap-datepicker.css" rel="stylesheet" />
-
 @{
     ViewBag.VolumesBadge = "";
     ViewBag.LoansBadge = "";
@@ -34,16 +31,7 @@
 
     <h2>@ViewBag.Title</h2>
     <div class="alert alert-info">
-
-        @*@using (Html.BeginForm("Edit", "Copies", FormMethod.Get))
-            {
-                <div class="row" style="margin-right: 0">
-                    <div class="col-md-10">
-                        @Html.DropDownList("CopyId", null, new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control" })
-                    </div>
-                    <span class="pull-right"><a href="@Url.Action("Add", "Copies", new {id = @Model.TitleId, returnAction = "Edit", returnController = "Copies"})" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a></span>
-                </div>
-            }*@
+        
         @Html.Partial("_SelectCopy")
 
         <div class="row" style="margin-right: 0">
@@ -168,26 +156,28 @@
     }
 }
 
-<script type="text/javascript">
+@section scripts {
+    <script type="text/javascript">
 
-    $(document).ready(function () {
-        // hide the alert after 6 seconds ...
-        setTimeout(function () {
-            $(".alert-dismissable").alert('close');
-        }, 6000);
-    });
-
-    $(function () {
-        $('a[data-toggle="tab"]').on('click', function (e) {
-            // Save the latest tab:
-            sessionStorage.setItem('lastTab_EditCopy', $(e.target).attr('href'));
+        $(document).ready(function() {
+            // hide the alert after 6 seconds ...
+            setTimeout(function() {
+                $(".alert-dismissable").alert('close');
+            }, 6000);
         });
 
-        // Go to the latest tab, if it exists:
-        var lastTab = sessionStorage.getItem('lastTab_EditCopy');
+        $(function() {
+            $('a[data-toggle="tab"]').on('click', function(e) {
+                // Save the latest tab:
+                sessionStorage.setItem('lastTab_EditCopy', $(e.target).attr('href'));
+            });
 
-        if (lastTab) {
-            $('a[href="' + lastTab + '"]').click();
-        }
-    });
-</script>
+            // Go to the latest tab, if it exists:
+            var lastTab = sessionStorage.getItem('lastTab_EditCopy');
+
+            if (lastTab) {
+                $('a[href="' + lastTab + '"]').click();
+            }
+        });
+    </script>
+}

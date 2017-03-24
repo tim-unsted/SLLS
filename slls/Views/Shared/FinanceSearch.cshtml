@@ -1,7 +1,7 @@
 ﻿@model slls.ViewModels.FinanceSearchingViewModel
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm("FinanceSearchResults", "Searching", FormMethod.Post, new { id = "searchForm" }))
+@using (Html.BeginForm("FinanceSearchResults", "Searching", FormMethod.Post, new { id = "searchForm", defaultbutton = "btnSubmit" }))
 {
     <div class="well">
         <div class="row">
@@ -59,9 +59,66 @@
     </div>
 }
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#MainSearchString').focus();
-    });
-</Script>
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#MainSearchString').focus();
 
+            $(document).ready(function () {
+                $('#titles').DataTable({
+                    "dom": sDom,
+                    "pagingType": sPagingType,
+                    "pageLength": sPageLength,
+                    "lengthMenu": sLengthMenu,
+                    "language": {
+                        "url": "/DataTables/lang.txt"
+                    },
+                    "order": [0, 'asc'],
+                    "autoWidth": false,
+                    "columnDefs": [
+                        {
+                            "orderData": 6,
+                            "orderSequence": ["desc", "asc"],
+                            "targets": [1]
+                        },
+                        {
+                            "orderData": 7,
+                            "orderSequence": ["asc", "desc"],
+                            "targets": [4]
+                        },
+                        {
+                            "visible": false,
+                            "targets": [5, 6, 7]
+                        },
+                        {
+                            "sortable": false,
+                            "width": "10%",
+                            "targets": [8]
+                        }
+                    ],
+                    initComplete: function () {
+                        var api = this.api();
+                        this.api().columns('.select-filter').every(function () {
+                            var column = this;
+                            var select = $('<select class="form-control" style="width:100%;"><option value=""></option></select>')
+                                .appendTo($(column.footer()))
+                                .on('change', function () {
+                                    var val = $.fn.dataTable.util.escapeRegex(
+                                        $(this).val()
+                                    );
+
+                                    column
+                                        .search(val ? '^' + val + '$' : '', true, false)
+                                        .draw();
+                                });
+
+                            column.data().unique().sort().each(function (d, j) {
+                                select.append('<option value="' + d + '">' + d + '</option>');
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    </Script>
+}

@@ -83,103 +83,107 @@
     </dl>
 </div>
 
-<script type="text/javascript">
+@section scripts {
+    <script type="text/javascript">
 
-    $(document).ready(function () {
-        
-        $('#confirmDialog').dialog({
-            dialogClass: "no-close",
-            autoOpen: false,
-            width: 600,
-            modal: true,
-            resizable: false,
-            buttons: [{
-                text: 'Continue',
-                "class": 'btn btn-success',
-                click: function () {
-                    document.frmRenewloan.submit();
-                }
-            },
-            {
-                text: 'Cancel',
-                "class": 'btn btn-default',
-                click: function () {
-                    $(this).dialog("close");
-                }
-            }]
-        });
+        $(document).ready(function() {
 
-        $('#frmRenewloan').submit(function (e) {
-            e.preventDefault();
-            if ($(this).valid()) {
-                $("#warning-msg").hide();
-                $('#confirmDialog').dialog("open");
-            }
-            return false;
-        });
-
-        function doTitleCopyDetails() {
-            var details = $("#barcodeDetails");
-            var title = $("#title");
-            var confirmTitle = $("#confirmTitle");
-            var confirmBarcode = $("#confirmBarcode");
-            var barcode = $("#Barcode");
-            var borrowedby = $("#borrowedby");
-            var confirmBorrowedby = $("#confirmBorrowedBy");
-            var returndue = $("#returndue");
-            var confirmReturnDue = $("#confirmReturnDue");
-            var errorDiv = $("#_barcodeInvalid");
-            var errorMsg = $("#errMsg");
-            var validationError = $(".field-validation-error");
-            var barcodeGroup = $("#barcodeGroup");
-            var button = $("#cmdReturn");
-            var selectedBarcode = { barcode: $("#Barcode").val() };
-
-            $.ajax({
-                url: '@Url.Action("GetBorrowedItemDetails", "Borrowing")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedBarcode),
-                success: function (data) {
-                    if (data.success) {
-                        details.show();
-                        barcode.val(data.Barcode);
-                        title.text(data.BarcodeDetails);
-                        confirmTitle.text(data.BarcodeDetails);
-                        confirmBarcode.text(barcode.val());
-                        borrowedby.text(data.BorrowedBy);
-                        confirmBorrowedby.text(data.BorrowedBy);
-                        returndue.text(data.origReturnDue);
-                        confirmReturnDue.text(data.origReturnDue);
-                        errorDiv.hide();
-                        validationError.hide();
-                        barcodeGroup.removeClass("has-error");
-                        button.prop('disabled', false);
-
-                    } else {
-                        details.hide();
-                        errorMsg.text(data.BarcodeDetails);
-                        errorDiv.show();
-                        barcodeGroup.addClass("has-error ");
-                        button.prop('disabled', true);
+            $('#confirmDialog').dialog({
+                dialogClass: "no-close",
+                autoOpen: false,
+                width: 600,
+                modal: true,
+                resizable: false,
+                buttons: [
+                    {
+                        text: 'Continue',
+                        "class": 'btn btn-success',
+                        click: function() {
+                            document.frmRenewloan.submit();
+                        }
+                    },
+                    {
+                        text: 'Cancel',
+                        "class": 'btn btn-default',
+                        click: function() {
+                            $(this).dialog("close");
+                        }
                     }
-                },
-                async: false
+                ]
             });
-        }
-    
-        ///Do something to display the title and copy details of the selected volume (currnelt loans) ...
-        $("#CurrentLoans").change(function () {
-            var barcode = $("#CurrentLoans option:selected").val();
-            $("#Barcode").val(barcode);
-            doTitleCopyDetails();
-        });
 
-        //Do something to display the title and copy details of the entered or selected barcode ...
-        $("#Barcode").change(function () {
-            doTitleCopyDetails();
-        });
+            $('#frmRenewloan').submit(function(e) {
+                e.preventDefault();
+                if ($(this).valid()) {
+                    $("#warning-msg").hide();
+                    $('#confirmDialog').dialog("open");
+                }
+                return false;
+            });
 
-    })
-</script>
+            function doTitleCopyDetails() {
+                var details = $("#barcodeDetails");
+                var title = $("#title");
+                var confirmTitle = $("#confirmTitle");
+                var confirmBarcode = $("#confirmBarcode");
+                var barcode = $("#Barcode");
+                var borrowedby = $("#borrowedby");
+                var confirmBorrowedby = $("#confirmBorrowedBy");
+                var returndue = $("#returndue");
+                var confirmReturnDue = $("#confirmReturnDue");
+                var errorDiv = $("#_barcodeInvalid");
+                var errorMsg = $("#errMsg");
+                var validationError = $(".field-validation-error");
+                var barcodeGroup = $("#barcodeGroup");
+                var button = $("#cmdReturn");
+                var selectedBarcode = { barcode: $("#Barcode").val() };
+
+                $.ajax({
+                    url: '@Url.Action("GetBorrowedItemDetails", "Borrowing")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(selectedBarcode),
+                    success: function(data) {
+                        if (data.success) {
+                            details.show();
+                            barcode.val(data.Barcode);
+                            title.text(data.BarcodeDetails);
+                            confirmTitle.text(data.BarcodeDetails);
+                            confirmBarcode.text(barcode.val());
+                            borrowedby.text(data.BorrowedBy);
+                            confirmBorrowedby.text(data.BorrowedBy);
+                            returndue.text(data.origReturnDue);
+                            confirmReturnDue.text(data.origReturnDue);
+                            errorDiv.hide();
+                            validationError.hide();
+                            barcodeGroup.removeClass("has-error");
+                            button.prop('disabled', false);
+
+                        } else {
+                            details.hide();
+                            errorMsg.text(data.BarcodeDetails);
+                            errorDiv.show();
+                            barcodeGroup.addClass("has-error ");
+                            button.prop('disabled', true);
+                        }
+                    },
+                    async: false
+                });
+            }
+
+            ///Do something to display the title and copy details of the selected volume (currnelt loans) ...
+            $("#CurrentLoans").change(function() {
+                var barcode = $("#CurrentLoans option:selected").val();
+                $("#Barcode").val(barcode);
+                doTitleCopyDetails();
+            });
+
+            //Do something to display the title and copy details of the entered or selected barcode ...
+            $("#Barcode").change(function() {
+                doTitleCopyDetails();
+            });
+
+        })
+    </script>
+}

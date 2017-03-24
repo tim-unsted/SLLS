@@ -1,25 +1,28 @@
 ﻿@model slls.ViewModels.TitleAddViewModel
 
 @Html.LabelFor(model => model.FrequencyID, new { @class = "control-label col-md-2" })
+
 <div class="col-md-5">
-    @Html.DropDownList("FrequencyID", null, new { @class = "form-control" })
-    @Html.ValidationMessageFor(model => model.FrequencyID, "", new { @class = "text-danger" })
+    @Html.DropDownList("FrequencyID", null, new {@class = "form-control"})
+    @Html.ValidationMessageFor(model => model.FrequencyID, "", new {@class = "text-danger"})
 </div>
+
 <div class="col-sm-1 hidden-sm hidden-xs" style="padding-top: 5px; padding-left: 0">
-    <a href="@Url.Content("~/LibraryAdmin/Frequencies/_add")" class="button" id="addFrequencyLink" title="Frequency not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
+    <a href="@Url.Action("_add", "Frequencies")" class="button" id="addFrequencyLink" title="Frequency not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
 </div>
 
-    <div id="newFrequencyDialog" title="Add New Frequency"></div>
+<div id="newFrequencyDialog" title="Add New Frequency"></div>
 
+@section scripts {
     <script type="text/javascript">
-        $(function () {
+        $(function() {
             $('#newFrequencyDialog').dialog({
-                open: function () {
+                open: function() {
                     $(this).closest(".ui-dialog")
-                    .find(".ui-dialog-titlebar-close")
-                    .removeClass("ui-icon-closethick")
-                    .addClass("btn btn-default")
-                    .text("X");
+                        .find(".ui-dialog-titlebar-close")
+                        .removeClass("ui-icon-closethick")
+                        .addClass("btn btn-default")
+                        .text("X");
                 },
                 autoOpen: false,
                 modal: true,
@@ -31,7 +34,7 @@
                     {
                         text: 'Save',
                         "class": 'btn btn-success',
-                        click: function () {
+                        click: function() {
                             var addNewFrm = $('#addFrequencyForm');
                             if (addNewFrm.valid()) {
                                 $.ajax({
@@ -39,56 +42,57 @@
                                     type: 'Post',
                                     data: addNewFrm.serialize(),
                                     async: false,
-                                    success: function (data) {
+                                    success: function(data) {
                                         if (data.success) {
                                             $('#FrequencyID').append(
-                                                    $('<option></option>')
-                                                        .val(data.newData.FrequencyID)
-                                                        .html(data.newData.Frequency1)
-                                                        .prop('selected', true)
-                                                );
+                                                $('<option></option>')
+                                                .val(data.newData.FrequencyID)
+                                                .html(data.newData.Frequency1)
+                                                .prop('selected', true)
+                                            );
                                             $('#newFrequencyDialog').dialog('close');
                                         } else {
                                             alert(data.errMsg);
                                         }
                                     },
-                                    error: function () {
+                                    error: function() {
                                         alert("Oops, there has been an error.");
                                     }
                                 });
                             }
                         }
                     },
-                {
-                    text: 'Cancel',
-                    "class": 'btn btn-default',
-                    click: function () {
-                        $('#FrequencyID').val(0);
-                        $(this).dialog('close');
+                    {
+                        text: 'Cancel',
+                        "class": 'btn btn-default',
+                        click: function() {
+                            $('#FrequencyID').val(0);
+                            $(this).dialog('close');
+                        }
                     }
-                }
                 ]
             });
         });
-        $('#addFrequencyLink').click(function () {
+        $('#addFrequencyLink').click(function() {
             var createFormUrl = $(this).attr('href');
             $('#newFrequencyDialog').html('')
-            .load(createFormUrl, function () {
-                jQuery.validator.unobtrusive.parse('#addNewFrm');
-                $('#newFrequencyDialog').dialog('open');
-            });
+                .load(createFormUrl, function() {
+                    jQuery.validator.unobtrusive.parse('#addNewFrm');
+                    $('#newFrequencyDialog').dialog('open');
+                });
             return false;
         });
 
-        $('#FrequencyID').change(function () {
+        $('#FrequencyID').change(function() {
             if (this.value === "-1") {
                 var createFormUrl = $('#addFrequencyLink').attr('href');
                 $('#newFrequencyDialog').html('')
-                .load(createFormUrl, function () {
-                    //jQuery.validator.unobtrusive.parse('#addNewFrm');
-                    $('#newFrequencyDialog').dialog('open');
-                });
+                    .load(createFormUrl, function() {
+                        //jQuery.validator.unobtrusive.parse('#addNewFrm');
+                        $('#newFrequencyDialog').dialog('open');
+                    });
             }
             return false;
         });
     </script>
+}

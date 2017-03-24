@@ -70,27 +70,4 @@
     </div>
 }
 
-@*<script type="text/javascript">
-    $(function () {
-        $('#btnCancel').click(function () {
-            $('#lrgModal').modal('hide');
-            $('#stdModal').modal('hide');
-        });
-
-        $('form').submit(function (e) {
-            e.preventDefault();
-            $.post(this.action, $(this).serialize(), function (response) {
-                if (response.error) {
-                    alert(response.error);
-                }
-                else {
-                    $('#stdModal').modal('hide');
-                    $('#lrgModal').modal('hide');
-                    location.reload();
-                }
-            }, 'json');
-        });
-    });
-</script>*@
-
-
+@Scripts.Render("~/bundles/modalAddEditHeader")

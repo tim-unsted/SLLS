@@ -8,3 +8,8 @@
 <div id="TitlesTable">
     @Html.Partial("_Index", Model)
 </div>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Titles/_Index.js")" type="text/javascript"></script>
+}

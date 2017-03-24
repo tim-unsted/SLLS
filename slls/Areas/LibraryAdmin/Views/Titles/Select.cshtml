@@ -2,8 +2,6 @@
 @using Westwind.Globalization
 @model slls.ViewModels.SelectTitleViewmodel
 
-
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
@@ -41,10 +39,10 @@
 
 </div>
 
-    @Scripts.Render("~/Scripts/jquery.mcautocomplete.js")
+@section scripts {
+<script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
 
     <script type="text/javascript">
-
         var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '20%', valueField: 'authors' }];
 
         $("#Title").mcautocomplete({
@@ -54,7 +52,7 @@
             columns: columns,
             source: function(request, response) {
                 var title = new Array();
-                var urlGetTerms = "@Url.Action("Autocomplete", "Titles")";
+                var urlGetTerms = "@Url.Action("AutoComplete", "Titles")";
                 $.ajax({
                     async: false,
                     cache: false,
@@ -81,8 +79,9 @@
                 return true;
             }
         });
-        
+
         $("#TitleID").change(function() {
             sessionStorage.removeItem('lastTab_EditTitle');
         });
     </script>
+}

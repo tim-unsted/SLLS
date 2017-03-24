@@ -2,6 +2,7 @@
 @model slls.ViewModels.CopiesAddViewModel
 
 @Html.Label(DbRes.T("StatusTypes.Status_Type", "FieldDisplayName"), "Status", new { @class = "control-label col-md-2" })
+
 <div class="col-md-5">
     @Html.DropDownList("StatusID", null, htmlAttributes: new { @class = "form-control" })
     <span class="help-inline">The status of an item can control where and how it may be viewed. (Optional)</span>
@@ -12,82 +13,84 @@
 
 <div id="newStatusTypeDialog" title="Quick Add: New Status Type"></div>
 
-<script type="text/javascript">
-    $(function () {
-        $('#newStatusTypeDialog').dialog({
-            open: function () {
-                $(this).closest(".ui-dialog")
-                .find(".ui-dialog-titlebar-close")
-                .removeClass("ui-icon-closethick")
-                .addClass("btn btn-default")
-                .text("X");
-            },
-            autoOpen: false,
-            modal: true,
-            overlay: {
-                backgroundColor: '#000',
-                opacity: 0.5
-            },
-            buttons: [
-                {
-                    text: 'Save',
-                    "class": 'btn btn-success',
-                    click: function () {
-                        var addNewFrm = $('#addStatusTypeForm');
-                        if (addNewFrm.valid()) {
-                            $.ajax({
-                                url: '@Url.Action("_add", "StatusTypes")',
-                                type: 'Post',
-                                data: addNewFrm.serialize(),
-                                async: false,
-                                success: function (data) {
-                                    if (data.success) {
-                                        $('#StatusID').append(
+@section scripts {
+    <script type="text/javascript">
+        $(function() {
+            $('#newStatusTypeDialog').dialog({
+                open: function() {
+                    $(this).closest(".ui-dialog")
+                        .find(".ui-dialog-titlebar-close")
+                        .removeClass("ui-icon-closethick")
+                        .addClass("btn btn-default")
+                        .text("X");
+                },
+                autoOpen: false,
+                modal: true,
+                overlay: {
+                    backgroundColor: '#000',
+                    opacity: 0.5
+                },
+                buttons: [
+                    {
+                        text: 'Save',
+                        "class": 'btn btn-success',
+                        click: function() {
+                            var addNewFrm = $('#addStatusTypeForm');
+                            if (addNewFrm.valid()) {
+                                $.ajax({
+                                    url: '@Url.Action("_add", "StatusTypes")',
+                                    type: 'Post',
+                                    data: addNewFrm.serialize(),
+                                    async: false,
+                                    success: function(data) {
+                                        if (data.success) {
+                                            $('#StatusID').append(
                                                 $('<option></option>')
-                                                    .val(data.newData.StatusID)
-                                                    .html(data.newData.Status)
-                                                    .prop('selected', true)
+                                                .val(data.newData.StatusID)
+                                                .html(data.newData.Status)
+                                                .prop('selected', true)
                                             );
-                                        $('#newStatusTypeDialog').dialog('close');
-                                    } else {
-                                        alert(data.errMsg);
+                                            $('#newStatusTypeDialog').dialog('close');
+                                        } else {
+                                            alert(data.errMsg);
+                                        }
+                                    },
+                                    error: function() {
+                                        alert("Oops, there has been an error.");
                                     }
-                                },
-                                error: function () {
-                                    alert("Oops, there has been an error.");
-                                }
-                            });
+                                });
+                            }
+                        }
+                    },
+                    {
+                        text: 'Cancel',
+                        "class": 'btn btn-default',
+                        click: function() {
+                            $('#StatusID').val(0);
+                            $(this).dialog('close');
                         }
                     }
-                },
-            {
-                text: 'Cancel',
-                "class": 'btn btn-default',
-                click: function () {
-                    $('#StatusID').val(0);
-                    $(this).dialog('close');
-                }
-            }
-            ]
-        });
-    });
-    $('#addStatusTypeLink').click(function () {
-        var createFormUrl = $(this).attr('href');
-        $('#newStatusTypeDialog').html('')
-        .load(createFormUrl, function () {
-            $('#newStatusTypeDialog').dialog('open');
-        });
-        return false;
-    });
-
-    $('#StatusID').change(function () {
-        if (this.value === "-1") {
-            var createFormUrl = $('#addStatusTypeLink').attr('href');
-            $('#newStatusTypeDialog').html('')
-            .load(createFormUrl, function () {
-                $('#newStatusTypeDialog').dialog('open');
+                ]
             });
-        }
-        return false;
-    });
-</script>
+        });
+        $('#addStatusTypeLink').click(function() {
+            var createFormUrl = $(this).attr('href');
+            $('#newStatusTypeDialog').html('')
+                .load(createFormUrl, function() {
+                    $('#newStatusTypeDialog').dialog('open');
+                });
+            return false;
+        });
+
+        $('#StatusID').change(function() {
+            if (this.value === "-1") {
+                var createFormUrl = $('#addStatusTypeLink').attr('href');
+                $('#newStatusTypeDialog').html('')
+                    .load(createFormUrl, function() {
+                        $('#newStatusTypeDialog').dialog('open');
+                    });
+            }
+            return false;
+        });
+    </script>
+}

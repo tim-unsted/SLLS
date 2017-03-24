@@ -1,29 +1,6 @@
 ﻿@using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.ReleaseNote>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#releasenotes').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [[1, "asc"]],
-            "columnDefs":[
-            {
-                "searchable": false,
-                "sortable": false,
-                "visible": false,
-                "targets": [2]}
-            ]
-        });
-    });
-</script>
-
-@*<h2>@ViewBag.Title</h2>*@
 @Html.Partial("_HeaderCancel")
 
 <div class="alert alert-info">
@@ -71,3 +48,29 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#releasenotes').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "order": [[1, "asc"]],
+                "columnDefs": [
+                    {
+                        "searchable": false,
+                        "sortable": false,
+                        "visible": false,
+                        "targets": [2]
+                    }
+                ]
+            });
+        });
+    </script>
+}

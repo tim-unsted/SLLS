@@ -1,5 +1,6 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.BarcodeEnquiryViewModel
+
 <div class="panel panel-gadget shadowed">
     <div class="panel-heading">
         <span class="panel-title">
@@ -10,9 +11,6 @@
         @using (Html.BeginForm("BarcodeLookup", "Searching", new AjaxOptions { HttpMethod = "post", OnFailure = "OnFailure" }))
         {
             <div class="form-horizontal">
-                @*<div class="alert alert-info">
-                    <strong>Info:</strong> Enter or scan the @DbRes.T("CopyItems.Barcode", "FieldDisplayName") to lookup the full details of the item.
-                </div>*@
                 <div class="form-group">
                     <div class="col-md-12">
                         @Html.Label("Enter a " + DbRes.T("CopyItems.Barcode", "FieldDisplayName"))

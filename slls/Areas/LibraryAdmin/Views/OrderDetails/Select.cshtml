@@ -40,58 +40,61 @@
 
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
+@section scripts {
+@Scripts.Render("~/bundles/selectPicker")
+    <script type="text/javascript">
+        $(document).ready(function() {
 
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
-        });
-
-        //Get a list of orders ...
-        $("#showOrders").click(function () {
-            var select = $("#OrderID");
-            var showAll = $("#showOrders");
-            var status = showAll.attr("value");
-            //alert(status);
-            select.empty();
-            var filter;
-            var text;
-            var newStatus;
-            if (status === "showAll") {
-                filter = { filter: "" };
-                newStatus = "outstanding";
-                text = "[Show Current]";
-            }
-            if (status === "outstanding") {
-                filter = { filter: "outstanding" };
-                newStatus = "showAll";
-                text = "[Show All]";
-            }
-
-            $.ajax({
-                url: '@Url.Action("GetOrderList", "OrderDetails")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(filter),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.AllOrders, function (index, itemData) {
-                            select.append($('<option />', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                            }));
-                        }
-                        );
-                        showAll.attr('value', newStatus);
-                        showAll.Text(text);
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
+            $('.selectpicker').selectpicker({
+                liveSearch: true,
+                showSubtext: true
             });
-        });
-    })
-</script>
+
+            //Get a list of orders ...
+            $("#showOrders").click(function() {
+                var select = $("#OrderID");
+                var showAll = $("#showOrders");
+                var status = showAll.attr("value");
+                //alert(status);
+                select.empty();
+                var filter;
+                var text;
+                var newStatus;
+                if (status === "showAll") {
+                    filter = { filter: "" };
+                    newStatus = "outstanding";
+                    text = "[Show Current]";
+                }
+                if (status === "outstanding") {
+                    filter = { filter: "outstanding" };
+                    newStatus = "showAll";
+                    text = "[Show All]";
+                }
+
+                $.ajax({
+                    url: '@Url.Action("GetOrderList", "OrderDetails")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(filter),
+                    success: function(data) {
+                        if (data.success) {
+                            $.each(data.AllOrders, function(index, itemData) {
+                                    select.append($('<option />', {
+                                        value: itemData.Value,
+                                        text: itemData.Text
+                                    }));
+                                }
+                            );
+                            showAll.attr('value', newStatus);
+                            showAll.Text(text);
+                        } else {
+                            alert('invalid ID' + data.success);
+                        }
+                    },
+                    async: false
+                });
+            });
+        })
+    </script>
+}

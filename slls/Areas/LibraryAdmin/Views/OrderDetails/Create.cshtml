@@ -202,19 +202,19 @@
         </div>
     </div>
 
-    @*@Html.Partial("_ModalAddFooter")*@
     <div class="modal-footer">
         @Html.SaveButton("Add Order")
         &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
     </div>
 }
 
+@Scripts.Render("~/bundles/modalAddEditHeader")
+@Scripts.Render("~/bundles/selectPicker")
 <script type="text/javascript">
-    $(document).ready(function () {
+    $(document).ready(function() {
         $('.selectpicker').selectpicker({
             liveSearch: true,
             showSubtext: true
         });
     });
 </script>
-

@@ -10,6 +10,11 @@
     @Html.Partial("_Outstanding", Model)
 </div>
 
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/OrderDetails/_Outstanding.js")" type="text/javascript"></script>
+}
+
 
 
     

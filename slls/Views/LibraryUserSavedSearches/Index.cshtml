@@ -3,35 +3,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.LibraryUserSavedSearch>
 
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#savedsearches').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "columnDefs": [
-                {
-                    "visible": false,
-                    "targets": [2]
-                },
-                {
-                    "sortable": false,
-                    "searchable": false,
-                    "targets": [3]
-                },
-                {
-                    "orderData": [2],
-                    "targets": [1]
-                }
-            ]
-        });
-    });
-</script>
-
 @Html.Partial("_HeaderCancel")
 
 <table class="table" id="savedsearches">
@@ -76,39 +47,34 @@
     </tbody>
 </table>
 
-@*<div id="alertDialog" title="@ViewBag.Title"><p id="contentholder"></p></div>
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        if (@ViewBag.HasAlert === true) {
-            $('#alertDialog').dialog({
-                open: function () {
-                    var text = "@ViewBag.AlertMsg";
-                    $(this).closest(".ui-dialog")
-                    .find(".ui-dialog-titlebar-close")
-                    .removeClass("ui-icon-closethick")
-                    .addClass("btn btn-default")
-                    .text("X"),
-                    $("#contentholder").html(text);
-
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#savedsearches').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
                 },
-                autoOpen: true,
-                modal: true,
-                overlay: {
-                    backgroundColor: '#000',
-                    opacity: 0.5
-                },
-                buttons: [
-                {
-                    text: "@DbRes.T("Buttons.Ok","Terminology")",
-                    "class": 'btn btn-primary',
-                    click: function () {
-                        $(this).dialog('close');
+                "columnDefs": [
+                    {
+                        "visible": false,
+                        "targets": [2]
+                    },
+                    {
+                        "sortable": false,
+                        "searchable": false,
+                        "targets": [3]
+                    },
+                    {
+                        "orderData": [2],
+                        "targets": [1]
                     }
-                }
                 ]
             });
-        }
-    });
-
-</script>*@
+        });
+    </script>
+}

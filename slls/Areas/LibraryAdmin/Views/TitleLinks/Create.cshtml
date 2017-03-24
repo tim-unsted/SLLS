@@ -1,11 +1,7 @@
-﻿@using System.Activities.Expressions
-@using slls.Utils.Helpers
+﻿@using slls.Utils.Helpers
 @using VortexSoft.Bootstrap
 @using Westwind.Globalization
 @model slls.ViewModels.LinkedFileAddViewModel
-
-<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 
 <div class="modal-header">
     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -135,90 +131,89 @@
     </div>
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
-        });
-    });
+@section scripts {
+@Scripts.Render("~/bundles/selectPicker")
+    @Scripts.Render("~/bundles/jqueryval")
 
-    $("#myForm").submit(function (e) {
-        e.preventDefault();
-        var formData = new FormData($(this)[0]);
-
-        $.ajax({
-            type: "POST",
-            url: this.action,
-            data: formData,
-            async: false,
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                if (data.success) {
-                    $('#stdModal').modal('hide');
-                    location.reload();
-                } else {
-                    alert('Oops! ' + data.success);
-                }
-            }
-        });
-        return false;
-    });
-
-    function OnSuccess(json) {
-        if (json.isRedirect) {
-            window.location.href = json.redirectUrl;
-        }
-    }
-
-    function OnFailure(response) {
-        var obj = $.parseJSON(response.responseText);
-        alert(obj.message);
-    }
-
-</script>
-
-<script>
-    var Url = $('#Url');
-    $("#myform").validate({
-        rules: {
-            Url: {
-                required: true,
-                url: true
-            }
-        }
-    });
-</script>
-
-<script type="text/javascript">
-    $(function () {
-
-        // We can attach the `fileselect` event to all file inputs on the page
-        $(document).on('change', ':file', function () {
-            var input = $(this),
-                numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-            input.trigger('fileselect', [numFiles, label]);
-        });
-
-        // We can watch for our custom `fileselect` event like this
-        $(document).ready(function () {
-            $(':file').on('fileselect', function (event, numFiles, label) {
-
-                var input = $(this).parents('.input-group').find(':text'),
-                    log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-                if (input.length) {
-                    //alert(input.length);
-                    input.val(log);
-                } else {
-                    if (log) alert(log);
-                }
-
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.selectpicker').selectpicker({
+                liveSearch: true,
+                showSubtext: true
             });
         });
 
-    });
-</script>
+        $("#myForm").submit(function(e) {
+            e.preventDefault();
+            var formData = new FormData($(this)[0]);
+
+            $.ajax({
+                type: "POST",
+                url: this.action,
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    if (data.success) {
+                        $('#stdModal').modal('hide');
+                        location.reload();
+                    } else {
+                        alert('Oops! ' + data.success);
+                    }
+                }
+            });
+            return false;
+        });
+
+        function OnSuccess(json) {
+            if (json.isRedirect) {
+                window.location.href = json.redirectUrl;
+            }
+        }
+
+        function OnFailure(response) {
+            var obj = $.parseJSON(response.responseText);
+            alert(obj.message);
+        }
+    
+        var Url = $('#Url');
+        $("#myform").validate({
+            rules: {
+                Url: {
+                    required: true,
+                    url: true
+                }
+            }
+        });
+    
+        $(function() {
+
+            // We can attach the `fileselect` event to all file inputs on the page
+            $(document).on('change', ':file', function() {
+                var input = $(this),
+                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                input.trigger('fileselect', [numFiles, label]);
+            });
+
+            // We can watch for our custom `fileselect` event like this
+            $(document).ready(function() {
+                $(':file').on('fileselect', function(event, numFiles, label) {
+
+                    var input = $(this).parents('.input-group').find(':text'),
+                        log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                    if (input.length) {
+                        //alert(input.length);
+                        input.val(log);
+                    } else {
+                        if (log) alert(log);
+                    }
+
+                });
+            });
+        });
+    </script>
+}

@@ -176,24 +176,7 @@
     @Html.Partial("_ModalEditFooter")
 }
 
-<script type="text/javascript">
-    $('#cmdResetPwd').click(function () {
-        $('#lrgModal').modal('hide');
-    });
-    //$(function () {
-    //    $('form').submit(function (e) {
-    //        e.preventDefault();
-    //        $.post(this.action, $(this).serialize(), function (response) {
-    //            if (response.error) {
-    //                alert(response.error);
-    //            }
-    //            else {
-    //                $('#stdModal').modal('hide');
-    //                $('#lrgModal').modal('hide');
-    //            }
-    //        }, 'json');
-    //    });
-    //});
-</script>
+@Scripts.Render("~/bundles/modalAddEditHeader")
+
 
 

@@ -65,42 +65,45 @@
     </div>
 }
 
-@*<script type="text/javascript">
-    $(document).ready(function () {
+@*
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
 
-        $("#AvailableItemsType").change(function () {
-            var select = $("#SelectedItems");
-            select.empty();
+            $("#AvailableItemsType").change(function () {
+                var select = $("#SelectedItems");
+                select.empty();
 
-            var selectedListType = { listType: $("#AvailableItemsType").val() };
+                var selectedListType = { listType: $("#AvailableItemsType").val() };
 
-            $.ajax({
-                url: '@Url.Action("GetListRows", @Model.PostSelectController)',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedListType),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.AvailableItems, function (index, itemData) {
-                            select.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                            }));
+                $.ajax({
+                    url: '@Url.Action("GetListRows", @Model.PostSelectController)',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(selectedListType),
+                    success: function (data) {
+                        if (data.success) {
+                            $.each(data.AvailableItems, function (index, itemData) {
+                                select.append($('<option/>', {
+                                    value: itemData.Value,
+                                    text: itemData.Text
+                                }));
+                            }
+                            );
+                        } else {
+                            alert('Opps!' + data.success);
                         }
-                        );
-                    } else {
-                        alert('Opps!' + data.success);
-                    }
-                },
-                async: false
+                    },
+                    async: false
+                });
             });
         });
-    });
 
-    $(function () {
-        $('#SelectedItems').on('dblclick', function () {
-            $("#MultiSelect").submit();
+        $(function () {
+            $('#SelectedItems').on('dblclick', function () {
+                $("#MultiSelect").submit();
+            });
         });
-    });
+}
 </script>*@

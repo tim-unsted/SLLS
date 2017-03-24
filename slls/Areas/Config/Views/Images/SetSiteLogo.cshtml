@@ -25,8 +25,8 @@
         }
         <div class="form-group">
             <div class="col-md-12">
-                @Html.Label(Model.SelectLabel, htmlAttributes: new {@class = "control-label"})
-                @Html.DropDownListFor(x => x.SelectedItem, Model.AvailableItems, Model.SelectText, new {@class = "form-control selectpicker"})
+                @Html.Label(Model.SelectLabel, htmlAttributes: new { @class = "control-label" })
+                @Html.DropDownListFor(x => x.SelectedItem, Model.AvailableItems, Model.SelectText, new { @class = "form-control selectpicker" })
             </div>
         </div>
 
@@ -45,6 +45,8 @@
     </div>
 }
 
+@Scripts.Render("~/bundles/selectPicker")
+@Scripts.Render("~/bundles/modalAddEditHeader")
 <script type="text/javascript">
     $(document).ready(function () {
         $('.selectpicker').selectpicker({
@@ -63,7 +65,7 @@
     $("#SelectedItem").change(function () {
         var imageId = $("#SelectedItem").val();
         if (imageId > 0) {
-            var url = "@Url.Action("RenderImage", "Files", new { id = "xxx" , area = "" })";
+            var url = "@Url.Action("RenderImage", "Files", new {id = "xxx", area = ""})";
             $("#selectedImage").attr("src", url.replace('xxx', imageId));
             $('#selectedImage').show();
         } else {

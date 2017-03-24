@@ -45,7 +45,7 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
-    @Html.Partial("_SelectTitle")
+    @Html.Partial("_Select")
 
     <div class="row" style="margin-right: 0">
         <div class="col-md-12" style="margin-top: 10px;">
@@ -231,26 +231,51 @@
     }
 }
 
-<script type="text/javascript">
-    
-    $(document).ready(function () {
-        // show the alert
-        setTimeout(function () {
-            $(".alert-dismissable").alert('close');
-        }, 6000);
-    });
+@Html.Hidden("AutoSuggestUrl", @Url.Action("AutoComplete", "Titles"));
+@Html.Hidden("DestUrl", @Url.Action("Edit", "Titles", new {id = "REPLACEME"}));
+@Html.Hidden("AddClassmarkUrl", @Url.Action("_add", "Classmarks"));
+@Html.Hidden("AddMediaUrl", @Url.Action("_add", "MediaTypes"));
+@Html.Hidden("AddFrequencyUrl", @Url.Action("_add", "Frequencies"));
+@Html.Hidden("AddLanguageUrl", @Url.Action("_add", "Languages"));
+@Html.Hidden("AddPublisherUrl", @Url.Action("_add", "Publishers"));
 
-    $(function () {
-        $('a[data-toggle="tab"]').on('click', function (e) {
-            //save the latest tab:
-            sessionStorage.setItem('lastTab_EditTitle', $(e.target).attr('href'));
+@section Scripts{
+<script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+@Scripts.Render("~/bundles/selectTitle")
+@Scripts.Render("~/bundles/titlesAddEdit")
+
+    <script type="text/javascript">
+
+        $(document).ready(function() {
+            // show the alert
+            setTimeout(function() {
+                $(".alert-dismissable").alert('close');
+            }, 6000);
         });
 
-        //go to the latest tab, if it exists:
-        var lastTab = sessionStorage.getItem('lastTab_EditTitle');
+        $(function() {
+            $('a[data-toggle="tab"]').on('click', function(e) {
+                //save the latest tab:
+                sessionStorage.setItem('lastTab_EditTitle', $(e.target).attr('href'));
+            });
 
-        if (lastTab) {
-            $('a[href="' + lastTab + '"]').click();
-        }
-    });
-</script>
+            //go to the latest tab, if it exists:
+            var lastTab = sessionStorage.getItem('lastTab_EditTitle');
+
+            if (lastTab) {
+                $('a[href="' + lastTab + '"]').click();
+            }
+        });
+
+        $(".validation-summary-errors").removeClass("validation-summary-errors");
+        $(".input-validation-error").removeClass("input-validation-error").parent().addClass("has-error");
+
+        var isChanged = false;
+        $('input,select,textarea').change(function() {
+            isChanged = true;
+        });
+
+    </script>
+
+
+}

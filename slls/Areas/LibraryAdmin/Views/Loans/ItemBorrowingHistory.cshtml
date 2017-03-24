@@ -111,165 +111,167 @@
     </div>
 }
 
+@section scripts {
+@Scripts.Render("~/bundles/selectPicker")
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var typingTimer; //timer identifier
+            var doneTypingInterval = 500; //time in ms, 0.5 seconds for example
+            var input = $('#Barcode');
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        var typingTimer; //timer identifier
-        var doneTypingInterval = 500; //time in ms, 0.5 seconds for example
-        var input = $('#Barcode');
+            input.focus();
 
-        input.focus();
-
-        //on keyup, start the countdown
-        input.on('keyup', function () {
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(doneTyping, doneTypingInterval);
-        });
-
-        //on keydown, clear the countdown
-        input.on('keydown', function () {
-            clearTimeout(typingTimer);
-        });
-
-        //on paste, clear the countdown
-        input.on('paste', function () {
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(doneTyping, doneTypingInterval);
-        });
-
-        function doneTyping() {
-            var selectedBarcode = { barcode: input.val() };
-            $.ajax({
-                url: '@Url.Action("GetIdsFromBarcode", "Loans")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedBarcode),
-                success: function (data) {
-                    if (data.success) {
-                        $("#TitleId").val(data.TitleId).change();
-                        $("#CopyId").val(data.CopyId).change();
-                        $("#VolumeId").val(data.VolumeId).change();
-                    }
-                }
+            //on keyup, start the countdown
+            input.on('keyup', function() {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(doneTyping, doneTypingInterval);
             });
-        }
 
-        $('.selectpicker').selectpicker({
-            liveSearch: true
-        });
+            //on keydown, clear the countdown
+            input.on('keydown', function() {
+                clearTimeout(typingTimer);
+            });
 
-        $('#Weeks').click(function () {
-            $('input:radio[id="DateRangeType"][value="span"]').prop("checked", true);
-        });
+            //on paste, clear the countdown
+            input.on('paste', function() {
+                clearTimeout(typingTimer);
+                typingTimer = setTimeout(doneTyping, doneTypingInterval);
+            });
 
-        $('#StartDate').click(function () {
-            $('input:radio[id="DateRangeType"][value="range"]').prop("checked", true);
-        });
+            function doneTyping() {
+                var selectedBarcode = { barcode: input.val() };
+                $.ajax({
+                    url: '@Url.Action("GetIdsFromBarcode", "Loans")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(selectedBarcode),
+                    success: function(data) {
+                        if (data.success) {
+                            $("#TitleId").val(data.TitleId).change();
+                            $("#CopyId").val(data.CopyId).change();
+                            $("#VolumeId").val(data.VolumeId).change();
+                        }
+                    }
+                });
+            }
 
-        $('#EndDate').click(function () {
-            $('input:radio[id="DateRangeType"][value="range"]').prop("checked", true);
-        });
+            $('.selectpicker').selectpicker({
+                liveSearch: true
+            });
 
-        //Get a list of borrowed copies for the selected title ...
-        $("#TitleId").change(function () {
-            var selectCopies = $("#CopyId");
-            var selectVolumes = $("#VolumeId");
-            selectCopies.empty();
-            selectVolumes.empty();
-            //alert($("#TitleId").val());
+            $('#Weeks').click(function() {
+                $('input:radio[id="DateRangeType"][value="span"]').prop("checked", true);
+            });
 
-            var selectedTitleId = { titleId: $("#TitleId").val() };
+            $('#StartDate').click(function() {
+                $('input:radio[id="DateRangeType"][value="range"]').prop("checked", true);
+            });
 
-            $.ajax({
-                url: '@Url.Action("GetCopies", "Loans")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedTitleId),
-                success: function (data) {
-                    if (data.success) {
+            $('#EndDate').click(function() {
+                $('input:radio[id="DateRangeType"][value="range"]').prop("checked", true);
+            });
 
-                        var copiesCount = data.BorrowedCopies.length;
-                        selectCopies.append($('<option/>', {
-                            value: "0",
-                            text: "All Copies (" + copiesCount + ")"
-                        }));
+            //Get a list of borrowed copies for the selected title ...
+            $("#TitleId").change(function() {
+                var selectCopies = $("#CopyId");
+                var selectVolumes = $("#VolumeId");
+                selectCopies.empty();
+                selectVolumes.empty();
+                //alert($("#TitleId").val());
 
-                        var volumesCount = data.BorrowedVolumes.length;
-                        selectVolumes.append($('<option/>', {
-                            value: "0",
-                            text: "All Copy Items (" + volumesCount + ")"
-                        }));
+                var selectedTitleId = { titleId: $("#TitleId").val() };
 
-                        //Load in the copies ...
-                        $.each(data.BorrowedCopies, function (index, itemData) {
+                $.ajax({
+                    url: '@Url.Action("GetCopies", "Loans")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(selectedTitleId),
+                    success: function(data) {
+                        if (data.success) {
+
+                            var copiesCount = data.BorrowedCopies.length;
                             selectCopies.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
+                                value: "0",
+                                text: "All Copies (" + copiesCount + ")"
                             }));
-                        });
 
-                        //Load in the volumes ...
-                        $.each(data.BorrowedVolumes, function (index, itemData) {
+                            var volumesCount = data.BorrowedVolumes.length;
                             selectVolumes.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
+                                value: "0",
+                                text: "All Copy Items (" + volumesCount + ")"
                             }));
-                        });
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
+
+                            //Load in the copies ...
+                            $.each(data.BorrowedCopies, function(index, itemData) {
+                                selectCopies.append($('<option/>', {
+                                    value: itemData.Value,
+                                    text: itemData.Text
+                                }));
+                            });
+
+                            //Load in the volumes ...
+                            $.each(data.BorrowedVolumes, function(index, itemData) {
+                                selectVolumes.append($('<option/>', {
+                                    value: itemData.Value,
+                                    text: itemData.Text
+                                }));
+                            });
+                        } else {
+                            alert('invalid ID' + data.success);
+                        }
+                    },
+                    async: false
+                });
+            });
+
+            //Get a list of available volumes for a selected title/copy ...
+            function DoVolumes(copyId) {
+                var selectVolumes = $("#VolumeId");
+                var barcodeField = $("#Barcode");
+                selectVolumes.empty();
+
+                var selectedCopyId = { copyId: copyId };
+
+                $.ajax({
+                    url: '@Url.Action("GetVolumes", "Loans")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(selectedCopyId),
+                    success: function(data) {
+                        if (data.success) {
+
+                            var volumesCount = data.BorrowedVolumes.length;
+                            selectVolumes.append($('<option/>', {
+                                value: "0",
+                                text: "All Copy Items (" + volumesCount + ")"
+                            }));
+
+                            $.each(data.BorrowedVolumes, function(index, itemData) {
+                                selectVolumes.append($('<option/>', {
+                                    value: itemData.Value,
+                                    text: itemData.Text
+                                }));
+                            });
+                        } else {
+                            alert('invalid ID' + data.success);
+                        }
+                    },
+                    async: false
+                });
+            }
+
+            $("#CopyId").change(function() {
+                DoVolumes($("#CopyId").val());
+                $("#Barcode").val("");
+            });
+
+            $("#VolumeId").change(function() {
+                var barcode = $("#VolumeId option:selected").text();
+                $("#Barcode").val(barcode);
             });
         });
-
-        //Get a list of available volumes for a selected title/copy ...
-        function DoVolumes(copyId) {
-            var selectVolumes = $("#VolumeId");
-            var barcodeField = $("#Barcode");
-            selectVolumes.empty();
-
-            var selectedCopyId = { copyId: copyId };
-
-            $.ajax({
-                url: '@Url.Action("GetVolumes", "Loans")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedCopyId),
-                success: function (data) {
-                    if (data.success) {
-
-                        var volumesCount = data.BorrowedVolumes.length;
-                        selectVolumes.append($('<option/>', {
-                            value: "0",
-                            text: "All Copy Items (" + volumesCount + ")"
-                        }));
-
-                        $.each(data.BorrowedVolumes, function (index, itemData) {
-                            selectVolumes.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                            }));
-                        });
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
-            });
-        }
-
-        $("#CopyId").change(function () {
-            DoVolumes($("#CopyId").val());
-            $("#Barcode").val("");
-        });
-
-        $("#VolumeId").change(function () {
-            var barcode = $("#VolumeId option:selected").text();
-            $("#Barcode").val(barcode);
-        });
-    });
-</script>
+    </script>
+}

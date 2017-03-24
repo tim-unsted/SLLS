@@ -77,29 +77,30 @@
      @Html.Partial("_ModalAddFooter")
 }
 
-<script type="text/javascript">
+@Scripts.Render("~/bundles/modalAddEditHeader")
+    <script type="text/javascript">
 
-    $(document).ready(function () {
+        $(document).ready(function() {
 
-        $("#Scope").change(function () {
-            var position = $("#Position");
-            var selectedScope = { Scope: $("#Scope").val() };
-            
-            $.ajax({
-                url: '@Url.Action("GetNextPosition", "Notifications")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedScope),
-                success: function (data) {
-                    if (data.success) {
-                        position.val(data.Position);
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
+            $("#Scope").change(function() {
+                var position = $("#Position");
+                var selectedScope = { Scope: $("#Scope").val() };
+
+                $.ajax({
+                    url: '@Url.Action("GetNextPosition", "Notifications")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(selectedScope),
+                    success: function(data) {
+                        if (data.success) {
+                            position.val(data.Position);
+                        } else {
+                            alert('invalid ID' + data.success);
+                        }
+                    },
+                    async: false
+                });
             });
         });
-    });
-</script>
+    </script>

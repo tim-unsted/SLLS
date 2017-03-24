@@ -5,53 +5,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.HostedFile>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#files').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "columnDefs": [
-                {
-                    "width": "10%",
-                    "orderData": 6,
-                    "searchable": false,
-                    "sortable": true,
-                    "orderSequence": ["desc", "asc"],
-                    "targets": [3]
-                },
-                {
-                    "orderData": 7,
-                    "orderSequence": ["desc", "asc"],
-                    "targets": [2]
-                },
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": true,
-                    "targets": [4]
-                },
-                {
-                    "visible": false,
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [6,7]
-                },
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [8]
-                }
-            ]
-        });
-    });
-</script>
-
 <h2>@ViewBag.Title</h2>
 
 <div class="alert alert-info">
@@ -67,69 +20,119 @@
 
 <table id="files" class="table table-hover">
     <thead>
-        <tr>
-            <th>
-                @DbRes.T("Hosted_Files.FileName", "FieldDisplayName")
-            </th>
-            <th>
-                @DbRes.T("Hosted_Files.Original_Path", "FieldDisplayName")
-            </th>
-            <th>
-                @DbRes.T("Hosted_Files.Date_Uploaded", "FieldDisplayName")
-            </th>
-            <th>
-                @DbRes.T("Hosted_Files.File_Size", "FieldDisplayName")
-            </th>
-            <th>
-                @DbRes.T("TitleLinks", "EntityType")
-            </th>
-            <th>
-                @DbRes.T("OrderLinks", "EntityType")
-            </th>
-            <th></th>
-            <th></th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @DbRes.T("Hosted_Files.FileName", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("Hosted_Files.Original_Path", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("Hosted_Files.Date_Uploaded", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("Hosted_Files.File_Size", "FieldDisplayName")
+        </th>
+        <th>
+            @DbRes.T("TitleLinks", "EntityType")
+        </th>
+        <th>
+            @DbRes.T("OrderLinks", "EntityType")
+        </th>
+        <th></th>
+        <th></th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.ResolvedLink(fileId: item.FileId, linkDisplayText: item.FileName, linkTitle: item.FileName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Path)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.InputDate)
-                </td>
-                <td>
-                    @Html.Raw(Convert.ToDecimal(item.SizeStored).ToString("#,##0"))<span> KB</span>
-                </td>
-                <td>
-                    @if (item.TitleLinks.Any())
-                    {
-                        <a href="@Url.Action("ByLinkedFile", "Titles", new {id = item.FileId})" title="View all items linked to this @DbRes.T("Hosted_Files.File", "FieldDisplayName")"><span class="badge badge-link">@item.TitleLinks.Count</span></a>
-                    }
-                </td>
-                <td>
-                    @if (item.OrderLinks.Any())
-                    {
-                        <a href="@Url.Action("ByLinkedFile", "OrderDetails", new {id = item.FileId})" title="View all orders linked to this @DbRes.T("Hosted_Files.File", "FieldDisplayName")"><span class="badge badge-link">@item.OrderLinks.Count</span></a>
-                    }
-                </td>
-                <td>
-                    @Html.Raw(item.SizeStored)
-                </td>
-                <td>
-                    @Html.Raw(item.InputDateSortable)
-                </td>
-                <td class="just-right">
-                    <a href="@Url.Action("Delete", new {id = item.FileId})" class="btn btn-link modal-link" title="Remove hosted file"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
-                    <a href="@Url.Action("FileDownload", "Files", new {id = item.FileId, area = ""})" class="btn btn-link" title="View File"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span></a>
-                </td>
-            </tr>
-        }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.ResolvedLink(fileId: item.FileId, linkDisplayText: item.FileName, linkTitle: item.FileName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Path)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.InputDate)
+            </td>
+            <td>
+                @Html.Raw(Convert.ToDecimal(item.SizeStored).ToString("#,##0"))<span> KB</span>
+            </td>
+            <td>
+                @if (item.TitleLinks.Any())
+                {
+                    <a href="@Url.Action("ByLinkedFile", "Titles", new {id = item.FileId})" title="View all items linked to this @DbRes.T("Hosted_Files.File", "FieldDisplayName")"><span class="badge badge-link">@item.TitleLinks.Count</span></a>
+                }
+            </td>
+            <td>
+                @if (item.OrderLinks.Any())
+                {
+                    <a href="@Url.Action("ByLinkedFile", "OrderDetails", new {id = item.FileId})" title="View all orders linked to this @DbRes.T("Hosted_Files.File", "FieldDisplayName")"><span class="badge badge-link">@item.OrderLinks.Count</span></a>
+                }
+            </td>
+            <td>
+                @Html.Raw(item.SizeStored)
+            </td>
+            <td>
+                @Html.Raw(item.InputDateSortable)
+            </td>
+            <td class="just-right">
+                <a href="@Url.Action("Delete", new {id = item.FileId})" class="btn btn-link modal-link" title="Remove hosted file"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                <a href="@Url.Action("FileDownload", "Files", new {id = item.FileId, area = ""})" class="btn btn-link" title="View File"><span aria-hidden="true" class="glyphicon glyphicon-eye-open"></span></a>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#files').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "columnDefs": [
+                    {
+                        "width": "10%",
+                        "orderData": 6,
+                        "searchable": false,
+                        "sortable": true,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [3]
+                    },
+                    {
+                        "orderData": 7,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [2]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": true,
+                        "targets": [4]
+                    },
+                    {
+                        "visible": false,
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [6, 7]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [8]
+                    }
+                ]
+            });
+        });
+    </script>
+}

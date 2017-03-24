@@ -4,35 +4,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Circulation>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#tblcirculationlist').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [[1, 'asc'], [0, 'asc']],
-            "columnDefs": [
-            {
-                "searchable": false,
-                "sortable": true,
-                "orderSequence": ["desc", "asc"],
-                "targets": [1]
-            },
-            {
-                "width": "20%",
-                "searchable": false,
-                "sortable": false,
-                "targets": [2]
-            }
-            ]
-        });
-    });
-</script>
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
@@ -112,11 +83,41 @@
     </table>
 </div>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
+@section scripts {
+@Scripts.Render("~/bundles/selectPicker")
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('.selectpicker').selectpicker({
+                liveSearch: true,
+                showSubtext: true
+            });
+
+            $('#tblcirculationlist').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "order": [[1, 'asc'], [0, 'asc']],
+                "columnDefs": [
+                    {
+                        "searchable": false,
+                        "sortable": true,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [1]
+                    },
+                    {
+                        "width": "20%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [2]
+                    }
+                ]
+            });
         });
-    });
-</script>
+    </script>
+}

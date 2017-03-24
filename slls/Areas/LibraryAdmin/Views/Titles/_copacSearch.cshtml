@@ -91,12 +91,16 @@
     }
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#Title').focus();
-    });
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Titles/_CopacResults.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('#Title').focus();
+        });
 
-    $('#submit').on("click", function () {
-        $(document.body).css({ 'cursor': 'wait' });
-    });
-</script>
+        $('#submit').on("click", function() {
+            $(document.body).css({ 'cursor': 'wait' });
+        });
+    </script>
+}

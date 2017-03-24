@@ -11,3 +11,20 @@
 </div>
 
 @Html.Partial("_index")
+
+@section scripts {
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#parameters').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": 100,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                }
+            });
+        });
+    </script>
+}

@@ -50,27 +50,27 @@
     </div>
 }
 
-<script type="text/javascript">
-
-    $(document).ready(function () {
-        //REM: Hide the 'success' alert after x seconds ...
-        setTimeout(function () {
-            $(".alert-success").alert('close');
-        }, 6000);
-    });
-
-    $(function () {
-        $('a[data-toggle="tab"]').on('click', function (e) {
-            //save the latest tab:
-            sessionStorage.setItem('lastTab_EditOrder', $(e.target).attr('href'));
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function() {
+            //REM: Hide the 'success' alert after x seconds ...
+            setTimeout(function() {
+                $(".alert-success").alert('close');
+            }, 6000);
         });
 
-        //go to the latest tab, if it exists:
-        var lastTab = sessionStorage.getItem('lastTab_EditOrder');
+        $(function() {
+            $('a[data-toggle="tab"]').on('click', function(e) {
+                //save the latest tab:
+                sessionStorage.setItem('lastTab_EditOrder', $(e.target).attr('href'));
+            });
 
-        if (lastTab) {
-            $('a[href="' + lastTab + '"]').click();
-        }
-    });
-    
-</script>
+            //go to the latest tab, if it exists:
+            var lastTab = sessionStorage.getItem('lastTab_EditOrder');
+
+            if (lastTab) {
+                $('a[href="' + lastTab + '"]').click();
+            }
+        });
+    </script>
+}

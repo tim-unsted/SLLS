@@ -1,31 +1,6 @@
-﻿@using System
-@using slls.Utils.Helpers
+﻿@using slls.Utils.Helpers
 @using Westwind.Globalization
-@model System.Collections.Generic.IEnumerable<slls.Models.UsefulLink>
-
-<script type="text/javascript">
-    $(document)
-        .ready(function () {
-            $('#usefulLinks')
-                .DataTable({
-                    "dom": sDom,
-                    "pagingType": sPagingType,
-                    "pageLength": sPageLength,
-                    "lengthMenu": sLengthMenu,
-                    "language": {
-                        "url": "/DataTables/lang.txt"
-                    },
-                    "columnDefs": [
-                    {
-                        "width": "10%",
-                        "searchable": false,
-                        "sortable": false,
-                        "targets": [5]
-                    }
-                    ]
-                });
-        });
-</script>
+@model IEnumerable<slls.Models.UsefulLink>
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
@@ -81,3 +56,30 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document)
+            .ready(function () {
+                $('#usefulLinks')
+                    .DataTable({
+                        "dom": sDom,
+                        "pagingType": sPagingType,
+                        "pageLength": sPageLength,
+                        "lengthMenu": sLengthMenu,
+                        "language": {
+                            "url": "/DataTables/lang.txt"
+                        },
+                        "columnDefs": [
+                            {
+                                "width": "10%",
+                                "searchable": false,
+                                "sortable": false,
+                                "targets": [5]
+                            }
+                        ]
+                    });
+            });
+    </script>
+}

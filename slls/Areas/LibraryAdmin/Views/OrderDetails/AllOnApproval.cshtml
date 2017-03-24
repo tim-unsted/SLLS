@@ -18,6 +18,13 @@
     @Html.Partial("_OnApproval", Model)
 </div>
 
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/OrderDetails/_OnApproval.js")" type="text/javascript"></script>
+}
+
+
+
 
 
 

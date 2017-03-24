@@ -6,44 +6,6 @@
 @model slls.ViewModels.MenuViewModel
 
 
-<script type="text/javascript">
-
-    $(document).ready(function () {
-
-        $("#parentArea").change(function () {
-            var select = $("#parentID");
-            select.empty();
-
-            var selectedAreaID = { AreaID: $("#parentArea").val() };
-
-            $.ajax({
-                url: '@Url.Action("GetParents", "MenuBuilder")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedAreaID),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.ParentData, function (index, itemData) {
-                            select.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                            }));
-                        }
-                        );
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
-            });
-        });
-    });
-
-</script>
-
-
-
 @Html.Partial("_ModalAddHeader")
 
 @using (Html.BeginForm())
@@ -198,16 +160,16 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                @Html.LabelFor(model => model.DataToggle, htmlAttributes: new {@class = "control-label col-md-3"})
+                                @Html.LabelFor(model => model.DataToggle, htmlAttributes: new { @class = "control-label col-md-3" })
                                 <div class="col-md-3">
-                                    @Html.DropDownListFor(model => model.DataToggle, new SelectList(ViewBag.DataToggles, "Key", "Value"), new {@class = "form-control"})
-                                    @Html.ValidationMessageFor(model => model.DataToggle, "", new {@class = "text-danger"})
+                                    @Html.DropDownListFor(model => model.DataToggle, new SelectList(ViewBag.DataToggles, "Key", "Value"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.DataToggle, "", new { @class = "text-danger" })
                                 </div>
 
-                                @Html.LabelFor(model => model.DataTarget, htmlAttributes: new {@class = "control-label col-md-2"})
+                                @Html.LabelFor(model => model.DataTarget, htmlAttributes: new { @class = "control-label col-md-2" })
                                 <div class="col-md-3">
-                                    @Html.DropDownListFor(model => model.DataTarget, new SelectList(ViewBag.DataTargets, "Key", "Value"), new {@class = "form-control"})
-                                    @Html.ValidationMessageFor(model => model.DataTarget, "", new {@class = "text-danger"})
+                                    @Html.DropDownListFor(model => model.DataTarget, new SelectList(ViewBag.DataTargets, "Key", "Value"), new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.DataTarget, "", new { @class = "text-danger" })
                                 </div>
                             </div>
                             <div class="form-group">
@@ -274,6 +236,40 @@
     @Html.Partial("_ModalAddFooter")
 
 }
+
+@Scripts.Render("~/bundles/modalAddEditHeader")
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#parentArea").change(function () {
+            var select = $("#parentID");
+            select.empty();
+
+            var selectedAreaID = { AreaID: $("#parentArea").val() };
+
+            $.ajax({
+                url: '@Url.Action("GetParents", "MenuBuilder")',
+                type: 'Post',
+                contentType: 'application/json',
+                dataType: 'json',
+                data: JSON.stringify(selectedAreaID),
+                success: function (data) {
+                    if (data.success) {
+                        $.each(data.ParentData, function (index, itemData) {
+                            select.append($('<option/>', {
+                                value: itemData.Value,
+                                text: itemData.Text
+                            }));
+                        }
+                        );
+                    } else {
+                        alert('invalid ID' + data.success);
+                    }
+                },
+                async: false
+            });
+        });
+    });
+</script>
 
 
 

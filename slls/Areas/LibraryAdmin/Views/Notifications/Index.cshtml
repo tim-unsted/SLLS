@@ -3,41 +3,6 @@
 @using Westwind.Globalization
 @model slls.ViewModels.NotificationIndexViewModel
 
-<script type="text/javascript">
-    $(document)
-        .ready(function () {
-            $('#notifications')
-                .DataTable({
-                    "dom": sDom,
-                    "pagingType": sPagingType,
-                    "pageLength": sPageLength,
-                    "lengthMenu": sLengthMenu,
-                    "language": {
-                        "url": "/DataTables/lang.txt"
-                    },
-                    "order": [[2, 'asc']],
-                    "columnDefs": [
-                        {
-                            "visible": false,
-                            "searchable": false,
-                            "sortable": false,
-                            "targets": [5]
-                        },
-                        {
-                            "width": "10%",
-                            "searchable": false,
-                            "sortable": false,
-                            "targets": [6]
-                        },
-                        {
-                            "orderData": [5],
-                            "targets": [4]
-                        }
-                    ]
-                });
-        });
-</script>
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "selectMonthYear" }))
@@ -119,3 +84,41 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document)
+            .ready(function () {
+                $('#notifications')
+                    .DataTable({
+                        "dom": sDom,
+                        "pagingType": sPagingType,
+                        "pageLength": sPageLength,
+                        "lengthMenu": sLengthMenu,
+                        "language": {
+                            "url": "/DataTables/lang.txt"
+                        },
+                        "order": [[2, 'asc']],
+                        "columnDefs": [
+                            {
+                                "visible": false,
+                                "searchable": false,
+                                "sortable": false,
+                                "targets": [5]
+                            },
+                            {
+                                "width": "10%",
+                                "searchable": false,
+                                "sortable": false,
+                                "targets": [6]
+                            },
+                            {
+                                "orderData": [5],
+                                "targets": [4]
+                            }
+                        ]
+                    });
+            });
+    </script>
+}

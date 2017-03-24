@@ -76,43 +76,44 @@
 
 }
 
-<script type="text/javascript">
+@section scripts {
+@Scripts.Render("~/bundles/selectPicker")
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $('.selectpicker').selectpicker({
+                liveSearch: true,
+                showSubtext: true
+            });
 
-    $(document).ready(function () {
+            $("#TitleID").change(function() {
+                var select = $("#CopyID");
+                select.empty();
 
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
-        });
+                var selectedTitleId = { TitleID: $("#TitleID").val() };
 
-        $("#TitleID").change(function () {
-            var select = $("#CopyID");
-            select.empty();
-
-            var selectedTitleId = { TitleID: $("#TitleID").val() };
-
-            $.ajax({
-                url: '@Url.Action("GetTitleCopies", "Titles")',
-                type: 'Post',
-                contentType: 'application/json',
-                dataType: 'json',
-                data: JSON.stringify(selectedTitleId),
-                success: function (data) {
-                    if (data.success) {
-                        $.each(data.TitleCopyData, function (index, itemData) {
-                            select.append($('<option/>', {
-                                value: itemData.Value,
-                                text: itemData.Text
-                                }));
-                            }
-                        );
-                        $('#LoanTypeId').val(data.DefaultloanType);
-                    } else {
-                        alert('invalid ID' + data.success);
-                    }
-                },
-                async: false
+                $.ajax({
+                    url: '@Url.Action("GetTitleCopies", "Titles")',
+                    type: 'Post',
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    data: JSON.stringify(selectedTitleId),
+                    success: function(data) {
+                        if (data.success) {
+                            $.each(data.TitleCopyData, function(index, itemData) {
+                                    select.append($('<option/>', {
+                                        value: itemData.Value,
+                                        text: itemData.Text
+                                    }));
+                                }
+                            );
+                            $('#LoanTypeId').val(data.DefaultloanType);
+                        } else {
+                            alert('invalid ID' + data.success);
+                        }
+                    },
+                    async: false
+                });
             });
         });
-    });
-</script>
+    </script>
+}

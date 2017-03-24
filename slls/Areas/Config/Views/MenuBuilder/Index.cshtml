@@ -4,37 +4,6 @@
 @using slls.ViewModels
 @model System.Collections.Generic.IEnumerable<slls.Models.Menu>
 
-<script type="text/javascript">
-    $(function () {
-        var detailsPartial = $('#details');
-
-        $('.details-link').click(function (event) {
-            event.preventDefault();
-            var url = $(this).attr('href');
-
-            $.ajax({
-                url: url,
-                type: 'get',
-                success: function (data) {
-                    detailsPartial.html(data);
-                    $('#clearDetails').click(function () {
-                        detailsPartial.html(null);
-                    });
-                }
-            });
-        });
-
-        $('.list > li a').click(function () {
-            var menuItem = $(this).parent().find('ul');
-            var id = menuItem.attr('id');
-            menuItem.toggle();
-            localStorage.setItem('menuItemDisplay.' + id, menuItem.is(':visible'));
-        });
-    });
-
-</script>
-
-
 <h2>@ViewBag.Title</h2>
 
 <div class="alert alert-info">
@@ -139,9 +108,33 @@
     </div>
 </div>
 
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            var detailsPartial = $('#details');
 
-@*<script type="text/javascript">
-        $('#row').scroll(function() {
-            $('#details').css('top', $(this).scrollTop());
-    });
-    </script>*@
+            $('.details-link').click(function (event) {
+                event.preventDefault();
+                var url = $(this).attr('href');
+
+                $.ajax({
+                    url: url,
+                    type: 'get',
+                    success: function (data) {
+                        detailsPartial.html(data);
+                        $('#clearDetails').click(function () {
+                            detailsPartial.html(null);
+                        });
+                    }
+                });
+            });
+
+            $('.list > li a').click(function () {
+                var menuItem = $(this).parent().find('ul');
+                var id = menuItem.attr('id');
+                menuItem.toggle();
+                localStorage.setItem('menuItemDisplay.' + id, menuItem.is(':visible'));
+            });
+        });
+    </script>
+}

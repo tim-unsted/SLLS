@@ -1,6 +1,4 @@
-﻿@using slls.Models
-@using Westwind.Globalization
-@model slls.ViewModels.OrderDetailsListViewModel
+﻿@model slls.ViewModels.OrderDetailsListViewModel
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
@@ -9,3 +7,8 @@
 <div>
     @Html.Partial("_Index", Model)
 </div>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/OrderDetails/_Index.js")" type="text/javascript"></script>
+}

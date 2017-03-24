@@ -1,6 +1,7 @@
-﻿<script src="~/Scripts/jquery.validate.min.js"></script>
-<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
-<script src="~/Scripts/DatePickerReady.js"></script>
+﻿@section scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script src="~/Scripts/DatePickerReady.js"></script>
+}
 
 <div>
     <span class="btn-group pull-right">
@@ -13,5 +14,4 @@
         @Html.Partial("_NoData", TempData["NoData"])
     }
 </div>
-@*<hr class="hr-compact"/>*@
 

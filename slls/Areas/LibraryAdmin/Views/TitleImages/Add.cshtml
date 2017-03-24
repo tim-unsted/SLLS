@@ -24,7 +24,6 @@
         </ul>
     </div>
 
-
     <div class="form-horizontal">
         <div class="form-group">
             @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
@@ -117,10 +116,6 @@
                     @Html.HelpInline("<strong>Tip:</strong> Press and hold the 'Ctrl' button in the pop-up file explorer to pick multiple image files.")
                 </div>
             </div>
-            @*<div class="form-group">
-                    @Html.Label("--- Or ---", new {@class = "control-label col-md-2"})
-                </div>*@
-
         </div>
 
         <div class="modal-footer">
@@ -129,79 +124,80 @@
         </div>
     }
 
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.selectpicker').selectpicker({
-                liveSearch: true,
-                showSubtext: true
-            });
-        });
-
-        $("#frmUpload").submit(function (e) {
-            e.preventDefault();
-            var formData = new FormData($(this)[0]);
-
-            $.ajax({
-                type: "POST",
-                url: this.action,
-                data: formData,
-                async: false,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function (data) {
-                    if (data.success) {
-                        $('#stdModal').modal('hide');
-                        $('#lrgModal').modal('hide');
-                        location.reload();
-                    } else {
-                        alert('Oops! ' + data.success);
-                    }
-                }
-            });
-            return false;
-        });
-
-        function OnSuccess(json) {
-            if (json.isRedirect) {
-                window.location.href = json.redirectUrl;
-            }
-        }
-
-        function OnFailure(response) {
-            var obj = $.parseJSON(response.responseText);
-            alert(obj.message);
-        }
-
-    </script>
-
-    <script type="text/javascript">
-        $(function () {
-
-            // We can attach the `fileselect` event to all file inputs on the page
-            $(document).on('change', ':file', function () {
-                var input = $(this),
-                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-                input.trigger('fileselect', [numFiles, label]);
-            });
-
-            // We can watch for our custom `fileselect` event like this
+    @section scripts {
+        @Scripts.Render("~/bundles/selectPicker")
+        <script type="text/javascript">
             $(document).ready(function () {
-                $(':file').on('fileselect', function (event, numFiles, label) {
-
-                    var input = $(this).parents('.input-group').find(':text'),
-                        log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-                    if (input.length) {
-                        //alert(input.length);
-                        input.val(log);
-                    } else {
-                        if (log) alert(log);
-                    }
-
+                $('.selectpicker').selectpicker({
+                    liveSearch: true,
+                    showSubtext: true
                 });
             });
 
-        });
-    </script>
+            $("#frmUpload").submit(function (e) {
+                e.preventDefault();
+                var formData = new FormData($(this)[0]);
+
+                $.ajax({
+                    type: "POST",
+                    url: this.action,
+                    data: formData,
+                    async: false,
+                    cache: false,
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        if (data.success) {
+                            $('#stdModal').modal('hide');
+                            $('#lrgModal').modal('hide');
+                            location.reload();
+                        } else {
+                            alert('Oops! ' + data.success);
+                        }
+                    }
+                });
+                return false;
+            });
+
+            function OnSuccess(json) {
+                if (json.isRedirect) {
+                    window.location.href = json.redirectUrl;
+                }
+            }
+
+            function OnFailure(response) {
+                var obj = $.parseJSON(response.responseText);
+                alert(obj.message);
+            }
+
+            $(function () {
+
+                // We can attach the `fileselect` event to all file inputs on the page
+                $(document).on('change', ':file', function () {
+                    var input = $(this),
+                        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                    input.trigger('fileselect', [numFiles, label]);
+                });
+
+                // We can watch for our custom `fileselect` event like this
+                $(document).ready(function () {
+                    $(':file').on('fileselect', function (event, numFiles, label) {
+
+                        var input = $(this).parents('.input-group').find(':text'),
+                            log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                        if (input.length) {
+                            //alert(input.length);
+                            input.val(log);
+                        } else {
+                            if (log) alert(log);
+                        }
+
+                    });
+                });
+
+            });
+
+        </script>
+    }

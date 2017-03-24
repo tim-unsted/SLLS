@@ -35,12 +35,14 @@
     @Html.Partial("_ModalEditFooter")
 }
 
-<script type="text/javascript">
+@section scripts {
+    <script type="text/javascript">
 
-    $(function () {
-        $('#btnSave').click(function () {
-            $('#stdModal').modal('hide');
-            $('#lrgModal').modal('hide');
+        $(function() {
+            $('#btnSave').click(function() {
+                $('#stdModal').modal('hide');
+                $('#lrgModal').modal('hide');
+            });
         });
-    });
-</script>
+    </script>
+}

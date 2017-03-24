@@ -1,20 +1,6 @@
 ﻿@using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.SubjectIndex>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#subjectindex').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            }
-        });
-    });
-</script>
-
 <h2>@ViewBag.Title</h2>
 
 <p>
@@ -50,3 +36,20 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#subjectindex').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                }
+            });
+        });
+    </script>
+}

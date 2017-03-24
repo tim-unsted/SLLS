@@ -14,5 +14,11 @@
     @Html.Partial("_Simpleresults", Model)
 </div>
 
+@Html.Hidden("SearchResultSize", @Model.SearchResultSize)
+@Html.Hidden("OrderBy", @Model.OrderBy)
 
+@section scripts {
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/OPAC/_Simpleresults.js")" type="text/javascript"></script>
+}
 

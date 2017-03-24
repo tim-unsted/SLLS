@@ -540,86 +540,7 @@ body.modal-open .datepicker {
      left: -9999px;
 }
 
-/*Auto-complete dropdowns em.g. Quick Search*/
-.ui-autocomplete {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    z-index: 1000;
-    float: left;
-    display: none;
-    min-width: 160px;
-    _width: 160px;
-    max-height: 400px;
-    overflow-y: auto;
-    /* prevent horizontal scrollbar */
-    overflow-x: hidden;
-    padding: 4px 0;
-    margin: 2px 0 0 0;
-    list-style: none;
-    background-color: #ffffff;
-    border-color: #ccc;
-    border-color: rgba(0, 0, 0, 0.2);
-    border-style: solid;
-    border-width: 1px;
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    -webkit-background-clip: padding-box;
-    -moz-background-clip: padding;
-    background-clip: padding-box;
-    *border-right-width: 2px;
-    *border-bottom-width: 2px;
-}
 
-
-.ui-autocomplete > li > a {
-    color: #444;
-    }
-
-.ui-menu-item > a.ui-corner-all {
-    display: block;
-    /*padding: 5px 10px;*/
-    clear: both;
-    font-weight: normal;
-    line-height: 18px;
-    color: #555555;
-    white-space: nowrap;
-}
-
-/*.ui-menu-item li span { 
-	float: left;
-	width: 40px;
-}*/
-
-.ui-menu .ui-menu-item {
-    position: relative;
-    margin: 0;
-    cursor: pointer;
-    padding: 5px 10px;
-    list-style-image: none;
-    border-bottom: 1px solid #fafafa;
-    /*list-style-image: url("data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");*/
-}
-
-.ui-menu .ui-menu-item a:hover {
-	background: Highlight;
-	font-weight: normal;
-	color: #ffffff;
-}
-
-.ui-state-hover, .ui-state-active {
-    color: #ffffff;
-    text-decoration: none;
-    background-color: #0088cc;
-    border-radius: 0px;
-    -webkit-border-radius: 0px;
-    -moz-border-radius: 0px;
-    background-image: none;
-}
 
 
 /*Pagination at the top and bottom of all 'list' pages*/
@@ -880,6 +801,83 @@ ul li{
     padding: 5px 10px;
 }
 
+/*Auto-complete dropdowns em.g. Quick Search*/
+.ui-autocomplete {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+    float: left;
+    display: none;
+    min-width: 160px;
+    _width: 160px;
+    max-height: 400px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    padding: 4px 0;
+    margin: 2px 0 0 0;
+    list-style: none;
+    background-color: #ffffff;
+    border-color: #ccc;
+    border-color: rgba(0, 0, 0, 0.2);
+    border-style: solid;
+    border-width: 1px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+    *border-right-width: 2px;
+    *border-bottom-width: 2px;
+}
+
+
+.ui-autocomplete > li > a {
+    color: #444;
+    }
+
+.ui-autocomplete > li > a:hover {
+    color:#ffffff;
+    text-decoration:none
+}
+
+.ui-menu .ui-menu-item > a.ui-corner-all {
+    display: block;
+    clear: both;
+    font-weight: normal;
+    color: #444;
+    white-space: nowrap;
+}
+
+.ui-menu .ui-menu-item {
+    margin: 0;
+    cursor: pointer;
+    list-style-image: none;
+    border-bottom: 1px solid #fafafa;
+    line-height:1;
+}
+
+.ui-menu .ui-menu-item:hover {
+	background-color: #0088cc;
+	font-weight: normal;
+	color: #ffffff;
+    line-height:1;
+}
+
+.ui-state-hover, .ui-state-active {
+    text-decoration: none;
+    background-color: #0088cc;
+    border-radius: 0px;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    background-image: none;
+}
+
 .ui-button {
     padding:10px;
     line-height: 10px;
@@ -1116,8 +1114,8 @@ h5 {
 }
 
 .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-    /*background-color: #C71585;
-    border-color: #C71585;*/
+    /*background-color: #5cb85c;
+    border-color: #4cae4c;*/
     color: #ffffff;
     font-weight: bold;
 }

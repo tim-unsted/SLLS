@@ -3,39 +3,6 @@
 @using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Language>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#languages').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "columnDefs": [
-            {
-                "width": "80%",
-                "targets": [0]
-            },
-            {
-                "width": "10%",
-                "searchable": false,
-                "sortable": true,
-                "orderSequence": ["desc", "asc"],
-                "targets": [1]
-            },
-            {
-                "width": "10%",
-                "searchable": false,
-                "sortable": false,
-                "targets": [2]
-            }
-            ]
-        });
-    });
-</script>
-
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <p>
@@ -85,3 +52,39 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#languages').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "columnDefs": [
+                    {
+                        "width": "80%",
+                        "targets": [0]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": true,
+                        "orderSequence": ["desc", "asc"],
+                        "targets": [1]
+                    },
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [2]
+                    }
+                ]
+            });
+        });
+    </script>
+}

@@ -12,10 +12,12 @@
     @Html.Partial("_Index", Model)
 </div>
 
-<script type="text/javascript">
-    $(function () {
-        $("#lrgModal").draggable({
-            handle: ".modal-header"
+@section scripts {
+    <script type="text/javascript">
+        $(function() {
+            $("#lrgModal").draggable({
+                handle: ".modal-header"
+            });
         });
-    });
-</script>
+    </script>
+}

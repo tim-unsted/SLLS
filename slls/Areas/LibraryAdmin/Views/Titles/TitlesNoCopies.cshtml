@@ -15,3 +15,8 @@
 <div>
     @Html.Partial("_IndexNoCopies", Model)
 </div>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Titles/_IndexNoCopies.js")" type="text/javascript"></script>
+}

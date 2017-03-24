@@ -1,19 +1,6 @@
 ﻿@using slls.Utils.Helpers
 @model slls.ViewModels.NewEmailViewModel
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        var width = $('.g-recaptcha').parent().width();
-        if (width < 302) {
-            var scale = width / 302;
-            $('.g-recaptcha').css('transform', 'scale(' + scale + ')');
-            $('.g-recaptcha').css('-webkit-transform', 'scale(' + scale + ')');
-            $('.g-recaptcha').css('transform-origin', '0 0');
-            $('.g-recaptcha').css('-webkit-transform-origin', '0 0');
-        }
-    });
-</script>
-
 <div class="panel panel-gadget shadowed">
     <div class="panel-heading">
         <span class="panel-title">
@@ -80,7 +67,7 @@
                 }
                 
                 <div style="text-align: right;">
-                    <button type="submit" id="btnSubmit" value="Send" class="btn btn-success" title="Send message"><span aria-hidden="true" class="glyphicon glyphicon-send"></span> Send</button>
+                    <button type="submit" id="btnSend" value="Send" class="btn btn-success" title="Send message"><span aria-hidden="true" class="glyphicon glyphicon-send"></span> Send</button>
                 </div>
             </div>
         }

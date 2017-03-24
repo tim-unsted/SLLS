@@ -52,31 +52,6 @@
         <button type="submit" id="btnSave" value="Check In" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @DbRes.T("CheckIn.Check_In_Part", "FieldDisplayName")</button>
         &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
     </div>
-    @*@Html.Partial("_ModalAddFooter")*@
 }
 
-@*<script type="text/javascript">
-    $(function () {
-        $('#btnSave').click(function () {
-            $('#stdModal').modal('hide');
-        });
-    });
-
-    $('form').submit(function (e) {
-        e.preventDefault();
-        $.post(this.action, $(this).serialize(), function (response) {
-            if (response.error) {
-                alert(response.error);
-            }
-            else {
-                $('#stdModal').modal('hide');
-                $('#lrgModal').modal('hide');
-                //Refresh
-                location.reload();
-            }
-        }, 'json');
-    });
-
-    $(".validation-summary-errors").removeClass("validation-summary-errors");
-    $(".input-validation-error").removeClass("input-validation-error").parent().addClass("has-error");
-</script>*@
+@Scripts.Render("~/bundles/modalAddEditHeader")

@@ -1,10 +1,6 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.SelectPopupViewModel
 
-@*<div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-    <h4 class="modal-title">@Html.DisplayFor(model => model.HeaderText)</h4>
-</div>*@
 @Html.Partial("_ModalEditHeader")
 
 @using (Html.BeginForm(Model.PostSelectAction, Model.PostSelectController, FormMethod.Post, new { @class = "form-horizontal", id = "frmSelect" }))
@@ -59,25 +55,4 @@
     </div>
 }
 
-<script type="text/javascript">
-    $(function () {
-        $('#SelectedItem').on('dblclick', function () {
-            $("#frmSelect").submit();
-        });
-
-        $('form').submit(function (e) {
-            e.preventDefault();
-            $.post(this.action, $(this).serialize(), function (response) {
-                if (response.error) {
-                    alert(response.error);
-                }
-                else {
-                    $('#stdModal').modal('hide');
-                    $('#lrgModal').modal('hide');
-                    //Refresh
-                    location.reload();
-                }
-            }, 'json');
-        });
-    });
-</script>
+@Scripts.Render("~/bundles/modalAddEditHeader")

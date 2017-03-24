@@ -23,3 +23,8 @@
 <div id="VolumesTable">
     @Html.Partial("_VolumesWithTitles", Model)
 </div>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Volumes/_VolumesWithTitles.js")" type="text/javascript"></script>
+}

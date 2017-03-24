@@ -44,8 +44,9 @@
 </div>
 
 <div class="modal-footer">
-    @*<button type="submit" id="btnSave" value="Save" class="btn btn-primary modal-link" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Edit</button>*@
     <a href="@Url.Action("Edit")" title="Edit connection" class="btn btn-primary modal-link" data-dismiss="modal"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span> Edit</a>
     &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
 </div>
+
+@Scripts.Render("~/bundles/modalAddEditHeader")
 

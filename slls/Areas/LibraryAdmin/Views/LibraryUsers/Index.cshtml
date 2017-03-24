@@ -5,44 +5,6 @@
 @using Westwind.Globalization
 @model slls.ViewModels.LibraryUsersIndexViewModel
 
-<script type="text/javascript">
-    //var baseUrl = window.location.href;
-    $(document).ready(function() {
-        $('#users').DataTable({
-            "dom": sDom,
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "order": [[0, 'asc'], [1, 'asc']],
-            "columnDefs": [
-                {
-                    "width": "10%",
-                    "searchable": false,
-                    "sortable": false,
-                    "targets": [7]
-                }
-            ]
-        });
-        $(function() {
-            $('#ShowAll').change(function() {
-                // the value of the checkbox changed => refresh the page:
-                var currentLocation = window.location.href;
-                var baseUrl = currentLocation.replace(/&?showAll=([^&]$|[^&]*)/i, "");
-                //var showAll = this.checked;
-                var s = window.location.search;
-                if (this.checked === true) {
-                    window.location.href = baseUrl + ((s.substring(0, 1) === "?") ? "&showAll=true" : "?showAll=true");
-                } else {
-                    window.location.href = baseUrl;
-                }
-            });
-        });
-    });
-</script>
-
 @{
     var db = new DbEntities();
 }
@@ -126,3 +88,43 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#users').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "order": [[0, 'asc'], [1, 'asc']],
+                "columnDefs": [
+                    {
+                        "width": "10%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [7]
+                    }
+                ]
+            });
+            $(function () {
+                $('#ShowAll').change(function () {
+                    // the value of the checkbox changed => refresh the page:
+                    var currentLocation = window.location.href;
+                    var baseUrl = currentLocation.replace(/&?showAll=([^&]$|[^&]*)/i, "");
+                    //var showAll = this.checked;
+                    var s = window.location.search;
+                    if (this.checked === true) {
+                        window.location.href = baseUrl + ((s.substring(0, 1) === "?") ? "&showAll=true" : "?showAll=true");
+                    } else {
+                        window.location.href = baseUrl;
+                    }
+                });
+            });
+        });
+    </script>
+}

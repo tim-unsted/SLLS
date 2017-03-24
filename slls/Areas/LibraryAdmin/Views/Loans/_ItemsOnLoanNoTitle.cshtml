@@ -1,44 +1,6 @@
 ﻿@using Westwind.Globalization
 @model System.Collections.Generic.IEnumerable<slls.Models.Borrowing>
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#itemsonloan').DataTable({
-            "dom": '<"inline"l><"inline float-right"p>rt<"inline"i><"inline float-right"p><"clear"><"inline"l><"clear">',
-            "pagingType": sPagingType,
-            "pageLength": sPageLength,
-            "lengthMenu": sLengthMenu,
-            "language": {
-                "url": "/DataTables/lang.txt"
-            },
-            "columnDefs":
-            [
-            {
-                "width": "10%",
-                "targets": [0]
-            },
-            {
-                "visible": false,
-                "targets": [5, 6]
-            },
-            {
-                "orderData": [5],
-                "targets": [3]
-            },
-            {
-                "orderData": [6],
-                "targets": [4]
-            },
-            {
-                "width": "15%",
-                "searchable": false,
-                "sortable": false,
-                "targets": [7]
-            }]
-        });
-    });
-</script>
-
 <table id="itemsonloan" class="table table-condensed table-hover" style="width: 100%;">
     <thead>
         <tr>
@@ -98,3 +60,45 @@
         }
     </tbody>
 </table>
+
+@section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#itemsonloan').DataTable({
+                "dom": '<"inline"l><"inline float-right"p>rt<"inline"i><"inline float-right"p><"clear"><"inline"l><"clear">',
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                },
+                "columnDefs":
+                [
+                    {
+                        "width": "10%",
+                        "targets": [0]
+                    },
+                    {
+                        "visible": false,
+                        "targets": [5, 6]
+                    },
+                    {
+                        "orderData": [5],
+                        "targets": [3]
+                    },
+                    {
+                        "orderData": [6],
+                        "targets": [4]
+                    },
+                    {
+                        "width": "15%",
+                        "searchable": false,
+                        "sortable": false,
+                        "targets": [7]
+                    }
+                ]
+            });
+        });
+    </script>
+}
