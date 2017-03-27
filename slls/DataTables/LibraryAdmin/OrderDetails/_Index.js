@@ -21,31 +21,35 @@
             "targets": [1]
         },
         {
-            "width": "20%",
+            "width": "15%",
             "targets": [2],
             "data": 2
         },
         {
-            "width": "15%",
+            "width": "10%",
             "targets": [3]
         },
         {
-            "width": "10%",
-            "targets": [4, 5, 7]
+            "width": "15%",
+            "targets": [4]
         },
         {
             "width": "10%",
-            "orderData": [10],
-            "targets": [6]
+            "targets": [5,6,8]
+        },
+        {
+            "width": "10%",
+            "orderData": [11],
+            "targets": [7]
         },
         {
             "visible": false,
-            "targets": [8, 9, 10, 11, 12]
+            "targets": [9, 10, 11, 12, 13]
         },
         {
             "width": "10%",
             "orderable": false,
-            "targets": [13]
+            "targets": [14]
         }
     ],
     initComplete: function () {

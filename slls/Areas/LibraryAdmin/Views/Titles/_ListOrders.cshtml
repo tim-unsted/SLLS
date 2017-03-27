@@ -21,6 +21,9 @@
             @Html.DisplayNameFor(model => model.PriceGross)
         </th>
         <th>
+            @Html.DisplayNameFor(model => model.Item)
+        </th>
+        <th>
             @Html.DisplayNameFor(model => model.ReceivedDate)
         </th>
         <th>
@@ -58,6 +61,9 @@
                 @Html.DisplayFor(modelItem => item.PriceGross)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.Item)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.ReceivedDate)
             </td>
             <td>
@@ -87,43 +93,3 @@
     }
     </tbody>
 </table>
-
-@section scripts {
-@*@Scripts.Render("~/bundles/datatables")*@
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#orderdetails').DataTable({
-                "dom": '<"inline"i><"clear"><"inline"l><"inline float-right"p>rt<"inline"i><"inline float-right"p><"clear"><"inline"l><"clear">',
-                "pagingType": sPagingType,
-                "pageLength": sPageLength,
-                "lengthMenu": sLengthMenu,
-                "language": {
-                    "url": "/DataTables/lang.txt"
-                },
-                "order": [[0, "desc"]],
-                "columnDefs": [
-                    {
-                        "orderData": [7],
-                        "targets": [1]
-                    },
-                    {
-                        "orderData": [8],
-                        "targets": [5]
-                    },
-                    {
-                        "searchable": false,
-                        "sortable": false,
-                        "visible": false,
-                        "targets": [7, 8]
-                    },
-                    {
-                        "width": "10%",
-                        "searchable": false,
-                        "sortable": false,
-                        "targets": [9]
-                    }
-                ]
-            });
-        });
-    </script>
-}

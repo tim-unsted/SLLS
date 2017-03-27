@@ -16,6 +16,9 @@
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().TitleID)
             </th>
             <th class="select-filter">
+                @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().Item)
+            </th>
+            <th class="select-filter">
                 @Html.DisplayNameFor(model => model.Orders.FirstOrDefault().SupplierID)
             </th>
             <th class="select-filter">
@@ -54,6 +57,7 @@
                 <td class="filter"></td>
                 <td class="filter"></td>
                 <td class="filter"></td>
+                <td class="filter"></td>
             </tr>
         </tfoot>
 
@@ -68,7 +72,10 @@
                     @Html.DisplayFor(modelItem => item.OrderDate)
                 </td>
                 <td>
-                    <a href="@Url.Action("Edit", "Titles", new  { id = item.TitleID })" title="View/Edit Title">@item.Title.Title1</a>
+                    <a href="@Url.Action("Edit", "Titles", new {id = item.TitleID})" title="View/Edit Title">@item.Title.Title1</a>
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Item)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Supplier.SupplierName)

@@ -569,6 +569,7 @@
     <Content Include="DataTables\LibraryAdmin\Circulation\_CirculationListSubForm.js" />
     <Content Include="DataTables\LibraryAdmin\Loans\_ItemsOnLoan.js" />
     <Content Include="DataTables\LibraryAdmin\OrderDetails\_IndexNoTitle.js" />
+    <Content Include="DataTables\LibraryAdmin\OrderDetails\_ListOrders.js" />
     <Content Include="DataTables\LibraryAdmin\OrderDetails\_OrdersNoSupplier.js" />
     <Content Include="DataTables\LibraryAdmin\OrderDetails\_OnApproval.js" />
     <Content Include="DataTables\LibraryAdmin\OrderDetails\_Index.js" />
@@ -1071,6 +1072,7 @@
     <Content Include="Scripts\titles-add-publisher.js" />
     <Content Include="Scripts\titles-autocat-partial.js" />
     <Content Include="Scripts\_ModalAddEditHeader.js" />
+    <Content Include="Scripts\_SelectCopy.js" />
     <Content Include="Scripts\_SelectTitle.js" />
     <Content Include="Views\Home\Dashboard\_Notifications.cshtml" />
     <Content Include="Customer\Settings\ExternalLogins.config" />

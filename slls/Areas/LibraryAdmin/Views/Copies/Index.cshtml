@@ -18,3 +18,12 @@
     @Html.Partial("_Index")
 </div>
 
+@Html.Hidden("AutoSuggestUrl", @Url.Action("AutoComplete", "Titles"))
+@*@Html.Hidden("BackToTitleUrl", @Url.Action("Edit", "Titles", new { id = "REPLACEME" }));*@
+@Html.Hidden("DestUrl", @Url.Action("Index", "Copies", new { id = "REPLACEME" }))
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/_SelectTitle.js")" type="text/javascript"></script>
+}
+

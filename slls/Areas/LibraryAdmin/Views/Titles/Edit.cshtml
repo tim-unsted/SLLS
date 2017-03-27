@@ -231,16 +231,18 @@
     }
 }
 
-@Html.Hidden("AutoSuggestUrl", @Url.Action("AutoComplete", "Titles"));
-@Html.Hidden("DestUrl", @Url.Action("Edit", "Titles", new {id = "REPLACEME"}));
-@Html.Hidden("AddClassmarkUrl", @Url.Action("_add", "Classmarks"));
-@Html.Hidden("AddMediaUrl", @Url.Action("_add", "MediaTypes"));
-@Html.Hidden("AddFrequencyUrl", @Url.Action("_add", "Frequencies"));
-@Html.Hidden("AddLanguageUrl", @Url.Action("_add", "Languages"));
-@Html.Hidden("AddPublisherUrl", @Url.Action("_add", "Publishers"));
+@Html.Hidden("AutoSuggestUrl", @Url.Action("AutoComplete", "Titles"))
+@Html.Hidden("DestUrl", @Url.Action("Edit", "Titles", new {id = "REPLACEME"}))
+@Html.Hidden("AddClassmarkUrl", @Url.Action("_add", "Classmarks"))
+@Html.Hidden("AddMediaUrl", @Url.Action("_add", "MediaTypes"))
+@Html.Hidden("AddFrequencyUrl", @Url.Action("_add", "Frequencies"))
+@Html.Hidden("AddLanguageUrl", @Url.Action("_add", "Languages"))
+@Html.Hidden("AddPublisherUrl", @Url.Action("_add", "Publishers"))
 
 @section Scripts{
+@*@Scripts.Render("~/bundles/datatables")*@
 <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/DataTables/LibraryAdmin/OrderDetails/_ListOrders.js")" type="text/javascript"></script>
 @Scripts.Render("~/bundles/selectTitle")
 @Scripts.Render("~/bundles/titlesAddEdit")
 
