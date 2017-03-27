@@ -18,8 +18,6 @@
         <div class="form-group" title="@Model.Message">
             @Html.TextBoxFor(x => x.Title, new { @placeholder = "Start typing the term you are looking for ...", @class = "form-control" })
             @Html.HiddenFor(model => model.TitleID)
-            @*@Html.DropDownListFor(model => model.TitleID, Model.Titles, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
-                @Html.ValidationMessageFor(model => model.TitleID, "", new { @class = "text-danger" })*@
         </div>
 
         <p>

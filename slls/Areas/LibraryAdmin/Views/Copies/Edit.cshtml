@@ -60,6 +60,7 @@
     {
         tabs.Tab(DbRes.T("Loans", "EntityType") + ViewBag.LoansBadge, "tab5");
     }
+    tabs.Tab("<span class = 'glyphicon glyphicon-share-alt'></span> Back to " + DbRes.T("Titles.Title", "FieldDisplayName"), "BackToTitle");
 
     using (tabs.BeginPanel())
     {
@@ -68,7 +69,7 @@
             @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
         </div>
         <div>
-            <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
+            <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="Back to @DbRes.T("titles.title", "FieldDisplayName")">@Model.Title</a></span>
         </div>
         <div id="CopyDetails">
             @Html.Partial("_CopyDetails", Model)
@@ -153,8 +154,15 @@
                 &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
             </div>
         }
+
+        using (tabs.BeginPanel())
+        {
+            
+        }
     }
 }
+
+@Html.Hidden("DestUrl", @Url.Action("Edit", "Titles", new { id = "REPLACEME" }));
 
 @section scripts {
     <script type="text/javascript">
@@ -166,17 +174,34 @@
             }, 6000);
         });
 
+        @*$('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+            var target = $(e.target).attr("href"); // active tab
+            if (target === "#tab6") {
+                var url = $("#DestUrl").val();
+                window.location.href = url.replace('REPLACEME', @Model.TitleId);
+            }
+        });*@
+
         $(function() {
             $('a[data-toggle="tab"]').on('click', function(e) {
-                // Save the latest tab:
-                sessionStorage.setItem('lastTab_EditCopy', $(e.target).attr('href'));
+                var target = $(e.target).attr("href"); // active tab
+                if (target === "#BackToTitle") {
+                    var url = $("#DestUrl").val();
+                    window.location.href = url.replace('REPLACEME', @Model.TitleId);
+                } else {
+                    // Save the latest tab:
+                    sessionStorage.setItem('lastTab_EditCopy', target);
+                }
             });
 
             // Go to the latest tab, if it exists:
             var lastTab = sessionStorage.getItem('lastTab_EditCopy');
 
             if (lastTab) {
-                $('a[href="' + lastTab + '"]').click();
+                //alert(lastTab);
+                if (lastTab !== "#tab6") {
+                    $('a[href="' + lastTab + '"]').click();
+                }
             }
         });
     </script>

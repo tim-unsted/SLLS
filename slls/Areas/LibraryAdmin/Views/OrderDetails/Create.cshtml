@@ -2,6 +2,17 @@
 @using Westwind.Globalization
 @model slls.ViewModels.OrderDetailsAddViewModel
 
+@Scripts.Render("~/bundles/modalAddEditHeader")
+@Scripts.Render("~/bundles/selectPicker")
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
+        });
+    });
+</script>
+
 @Html.Partial("_ModalDefaultHeader")
 
 @using (Html.BeginForm("PostCreate", "OrderDetails", FormMethod.Post))
@@ -208,13 +219,3 @@
     </div>
 }
 
-@Scripts.Render("~/bundles/modalAddEditHeader")
-@Scripts.Render("~/bundles/selectPicker")
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('.selectpicker').selectpicker({
-            liveSearch: true,
-            showSubtext: true
-        });
-    });
-</script>

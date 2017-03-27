@@ -41,7 +41,7 @@ namespace slls
             // Bootstrap CSS, etc ...
             var cssBundle = new StyleBundle("~/Content/css").Include(
                 "~/Content/bootstrap.css",
-                "~/Content/bootstrap-datepicker.min.css.map",
+                "~/Content/bootstrap-datepicker.min.css",
                 "~/Content/bootstrap-select.min.css",
                 "~/Content/datatables.min.css",
                 "~/Content/site.css"
@@ -73,7 +73,6 @@ namespace slls
                 "~/Scripts/respond.js",
                 "~/Scripts/bootstrap-datepicker.min.js",
                 "~/Scripts/DatePickerReady.js",
-                "~/Scripts/locales/bootstrap-datepicker.en-GB.min.js",
                 "~/Scripts/modal.min.js",
                 "~/Scripts/slls.js"
                 );
@@ -107,6 +106,7 @@ namespace slls
             modalAddEditHeader.Include("~/Scripts/jquery.validate.min.js");
             modalAddEditHeader.Include("~/Scripts/jquery.validate.unobtrusive.min.js");
             modalAddEditHeader.Include("~/Scripts/jquery.unobtrusive-ajax.min.js");
+            modalAddEditHeader.Include("~/Scripts/bootstrap-datepicker.min.js");
             modalAddEditHeader.Include("~/Scripts/DatePickerReady.js");
             modalAddEditHeader.Include("~/Scripts/_ModalAddEditHeader.js");
             bundles.Add(modalAddEditHeader);
