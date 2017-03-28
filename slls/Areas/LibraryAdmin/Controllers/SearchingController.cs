@@ -1512,6 +1512,11 @@ namespace slls.Areas.LibraryAdmin
         [HttpPost]
         public ActionResult BarcodeLookup(BarcodeEnquiryViewModel viewModel)
         {
+            if(string.IsNullOrEmpty(viewModel.Barcode))
+            {
+                return Json( new { success = false} );
+            }
+            
             var copyId = 0;
             var titleId = 0;
             var barcode = viewModel.Barcode.Trim();
@@ -1529,10 +1534,12 @@ namespace slls.Areas.LibraryAdmin
 
             if (titleId != 0)
             {
-                return RedirectToAction("Edit", "Titles", new {id = titleId});
+                UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                string actionUrl = urlHelper.Action("Edit", "Titles", new { id = titleId });
+                return Json(new { success = true, redirectTo = actionUrl });
             }
 
-            return PartialView("BarcodeEnquiry", viewModel);
+            return Json( new { success = false} );
         }
 
         public ActionResult IsbnEnquiry()
@@ -1578,14 +1585,20 @@ namespace slls.Areas.LibraryAdmin
 
             if (titles.Count() > 1)
             {
-                return RedirectToAction("AdminSearch", new {q = viewModel.Isbn, f = "isbn"});
+                UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                string actionUrl = urlHelper.Action("AdminSearch", new { q = viewModel.Isbn, f = "isbn" });
+                return Json(new { success = true, redirectTo = actionUrl });
+                //return RedirectToAction("AdminSearch", new {q = viewModel.Isbn, f = "isbn"});
             }
             else
             {
-                return RedirectToAction("Edit", "Titles", new {id = titles.FirstOrDefault().TitleID});
+                UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+                string actionUrl = urlHelper.Action("Edit", "Titles", new { id = titles.FirstOrDefault().TitleID });
+                return Json(new { success = true, redirectTo = actionUrl });
+                //return RedirectToAction("Edit", "Titles", new {id = titles.FirstOrDefault().TitleID});
             }
 
-            //return PartialView("IsbnLookup", viewModel);
+            return Json(new {success = false});
         }
 
         public ActionResult EditTitle(int id)

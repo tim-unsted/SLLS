@@ -1431,7 +1431,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 return RedirectToAction("Select");
             }
-            var title = _repository.GetById<Title>(id);
+            var title = _db.Titles.Find(id); //_repository.GetById<Title>(id);
             if (title == null)
             {
                 return RedirectToAction("Select");
@@ -1464,6 +1464,30 @@ namespace slls.Areas.LibraryAdmin
             return View(viewModel);
         }
 
+        public ActionResult _ListKeywords(int id = 0)
+        {
+            var subjectIndexes = _db.SubjectIndexes.Where(s => s.TitleID == id);
+            return PartialView("_ListKeywords", subjectIndexes);
+        }
+
+        public ActionResult _ListTitleLinks(int id = 0)
+        {
+            var titleLinks = _db.TitleLinks.Where(l => l.TitleID == id);
+            return PartialView("_ListTitleLinks", titleLinks);
+        }
+
+        public ActionResult _ListLongTexts(int id = 0)
+        {
+            var longTexts =
+                _db.TitleAdditionalFieldDatas.Where(t => t.TitleID == id && t.TitleAdditionalFieldDef.IsLongText);
+            return PartialView("_ListLongTexts", longTexts);
+        }
+
+        public ActionResult _ListOrders(int id = 0)
+        {
+            var orders = _db.OrderDetails.Where(o => o.TitleID == id);
+            return PartialView("_ListOrders", orders);
+        }
         
         // POST: Titles/Update/5
         [HttpPost]

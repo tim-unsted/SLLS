@@ -309,7 +309,7 @@ namespace slls.Areas.LibraryAdmin
 
             ViewData["LocationID"] = SelectListHelper.OfficeLocationList(Utils.PublicFunctions.GetDefaultValue("Copies", "LocationID"));
             ViewData["StatusID"] = SelectListHelper.StatusList(Utils.PublicFunctions.GetDefaultValue("Copies", "StatusID"));
-            ViewData["TitleID"] = SelectListHelper.TitlesList();
+            //ViewData["TitleID"] = SelectListHelper.TitlesList();
             ViewBag.Title = viewModel.Step != 0 ? "Step " + viewModel.Step + ": Add New " + _entityName : "Add New " + _entityName;
             ViewBag.BtnText = "Next >";
             ViewBag.BtnTip = "Save new " + _entityName + " and add " + DbRes.T("CopyItems", "EntityType");
@@ -323,6 +323,7 @@ namespace slls.Areas.LibraryAdmin
             //{
             //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             //}
+
             var copy = _db.Copies.Find(id);
             if (copy == null)
             {
@@ -403,6 +404,16 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.LoansCount = copy.Volumes.Count(v => v.OnLoan);
             ViewBag.Title = "Copy Details";
             return View(viewModel);
+        }
+
+        public ActionResult EditAll(int id = 0)
+        {
+            var copy = _db.Copies.FirstOrDefault(c => c.TitleID == id);
+            if (copy != null)
+            {
+                return RedirectToAction("Edit", new { id = copy.CopyID });
+            }
+            return null;
         }
 
         // POST: Copies/Edit/5

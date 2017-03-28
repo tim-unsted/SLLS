@@ -4,7 +4,7 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "TitlesTable" }))
 {
-    <div class="well well-default">
+    <div class="alert alert-info">
         <div class="form-group">
             @Html.DropDownList("ListPublishers", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
         </div>

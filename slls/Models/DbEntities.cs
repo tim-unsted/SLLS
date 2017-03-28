@@ -11,7 +11,7 @@ namespace slls.Models
     public partial class DbEntities : IdentityDbContext<ApplicationUser>
     {
         public DbEntities()
-            : base("name=SLLS")
+            : base("name=SLLS",false)
         {
         }
 
@@ -105,6 +105,7 @@ namespace slls.Models
         public virtual DbSet<vwSelectUserByLastname> vwSelectUsersByLastnames { get; set; }
         public virtual DbSet<vwSelectTitleToBorrow> VwSelectTitlesToBorrow { get; set; }
         public virtual DbSet<vwSelectTitleToRenewReturn> VwSelectTitlesToRenewReturn { get; set; }
+        public virtual DbSet<vwTitleSummary> VwTitlesSummary { get; set; }
 
         //public virtual DbSet<vwBinding> vwBinding { get; set; } 
         //public virtual DbSet<vwBorrowing> vwBorrowing { get; set; }

@@ -308,6 +308,39 @@ namespace slls.Areas.LibraryAdmin
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult AutocompleteUsed(string term)
+        {
+            var keywords = new List<Keyword>();
+            var usedKeywords = _db.Keywords.Where(k => k.SubjectIndexes.Any());
+            if (term.Length < 3)
+            {
+                keywords = (from k in usedKeywords
+                            where k.KeywordTerm.StartsWith(term)
+                            orderby k.KeywordTerm
+                            select k).Take(100).ToList();
+            }
+            else
+            {
+                keywords = (from k in usedKeywords
+                            where k.KeywordTerm.Contains(term)
+                            orderby k.KeywordTerm
+                            select k).Take(100).ToList();
+            }
+
+            IList<SelectListItem> list = new List<SelectListItem>();
+
+            foreach (var x in keywords)
+            {
+                list.Add(new SelectListItem { Text = x.KeywordTerm, Value = x.KeywordID.ToString() });
+            }
+
+            var result = list.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
         
         [HttpGet]
         public ActionResult Delete(int id = 0)

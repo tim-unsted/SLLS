@@ -370,6 +370,7 @@
     <Compile Include="Models\vwSelectTitleWithCopy.cs" />
     <Compile Include="Models\vwSelectUserByFirstname.cs" />
     <Compile Include="Models\vwSelectUserByLastname.cs" />
+    <Compile Include="Models\vwTitleSummary.cs" />
     <Compile Include="Models\vwVolumesWithLoans.cs" />
     <Compile Include="Partials\OrderDetails.cs" />
     <Compile Include="Properties\Settings.Designer.cs">

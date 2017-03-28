@@ -39,6 +39,7 @@ namespace slls.ViewModels
         public int LanguageId { get; set; }
         public int KeywordId { get; set; }
         public int AuthorId { get; set; }
+        public string SelectedKeyword { get; set; }
 
         //Stuff to handle the alphabetical paging links on the index view ...
         public List<string> FirstLetters { get; set; }
