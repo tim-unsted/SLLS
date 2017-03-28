@@ -28,6 +28,7 @@
 @section scripts {
     @Scripts.Render("~/bundles/signalR")
     <script src="@Html.ResolveUrl("~/signalr/hubs")"></script>
+    
     <script type="text/javascript">
         $(function() {
             var pageName = "AutoCat";
@@ -50,5 +51,276 @@
                 $('a[href="' + lastTab + '"]').click();
             }
         });
+
+        $(document).ready(function () {
+            $('#IsbnInput').focus();
+            $('#progress-bar')
+                .css('width', '0%')
+                .attr('aria-valuenow', "0");
+            StartMessaging();
+        });
+
+        var typingTimer; //timer identifier
+        var doneTypingInterval = 500; //time in ms, 0.5 seconds for example
+        var input = $('#IsbnInput');
+        var isbnList = $('#Isbnlist');
+        var submit = $('#sources');
+        var isbn = '';
+
+        function InitProgress(message, count) {
+
+            //unhide the progress div...
+            $('.progress').show();
+            $("#recentlyAdded").hide();
+
+            // get the progress bar ...
+            var progress = $('#progress-bar');
+            progress.css('width', count + '%');
+            progress.html('');
+
+            $("#messages").html(message);
+        }
+
+        function UpdateProgress(message, count) {
+
+            // get the progress bar ...
+            var progress = $('#progress-bar');
+            progress.css('width', count + '%');
+            progress.attr('aria-valuenow', count);
+            progress.html(message);
+        }
+
+        function DoCurrentValue(currentValue) {
+            //remove the currently processed ISBN from the list ...
+            $("#Isbnlist option[value='" + currentValue + "']").remove();
+        }
+
+        function FinaliseProgress() {
+            // Clear the progress bar ...
+            //$('#progress-bar').html('');
+
+            // hide the progress div...
+            $('.progress').hide();
+        }
+
+        function DisplayMessage(message) {
+            // display the passed message ...
+            $("#messages").html(message);
+
+            if (message.length > 0) {
+                $("#recentlyAdded").show();
+            }
+        }
+
+        function StopMessaging(message, count, id) {
+            var url = '';
+            if (count == 1) {
+                $(document.body).css({ 'cursor': 'wait' });
+                url = '@Url.Action("Edit", "Titles", new {id = "__id__"})';
+                window.location.href = url.replace('__id__', id);
+                return true;
+            }
+            if (count > 1) {
+                $(document.body).css({ 'cursor': 'wait' });
+                url = '@Url.Action("RecentlyAdded", "Titles", new {days = "__days__"})';
+                window.location.href = url.replace('__days__', 1);
+                return true;
+            } else {
+                $('#alert').html('<strong>Info: </strong>One or more ISBNs could not be found at the selected source(s). Please check the ISBN or try an alternative source.');
+                $(".btn-group").removeClass("open");
+                FinaliseProgress();
+            }
+        }
+
+        submit.on("click", function () {
+            // select all items in the list
+            $("#Isbnlist option").prop("selected", true);
+        });
+
+        //on keyup, start the countdown
+        input.on('keyup', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+        });
+
+        //on keydown, clear the countdown
+        input.on('keydown', function () {
+            clearTimeout(typingTimer);
+        });
+
+        //Prevent the Enter/Return key - this happens automatically when using a scanner.
+        $(document).keypress(function (e) {
+            if (e.which == 10 || e.which == 13) {
+                //alert('You pressed enter!');
+                event.preventDefault();
+                clearTimeout(typingTimer);
+                doneTyping();
+            }
+        });
+
+        //on keydown, clear the countdown
+        input.on('paste', function () {
+            clearTimeout(typingTimer);
+            doArray();
+        });
+
+        //on Isbnlist keyup, check for delete
+        isbnList.on('keyup', function (e) {
+            if (e.keyCode === 46 || e.keyCode === 8) {
+                $('#Isbnlist option:selected').remove();
+                input.val('');
+            }
+        });
+
+        isbnList.click(function () {
+            var selected = isbnList.find(':selected').text();
+            input.val(selected.replace("Invalid: ", ""));
+        });
+
+        //user is "finished typing," do something ...
+        function doneTyping() {
+            var isbn = $("#IsbnInput").val();
+            isbn = cleanIsbn(isbn);
+            if (checkIsbn(isbn)) {
+                if ($('#Isbnlist option:contains(' + isbn + ')').length == 0) {
+                    $('#Isbnlist').
+                        append($("<option></option>").
+                            attr("value", isbn).
+                            text(isbn));
+                    input.val('');
+                } else {
+                    alert("You've already entered this ISBN!");
+                };
+                // input.val('');
+            };
+        }
+
+        //user has pasted something into the input box ...
+        function doArray() {
+            setTimeout(function () {
+                var isbnString = input.text();
+                var delim = [",", ";", "~", "\n"];
+
+                $.each(delim, function (index, delim) {
+                    var isbnText = "";
+                    var exists = isbnString.indexOf(delim);
+                    if (exists > 0) {
+                        var arr = isbnString.split(delim);
+                        for (var i = 0; i < arr.length; i++) {
+                            isbn = cleanIsbn(arr[i]);
+                            if (checkIsbn(isbn)) {
+                                isbnText = isbn;
+                            } else {
+                                isbnText = "Invalid: " + isbn;
+                            }
+
+                            //Try to avoid pasting in duplicates
+                            if ($('#Isbnlist option:contains(' + isbnText + ')').length == 0) {
+                                $('#Isbnlist').
+                                    append($("<option></option>").
+                                        attr("value", isbn).
+                                        text(isbnText));
+                            };
+                        }
+                        input.val("");
+                    }
+                });
+            }, 100);
+        }
+
+        //Remove any spaces or hyphons from the ISBN ...
+        function cleanIsbn(isbn) {
+            isbn = isbn.replace(/-/g, "");
+            isbn = isbn.replace(/ /g, '');
+            return isbn;
+        }
+
+        //Try to verify a true ISBN. This is ultimately done by calculating a check-sum and comparing that to the last digit
+        function checkIsbn(isbn) {
+            if (isbn.length < 10) {
+                return false;
+            };
+            if (isbn.length === 10 && isbn.slice(0, 3) != '978' && isbn.slice(0, 3) != '979') {
+                if (checkIsbn10(isbn)) {
+                    return true;
+                } else {
+                    $('#alert').show();
+                    return false;
+                }
+            } else if (isbn.length === 13) {
+                if (checkIsbn13(isbn)) {
+                    return true;
+                } else {
+                    $('#alert').show();
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        }
+
+        function checkIsbn10(isbn) {
+            var message = isbn.slice(0, 9); // get the first 9 characters
+            var checkDigit = isbn.slice(9, 10); // get the last character
+            if (checkDigit == getIsbnCheckDigit(message)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function checkIsbn13(isbn) {
+            var message = isbn.slice(0, 12); // get the first 12 characters
+            var checkDigit = isbn.slice(12, 13); // get the last character
+            if (checkDigit == getEANCheckDigit(message)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function getIsbnCheckDigit(message) {
+            if (message.length < 9) {
+                return false;
+            }
+
+            var digit;
+            var addn = 0;
+            for (var i = 0; i < 9; i++) {
+                digit = message.slice(i, i + 1);
+                addn = addn + digit * (i + 1);
+            }
+
+            var checkDigit = addn % 11;
+            if (checkDigit === 10) {
+                checkDigit = "X";
+            }
+
+            return checkDigit;
+        }
+
+        function getEANCheckDigit(message) {
+            if (message.length !== 12) {
+                return false;
+            }
+
+            var digit;
+            var addn = 0;
+            for (var i = 0; i < 12; i++) {
+                digit = message.slice(i, i + 1);
+                if ((i + 1) % 2 == 0) {
+                    addn = addn + digit * 3;
+                } else {
+                    addn = addn + digit * 1;
+                }
+            }
+
+            var checkDigit = 10 - (addn % 10);
+            if (checkDigit == 10) {
+                checkDigit = 0;
+            }
+
+            return checkDigit;
+        }
     </script>
 }

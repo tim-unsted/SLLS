@@ -498,6 +498,8 @@ namespace slls.ViewModels
         [AllowHtml]
         public string HelpText { get; set; }
 
+        public string PlaceHolderText { get; set; }
+
         public string ReturnAction { get; set; }
         public IEnumerable<SelectListItem> Titles { get; set; }
         

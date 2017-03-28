@@ -303,10 +303,10 @@ namespace slls.Areas.LibraryAdmin
                                 _db.TitleImages.Add(titleImage);
                                 _db.SaveChanges();
                             }
+                            downloadCount++;
+                            ProgressHub.SendMessage("Working ... " + downloadCount + " images downloaded.", viewModel.Who);
+                            break;
                         }
-                        downloadCount++;
-                        ProgressHub.SendMessage("Working ... " + downloadCount + " images downloaded.", viewModel.Who);
-                        break;
                     }
                 }
                 var progressPercent = (progress / startCount) * 100;

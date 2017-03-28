@@ -16,8 +16,6 @@
 @using (Ajax.BeginForm("PostDownloadImagesAutoCat", "TitleImages", "Post",
  new AjaxOptions { UpdateTargetId = "progress" }, new { id = "xxx", name ="xxx"}))
 {
-    <script src="@Html.ResolveUrl("~/signalr/hubs")"></script>
-
     @Html.AntiForgeryToken()
     
     @Html.ValidationSummary()
@@ -85,6 +83,7 @@
 
 @section scripts {
 @Scripts.Render("~/bundles/signalR")
+<script src="@Html.ResolveUrl("~/signalr/hubs")"></script>
 
     <script type="text/javascript">
         $(document).ready(function() {

@@ -62,9 +62,10 @@ namespace slls.Areas.LibraryAdmin
                     ViewBag.Title = "View/Edit " + _entityName;
                     viewModel.BtnText = "View/Edit " + _entityName;
                     viewModel.Message = "Select an " + _entityName.ToLower() + " to view/edit";
-                    viewModel.HelpText = "Start typing the " + _entityName.ToLower() +
+                    viewModel.HelpText = "Start typing part of the " + _entityName.ToLower() +
                                          " you wish to view/edit in the box below.";
                     viewModel.ReturnAction = "Edit";
+                    viewModel.PlaceHolderText = "Enter a " + _entityName.ToLower() + " to view/edit ...";
                     //viewModel.Titles = SelectListHelper.TitlesList();
                     break;
                 }
@@ -74,10 +75,10 @@ namespace slls.Areas.LibraryAdmin
                     ViewBag.Title = "Duplicate Existing " + _entityName;
                     viewModel.BtnText = "Duplicate Existing " + _entityName;
                     viewModel.Message = "Select an existing " + _entityName.ToLower() + " to duplicate";
-                    viewModel.HelpText = "Select the existing " + _entityName.ToLower() +
-                                         " you wish to duplicate from the dropdown list of available " +
-                                         DbRes.T("Titles", "EntityType").ToLower() + " below.";
+                    viewModel.HelpText = "Start typing part of the existing " + _entityName.ToLower() +
+                                         " you wish to duplicate in the box below.";
                     viewModel.ReturnAction = "DuplicateTitle";
+                    viewModel.PlaceHolderText = "Enter a " + _entityName.ToLower() + " to duplicate ...";
                     //viewModel.Titles = SelectListHelper.TitlesList();
                     return View("SelectDuplicate", viewModel);
                     break;
@@ -88,10 +89,10 @@ namespace slls.Areas.LibraryAdmin
                     ViewBag.Title = "Print " + _entityName;
                     viewModel.BtnText = "Print " + _entityName;
                     viewModel.Message = "Select an " + _entityName.ToLower() + " to print";
-                    viewModel.HelpText = "Select the " + _entityName.ToLower() +
-                                         " you wish to print from the dropdown list of available " +
-                                         DbRes.T("Titles", "EntityType").ToLower() + " below.";
+                    viewModel.HelpText = "Start typing part of the " + _entityName.ToLower() +
+                                         " you wish to print in the box below.";
                     viewModel.ReturnAction = "PrintDetails";
+                    viewModel.PlaceHolderText = "Enter a " + _entityName.ToLower() + " to print ...";
                     //viewModel.Titles = SelectListHelper.TitlesList();
                     break;
                 }
