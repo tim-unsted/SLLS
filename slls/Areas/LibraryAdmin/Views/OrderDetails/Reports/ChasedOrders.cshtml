@@ -75,3 +75,7 @@
 }
 <hr class="hr-compact" />
 <strong>Total value of items on order: @string.Format("{0:C}", ViewData["TotalSum"])</strong>
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/report-no-data.js")" type="text/javascript"></script>
+}

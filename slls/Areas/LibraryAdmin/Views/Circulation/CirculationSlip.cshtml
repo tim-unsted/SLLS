@@ -6,7 +6,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Simple Little Library System</title>
     @Styles.Render("~/Content/css")
@@ -21,57 +21,61 @@
 </head>
 <body>
 
-    <div class="container body-content">
+<div class="container body-content">
 
-        @Html.Partial("_PrintHeader")
+    @Html.Partial("_PrintHeader")
 
-        @{
-            //Find the last item in the list ...
-            var last = new PartsReceived();
-            if (Model.HasData)
-            {
-                last = Model.PartsReceived.Last();
-            }
-
+    @{
+        //Find the last item in the list ...
+        var last = new PartsReceived();
+        if (Model.HasData)
+        {
+            last = Model.PartsReceived.Last();
         }
 
-        <div class="row">
+    }
 
-            <div class="col-md-7">
+    <div class="row">
 
-                <br />
+        <div class="col-md-7">
 
-                @foreach (var item in Model.PartsReceived)
-                {
-                    <div class="keep-together" style="padding-left: 20px; padding-right: 20px; padding-bottom: 50px; margin-bottom: 50px; border: 2px solid #000000;">
-                        <div class="form-horizontal">
-                            <div class="form-group ">
-                                <div class="col-md-12">
-                                    <h3>@Html.DisplayFor(modelItem => item.Copy.Title.Title1)</h3>
-                                </div>
-                                <div class="col-md-12">
-                                    @Html.Label(DbRes.T("Copies.Copy", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.Copy.CopyNumber)
-                                </div>
-                                <div class="col-md-12">
-                                    @Html.Label(DbRes.T("CheckIn.Date_Received", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.DateReceived)
-                                </div>
-                                <div class="col-md-12">
-                                    @Html.Label(DbRes.T("CheckIn.Part", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.PartReceived)
-                                </div>
+            <br/>
+
+            @foreach (var item in Model.PartsReceived)
+            {
+                <div class="keep-together" style="padding-left: 20px; padding-right: 20px; padding-bottom: 50px; margin-bottom: 50px; border: 2px solid #000000;">
+                    <div class="form-horizontal">
+                        <div class="form-group ">
+                            <div class="col-md-12">
+                                <h3>@Html.DisplayFor(modelItem => item.Copy.Title.Title1)</h3>
+                            </div>
+                            <div class="col-md-12">
+                                @Html.Label(DbRes.T("Copies.Copy", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.Copy.CopyNumber)
+                            </div>
+                            <div class="col-md-12">
+                                @Html.Label(DbRes.T("CheckIn.Date_Received", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.DateReceived)
+                            </div>
+                            <div class="col-md-12">
+                                @Html.Label(DbRes.T("CheckIn.Part", "FieldDisplayName")) @Html.DisplayFor(modelItem => item.PartReceived)
                             </div>
                         </div>
-                        @Html.Action("CirculationSlipRecipients", new { id = item.CopyID })
-                        @Html.DisplayFor(modelItem => item.Copy.CirculationMessage.CirculationMsg)
                     </div>
-                    //If this item is the last, just end here ...
-                    if (item.Equals(@last))
-                    {
-                        <div></div>
-                    }
+                    @Html.Action("CirculationSlipRecipients", new {id = item.CopyID})
+                    @Html.DisplayFor(modelItem => item.Copy.CirculationMessage.CirculationMsg)
+                </div>
+                //If this item is the last, just end here ...
+                if (item.Equals(@last))
+                {
+                    <div></div>
                 }
-            </div>
+            }
         </div>
     </div>
+</div>
 
 </body>
 </html>
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/report-no-data.js")" type="text/javascript"></script>
+}
