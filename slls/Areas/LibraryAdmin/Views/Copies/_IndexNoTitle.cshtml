@@ -1,107 +1,73 @@
 ﻿@using System
 @using System.Linq
 @using Westwind.Globalization
-@model System.Collections.Generic.IEnumerable<slls.Models.Copy>
+@model slls.ViewModels.TitleEditViewModel
 
-<table id="copies" class="table table-condensed table-hover">
-    <thead>
-    <tr>
-        <th>
-            @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
-        </th>
-        <th>
-            @Html.Label(DbRes.T("Locations.Location", "FieldDisplayName"))
-        </th>
-        <th>
-            @Html.Label(DbRes.T("StatusTypes.Status_Type", "FieldDisplayName"))
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Holdings)
-        </th>
-        <th>
-            @Html.Label(DbRes.T("CopyItems.Barcodes", "FieldDisplayName"))
-        </th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.OrderBy(c => c.CopyNumber))
-    {
+@if (Model.HasCopies)
+{
+    <table id="copies" class="table table-condensed table-hover">
+        <thead>
         <tr>
-            <td>
-                @if (String.IsNullOrEmpty(item.CopyNumber.ToString()))
-                {
-                    @Html.ActionLink(" ", "Edit", "Copies", new { id = item.CopyNumber }, null)
-                }
-                else
-                {
-                    @Html.ActionLink(item.CopyNumber.ToString(), "Edit", "Copies", new { id = item.CopyID }, null)
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Location.LocationString)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StatusType.Status)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Holdings)
-            </td>
-            @*<td>
+            <th>
+                @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label(DbRes.T("Locations.Location", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label(DbRes.T("StatusTypes.Status_Type", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label(DbRes.T("Copies.Holding", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label(DbRes.T("CopyItems.Barcodes", "FieldDisplayName"))
+            </th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Copies)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.CopyNumber.ToString()))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Copies", new {id = item.CopyNumber}, null)
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.CopyNumber.ToString(), "Edit", "Copies", new {id = item.CopyID}, null)
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Location.LocationString)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StatusType.Status)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Holdings)
+                </td>
+                @*<td>
                 @foreach (var barcode in item.Volumes)
                 {
                     <a href="@Url.Action("Edit", "Volumes", new { id = barcode.VolumeID }, null)" class="modal-link" title="View/Edit Volume">@barcode.Barcode</a>
                 }
             </td>*@
-            <td>
-                @if (item.Volumes.Any())
-                {
-                    <a href="@Url.Action("Index", "Volumes", new {copyId = item.CopyID})" title="View all @DbRes.T("Copies.Copy_Items", "FieldDisplayName")"><span class="badge badge-link">@item.Volumes.Count</span></a>
-                }
-            </td>
-
-            <td class="just-right">
-                <a href="@Url.Action("Edit", "Copies", new { id = item.CopyID }, null)" class="btn btn-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
-                <a href="@Url.Action("Delete", "Copies", new { id = item.CopyID }, null)" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash" /></a>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
-
-@section scripts {
-@*@Scripts.Render("~/bundles/datatables")*@
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#copies').DataTable({
-                "dom": sDom,
-                "pagingType": sPagingType,
-                "pageLength": sPageLength,
-                "lengthMenu": sLengthMenu,
-                "language": {
-                    "url": "/DataTables/lang.txt"
-                },
-                "columnDefs": [
+                <td>
+                    @if (item.Volumes.Any())
                     {
-                        "width": "10%",
-                        "targets": 0
-                    },
-                    {
-                        "width": "20%",
-                        "targets": [1, 2]
-                    },
-                    {
-                        "width": "30%",
-                        "targets": [3]
-                    },
-                    {
-                        "width": "10%",
-                        "searchable": false,
-                        "sortable": false,
-                        "targets": [5]
+                        <a href="@Url.Action("Index", "Volumes", new {copyId = item.CopyID})" title="View all @DbRes.T("Copies.Copy_Items", "FieldDisplayName")"><span class="badge badge-link">@item.Volumes.Count</span></a>
                     }
-                ]
-            });
-        });
-    </script>
+                </td>
+
+                <td class="just-right">
+                    <a href="@Url.Action("Edit", "Copies", new {id = item.CopyID}, null)" class="btn btn-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
+                    <a href="@Url.Action("Delete", "Copies", new {id = item.CopyID}, null)" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash" /></a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
 }

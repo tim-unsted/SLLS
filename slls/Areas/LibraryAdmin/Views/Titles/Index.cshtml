@@ -4,7 +4,7 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
-    Use the alpha-filters below to narrow your search ...
+    Use the alpha-filters below to narrow your search ...<br/>
     @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("Index", new {selectedLetter = x}))
 </div>
 

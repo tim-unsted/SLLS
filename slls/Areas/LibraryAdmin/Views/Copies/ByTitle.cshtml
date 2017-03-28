@@ -16,6 +16,9 @@
 </div>
 
 @section scripts {
+@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Copies/_IndexNoTitle.js")" type="text/javascript"></script>
+
 @Scripts.Render("~/bundles/selectPicker")
     <script type="text/javascript">
         $(document).ready(function() {

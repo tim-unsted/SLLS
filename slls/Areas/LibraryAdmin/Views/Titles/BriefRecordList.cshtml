@@ -5,9 +5,9 @@
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
-<div class="well well-default">
-    Use the alpha-filters below to narrow your search ...
-    @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("BriefRecordList", new {selectedLetter = x}))
+<div class="alert alert-info">
+    Use the alpha-filters below to narrow your search ...<br />
+    @Html.AlphabeticalPager(Model.SelectedLetter, Model.FirstLetters, x => Url.Action("BriefRecordList", new { selectedLetter = x }))
 </div>
 
 
@@ -46,6 +46,11 @@
                             }
                             <div class="col-md-5">
                                 <dl class="dl-horizontal">
+                                    @if (item.Title1 != null)
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Title", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.Title1)</dd>
+                                    }
                                     @if (item.Edition != null)
                                     {
                                         <dt>@Html.DisplayName(DbRes.T("Titles.Edition", "FieldDisplayName")):</dt>
@@ -56,10 +61,20 @@
                                         <dt>@Html.DisplayName(DbRes.T("Titles.ISBN_ISSN", "FieldDisplayName")):</dt>
                                         <dd>@Html.DisplayFor(modelItem => item.Isbn)</dd>
                                     }
+                                    @if (item.Source != null)
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Source", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.Source)</dd>
+                                    }
                                     @if (item.Publisher.PublisherName != null)
                                     {
                                         <dt>@Html.DisplayName(DbRes.T("Titles.Publisher", "FieldDisplayName")):</dt>
                                         <dd>@Html.DisplayFor(modelItem => item.Publisher.PublisherName)</dd>
+                                    }
+                                    @if (item.PlaceofPublication != null)
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Place_of_Publication", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.PlaceofPublication)</dd>
                                     }
                                     @if (item.Year != null)
                                     {
@@ -72,23 +87,40 @@
                                         foreach (var author in item.TitleAuthors)
                                         {
                                             <dd>
-                                                <a href="@Url.Action("Edit", "Authors", new {id = author.AuthorId}, null)" class="modal-link" title="View/Edit Author">@author.Author.DisplayName</a><br />
+                                                <a href="@Url.Action("Edit", "Authors", new {id = author.AuthorId}, null)" class="modal-link" title="View/Edit Author">@author.Author.DisplayName</a><br/>
                                             </dd>
                                         }
-                                    }@if (item.Classmark.Classmark1 != null)
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Classmarks.Classmark", "FieldDisplayName")):</dt>
-                                        <dd>@Html.DisplayFor(modelItem => item.Classmark.Classmark1)</dd>
                                     }
+                                    @if (item.TitleEditors.Any())
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Editors", "FieldDisplayName")):</dt>
+                                        foreach (var author in item.TitleEditors)
+                                        {
+                                            <dd>
+                                                <a href="@Url.Action("Edit", "Authors", new {id = author.AuthorID}, null)" class="modal-link" title="View/Edit Author">@author.Author.DisplayName</a><br />
+                                            </dd>
+                                        }
+                                    }
+                                    @if (item.Classmark.Classmark1 != null)
+                                     {
+                                         <dt>@Html.DisplayName(DbRes.T("Classmarks.Classmark", "FieldDisplayName")):</dt>
+                                         <dd>@Html.DisplayFor(modelItem => item.Classmark.Classmark1)</dd>
+                                     }
                                     @if (item.MediaType.Media != null)
                                     {
                                         <dt>@Html.DisplayName(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")):</dt>
                                         <dd>@Html.DisplayFor(modelItem => item.MediaType.Media)</dd>
-                                    }@if (item.Citation != null)
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Titles.Citation", "FieldDisplayName")):</dt>
-                                        <dd>@Html.DisplayFor(modelItem => item.Citation)</dd>
                                     }
+                                    @if (item.Citation != null)
+                                     {
+                                         <dt>@Html.DisplayName(DbRes.T("Titles.Citation", "FieldDisplayName")):</dt>
+                                         <dd>@Html.DisplayFor(modelItem => item.Citation)</dd>
+                                     }
+                                     @if (item.Notes != null)
+                                     {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Notes", "FieldDisplayName")):</dt>
+                                        <dd>@Html.DisplayFor(modelItem => item.Notes)</dd>
+                                     }
                                 </dl>
                             </div>
                             <div class="col-md-5">

@@ -36,14 +36,6 @@ namespace slls.Areas.LibraryAdmin
         // GET: List All Copies
         public ActionResult Index(int id = 0)
         {
-            //var copies =
-            //    _db.Copies
-            //        .Include(c => c.Location)
-            //        .Include(c => c.StatusType)
-            //        .Include(c => c.Title)
-            //        .Include(c => c.Volumes)
-            //        .Where(c => c.TitleID == id);
-
             var viewModel = new TitleEditViewModel();
 
             if (id > 0)
@@ -58,18 +50,8 @@ namespace slls.Areas.LibraryAdmin
                     viewModel.SelectTitle = title.Title1;
                 }
             }
-
-            //var viewModel = new TitleEditViewModel
-            //{
-            //    TitleID = title.TitleID,
-            //    Title1 = title.Title1,
-            //    Copies = title.Copies,
-            //    HasCopies = title.Copies.Any(),
-            //    SelectTitle = title.Title1
-            //};
-
+            
             ViewBag.Title = DbRes.T("Titles.Title", "FieldDisplayName") + " " + DbRes.T("Copies", "EntityType");
-            //ViewData["TitleId"] = SelectListHelper.TitlesWithCopies(id, msg: "Select a ");
             return View(viewModel);
         }
 
@@ -196,46 +178,26 @@ namespace slls.Areas.LibraryAdmin
 
         //[Route("ByTitle")]
         //[Route("~/LibraryAdmin/Copies/ByTitle")]
-        public ActionResult ByTitle(int listTitle = 0)
+        public ActionResult ByTitle(int id = 0)
         {
-            //Get the list of locations in use ...
-            var titles = (from t in _db.Titles
-                               where t.Copies.Any()
-                               select
-                                   new {t.TitleID, Title = t.Title1 + " (" + t.Copies.Count + ")", t.NonFilingChars })
-                .Distinct();
+            var viewModel = new TitleEditViewModel();
 
-
-            //Start a new list selectlist items ...
-            var titleList = new List<SelectListItem>
+            if (id > 0)
             {
-                new SelectListItem
+                var title = _db.Titles.Find(id);
+                if (title != null)
                 {
-                    Text = "Select a " + DbRes.T("Titles.Title", "FieldDisplayName"),
-                    Value = "0"
+                    viewModel.TitleID = title.TitleID;
+                    viewModel.Title1 = title.Title1;
+                    viewModel.Copies = title.Copies;
+                    viewModel.HasCopies = title.Copies.Any();
+                    viewModel.SelectTitle = title.Title1;
+                    viewModel.RedirectAction = "ByTitle";
                 }
-            };
-
-            //Add the actual locations ...
-            foreach (var item in titles.OrderBy(t => t.Title.Substring(t.NonFilingChars)))
-            {
-                titleList.Add(new SelectListItem
-                {
-                    Text = item.Title,
-                    Value = item.TitleID.ToString()
-                });
             }
 
-            ViewData["ListTitle"] = titleList;
             ViewBag.Title = ViewBag.Title + " By " + DbRes.T("Titles.Title", "FieldDisplayName");
-
-            //Get the actual results if the user has selected anything ...
-            var titleCopies =
-                from c in
-                    _db.Copies
-                where c.TitleID == listTitle
-                select c;
-            return View(titleCopies.ToList());
+            return View("Index", viewModel);
         }
         
 
@@ -260,7 +222,6 @@ namespace slls.Areas.LibraryAdmin
         {
             ViewData["LocationID"] = SelectListHelper.OfficeLocationList(Utils.PublicFunctions.GetDefaultValue("Copies", "LocationID")); 
             ViewData["StatusID"] = SelectListHelper.StatusList(Utils.PublicFunctions.GetDefaultValue("Copies", "StatusID"));
-            //ViewData["TitleID"] = SelectListHelper.TitlesList();
 
             int step = 1;
 

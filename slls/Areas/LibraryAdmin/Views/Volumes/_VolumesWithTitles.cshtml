@@ -2,92 +2,95 @@
 @using Westwind.Globalization
 @model slls.ViewModels.VolumesIndexViewModel
 
-<table id="volumes" class="table table-hover">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().Barcode)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().LabelText)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().Copy.Title.Title1)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().Copy.CopyNumber)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().Copy.Location.Location1)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().LoanType.LoanTypeName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().OnLoan)
-        </th>
-        <th></th>
-        <th></th>
-        <th></th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-
-    @foreach (var item in Model.Volumes)
-    {
+@if (Model.Volumes.Any())
+{
+    <table id="volumes" class="table table-hover">
+        <thead>
         <tr>
-            <td>
-                @if (Model.UsePreprintedBarcodes && item.IsBarcodeEdited == false)
-                {
-                    @Html.ActionLink(item.Barcode, "Edit", "Volumes", new {id = item.VolumeID}, new {@class = "btn-danger modal-link"})
-                }
-                else
-                {
-                    @Html.ActionLink(item.Barcode, "Edit", "Volumes", new {id = item.VolumeID}, new {@class = "btn-link modal-link"})
-                }
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LabelText)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Copy.Title.Title1)
-            </td>
-            <td>
-                Copy @Html.DisplayFor(modelItem => item.Copy.CopyNumber)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Copy.Location.LocationString)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LoanType.LoanTypeName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OnLoan)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Copy.Title.FiledTitle)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Copy.TitleID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Copy.CopyID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.VolumeID)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Copy.CopyNumber)
-            </td>
-
-            <td class="just-right">
-
-                <a href="@Url.Action("Delete", "Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="Delete this @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")"><span class=" glyphicon glyphicon-trash"></span></a>
-                <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="View/Edit this @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().Barcode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().LabelText)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().Copy.Title.Title1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().Copy.CopyNumber)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().Copy.Location.Location1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().LoanType.LoanTypeName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Volumes.FirstOrDefault().OnLoan)
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
         </tr>
-    }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+
+        @foreach (var item in Model.Volumes)
+        {
+            <tr>
+                <td>
+                    @if (Model.UsePreprintedBarcodes && item.IsBarcodeEdited == false)
+                    {
+                        @Html.ActionLink(item.Barcode, "Edit", "Volumes", new {id = item.VolumeID}, new {@class = "btn-danger modal-link"})
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Barcode, "Edit", "Volumes", new {id = item.VolumeID}, new {@class = "btn-link modal-link"})
+                    }
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LabelText)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Copy.Title.Title1)
+                </td>
+                <td>
+                    Copy @Html.DisplayFor(modelItem => item.Copy.CopyNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Copy.Location.LocationString)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LoanType.LoanTypeName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OnLoan)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Copy.Title.FiledTitle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Copy.TitleID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Copy.CopyID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VolumeID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Copy.CopyNumber)
+                </td>
+
+                <td class="just-right">
+
+                    <a href="@Url.Action("Delete", "Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="Delete this @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")"><span class=" glyphicon glyphicon-trash"></span></a>
+                    <a href="@Url.Action("Edit", "Volumes", new {id = item.VolumeID})" class="btn btn-link modal-link" title="View/Edit this @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

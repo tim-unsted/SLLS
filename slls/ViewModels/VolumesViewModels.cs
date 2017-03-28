@@ -13,6 +13,15 @@ namespace slls.ViewModels
         public IEnumerable<Volume> Volumes { get; set; }
         public int TitleId { get; set; }
         public bool UsePreprintedBarcodes { get; set; }
+        public string SelectTitle { get; set; }
+        public string SelectTitlePlaceHolder { get; set; }
+        public string SelectTitleTip { get; set; }
+
+        public VolumesIndexViewModel()
+        {
+            SelectTitlePlaceHolder = "Start typing the item you are looking for ...";
+            SelectTitleTip = "Start typing the item you are looking for ...";
+        }
     }
     
     public class VolumesAddViewModel
@@ -63,6 +72,8 @@ namespace slls.ViewModels
         public bool AddMore { get; set; }
 
         public bool UsePreprintedBarcodes { get; set; }
+
+        public string SelectTitle { get; set; }
     }
 
     public class VolumesEditViewModel

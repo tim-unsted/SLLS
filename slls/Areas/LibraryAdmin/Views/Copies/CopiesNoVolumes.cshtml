@@ -21,3 +21,8 @@
 <div>
     @Html.Partial("_IndexNoVolumes", Model)
 </div>
+
+@section scripts {
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Copies/_IndexNoVolumes.js")" type="text/javascript"></script>
+}

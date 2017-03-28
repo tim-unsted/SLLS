@@ -3,21 +3,25 @@
 
 <h2>@ViewBag.Title</h2>
 
-<div class="alert alert-info">
-    <span class="help-block"><strong>Info: </strong>This page shows a list of items (@DbRes.T("Copies","EntityType")) that routinely get sent to the Binders so that staff can be aware of which items are bound each year. There is a related report that shows which items (Volumes) are currently at the binders.</span>
-    <a href="@Url.Action("Bind", "Copies")" title="Add new bound item" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New Bound Items</a>
-</div>
+@{
+    if (Model.Any())
+    {
+        <div class="alert alert-info">
+            <span class="help-block"><strong>Info: </strong>This page shows a list of items (@DbRes.T("Copies", "EntityType")) that routinely get sent to the Binders so that staff can be aware of which items are bound each year. There is a related report that shows which items (Volumes) are currently at the binders.</span>
+            <a href="@Url.Action("Bind", "Copies")" title="Add new bound item" class="btn btn-primary" data-toggle="modal" data-target="#lrgModal"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New Bound Items</a>
+        </div>
+    }
+    if (TempData["NoData"] != null)
+    {
+        @Html.Partial("_NoData", TempData["NoData"])
+    }
+}
 
-<div id="TitlesTable">
-    @Html.Partial("_Index", Model)
+<div>
+    @Html.Partial("_IndexNoVolumes", Model)
 </div>
 
 @section scripts {
-    <script type="text/javascript">
-        $(function() {
-            $("#lrgModal").draggable({
-                handle: ".modal-header"
-            });
-        });
-    </script>
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Copies/_IndexNoVolumes.js")" type="text/javascript"></script>
 }

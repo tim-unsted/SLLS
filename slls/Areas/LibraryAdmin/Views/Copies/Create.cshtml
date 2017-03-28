@@ -16,7 +16,6 @@
         <div class="form-group">
             @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), new {@class = "control-label col-md-2"})
             <div class="col-md-10">
-                @*@Html.DropDownList("TitleID", null, new {@class = "form-control selectpicker"})*@
                 @Html.TextBoxFor(x => x.SelectTitle, new { @placeholder = "Start typing part of the title you wish to add, then select it from the drop-down list below ...", @class = "form-control" })
                 @Html.HiddenFor(model => model.TitleID)
                 @Html.ValidationMessageFor(model => model.TitleID, "", new {@class = "text-danger"})
@@ -62,10 +61,10 @@
     </div>
 }
 
-<script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
-
 @section scripts {
 @Scripts.Render("~/bundles/selectPicker")
+<script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+
     <script type="text/javascript">
 
         $(document).ready(function() {

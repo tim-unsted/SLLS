@@ -49,19 +49,25 @@ namespace slls.Areas.LibraryAdmin
         // GET: Volumes
         public ActionResult Index(int id = 0)
         {
-            var volumes = _db.Volumes.Include(v => v.Copy);
-            
-            // Filter by Title ID ...
-            var copies = _db.Copies.Where(c => c.TitleID == id).Select(c => c.CopyID);
-            volumes = volumes.Where(v => copies.Contains(v.CopyID));
-
+            var volumes = _db.Volumes.Where(v => v.CopyID == 0);
             var viewModel = new VolumesIndexViewModel()
             {
                 Volumes = volumes,
-                TitleId = id,
-                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true", dataType: "bool") == "true"
-            };
-            ViewData["TitleId"] = SelectListHelper.TitlesWithVolumes(id, msg: "Select a ");
+                UsePreprintedBarcodes =
+                    Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true", dataType: "bool") == "true"
+            };          
+            
+            // Filter by Title ID ...
+            if (id > 0)
+            {
+                var title = _db.vwSelectTitles.FirstOrDefault(t => t.TitleId == id);
+                viewModel.SelectTitle = title.Title;
+                var copies = _db.vwSelectCopies.Where(c => c.TitleId == id).Select(c => c.CopyId);
+                viewModel.Volumes = _db.Volumes.Where(v => copies.Contains(v.CopyID));
+                viewModel.TitleId = id;
+            }
+            
+            //ViewData["TitleId"] = SelectListHelper.TitlesWithVolumes(id, msg: "Select a ");
             return View(viewModel);
         }
 
@@ -69,19 +75,25 @@ namespace slls.Areas.LibraryAdmin
         {
             var volumes = _db.Volumes.Where(v => v.IsBarcodeEdited == false);
 
+            var viewModel = new VolumesIndexViewModel()
+            {
+                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true", dataType: "bool") == "true",
+                Volumes = volumes,
+                SelectTitlePlaceHolder = "To filter by title, start typing part of the title you are looking for ...",
+                SelectTitleTip = "Filter this list by Title by typing part of the title you are loking for:"
+            };
+
             // Optionally filter by Title ID ...
             if (id > 0)
             {
-                var copies = _db.Copies.Where(c => c.TitleID == id).Select(c => c.CopyID);
-                volumes = volumes.Where(v => copies.Contains(v.CopyID));
+                var title = _db.vwSelectTitles.FirstOrDefault(t => t.TitleId == id);
+                viewModel.SelectTitle = title.Title;
+                var copies = _db.vwSelectCopies.Where(c => c.TitleId == id).Select(c => c.CopyId);
+                viewModel.Volumes = _db.Volumes.Where(v => copies.Contains(v.CopyID));
+                viewModel.TitleId = id;
             }
-            var viewModel = new VolumesIndexViewModel()
-            {
-                Volumes = volumes,
-                TitleId = id,
-                UsePreprintedBarcodes = Settings.GetParameterValue("Catalogue.UsePreprintedBarcodes", "true", dataType: "bool") == "true"
-            };
-            ViewData["TitleId"] = SelectListHelper.TitlesWithVolumes(id, msg: "Filter by ");
+
+            //ViewData["TitleId"] = SelectListHelper.TitlesWithVolumes(id, msg: "Filter by ");
             ViewBag.Title = ViewBag.Title + " With System Generated " + DbRes.T("CopyItems.Barcode", "FieldDisplayName") + "s";
             return View(viewModel);
         }
@@ -153,8 +165,9 @@ namespace slls.Areas.LibraryAdmin
         // GET: Volumes/Create
         public ActionResult Create()
         {
-            ViewData["TitleId"] = new SelectList(_db.Titles.Where(t => t.Copies.Any()).OrderBy(t => t.Title1.Substring(t.NonFilingChars)), "TitleID", "Title1");
+            //ViewData["TitleId"] = new SelectList(_db.Titles.Where(t => t.Copies.Any()).OrderBy(t => t.Title1.Substring(t.NonFilingChars)), "TitleID", "Title1");
             ViewData["CopyId"] = new SelectList("");
+            
             ViewData["LoanTypeId"] = new SelectList(_db.LoanTypes, "LoanTypeID", "LoanTypeName");
             ViewBag.Title = "Add New " + _entityName;
             ViewBag.BtnText = DbRes.T("Buttons.Confirm_Add", "Terminology");

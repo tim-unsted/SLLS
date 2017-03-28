@@ -567,6 +567,11 @@
     <Content Include="Content\datatables.min.css" />
     <Content Include="Customer\Images\slls-logo.png" />
     <Content Include="DataTables\LibraryAdmin\Circulation\_CirculationListSubForm.js" />
+    <Content Include="DataTables\LibraryAdmin\Copies\_Index.js" />
+    <Content Include="DataTables\LibraryAdmin\Copies\_IndexNoLocations.js" />
+    <Content Include="DataTables\LibraryAdmin\Copies\_IndexNoStatus.js" />
+    <Content Include="DataTables\LibraryAdmin\Copies\_IndexNoTitle.js" />
+    <Content Include="DataTables\LibraryAdmin\Copies\_IndexNoVolumes.js" />
     <Content Include="DataTables\LibraryAdmin\Loans\_ItemsOnLoan.js" />
     <Content Include="DataTables\LibraryAdmin\OrderDetails\_IndexNoTitle.js" />
     <Content Include="DataTables\LibraryAdmin\OrderDetails\_ListOrders.js" />

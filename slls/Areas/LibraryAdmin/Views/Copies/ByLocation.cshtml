@@ -4,7 +4,7 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "TitlesTable" }))
 {
-    <div class="well well-default">
+    <div class="alert alert-info">
         <div class="form-group">
             @Html.DropDownList("ListLocations", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
         </div>
@@ -16,7 +16,9 @@
 </div>
 
 @section scripts {
-@Scripts.Render("~/bundles/selectPicker")
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Copies/_IndexNoLocations.js")" type="text/javascript"></script>
+    @Scripts.Render("~/bundles/selectPicker")
     <script type="text/javascript">
         $(document).ready(function() {
             $('.selectpicker').selectpicker({
