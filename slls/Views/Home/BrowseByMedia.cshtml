@@ -4,11 +4,10 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "TitlesTable" }))
 {
-    <div class="form-group">
+    <div class="alert alert-info">
         @Html.DropDownList("ListMedia", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
     </div>
 }
-
 <br />
 <div id="TitlesTable">
     @Html.Partial("_Simpleresults", Model)

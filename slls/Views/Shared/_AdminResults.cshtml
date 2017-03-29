@@ -4,7 +4,7 @@
 @model slls.ViewModels.SimpleSearchingViewModel
 
 <div class="btn-group">
-    <button type="button" class="btn btn-cancel dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Export Results <span class="caret"></span>
     </button>
     <ul class="dropdown-menu">
@@ -13,7 +13,7 @@
         <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopiesvolumes"})" title="Export Titles, Copies & Copy Item (Volume) details" class="btn-link">Titles, Copies & Copy Item details</a></li>
     </ul>
 </div>
-<a href="@Url.Action("SaveSearch", "Searching")" title="Save Search" class="btn btn-cancel modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save Search</a>
+<a href="@Url.Action("SaveSearch", "Searching")" title="Save Search" class="btn btn-success modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save Search</a>
 
 <table id="titles" class="table table-condensed table-hover">
     <thead>

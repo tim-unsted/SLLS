@@ -646,43 +646,32 @@ namespace slls.Controllers
             return View(viewModel);
         }
 
-        public ActionResult BrowseBySubject(int listSubjects = 0)
+        public ActionResult BrowseBySubject(int id = 0)
         {
-            //Get a list of all currently used keywords. this cuts the down the list a bit!
-            var keywords = (from k in CacheProvider.GetAll<Keyword>("keywords")
-                            join x in _db.SubjectIndexes on k.KeywordID equals x.KeywordID
-                            group k by new
-                            {
-                                Id = k.KeywordID,
-                                Term = k.KeywordTerm
-                            } into grouped
-                            select new
-                            {
-                                keywordid = grouped.Key.Id,
-                                keywordterm = grouped.Key.Term + " (" + grouped.Count() + ")"
-                            }).Distinct().OrderBy(x => x.keywordterm);
+            ////Get a list of all currently used keywords. this cuts the down the list a bit!
+            //var keywords = _db.vwSelectKeywordsUsed.OrderBy(x => x.KeywordTerm);
 
-            //Start a new list selectlist items ...
-            List<SelectListItem> kwdList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = "Select a " + DbRes.T("Keywords.Keyword", "FieldDisplayName"),
-                    Value = "0"
-                }
-            };
+            ////Start a new list selectlist items ...
+            //List<SelectListItem> kwdList = new List<SelectListItem>
+            //{
+            //    new SelectListItem
+            //    {
+            //        Text = "Select a " + DbRes.T("Keywords.Keyword", "FieldDisplayName"),
+            //        Value = "0"
+            //    }
+            //};
 
-            //Add a default item ...
+            ////Add a default item ...
 
-            //Add the actual keywords ...
-            foreach (var item in keywords)
-            {
-                kwdList.Add(new SelectListItem
-                {
-                    Text = item.keywordterm,
-                    Value = item.keywordid.ToString()
-                });
-            }
+            ////Add the actual keywords ...
+            //foreach (var item in keywords)
+            //{
+            //    kwdList.Add(new SelectListItem
+            //    {
+            //        Text = item.KeywordTerm,
+            //        Value = item.KeywordId.ToString()
+            //    });
+            //}
 
             //Get a list of all items linked to the selected keyword
             var viewModel = new SimpleSearchingViewModel
@@ -691,14 +680,20 @@ namespace slls.Controllers
                                _db.Titles
                            join c in _db.Copies on t.TitleID equals c.TitleID
                            join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
-                           where t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && x.KeywordID == listSubjects && x.KeywordID != 0
+                           where t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && x.KeywordID == id && x.KeywordID != 0
                            select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
                 IsActualSearch = false,
                 OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text")
             };
 
-            ViewData["ListSubjects"] = kwdList;
+            if (id > 0)
+            {
+                var keyword = _db.vwSelectKeywordsUsed.Find(id);
+                viewModel.SelectItem = keyword.KeywordTerm;
+            }
+
+            //ViewData["ListSubjects"] = kwdList;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
             ViewBag.Title = "Browse By " + DbRes.T("Keywords.Keyword", "FieldDisplayName");
             ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
@@ -1617,6 +1612,37 @@ namespace slls.Controllers
             ViewBag.Title = "Save Search As ...";
             TempData["simpleSearchingViewModel"] = viewModel;
             return PartialView("SaveSearch", viewModel);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult KeywordsUsed(string term)
+        {
+            var keywords = new List<vwSelectKeywordUsed>();
+            if (term.Length < 3)
+            {
+                keywords = (from k in _db.vwSelectKeywordsUsed
+                            where k.KeywordTerm.StartsWith(term)
+                            orderby k.KeywordTerm
+                            select k).Take(100).ToList();
+            }
+            else
+            {
+                keywords = (from k in _db.vwSelectKeywordsUsed
+                            where k.KeywordTerm.Contains(term)
+                            orderby k.KeywordTerm
+                            select k).Take(100).ToList();
+            }
+
+            IList<SelectListItem> list = new List<SelectListItem>();
+
+            foreach (var x in keywords)
+            {
+                list.Add(new SelectListItem { Text = x.KeywordTerm, Value = x.KeywordId.ToString() });
+            }
+
+            var result = list.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
         

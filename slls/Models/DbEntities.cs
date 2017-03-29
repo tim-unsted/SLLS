@@ -108,6 +108,7 @@ namespace slls.Models
         public virtual DbSet<vwSelectTitleToBorrow> VwSelectTitlesToBorrow { get; set; }
         public virtual DbSet<vwSelectTitleToRenewReturn> VwSelectTitlesToRenewReturn { get; set; }
         public virtual DbSet<vwTitleSummary> VwTitlesSummary { get; set; }
+        public virtual DbSet<vwSelectKeywordUsed> vwSelectKeywordsUsed { get; set; }
 
         //public virtual DbSet<vwBinding> vwBinding { get; set; } 
         //public virtual DbSet<vwBorrowing> vwBorrowing { get; set; }

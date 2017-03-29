@@ -364,6 +364,7 @@
     <Compile Include="Models\vwSelectCirculatedCopy.cs" />
     <Compile Include="Models\vwSelectCopy.cs" />
     <Compile Include="Models\vwSelectCopyWithCheckins.cs" />
+    <Compile Include="Models\vwSelectKeywordsUsed.cs" />
     <Compile Include="Models\vwSelectOrder.cs" />
     <Compile Include="Models\vwSelectSupplier.cs" />
     <Compile Include="Models\vwSelectTitleToRenewReturn.cs" />
@@ -569,6 +570,7 @@
     <Content Include="Content\bootstrap-select.min.css" />
     <Content Include="Content\datatables.min.css" />
     <Content Include="Customer\Images\slls-logo.png" />
+    <Content Include="DataTables\LibraryAdmin\CatalogueSearchResults.js" />
     <Content Include="DataTables\LibraryAdmin\Circulation\_CirculationListSubForm.js" />
     <Content Include="DataTables\LibraryAdmin\Copies\_Index.js" />
     <Content Include="DataTables\LibraryAdmin\Copies\_IndexNoLocations.js" />

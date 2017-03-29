@@ -4,7 +4,7 @@
 
 @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "TitlesTable" }))
 {
-    <div class="form-group">
+    <div class="alert alert-info">
         @Html.DropDownList("ListPublishers", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
     </div>
 }
@@ -15,6 +15,7 @@
 </div>
 
 @Html.Hidden("SearchResultSize", @Model.SearchResultSize)
+@Html.Hidden("OrderBy", @Model.OrderBy)
 
 @section scripts {
 @*@Scripts.Render("~/bundles/datatables")*@

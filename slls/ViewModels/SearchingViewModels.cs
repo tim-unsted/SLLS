@@ -54,6 +54,8 @@ namespace slls.ViewModels
         public int NarrowByDefaultRecordCount { get; set; }
         public int SearchResultSize { get; set; }
         public string SearchStyle { get; set; }
+        public string SelectItem { get; set; }
+        public int SelectedId { get; set; }
         
         public SimpleSearchingViewModel()
         {
