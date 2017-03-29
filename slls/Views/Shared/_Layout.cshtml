@@ -81,83 +81,7 @@
     <!-- Local styling stuff -->
     <link rel="stylesheet" type="text/css" media="print" href="~/Content/print.css" />
     <link rel="stylesheet" type="text/css" media="screen" href="~/Customer/Styling/customer.css" />
-
-    @section scripts {
-        <script type="text/javascript">
-            
-            @*var dateFormat = "@GlobalVariables.DateFormat";
-            var popupTimeout = "@GlobalVariables.PopupTimeout";
-            var gaTrackId = '<%=ConfigurationManager.AppSettings["GoogleAnalyticsTrackingId"]%>';*@
-
-            $(document).ready(function() {
-
-                $(".modal-dialog").draggable({
-                    handle: ".modal-header"
-                });
-                $('.modal-dialog').resizable({
-                    minHeight: 300,
-                    minWidth: 300
-                });
-
-
-                $(function() {
-                    $("#dialogSuccess").dialog({
-                        dialogClass: "no-close",
-                        modal: true,
-                        buttons: [
-                            {
-                                text: 'OK',
-                                open: function(event, ui) {
-                                    setTimeout("$('#dialogSuccess').dialog('close')", popupTimeout);
-                                },
-                                click: function() {
-                                    $(this).dialog('close');
-                                }
-                            }
-                        ]
-                    });
-                });
-
-                $(function() {
-                    $("#dialogError").dialog({
-                        dialogClass: "no-close",
-                        modal: true,
-                        buttons: [
-                            {
-                                text: 'OK',
-                                open: function(event, ui) {
-                                    setTimeout("$('#dialogError').dialog('close')", popupTimeout);
-                                },
-                                click: function() {
-                                    $(this).dialog('close');
-                                }
-                            }
-                        ]
-                    });
-                });
-
-                $(function() {
-                    $("#dialogInfo").dialog({
-                        dialogClass: "no-close",
-                        modal: true,
-                        buttons: [
-                            {
-                                text: 'OK',
-                                open: function(event, ui) {
-                                    setTimeout("$('#dialogInfo').dialog('close')", popupTimeout);
-                                },
-                                click: function() {
-                                    $(this).dialog('close');
-                                }
-                            }
-                        ]
-                    });
-                });
-            });
-
-        </script>
-    }
-
+    
     @*<script src="@Url.Content("~/Scripts/google-analytics.js")" type="text/javascript"></script>*@
 
 </head>
@@ -230,7 +154,7 @@
         @*Pop-up to provide a success message*@
         @if (TempData["SuccessDialogMsg"] != null)
         {
-            <div id="dialogSuccess" title="Success!">
+            <div id="dialogSuccess" title="Success!" style="display: none;">
                 @TempData["SuccessDialogMsg"]
             </div>
         }

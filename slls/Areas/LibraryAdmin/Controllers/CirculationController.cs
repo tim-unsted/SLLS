@@ -43,77 +43,46 @@ namespace slls.Areas.LibraryAdmin
         }
 
 
-        public ActionResult CirculationList(int copy = 0)
+        public ActionResult CirculationList(int id = 0)
         {
-            IEnumerable<Copy> circulatedCopies = _db.Copies.Where(c => c.Circulated);
+            IEnumerable<Circulation> circulationList = from c in _db.Circulations where c.CopyID == id select c;
 
-            //Start a new list selectlist items ...
-            var allCirculatedItems = new List<SelectListItem>
+            var viewModel = new CirculationListViewModel()
             {
-                new SelectListItem
-                {
-                    Text = "Select a " + DbRes.T("Circulation.Circulated_Item", "FieldDisplayName"),
-                    Value = "0"
-                }
+                CirculationList = circulationList
             };
 
-            //Add a list of other circulated items ...
-            foreach (
-                var item in
-                    circulatedCopies.OrderBy(c => c.Title.Title1.Substring(c.Title.NonFilingChars))
-                        .ThenBy(c => c.CopyNumber))
+            if (id > 0)
             {
-                allCirculatedItems.Add(new SelectListItem
-                {
-                    Text = item.Title.Title1 + " - Copy " + item.CopyNumber,
-                    Value = item.CopyID.ToString()
-                });
+                var copy = _db.Copies.Find(id);
+                viewModel.SelectCopy = copy.Title.Title1 + " - Copy: " + copy.CopyNumber;
             }
-
-            //Get the actual recipients for the selected copy, if any ...
             
-            IEnumerable<Circulation> circulationList = from c in _db.Circulations
-                                  where c.CopyID == copy
-                                  select c;
-            
-            ViewData["Copy"] = allCirculatedItems;
-            ViewData["CopyID"] = copy;
+            //ViewData["Copy"] = allCirculatedItems;
+            ViewData["CopyID"] = id;
             ViewBag.Title = DbRes.T("Circulation.Circulation_List", "FieldDisplayName") + " By Item";
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("circulationSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "sortOrder");
-            return View(circulationList);
+            return View(viewModel);
+        }
+
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult SelectCirculatedCopies(string term)
+        {
+            //if (term.Length < 3) return null;
+
+            term = " " + term;
+            var titles = (from c in _db.vwSelectCirculatedCopies
+                          where c.Title.Contains(term)
+                          orderby c.Title.Substring(c.NonFilingChars)
+                          select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title, CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
         }
 
 
         public ActionResult CirculationByUser(string selectedUser)
         {
-            var libraryusers = (from users in _db.Users where users.IsLive && users.CanDelete && users.Lastname != null
-                                select
-                                    new
-                                    {
-                                        users.Id,
-                                        Fullname = users.Lastname + ", " + users.Firstname,
-                                    }).Distinct();
-
-            //Start a new list selectlist items ...
-            var usersList = new List<SelectListItem>
-            {
-                new SelectListItem
-                {
-                    Text = "Select a " + DbRes.T("Users.LibraryUser", "FieldDisplayName"),
-                    Value = "0"
-                }
-            };
-
-            //Add the actual library users ...
-            foreach (var item in libraryusers.OrderBy(u => u.Fullname))
-            {
-                usersList.Add(new SelectListItem
-                {
-                    Text = item.Fullname,
-                    Value = item.Id
-                });
-            }
-
             //Get any items circulated to the selected user ...
             var circulationList = _db.Circulations.Where(c => c.RecipientUser.Id == selectedUser && c.Copy.Circulated);
 
@@ -123,7 +92,7 @@ namespace slls.Areas.LibraryAdmin
                 var recipient = _db.Users.Find(selectedUser);
                 ViewData["UserName"] = recipient.Firstname ?? recipient.Lastname;
             }
-            ViewData["SelectedUser"] = usersList;
+            ViewData["SelectedUser"] = Utils.Helpers.SelectListHelper.SelectUsersByLastname();
             ViewData["UserID"] = selectedUser;
             ViewBag.Title = ViewBag.Title + " By " + DbRes.T("Circulation.Recipient", "FieldDisplayName");
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("circulationSeeAlso",
@@ -252,6 +221,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 return HttpNotFound();
             }
+            var success = true;
 
             //Remove all current items if the post option is "overwrite"
             if (viewModel.SelectedOption == "o")
@@ -300,7 +270,17 @@ namespace slls.Areas.LibraryAdmin
                 _db.Circulations.Add(newCirculation);
                 _db.SaveChanges();
             }
-            return Json(new { success = true });
+
+            if (success)
+            {
+                TempData["SuccessDialogMsg"] = "Recipient's circulated items were cloned successfully";
+            }
+            else
+            {
+                TempData["ErrorDialogMsg"] = "An error was encountered whilst attempting to clone the selected recipient's circulated items. Please check and try again.";
+            }
+
+            return Json(new { success = success });
 
         }
 
@@ -602,7 +582,7 @@ namespace slls.Areas.LibraryAdmin
             }
             MoveRecipientUp(recipient);
             //return Json(new { success = true }, JsonRequestBehavior.AllowGet);
-            return RedirectToAction("QuickCheckIn", "PartsReceived", new { SelectedCopy = recipient.CopyID });
+            return RedirectToAction("QuickCheckIn", "PartsReceived", new { id = recipient.CopyID });
         }
 
 
@@ -614,7 +594,7 @@ namespace slls.Areas.LibraryAdmin
                 return HttpNotFound();
             }
             MoveRecipientUp(recipient);
-            return RedirectToAction("CirculationList", new { Copy = recipient.CopyID });
+            return RedirectToAction("CirculationList", new { id = recipient.CopyID });
         }
 
 
@@ -659,7 +639,7 @@ namespace slls.Areas.LibraryAdmin
             }
             MoveRecipientDown(recipient);
             //return Json(new { success = true }, JsonRequestBehavior.AllowGet);
-            return RedirectToAction("QuickCheckIn", "PartsReceived", new { SelectedCopy = recipient.CopyID });
+            return RedirectToAction("QuickCheckIn", "PartsReceived", new { id = recipient.CopyID });
         }
 
 
@@ -671,7 +651,7 @@ namespace slls.Areas.LibraryAdmin
                 return HttpNotFound();
             }
             MoveRecipientDown(recipient);
-            return RedirectToAction("CirculationList", new { Copy = recipient.CopyID });
+            return RedirectToAction("CirculationList", new { id = recipient.CopyID });
         }
 
         public void MoveRecipientDown(Circulation item)
@@ -862,13 +842,13 @@ namespace slls.Areas.LibraryAdmin
 
         public ActionResult PostImportCirculationList(SelectPopupViewModel viewModel)
         {
-            var copy = _db.Copies.Find(viewModel.SelectedItem);
+            var copy = _db.Copies.Find(int.Parse(viewModel.SelectedItem));
             if (copy == null)
             {
                 return HttpNotFound();
             }
 
-            //If the option is to "overwrite" then remove all current reciptioned first
+            //If the option is to "overwrite" then remove all current recipients first
             if (viewModel.SelectedOption == "o")
             {
                 IEnumerable<Circulation> circulations = _db.Circulations.Where(c => c.CopyID == viewModel.PostSelectId);
@@ -917,6 +897,7 @@ namespace slls.Areas.LibraryAdmin
                 _db.Circulations.Add(newCirculation);
                 _db.SaveChanges();
             }
+            TempData["SuccessDialogMsg"] = "Circulation list has been cloned successfully.";
             return Json(new { success = true });
         }
 
@@ -966,6 +947,7 @@ namespace slls.Areas.LibraryAdmin
                 //Do the actual work ...
                 DoGlobalReplaceRecipient(user1.Id, user2.Id);
             }
+            TempData["SuccessDialogMsg"] = "Recipient has been replaced successfully.";
             return Json(new { success = true });
         }
 
@@ -1049,12 +1031,21 @@ namespace slls.Areas.LibraryAdmin
             }
 
             //Do the actual work ...
-            DoGlobalReplaceRecipient(user1.Id, user2.Id);
+            var success = DoGlobalReplaceRecipient(user1.Id, user2.Id);
 
-            return Json(new { success = true });
+            if (success)
+            {
+                TempData["SuccessDialogMsg"] = "The selected recipient has been globally replaced successfully.";
+            }
+            else
+            {
+                TempData["ErrorDialogMsg"] = "An error was encountered when attempting to globally replace the selected recipient. Please try again.";
+            }
+
+            return Json(new { success = success });
         }
 
-        public void DoGlobalReplaceRecipient(string userId1, string userId2)
+        public bool DoGlobalReplaceRecipient(string userId1, string userId2)
         {
             var user1Circulations = _db.Circulations.Where(c => c.RecipientUser.Id == userId1);
 
@@ -1074,7 +1065,8 @@ namespace slls.Areas.LibraryAdmin
                     }
                     catch (Exception e)
                     {
-                        ModelState.AddModelError("", e.Message);
+                       // ModelState.AddModelError("", e.Message);
+                        return false;
                     }
                 }
             }
@@ -1090,9 +1082,11 @@ namespace slls.Areas.LibraryAdmin
                 }
                 catch (Exception e)
                 {
-                    ModelState.AddModelError("", e.Message);
+                    //ModelState.AddModelError("", e.Message);
+                    return false;
                 }
             }
+            return true;
         }
 
 
@@ -1144,10 +1138,21 @@ namespace slls.Areas.LibraryAdmin
             }
 
             var position = viewModel.SelectedOption == "t" ? 0 : 999;
+            
+            var success = DoAddRecipientToAll(libraryUser.Id, position);
 
-            DoAddRecipientToAll(libraryUser.Id, position);
             ResortAll();
-            return Json(new { success = true });
+
+            if (success)
+            {
+                TempData["SuccessDialogMsg"] = libraryUser.Firstname + " has been added to ALL circulation lists.";
+            }
+            else
+            {
+                TempData["ErrorDialogMsg"] = "An error was encountered whilst attempting to add " + libraryUser.Firstname + " to all circulation lists. Please check and try again.";
+            }
+
+            return Json(new { success = success });
         }
 
 
@@ -1183,30 +1188,46 @@ namespace slls.Areas.LibraryAdmin
                 return HttpNotFound();
             }
 
-            DoAddRecipientToAll(libraryUser.Id, 999);
+            var success = DoAddRecipientToAll(libraryUser.Id, 999);
+            
             ResortAll();
 
-            return Json(new { success = true });
+            if (success)
+            {
+                TempData["SuccessDialogMsg"] = libraryUser.Firstname + " has been added to ALL circulation lists.";
+            }
+            else
+            {
+                TempData["ErrorDialogMsg"] = "An error was encountered whilst attempting to add " + libraryUser.Firstname + " to all circulation lists. Please check and try again.";
+            }
+            
+            return Json(new { success = success });
         }
 
 
-        public void DoAddRecipientToAll(string userId, int position = 999)
+        public bool DoAddRecipientToAll(string userId, int position = 999)
         {
             //Get a list of all cisrulated items ...
             var circulatedItems = _db.Copies.Where(c => c.Circulated);
-            foreach (var copy in circulatedItems.ToList())
+            try
             {
-                var newCirculation = new Circulation
+                foreach (var copy in circulatedItems.ToList())
                 {
-                    //Id = userId,
-                    RecipientUser = _db.Users.Find(userId),
-                    SortOrder = position,
-                    CopyID = copy.CopyID
-                };
-                //_repository.Insert(newCirculation);
-                _db.Circulations.Add(newCirculation);
-                _db.SaveChanges();
+                    var newCirculation = new Circulation
+                    {
+                        RecipientUser = _db.Users.Find(userId),
+                        SortOrder = position,
+                        CopyID = copy.CopyID
+                    };
+                    _db.Circulations.Add(newCirculation);
+                    _db.SaveChanges();
+                }
             }
+            catch (Exception)
+            {
+                return false;
+            }
+            return true;
         }
 
         public ActionResult RemoveNonLiveRecipients()
@@ -1232,37 +1253,43 @@ namespace slls.Areas.LibraryAdmin
                                join u in recipients on c.RecipientUser.Id equals u.Id
                                where u.IsLive != true
                                select c;
+            var success = true;
 
             foreach (var circulation in circulations.ToList())
             {
                 var copyId = circulation.CopyID;
+                
 
-                //Delete the circulation record ...
-                _db.Circulations.Remove(circulation);
-                _db.SaveChanges();
+                try
+                {
+                    //Delete the circulation record ...
+                    _db.Circulations.Remove(circulation);
+                    _db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    success = false;
+                }
 
                 //Reorder the affected liss ...
                 if (copyId != null) ReSortRecipients(copyId.Value);
             }
 
-            //return Json(new { success = true });
-            return
-                Content(
-                    "<script language='javascript' type='text/javascript'>alert('All Non-Live Recipients removed successfully');</script>");
+            if (success)
+            {
+                TempData["SuccessDialogMsg"] = "All Non-Live Recipients have been removed.";
+            }
+            else
+            {
+                TempData["ErrorDialogMsg"] = "An error was encountered whilst attempting to remove all non-live recipients. Please check and try again.";
+            }
+
+            return Json(new { success = success });
         }
 
 
         public ActionResult ClearCirculationSlips()
         {
-            var pendingParts = _db.PartsReceiveds.Where(p => p.PrintList);
-            if (!pendingParts.Any())
-            {
-                return
-                Content(
-                    "<script language='javascript' type='text/javascript'>alert('There are no Pending Circulations Slips');</script>");
-            }
-
-
             // Create new instance of DeleteConfirmationViewModel and pass it to _DeleteConfirmation Dialog (Reusable)
             var deleteConfirmationViewModel = new DeleteConfirmationViewModel
             {
@@ -1281,18 +1308,34 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult PostClearCirculationSlips()
         {
             var pendingParts = _db.PartsReceiveds.Where(p => p.PrintList);
+            var success = true;
 
             foreach (var part in pendingParts.ToList())
             {
-                //Update the part, setting PrintList=0...
-                part.PrintList = false;
-                //_repository.Update(part);
-                _db.Entry(part).State = EntityState.Modified;
-                _db.SaveChanges();
+                try
+                {
+                    //Update the part, setting PrintList=0...
+                    part.PrintList = false;
+                    //_repository.Update(part);
+                    _db.Entry(part).State = EntityState.Modified;
+                    _db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    success = false;
+                }
+            }
+            
+            if (success)
+            {
+                TempData["SuccessDialogMsg"] = "All Pending Circulation Slips have been cleared.";
+            }
+            else
+            {
+                TempData["ErrorDialogMsg"] = "An error was encountered whilst attempting to clear all circulation slips. Please check and try again.";
             }
 
-            TempData["SuccessDialogMsg"] = "All Pending Circulations Slips removed successfully.";
-            return Json(new { success = true });
+            return Json(new { success = success });
         }
 
 

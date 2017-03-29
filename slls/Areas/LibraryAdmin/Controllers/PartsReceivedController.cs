@@ -27,19 +27,58 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/PartsReceived
-        public ActionResult Index(int selectedCopy = 0)
+        public ActionResult Index(int id = 0)
         {
             //Get any parts received for the selected copy, if any ...
-            var partsReceivedList = selectedCopy == -1
+            var partsReceivedList = id == -1
                 ? _db.PartsReceiveds
-                : _db.PartsReceiveds.Where(p => p.CopyID == selectedCopy);
+                : _db.PartsReceiveds.Where(p => p.CopyID == id);
 
+            var viewModel = new PartsReceivedIndexViewModel
+            {
+                PartsReceivedList = partsReceivedList
+            };
 
-            ViewData["SelectedCopy"] = SelectListHelper.AllCopiesList(addAll: true, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
-            ViewData["CopyID"] = selectedCopy;
+            if (id > 0)
+            {
+                var copy = _db.Copies.Find(id);
+                viewModel.SelectCopy = copy.Title.Title1 + " - Copy: " + copy.CopyNumber;
+                viewModel.CopyID = id;
+            }
+
+            //ViewData["SelectedCopy"] = SelectListHelper.AllCopiesList(addAll: true, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
+            ViewData["CopyID"] = id;
             ViewBag.Title = _entityName;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("checkInSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "sortOrder");
-            return View(partsReceivedList);
+            return View(viewModel);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult SelectCopiesWithCheckins(string term)
+        {
+            //if (term.Length < 3) return null;
+
+            term = " " + term;
+            var titles = (from c in _db.vwSelectCopiesWithCheckins
+                          where c.Title.Contains(term)
+                          orderby c.Title.Substring(c.NonFilingChars)
+                          select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title, CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult SelectCirculatedCopies(string term)
+        {
+            //if (term.Length < 3) return null;
+
+            term = " " + term;
+            var titles = (from c in _db.vwSelectCirculatedCopies
+                          where c.Title.Contains(term)
+                          orderby c.Title.Substring(c.NonFilingChars)
+                          select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title, CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult PartsOverdue()

@@ -1,15 +1,15 @@
 ﻿@using Westwind.Globalization
-@model System.Collections.Generic.IEnumerable<slls.Models.PartsReceived>
+@model slls.ViewModels.PartsReceivedIndexViewModel
 
 <div id="partslist">
     <table id="partsreceived" class="table table-condensed table-hover">
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Copy.Title.Title1)
+                    @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Copy.CopyNumber)
+                    @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.PartReceived)
@@ -32,7 +32,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model)
+            @foreach (var item in Model.PartsReceivedList)
             {
                 <tr>
                     <td>

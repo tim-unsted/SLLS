@@ -2,21 +2,23 @@
 @using slls.Models
 @using slls.Utils.Helpers
 @using Westwind.Globalization
-@model System.Collections.Generic.IEnumerable<slls.Models.Circulation>
+@model slls.ViewModels.CirculationListViewModel
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
-    <span class="help-block"><strong>Info: </strong>This page show all @DbRes.T("Circulation.Recipients", "FieldDisplayName") for the selected @DbRes.T("Circulation.Circulated_Item", "FieldDisplayName"). Use the drop-down list below to select a @DbRes.T("Circulation.Circulated_Item", "FieldDisplayName")</span>
+   
 
-    @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "circulationlist" }))
-    {
-        @Html.DropDownList("Copy", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();", style = "margin-bottom: 15px;" })
-    }
-    
+    <div class="row" style="margin-right: 0">
+        <div class="col-md-12" style="margin-bottom: 5px;"><strong>Info: </strong>This page show all @DbRes.T("Circulation.Recipients", "FieldDisplayName") for the selected @DbRes.T("Circulation.Circulated_Item", "FieldDisplayName"). Use the box below to find the @DbRes.T("Circulation.Circulated_Item", "FieldDisplayName") you wish to view.</div>
+        <div class="col-md-12" title="Find the item ...">
+            @Html.TextBoxFor(x => x.SelectCopy, new { @placeholder = "Start typing the item you want to view ...", @class = "form-control" })
+        </div>
+    </div>
+
     @if ((int)ViewData["CopyID"] > 0)
     {
-        @Html.HorizontalSpacer();
+        @Html.HorizontalSpacer()
         <div class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add @DbRes.T("Circulation.Recipients", "FieldDisplayName") <span class="caret"></span>
@@ -28,13 +30,11 @@
         </div>
     }
 
-    @if (Model.Any())
+    @if (Model.CirculationList.Any())
     {
         <a href="@Url.Action("RemoveAllRecipients", new {id = ViewData["CopyID"]})" class="btn btn-primary modal-link" title="Remove All @DbRes.T("Circulation.Recipients", "FieldDisplayName") from this @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span> Remove <strong>All</strong></a>
         <a href="@Url.Action("EmailAllRecipients", new {id = ViewData["CopyID"]})" class="btn btn-success modal-link" title="Email All @DbRes.T("Circulation.Recipients", "FieldDisplayName") on this @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-envelope"></span> Email @DbRes.T("Circulation.Recipients", "FieldDisplayName")</a>
     }
-
-
 </div>
 
 <div id="circulationlist">
@@ -51,7 +51,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (Circulation item in Model)
+            @foreach (Circulation item in Model.CirculationList)
             {
                 //var recipient1 = recipient;
                 //var user = (from u in Model.Recipients where u.Id == recipient1.UserID select u).FirstOrDefault();
@@ -84,16 +84,11 @@
 </div>
 
 @section scripts {
-@Scripts.Render("~/bundles/selectPicker")
-@*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+    @*@Scripts.Render("~/bundles/datatables")*@
     <script type="text/javascript">
         $(document).ready(function () {
-
-            $('.selectpicker').selectpicker({
-                liveSearch: true,
-                showSubtext: true
-            });
-
+            
             $('#tblcirculationlist').DataTable({
                 "dom": sDom,
                 "pagingType": sPagingType,
@@ -117,6 +112,49 @@
                         "targets": [2]
                     }
                 ]
+            });
+
+            function selectAllText(textbox) {
+                textbox.focus();
+                textbox.select();
+            }
+
+            var columns = [{ name: '', minWidth: '0%', valueField: 'CopyId' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Copy', minWidth: '5%', valueField: 'copyNumber' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '15%', valueField: 'authors' }];
+
+            $('#SelectCopy').click(function() { selectAllText(jQuery(this)) });
+
+            $("#SelectCopy").mcautocomplete({
+                autoFocus: true,
+                showHeader: true,
+                columns: columns,
+                source: function(request, response) {
+                    var title = new Array();
+                    var urlGetTerms = "@Url.Action("SelectCirculatedCopies", "Circulation")";
+                    $.ajax({
+                        async: false,
+                        cache: false,
+                        type: "POST",
+                        url: urlGetTerms,
+                        data: { "term": request.term },
+                        success: function(data) {
+                            for (var i = 0; i < data.length; i++) {
+                                title[i] = { CopyId: data[i].CopyId, title: data[i].Title, copyNumber: data[i].CopyNumber, edition: data[i].Edition, year: data[i].Year, authors: data[i].AuthorString };
+                            }
+                        }
+                    });
+                    response(title);
+                },
+                select: function(event, ui) {
+                    event.preventDefault();
+                    if (ui.item) {
+                        if (ui.item.CopyId != null) {
+                            //alert('Here');
+                            $('#SelectCopy').val(ui.item.title + " - Copy: " + ui.item.copyNumber);
+                            var url = '@Url.Action("CirculationList", "Circulation", new {id = "REPLACEME"})';
+                            window.location.href = url.replace('REPLACEME', ui.item.CopyId);
+                        }
+                    }
+                }
             });
         });
     </script>

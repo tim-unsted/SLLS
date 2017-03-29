@@ -16,4 +16,67 @@
         $('.g-recaptcha').css('transform-origin', '0 0');
         $('.g-recaptcha').css('-webkit-transform-origin', '0 0');
     }
+
+    $(".modal-dialog").draggable({
+        handle: ".modal-header"
+    });
+    $('.modal-dialog').resizable({
+        minHeight: 300,
+        minWidth: 300
+    });
+
+
+    $(function () {
+        $("#dialogSuccess").dialog({
+            dialogClass: "no-close",
+            modal: true,
+            buttons: [
+                {
+                    text: 'OK',
+                    open: function (event, ui) {
+                        setTimeout("$('#dialogSuccess').dialog('close')", popupTimeout);
+                    },
+                    click: function () {
+                        $(this).dialog('close');
+                    }
+                }
+            ]
+        });
+    });
+
+    $(function () {
+        $("#dialogError").dialog({
+            dialogClass: "no-close",
+            modal: true,
+            buttons: [
+                {
+                    text: 'OK',
+                    open: function (event, ui) {
+                        setTimeout("$('#dialogError').dialog('close')", popupTimeout);
+                    },
+                    click: function () {
+                        $(this).dialog('close');
+                    }
+                }
+            ]
+        });
+    });
+
+    $(function () {
+        $("#dialogInfo").dialog({
+            dialogClass: "no-close",
+            modal: true,
+            buttons: [
+                {
+                    text: 'OK',
+                    open: function (event, ui) {
+                        setTimeout("$('#dialogInfo').dialog('close')", popupTimeout);
+                    },
+                    click: function () {
+                        $(this).dialog('close');
+                    }
+                }
+            ]
+        });
+    });
 });

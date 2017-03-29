@@ -14,6 +14,7 @@ namespace slls.ViewModels
         public int CirculationId { get; set; }
         public IEnumerable<Circulation> CirculationList { get; set; }
         public IEnumerable<ApplicationUser> Recipients { get; set; }
+        public string SelectCopy { get; set; }
     }
 
     public class CirculationListSummaryViewModel

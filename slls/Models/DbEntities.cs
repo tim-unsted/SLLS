@@ -98,6 +98,8 @@ namespace slls.Models
         public virtual DbSet<vwVolumesWithLoans> vwVolumesWithLoans { get; set; }
         public virtual DbSet<vwSelectTitle> vwSelectTitles { get; set; }
         public virtual DbSet<vwSelectCopy> vwSelectCopies { get; set; }
+        public virtual DbSet<vwSelectCopyWithCheckins> vwSelectCopiesWithCheckins { get; set; }
+        public virtual DbSet<vwSelectCirculatedCopy> vwSelectCirculatedCopies { get; set; }
         public virtual DbSet<vwSelectTitleWithCopy> vwSelectTitlesWithCopies { get; set; }
         public virtual DbSet<vwSelectSupplier> vwSelectSuppliers { get; set; }
         public virtual DbSet<vwSelectOrder> vwSelectOrders { get; set; }

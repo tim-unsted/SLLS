@@ -86,8 +86,8 @@
     @Html.Partial("_ModalAddFooter")
 }
 
-@section scripts {
-    <script type="text/javascript">
+@Scripts.Render("~/bundles/modalAddEditHeader")
+<script type="text/javascript">
         $(document).ready(function () {
             $("#SupplierID").change(function () {
                 var select = $("#AddressID");
@@ -119,4 +119,3 @@
             });
         });
     </script>
-}

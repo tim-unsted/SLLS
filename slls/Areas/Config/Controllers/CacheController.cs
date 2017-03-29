@@ -78,7 +78,7 @@ namespace slls.Areas.Config
             GlobalVariables.PopupTimeout = null;
             GlobalVariables.SiteName = null;
             CssManager.LoadCss();
-            TempData["SuccessDialogMsg"] = "All data caches have been successfully cleared.";
+            TempData["SuccessDialogMsg"] = "All data caches have been cleared.";
             return Json(new { success = true });
 
         }

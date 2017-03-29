@@ -25,6 +25,8 @@ namespace slls.ViewModels
         [LocalDisplayName("Titles.Title", "FieldDisplayName")]
         public string Title { get; set; }
 
+        public string SelectCopy { get; set; }
+
         [StringLength(255)]
         [LocalDisplayName("CheckIn.Part_Issue_Desc", "FieldDisplayName")]
         public string PartReceived { get; set; }

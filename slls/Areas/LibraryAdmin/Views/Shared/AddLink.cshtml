@@ -39,7 +39,7 @@
 
                 using (tabs.BeginPanel())
                 {
-                    <br/>
+                    <br />
 
                     if (!string.IsNullOrEmpty(Model.OrderDetails))
                     {
@@ -60,7 +60,7 @@
                             </div>
                         </div>
                     }
-                    
+
                     <div class="form-group">
                         @Html.Label(DbRes.T("Links.URL_Path", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
@@ -81,14 +81,14 @@
                             </div>
                         </div>
                     }
-                    
+
                     <div class="form-group">
                         @Html.Label("Local File", new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
                             <div class="input-group">
                                 <label class="input-group-btn">
                                     <span class="btn btn-primary">
-                                        <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.Files, new {type = "file", multiple = "multiple", accept = ".*", @style = "display: none;"})
+                                        <span aria-hidden="true" class="glyphicon glyphicon-folder-open"></span>&nbsp;&nbsp;Browse &hellip; @Html.TextBoxFor(model => model.Files, new { type = "file", multiple = "multiple", accept = ".*", @style = "display: none;" })
                                     </span>
                                 </label>
                                 <input type="text" class="form-control">
@@ -134,11 +134,11 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.Label(DbRes.T("Links.Hover_Tip_Text", "FieldDisplayName"), htmlAttributes: new {@class = "control-label col-md-2"})
+                        @Html.Label(DbRes.T("Links.Hover_Tip_Text", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-9">
-                            @Html.EditorFor(model => model.HoverTip, new {htmlAttributes = new {@class = "form-control"}})
+                            @Html.EditorFor(model => model.HoverTip, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.HelpInline("Enter a tool-tip that appears when the mouse is hovered over the link.")
-                            @Html.ValidationMessageFor(model => model.HoverTip, "", new {@class = "text-danger"})
+                            @Html.ValidationMessageFor(model => model.HoverTip, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
@@ -167,89 +167,88 @@
     </div>
 }
 
-@section scripts {
+@Scripts.Render("~/bundles/modalAddEditHeader")
 @Scripts.Render("~/bundles/selectPicker")
 @Scripts.Render("~/bundles/jqueryval")
 
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.selectpicker').selectpicker({
-                liveSearch: true,
-                showSubtext: true
-            });
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
         });
+    });
 
-        $("#myForm").submit(function(e) {
-            e.preventDefault();
-            var formData = new FormData($(this)[0]);
+    $("#myForm").submit(function (e) {
+        e.preventDefault();
+        var formData = new FormData($(this)[0]);
 
-            $.ajax({
-                type: "POST",
-                url: this.action,
-                data: formData,
-                async: false,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(data) {
-                    if (data.success) {
-                        $('#stdModal').modal('hide');
-                        location.reload();
-                    } else {
-                        alert('Oops! ' + data.success);
-                    }
-                }
-            });
-            return false;
-        });
-
-        function OnSuccess(json) {
-            if (json.isRedirect) {
-                window.location.href = json.redirectUrl;
-            }
-        }
-
-        function OnFailure(response) {
-            var obj = $.parseJSON(response.responseText);
-            alert(obj.message);
-        }
-        
-        var Url = $('#Url');
-        $("#myform").validate({
-            rules: {
-                Url: {
-                    required: true,
-                    url: true
+        $.ajax({
+            type: "POST",
+            url: this.action,
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                if (data.success) {
+                    $('#stdModal').modal('hide');
+                    location.reload();
+                } else {
+                    alert('Oops! ' + data.success);
                 }
             }
         });
- 
-        $(function() {
+        return false;
+    });
 
-            // We can attach the `fileselect` event to all file inputs on the page
-            $(document).on('change', ':file', function() {
-                var input = $(this),
-                    numFiles = input.get(0).files ? input.get(0).files.length : 1,
-                    label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-                input.trigger('fileselect', [numFiles, label]);
-            });
+    function OnSuccess(json) {
+        if (json.isRedirect) {
+            window.location.href = json.redirectUrl;
+        }
+    }
 
-            // We can watch for our custom `fileselect` event like this
-            $(document).ready(function() {
-                $(':file').on('fileselect', function(event, numFiles, label) {
+    function OnFailure(response) {
+        var obj = $.parseJSON(response.responseText);
+        alert(obj.message);
+    }
 
-                    var input = $(this).parents('.input-group').find(':text'),
-                        log = numFiles > 1 ? numFiles + ' files selected' : label;
+    var Url = $('#Url');
+    $("#myform").validate({
+        rules: {
+            Url: {
+                required: true,
+                url: true
+            }
+        }
+    });
 
-                    if (input.length) {
-                        //alert(input.length);
-                        input.val(log);
-                    } else {
-                        if (log) alert(log);
-                    }
+    $(function () {
 
-                });
+        // We can attach the `fileselect` event to all file inputs on the page
+        $(document).on('change', ':file', function () {
+            var input = $(this),
+                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+            input.trigger('fileselect', [numFiles, label]);
+        });
+
+        // We can watch for our custom `fileselect` event like this
+        $(document).ready(function () {
+            $(':file').on('fileselect', function (event, numFiles, label) {
+
+                var input = $(this).parents('.input-group').find(':text'),
+                    log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+                if (input.length) {
+                    //alert(input.length);
+                    input.val(log);
+                } else {
+                    if (log) alert(log);
+                }
+
             });
         });
-    </script>
-}
+    });
+</script>
