@@ -36,22 +36,4 @@
     </div>
 }
 
-<script type="text/javascript">
-
-    function OnSuccess(json) {
-        if (json.isRedirect) {
-            //window.location.href = json.redirectUrl;
-            if (json.newWindow) {
-                window.open(json.redirectUrl, json.target);
-            } else {
-                window.location.href = json.redirectUrl;
-            }
-        }
-    }
-
-    function OnFailure(response) {
-        var obj = $.parseJSON(response.responseText);
-        alert(obj.message);
-    }
-
-</script>
+@Scripts.Render("~/bundles/modalAddEditHeader")

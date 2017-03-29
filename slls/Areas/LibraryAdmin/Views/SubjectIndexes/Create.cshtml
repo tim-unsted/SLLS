@@ -66,14 +66,13 @@
     </div>
 }
 
-@section scripts {
+@Scripts.Render("~/bundles/modalAddEditHeader")
 @Scripts.Render("~/bundles/selectPicker")
-    <script type="text/javascript">
-        $(document).ready(function() {
-            $('.selectpicker').selectpicker({
-                liveSearch: true,
-                showSubtext: true
-            });
+<script type="text/javascript">
+    $(document).ready(function() {
+        $('.selectpicker').selectpicker({
+            liveSearch: true,
+            showSubtext: true
         });
-    </script>
-}
+    });
+</script>

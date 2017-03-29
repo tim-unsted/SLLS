@@ -35,14 +35,4 @@
     @Html.Partial("_ModalEditFooter")
 }
 
-@section scripts {
-    <script type="text/javascript">
-
-        $(function() {
-            $('#btnSave').click(function() {
-                $('#stdModal').modal('hide');
-                $('#lrgModal').modal('hide');
-            });
-        });
-    </script>
-}
+@Scripts.Render("~/bundles/modalAddEditHeader")
