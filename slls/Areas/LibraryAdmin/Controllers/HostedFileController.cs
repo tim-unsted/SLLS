@@ -101,6 +101,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
+            var success = true;
             try
             {
                 //First, delete any title links using this file ...
@@ -114,7 +115,8 @@ namespace slls.Areas.LibraryAdmin
                     }
                     catch (Exception e)
                     {
-                        ModelState.AddModelError("", e.Message);
+                        //ModelState.AddModelError("", e.Message);
+                        success = false;
                     }
                 }
 
@@ -129,14 +131,23 @@ namespace slls.Areas.LibraryAdmin
                     }
                     catch (Exception e)
                     {
-                        ModelState.AddModelError("", e.Message);
+                        //ModelState.AddModelError("", e.Message);
+                        success = false;
                     }
                 }
 
                 //Finally, delete the file itself ...
-                var file = _db.HostedFiles.Find(viewModel.FileId);
-                _db.HostedFiles.Remove(file);
-                _db.SaveChanges();
+                try
+                {
+                    var file = _db.HostedFiles.Find(viewModel.FileId);
+                    _db.HostedFiles.Remove(file);
+                    _db.SaveChanges();
+                }
+                catch (Exception)
+                {
+                    success = false;
+                }
+                
                 return Json(new { success = true });
             }
             catch (Exception e)
@@ -144,7 +155,8 @@ namespace slls.Areas.LibraryAdmin
                 ModelState.AddModelError("", e.Message);
             }
 
-            return null;
+            TempData["ErrorDialogMsg"] = "An error was encountered whilst attempting to delete this file. Please check and try again.";
+            return Json(new { success = false });
         }
 
         protected override void Dispose(bool disposing)

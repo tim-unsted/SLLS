@@ -301,16 +301,17 @@ namespace slls.Areas.LibraryAdmin
         }
 
         [HttpPost]
-        public ActionResult _BrowseForFile(HttpPostedFileBase file)
+        public ActionResult _BrowseForFile(DataImportViewModel viewModel)
         {
-            if (file != null && file.ContentLength > 0 && (file.ContentType == "text/xml" || file.ContentType == "text/plain"))
+            if (viewModel.File == null) return null;
+            if (viewModel.File != null && viewModel.File.ContentLength > 0 && (viewModel.File.ContentType == "text/xml" || viewModel.File.ContentType == "text/plain"))
             {
-                var viewModel = new DataImportViewModel()
-                {
-                    File = file,
-                    FilePath = file.FileName,
-                    FileName = Path.GetFileName(file.FileName)
-                };
+                //var viewModel = new DataImportViewModel()
+                //{
+                //    File = file,
+                //    FilePath = file.FileName,
+                //    FileName = Path.GetFileName(file.FileName)
+                //};
                 TempData["tempDataImportViewModel"] = viewModel;
                 return RedirectToAction("ImportUsers");
             }

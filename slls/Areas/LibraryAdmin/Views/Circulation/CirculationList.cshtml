@@ -63,7 +63,8 @@
                         }
                         else
                         {
-                            @Html.ActionLink(item.RecipientUser.Fullname, "Edit", "LibraryUsers", new { id = item.RecipientUser.Id }, null)
+                            @*@Html.ActionLink(item.RecipientUser.Fullname, "Edit", "LibraryUsers", new { id = item.RecipientUser.Id }, null)*@
+                            <a href="@Url.Action("Edit", "LibraryUsers", new {id = item.RecipientUser.Id})" class="btn btn-link" title="Edit @DbRes.T("Circulation.Recipient", "FieldDisplayName")" data-toggle="modal" data-target="#lrgModal">@item.RecipientUser.Fullname</a>
                         }
                     </td>
                     

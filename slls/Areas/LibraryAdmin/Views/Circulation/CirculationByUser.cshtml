@@ -86,7 +86,7 @@
                     @Html.DisplayFor(modelItem => item.Copy.Circulations.Count)
                 </td>
                 <td class="just-right">
-                    <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn btn-link" title="View/Edit Circulation List"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
+                    <a href="@Url.Action("CirculationList", new {id = item.CopyID})" class="btn btn-link" title="View/Edit Circulation List"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
                     <a href="@Url.Action("EmailAllRecipients", new { id = item.Copy.CopyID })" class="modal-link" title="Email All @DbRes.T("Circulation.Recipients", "FieldDisplayName")"><span class="glyphicon glyphicon-envelope"></span></a> 
                     <a href="@Url.Action("RemoveItemFromRecipient", new {id = item.CirculationID})" class="btn btn-link modal-link" title="Remove @ViewData["UserName"] from this @DbRes.T("Circulation.Circulation_List", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></a>
                 </td>
