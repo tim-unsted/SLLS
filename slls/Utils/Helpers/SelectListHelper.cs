@@ -1066,12 +1066,12 @@ namespace slls.Utils.Helpers
 
             if (filter == "outstanding")
             {
-                validOrders = validOrders.Where(o => o.ReceivedDate == null);
+                validOrders = validOrders.Where(o => o._ReceivedDate == null);
             }
             
             if (filter == "noinvoice")
             {
-                validOrders = validOrders.Where(o => o.InvoiceDate == null && o.InvoiceRef == null);
+                validOrders = validOrders.Where(o => o._InvoiceDate == null && o._InvoiceRef == null);
             }
             
             foreach (var item in validOrders.OrderBy(x => x.Title.Substring(x.NonFilingChars)).ThenByDescending(x => x.OrderId))

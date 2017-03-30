@@ -13,7 +13,7 @@ namespace slls.ViewModels
     {
         public LinkedFileAddViewModel()
         {
-            ExistingFile = 1;
+            //ExistingFile = 1;
             PostAction = "PostCreate";
             PostController = "TitleLinks";
             AlertText = "Use the form to add a new link to the current item.";

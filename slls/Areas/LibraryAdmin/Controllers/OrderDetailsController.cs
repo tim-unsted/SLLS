@@ -9,6 +9,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Expressions;
+using System.Web.UI.WebControls.Expressions;
 using System.Web.WebSockets;
 using Microsoft.AspNet.Identity.Owin;
 using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
@@ -497,7 +498,37 @@ namespace slls.Areas.LibraryAdmin
             term = " " + term;
             var titles = (from o in _db.vwSelectOrders
                           where o.Title.Contains(term)
-                          orderby o.Title.Substring(o.NonFilingChars)
+                          orderby o.Title.Substring(o.NonFilingChars) ascending ,o.OrderId descending 
+                          select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult AutoCompleteNoInvoice(string term)
+        {
+            //if (term.Length < 3) return null;
+
+            term = " " + term;
+            var titles = (from o in _db.vwSelectOrders
+                          where o.Title.Contains(term) && o._InvoiceDate == null && o._InvoiceRef == null
+                          orderby o.Title.Substring(o.NonFilingChars) ascending, o.OrderId descending
+                          select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
+        }
+
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult AutoCompleteOutstanding(string term)
+        {
+            //if (term.Length < 3) return null;
+
+            term = " " + term;
+            var titles = (from o in _db.vwSelectOrders
+                          where o.Title.Contains(term) && o._ReceivedDate == null
+                          orderby o.Title.Substring(o.NonFilingChars) ascending, o.OrderId descending
                           select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName }).Take(250);
 
             return Json(titles, JsonRequestBehavior.AllowGet);
@@ -516,10 +547,10 @@ namespace slls.Areas.LibraryAdmin
                     {
                         ViewBag.Title = "Edit/Update " + _entityName;
                         viewModel.BtnText = "Edit/Update " + _entityName;
-                        viewModel.Message = "Select an " + _entityName.ToLower() + " to edit/update";
-                        viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to edit/update from the dropdown list of available " + _entityType.ToLower() + " below.";
+                        viewModel.Message = "Enter an " + _entityName.ToLower() + " to edit/update";
+                        viewModel.HelpText = "Start typing the name of the ordered item and then select the " + _entityName.ToLower() + " you wish to edit/update in the box below.";
                         viewModel.ReturnAction = "Edit";
-                        //viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
+                        viewModel.AutoCompleteSource = "AutoComplete";
                         break;
                     }
 
@@ -527,10 +558,10 @@ namespace slls.Areas.LibraryAdmin
                     {
                         ViewBag.Title = "Print " + _entityName;
                         viewModel.BtnText = "Print Order";
-                        viewModel.Message = "Select an " + _entityName.ToLower() + " to print";
-                        viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to print from the dropdown list of available " + _entityType.ToLower() + " below.";
+                        viewModel.Message = "Enter an " + _entityName.ToLower() + " to print";
+                        viewModel.HelpText = "Start typing the name of the ordered item and then select the " + _entityName.ToLower() + " you wish to print in the box below.";
                         viewModel.ReturnAction = "PrintOrder";
-                        //viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
+                        viewModel.AutoCompleteSource = "AutoComplete";
                         break;
                     }
 
@@ -538,10 +569,10 @@ namespace slls.Areas.LibraryAdmin
                     {
                         ViewBag.Title = "Reprint " + _entityName;
                         viewModel.BtnText = "Reprint " + _entityName;
-                        viewModel.Message = "Select an " + _entityName.ToLower() + " to Reprint";
-                        viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to reprint from the dropdown list of available " + _entityType.ToLower() + " below.";
+                        viewModel.Message = "Enter an " + _entityName.ToLower() + " to Reprint";
+                        viewModel.HelpText = "Start typing the name of the ordered item and then select the " + _entityName.ToLower() + " you wish to reprint in the box below.";
                         viewModel.ReturnAction = "PrintOrder";
-                        //viewModel.Orders = SelectListHelper.OrdersList();
+                        viewModel.AutoCompleteSource = "AutoComplete";
                         break;
                     }
 
@@ -549,10 +580,10 @@ namespace slls.Areas.LibraryAdmin
                     {
                         ViewBag.Title = "Duplicate " + _entityName;
                         viewModel.BtnText = "Duplicate " + _entityName;
-                        viewModel.Message = "Select an " + _entityName.ToLower() + " to Duplicate";
-                        viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to duplicate from the dropdown list of available " + _entityType.ToLower() + " below.";
+                        viewModel.Message = "Specify an " + _entityName.ToLower() + " to Duplicate";
+                        viewModel.HelpText = "Start typing the name of the ordered item and then select the " + _entityName.ToLower() + " you wish to duplicate in the box below.";
                         viewModel.ReturnAction = "DuplicateOrder";
-                        //viewModel.Orders = SelectListHelper.OrdersList();
+                        viewModel.AutoCompleteSource = "AutoComplete";
                         break;
                     }
 
@@ -560,11 +591,11 @@ namespace slls.Areas.LibraryAdmin
                     {
                         ViewBag.Title = "Add Invoice";
                         viewModel.BtnText = "Add Invoice";
-                        viewModel.Message = "Select an Order to add an Invoice to";
+                        viewModel.Message = "Enter an " + _entityName.ToLower() + " to add an Invoice to";
                         viewModel.HelpText = "<strong>Note: </strong>The list below <emp>only</emp> shows " + _entityType.ToLower() + " with no invoice. To see all " + _entityType.ToLower() + ", choose another option.";
                         viewModel.ReturnAction = "AddInvoice";
                         viewModel.Tab = "#invoice";
-                        //viewModel.Orders = SelectListHelper.OrdersList(filter: "noinvoice");
+                        viewModel.AutoCompleteSource = "AutoCompleteNoInvoice";
                         break;
                     }
 
@@ -575,7 +606,7 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.Message = "Select an " + _entityName;
                         viewModel.HelpText = "Select an " + _entityName.ToLower() + " from the dropdown list of available " + _entityType.ToLower() + " below.";
                         viewModel.ReturnAction = "Edit";
-                        //viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
+                        viewModel.AutoCompleteSource = "AutoComplete";
                         break;
                     }
             }
@@ -1049,7 +1080,9 @@ namespace slls.Areas.LibraryAdmin
                 CallingAction = "AddInvoice",
                 SelectedTab = "#invoice",
                 PlaceHolderText = "To view/edit another order, start typing part of the name of the ordered item ...",
-                SelectOrder = orderDetail.Title.Title1
+                SelectOrder = _db.vwSelectJustTitles.Find(orderDetail.TitleID).Title, //orderDetail.Title.Title1,
+                AutoCompleteSource = "AutoCompleteNoInvoice"
+                
             };
 
             if (success && viewModel.InvoiceDate != null)
@@ -1061,19 +1094,19 @@ namespace slls.Areas.LibraryAdmin
             else
             {
                 ViewBag.Title = "Add Invoice";
-                ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID, filter: "noinvoice");
+                //ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID, filter: "noinvoice");
             }
 
             //Check some values and issue info or warning messages if appropriate ...
             if (orderDetail.ReceivedDate == null && (orderDetail.InvoiceDate != null || orderDetail.InvoiceRef != null))
             {
                 viewModel.WarningMsg =
-                    "<strong>Info: </strong>An invoice has been entered for this " + _entityName.ToLower() + ", but the " + _entityName.ToLower() + " has not been marked as received and is still outstanding. You can enter a received date on the 'Invoices' tab'.";
+                    "<strong>Info: </strong>An invoice has been entered for this " + _entityName.ToLower() + ", but the " + _entityName.ToLower() + " has not been marked as received and is still outstanding. You can enter a received date on the 'Invoice' tab'.";
             }
             if (orderDetail.ReceivedDate != null && (orderDetail.InvoiceDate == null && orderDetail.InvoiceRef == null))
             {
                 viewModel.WarningMsg =
-                    "<strong>Info: </strong>This  " + _entityName.ToLower() + " has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
+                    "<strong>Info: </strong>This  " + _entityName.ToLower() + " has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoice' tab'.";
             }
 
             //ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID, filter: "noinvoice");
@@ -1192,7 +1225,8 @@ namespace slls.Areas.LibraryAdmin
                 AuthorityUsers = SelectListHelper.SelectUsersByLastname(),
                 CallingAction = "Edit",
                 PlaceHolderText = "To view/edit another order, start typing part of the name of the ordered item ...",
-                SelectOrder = orderDetail.Title.Title1
+                SelectOrder = _db.vwSelectJustTitles.Find(orderDetail.TitleID).Title, //orderDetail.Title.Title1,
+                AutoCompleteSource = "AutoComplete"
             };
 
             if (success)
@@ -1204,17 +1238,17 @@ namespace slls.Areas.LibraryAdmin
             if (orderDetail.ReceivedDate == null && orderDetail.InvoiceDate == null && orderDetail.InvoiceRef == null)
             {
                 viewModel.WarningMsg =
-                    "<strong>Info: </strong>This " + _entityName.ToLower() + " is still outstanding. You can add a receipt and invoice on the 'Invoices' tab'.";
+                    "<strong>Info: </strong>This " + _entityName.ToLower() + " is still outstanding. You can add a receipt and invoice on the 'Invoice' tab'.";
             }
             if (orderDetail.ReceivedDate == null && (orderDetail.InvoiceDate != null || orderDetail.InvoiceRef != null))
             {
                 viewModel.WarningMsg =
-                    "<strong>Info: </strong>An invoice has been entered for this " + _entityName.ToLower() + ", but the order has not been marked as received and is still outstanding. You can enter a received date on the 'Invoices' tab'.";
+                    "<strong>Info: </strong>An invoice has been entered for this " + _entityName.ToLower() + ", but the order has not been marked as received and is still outstanding. You can enter a received date on the 'Invoice' tab'.";
             }
             if (orderDetail.ReceivedDate != null && (orderDetail.InvoiceDate == null && orderDetail.InvoiceRef == null))
             {
                 viewModel.WarningMsg =
-                    "<strong>Info: </strong>This " + _entityName.ToLower() + " has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
+                    "<strong>Info: </strong>This " + _entityName.ToLower() + " has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoice' tab'.";
             }
 
             //ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);

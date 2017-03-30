@@ -35,6 +35,12 @@ namespace slls.Models
 
         public int NonFilingChars { get; set; }
 
+        public DateTime? _ReceivedDate { get; set; }
+
+        public string _InvoiceRef { get; set; }
+
+        public DateTime? _InvoiceDate { get; set; }
+
         [NotMapped]
         public string SelectOrder
         {

@@ -143,6 +143,8 @@ namespace slls.ViewModels
         public string CallingAction { get; set; }
 
         public string DateWarningMsg { get; set; }
+
+        public string SelectTitle { get; set; }
     }
 
     public class OrderDetailsEditViewModel
@@ -153,6 +155,7 @@ namespace slls.ViewModels
             WarningMsg = "";
             SelectedTab = "#orderdetails";
             CallingAction = "Edit";
+            AutoCompleteSource = "AutoComplete";
             //PlaceHolderText = "To view/edit another order, start typing part of the name of the ordered item ...";
         }
         
@@ -281,6 +284,7 @@ namespace slls.ViewModels
 
         public string SelectOrder { get; set; }
         public string PlaceHolderText { get; set; }
+        public string AutoCompleteSource { get; set; }
 
     }
 
@@ -397,7 +401,8 @@ namespace slls.ViewModels
         public SelectOrderViewmodel()
         {
             Tab = "#orderdetails";
-            PlaceHolderText = "Start typing the name of the ordered item you wish to view";
+            PlaceHolderText = "Start typing the name of an ordered item ...";
+            AutoCompleteSource = "AutoComplete";
         }
         
         public string Title { get; set; }
@@ -419,6 +424,8 @@ namespace slls.ViewModels
         public string SelectOrder { get; set; }
 
         public string PlaceHolderText { get; set; }
+
+        public string AutoCompleteSource { get; set; }
     }
     
 }

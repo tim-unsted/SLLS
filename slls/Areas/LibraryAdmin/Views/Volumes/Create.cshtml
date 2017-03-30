@@ -13,20 +13,7 @@
 
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Step)
-
-        @*<div class="form-group">
-            @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("TitleId", null, "Select a " + DbRes.T("Titles.Title", "FieldDisplayName"), new { @class = "form-control selectpicker", @id = "TitleID" })
-                @Html.ValidationMessageFor(model => model.TitleId, "", new { @class = "text-danger" })
-            </div>
-            <div class="col-md-10">
-                @Html.TextBoxFor(x => x.SelectTitle, new { @placeholder = "Start typing part of the title you wish to add, then select it from the drop-down list below ...", @class = "form-control" })
-                @Html.HiddenFor(model => model.TitleID)
-                @Html.ValidationMessageFor(model => model.TitleID, "", new {@class = "text-danger"})
-            </div>
-        </div>*@
-
+        
         <div class="form-group">
             @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), new { @class = "control-label col-md-2" })
             <div class="col-md-10">

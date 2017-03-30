@@ -101,7 +101,7 @@ namespace slls
             bundles.Add(selectTitle);
 
 
-            //Script for the modal edit pop-up ...
+            //Scripts for the modal edit pop-up ...
             var modalAddEditHeader = new ScriptBundle("~/bundles/modalAddEditHeader");
             modalAddEditHeader.Include("~/Scripts/jquery.validate.min.js");
             modalAddEditHeader.Include("~/Scripts/jquery.validate.unobtrusive.min.js");
@@ -110,6 +110,17 @@ namespace slls
             modalAddEditHeader.Include("~/Scripts/DatePickerReady.js");
             modalAddEditHeader.Include("~/Scripts/_ModalAddEditHeader.js");
             bundles.Add(modalAddEditHeader);
+
+
+            //Scripts for the modal edit pop-up that don't receive JSon ...
+            var modalAddEditHeaderNoJson = new ScriptBundle("~/bundles/modalAddEditHeaderNoJson");
+            modalAddEditHeader.Include("~/Scripts/jquery.validate.min.js");
+            modalAddEditHeader.Include("~/Scripts/jquery.validate.unobtrusive.min.js");
+            modalAddEditHeader.Include("~/Scripts/jquery.unobtrusive-ajax.min.js");
+            modalAddEditHeader.Include("~/Scripts/bootstrap-datepicker.min.js");
+            modalAddEditHeader.Include("~/Scripts/DatePickerReady.js");
+            //modalAddEditHeader.Include("~/Scripts/_ModalAddEditHeader.js");
+            bundles.Add(modalAddEditHeaderNoJson);
             
 
             //Stuff for the multi-column autocomplete ...
