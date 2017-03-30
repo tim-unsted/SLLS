@@ -57,7 +57,7 @@
 
         .modal-header { color: @CssManager.BodyTextColour; }
 
-        
+        /*.ui-autocomplete > li > a { color: @CssManager.BodyTextColour; }*/
 
         .ui-dialog .ui-dialog-title { color: @CssManager.BodyTextColour; }
 
@@ -73,8 +73,8 @@
         .btn-link:focus, .btn-link:hover { color: @CssManager.HyperlinkHoverColour; }
 
         .nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus {
-            background-color: #C71585;
-            border-color: #C71585;
+            background-color: @CssManager.SelectedTabColour;
+            border-color: @CssManager.SelectedTabColour;
         }
     </style>
 

@@ -8,7 +8,7 @@ $('#SelectTitle').click(function () { selectAllText(jQuery(this)) });
 var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '20%', valueField: 'authors' }];
 
 $("#SelectTitle").mcautocomplete({
-    autoFocus: true,
+    //autoFocus: true,
     showHeader: true,
     columns: columns,
     source: function(request, response) {

@@ -125,7 +125,7 @@
             $('#SelectCopy').click(function() { selectAllText(jQuery(this)) });
 
             $("#SelectCopy").mcautocomplete({
-                autoFocus: true,
+                //autoFocus: true,
                 showHeader: true,
                 columns: columns,
                 source: function(request, response) {
@@ -149,7 +149,6 @@
                     event.preventDefault();
                     if (ui.item) {
                         if (ui.item.CopyId != null) {
-                            //alert('Here');
                             $('#SelectCopy').val(ui.item.title + " - Copy: " + ui.item.copyNumber);
                             var url = '@Url.Action("CirculationList", "Circulation", new {id = "REPLACEME"})';
                             window.location.href = url.replace('REPLACEME', ui.item.CopyId);

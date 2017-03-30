@@ -8,7 +8,7 @@ var columns = [{ name: '', minWidth: '0%', valueField: 'CopyId' }, { name: 'Titl
 $('#SelectCopy').click(function() { selectAllText(jQuery(this)) });
 
 $("#SelectCopy").mcautocomplete({
-    autoFocus: true,
+    //autoFocus: true,
     showHeader: true,
     columns: columns,
     source: function(request, response) {
