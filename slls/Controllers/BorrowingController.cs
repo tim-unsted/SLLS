@@ -47,45 +47,15 @@ namespace slls.Controllers
                 fullName = string.Concat(new[] { user.Firstname, " ", user.Lastname });
             }
             
-            // Get a list of barcodes for a drop-down list
-            var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID);
-            var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && v.LoanType.RefOnly == false && v.LoanType.LengthDays > 0 && v.OnLoan == false && !currentLoans.Contains(v.VolumeID));
-            var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
-            var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
-
-            var volumes = availableVolumes
-                .ToList()
-                .Select(v => new
-                {
-                    v.VolumeID,
-                    v.Barcode
-                });
-
-            var copies = availableCopies.OrderBy(c => c.CopyNumber)
-                .ToList()
-                .Select(c => new
-                {
-                    c.CopyID,
-                    c.CopyNumber
-                });
-
-            var titles = availableTitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars))
-                .ToList()
-                .Select(t => new
-                {
-                    t.TitleID,
-                    Title = t.Title1
-                });
-
             var viewModel = new NewLoanViewModel()
             {
                 Borrowed = DateTime.Today,
                 ReturnDue = DateTime.Today.AddDays(21),
                 UserID = userId,
                 Borrower = fullName,
-                Volumes = new SelectList(volumes, "VolumeID", "Barcode"),
-                Copies = new SelectList(copies, "CopyID", "CopyNumber"),
-                Titles = new SelectList(titles, "TitleID", "Title"),
+                Volumes = new SelectList(""),
+                Copies = new SelectList(""),
+                Titles = new SelectList(""),
                 SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 

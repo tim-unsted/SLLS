@@ -1243,6 +1243,7 @@
     <Content Include="Areas\LibraryAdmin\Views\Shared\_SelectCopy.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Shared\_PaginateCopiesInLine.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Shared\_SelectTitle.cshtml" />
+    <Content Include="Areas\CheckInOut\Views\Shared\_ViewStart.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -1672,7 +1673,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\CheckInOut\Models\" />
-    <Folder Include="Areas\CheckInOut\Views\Shared\" />
     <Folder Include="Areas\Config\Models\" />
     <Folder Include="Areas\Config\Views\Cache\" />
     <Folder Include="Areas\LibraryAdmin\Models\" />

@@ -39,6 +39,7 @@ namespace slls.ViewModels
         [Required(ErrorMessage = "Please select a Borrower.")]
         public string UserID { get; set; }
 
+        [Required(ErrorMessage = "Please select a Borrower.")]
         public string CheckOutUserId { get; set; }
 
         public string UserSwipe { get; set; }

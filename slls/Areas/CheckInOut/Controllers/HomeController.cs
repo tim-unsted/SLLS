@@ -48,36 +48,6 @@ namespace slls.Areas.CheckInOut
                 userName = user.UserName;
             }
 
-            // Get a list of barcodes for a drop-down list
-            var currentLoans = _db.Borrowings.Where(b => b.Returned == null).Select(b => b.VolumeID);
-            var availableVolumes = _db.Volumes.Where(v => v.Deleted == false && v.LoanType.RefOnly == false && v.LoanType.LengthDays > 0 && v.OnLoan == false && !currentLoans.Contains(v.VolumeID));
-            var availableCopies = (from c in _db.Copies join v in availableVolumes on c.CopyID equals v.CopyID select c).Distinct();
-            var availableTitles = (from t in _db.Titles join c in availableCopies on t.TitleID equals c.TitleID select t).Distinct();
-
-            var volumes = availableVolumes
-                .ToList()
-                .Select(v => new
-                {
-                    v.VolumeID,
-                    v.Barcode
-                });
-
-            var copies = availableCopies.OrderBy(c => c.CopyNumber)
-                .ToList()
-                .Select(c => new
-                {
-                    c.CopyID,
-                    c.CopyNumber
-                });
-
-            var titles = availableTitles.OrderBy(t => t.Title1.Substring(t.NonFilingChars))
-                .ToList()
-                .Select(t => new
-                {
-                    t.TitleID,
-                    Title = t.Title1
-                });
-
             var viewModel = new NewLoanViewModel()
             {
                 Borrowed = DateTime.Today,
@@ -85,9 +55,9 @@ namespace slls.Areas.CheckInOut
                 UserID = checkoutUserId,
                 Borrower = fullName,
                 UserName = userName,
-                Volumes = new SelectList(volumes, "VolumeID", "Barcode"),
-                Copies = new SelectList(copies, "CopyID", "CopyNumber"),
-                Titles = new SelectList(titles, "TitleID", "Title"),
+                Volumes = new SelectList(""),
+                Copies = new SelectList(""),
+                Titles = new SelectList(""),
                 Success = success,
                 ShowCheckInOutItemHelper = Settings.GetParameterValue("Borrowing.CheckInOut.ShowItemHelper", "false", "Sets whether the Check-Out/In screens display a helper tool to find the item to borrow or return.", dataType: "bool") == "true",
                 SelectBorrowerOption = Settings.GetParameterValue("Borrowing.SelectBorrowerMethod", "dropdownlist", "Sets how borrowers can identify themselves in the loans screens when challenged. Valid options are: 'dropdownlist', 'swipecard', or 'username'.", dataType: "text"),
