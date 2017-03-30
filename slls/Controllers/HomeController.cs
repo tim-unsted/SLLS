@@ -648,52 +648,28 @@ namespace slls.Controllers
 
         public ActionResult BrowseBySubject(int id = 0)
         {
-            ////Get a list of all currently used keywords. this cuts the down the list a bit!
-            //var keywords = _db.vwSelectKeywordsUsed.OrderBy(x => x.KeywordTerm);
-
-            ////Start a new list selectlist items ...
-            //List<SelectListItem> kwdList = new List<SelectListItem>
-            //{
-            //    new SelectListItem
-            //    {
-            //        Text = "Select a " + DbRes.T("Keywords.Keyword", "FieldDisplayName"),
-            //        Value = "0"
-            //    }
-            //};
-
-            ////Add a default item ...
-
-            ////Add the actual keywords ...
-            //foreach (var item in keywords)
-            //{
-            //    kwdList.Add(new SelectListItem
-            //    {
-            //        Text = item.KeywordTerm,
-            //        Value = item.KeywordId.ToString()
-            //    });
-            //}
-
-            //Get a list of all items linked to the selected keyword
+            var results = new List<Title>();
             var viewModel = new SimpleSearchingViewModel
             {
-                Results = (from t in
-                               _db.Titles
-                           join c in _db.Copies on t.TitleID equals c.TitleID
-                           join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
-                           where t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && x.KeywordID == id && x.KeywordID != 0
-                           select t).Distinct().ToList(),
                 LibraryStaff = Roles.IsLibraryStaff(),
                 IsActualSearch = false,
-                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text")
+                OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text"),
+                Results = results
             };
 
             if (id > 0)
             {
                 var keyword = _db.vwSelectKeywordsUsed.Find(id);
                 viewModel.SelectItem = keyword.KeywordTerm;
+                viewModel.Results = (from t in
+                    _db.Titles
+                    join c in _db.Copies on t.TitleID equals c.TitleID
+                    join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
+                    where
+                        t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && x.KeywordID == id && x.KeywordID != 0
+                    select t).Distinct().ToList();
             }
 
-            //ViewData["ListSubjects"] = kwdList;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
             ViewBag.Title = "Browse By " + DbRes.T("Keywords.Keyword", "FieldDisplayName");
             ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);

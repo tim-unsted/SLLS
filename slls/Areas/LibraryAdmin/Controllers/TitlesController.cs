@@ -713,59 +713,32 @@ namespace slls.Areas.LibraryAdmin
 
 
         [Route("BrowseBySubject")]
-        //[Route("~/Admin/Catalogue/BrowseBySubject")]
         [Route("~/LibraryAdmin/Titles/BrowseBySubject")]
-        public ActionResult BrowseBySubject(int listSubjects = 0)
+        public ActionResult BrowseBySubject(int id = 0)
         {
-            //Get a list of all currently used keywords. this cuts the down the list a bit!
-            var keywords = (from k in _db.Keywords
-                            join x in _db.SubjectIndexes on k.KeywordID equals x.KeywordID
-                            group k by new
-                            {
-                                Id = k.KeywordID,
-                                Term = k.KeywordTerm
-                            } into grouped
-                            select new
-                            {
-                                keywordid = grouped.Key.Id,
-                                keywordterm = grouped.Key.Term + " (" + grouped.Count() + ")"
-                            }).Distinct().OrderBy(x => x.keywordterm);
-
-            //Start a new list selectlist items ...
-            var kwdList = new List<SelectListItem>
+            var results = new List<Title>();
+            var viewModel = new TitlesListViewModel()
             {
-                new SelectListItem
-                {
-                    Text = "Select a " + DbRes.T("Keywords.Keyword", "FieldDisplayName"),
-                    Value = "0"
-                }
+                Titles = results
             };
 
-            //Add a default item ...
-
-            //Add the actual keywords ...
-            foreach (var item in keywords)
+            if (id > 0)
             {
-                kwdList.Add(new SelectListItem
-                {
-                    Text = item.keywordterm,
-                    Value = item.keywordid.ToString()
-                });
+                var keyword = _db.vwSelectKeywordsUsed.Find(id);
+                viewModel.SelectItem = keyword.KeywordTerm;
+                results = (from t in
+                                         _db.Titles
+                                     join c in _db.Copies on t.TitleID equals c.TitleID
+                                     join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
+                                     where
+                                         t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && x.KeywordID == id && x.KeywordID != 0
+                                     select t).Distinct().ToList();
+                viewModel.Titles = results;
             }
 
-            ViewData["ListSubjects"] = kwdList;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
             ViewBag.Title = ViewBag.Title + " By " +
                             DbRes.T("Keywords.Keyword", "FieldDisplayName");
-
-            //Get a list of all items linked to the selected keyword
-            var viewModel = new TitlesListViewModel();
-            viewModel.Titles =
-                (from t in
-                     _db.Titles
-                 join x in _db.SubjectIndexes on t.TitleID equals x.TitleID
-                 where x.KeywordID == listSubjects
-                 select t).ToList();
             return View(viewModel);
         }
 
