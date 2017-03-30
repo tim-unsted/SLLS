@@ -41,15 +41,36 @@
 <div class="row">
     <div class="col-md-12">
         <div style="text-align: left;">
-            @Html.DisplayFor(x => Model.Supplier.SupplierName)
-            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Address1)
-            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Address2)
-            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Town_City)
-            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().County)
-            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Postcode)
-            @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Country)
+                @if (!string.IsNullOrEmpty(Model.Supplier.SupplierName))
+                {
+                    @Html.DisplayFor(x => Model.Supplier.SupplierName)<br/>
+                }
+                @if (!string.IsNullOrEmpty(Model.Supplier.SupplierAddresses.FirstOrDefault().Address1))
+                {
+                    @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Address1)<br />
+                }
+                @if (!string.IsNullOrEmpty(Model.Supplier.SupplierAddresses.FirstOrDefault().Address2))
+                {
+                    @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Address2)<br />
+                }
+                @if (!string.IsNullOrEmpty(Model.Supplier.SupplierAddresses.FirstOrDefault().Town_City))
+                {
+                    @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Town_City)<br />
+                }
+                @if (!string.IsNullOrEmpty(Model.Supplier.SupplierAddresses.FirstOrDefault().County))
+                {
+                    @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().County)<br />
+                }
+                @if (!string.IsNullOrEmpty(Model.Supplier.SupplierAddresses.FirstOrDefault().Postcode))
+                {
+                    @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Postcode)<br />
+                }
+                @if (!string.IsNullOrEmpty(Model.Supplier.SupplierAddresses.FirstOrDefault().Country))
+                {
+                    @Html.DisplayFor(x => Model.Supplier.SupplierAddresses.FirstOrDefault().Country)
+                }
         </div>
-    </div>
+</div>
 </div>
 
 <div class="row">

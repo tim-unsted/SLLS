@@ -6,16 +6,20 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
-    @Html.Partial("_Select")
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Add &bull; Print &bull; Duplicate <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
-            <li><a href="@Url.Action("PrintOrder", "OrderDetails", new {id = Model.OrderID})" title="Print @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
-            <li><a href="@Url.Action("DuplicateOrder", "OrderDetails", new {id = Model.OrderID})" title="Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
-        </ul>
+    @Html.TextBoxFor(x => Model.SelectOrder, new { @placeholder = Model.PlaceHolderText, @class = "form-control" })
+    <div class="row" style="margin-right: 0">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Add &bull; Print &bull; Duplicate &bull; Delete <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+                    <li><a href="@Url.Action("PrintOrder", "OrderDetails", new {id = Model.OrderID})" title="Print @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+                    <li><a href="@Url.Action("DuplicateOrder", "OrderDetails", new {id = Model.OrderID})" title="Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -51,13 +55,13 @@
 
 @section scripts {
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             //REM: go to the required tab, if it exists ...
             var goToTab = "@Model.SelectedTab";
             $('#orderTabs a[href="' + goToTab + '"]').tab('show'); // Select tab by name
 
             //REM: Hide the 'success' alert after x seconds ...
-            setTimeout(function() {
+            setTimeout(function () {
                 $(".alert-success").alert('close');
             }, 6000);
         });

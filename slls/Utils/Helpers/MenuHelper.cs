@@ -10,8 +10,9 @@ namespace slls.Utils.Helpers
         public static List<Menu> SeeAlso(string group = "", string ignoreAction = "", string ignoreController = "", string orderBy = "title")
         {
             var db = new DbEntities();
+            IEnumerable<Menu> menuItems = CacheProvider.MenuItems();
 
-            var seeAlso = db.Menus.Where(m => m.Groups.Contains(group) && (m.Action != ignoreAction)); // || m.Controller != ignoreController));
+            var seeAlso = menuItems.Where(m => m.Groups != null && m.Groups.Contains(group) && (m.Action != ignoreAction)); // || m.Controller != ignoreController));
             
             if (ignoreController != "")
             {

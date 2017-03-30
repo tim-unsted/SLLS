@@ -41,6 +41,14 @@
 <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
 
     <script type="text/javascript">
+        
+        function selectAllText(textbox) {
+            textbox.focus();
+            textbox.select();
+        }
+
+        $('#Title').click(function () { selectAllText(jQuery(this)) });
+
         var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '40%', valueField: 'title' }, { name: 'Edition', minWidth: '20%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Author', minWidth: '20%', valueField: 'authors' }];
 
         $("#Title").mcautocomplete({

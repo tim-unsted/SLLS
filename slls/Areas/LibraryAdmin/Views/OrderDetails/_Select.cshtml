@@ -1,4 +1,4 @@
-﻿<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
+﻿@*<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
 
 <style type="text/css">
     .bootstrap-select .dropdown-toggle .filter-option {
@@ -12,7 +12,7 @@
     .bootstrap-select.btn-group .dropdown-menu.inner {
         font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;
     }
-</style>
+</style>*@
 
 @using (Html.BeginForm())
 {
@@ -20,24 +20,62 @@
     
     <form>
         <div class="form-group" title="@ViewBag.Message">
-            @Html.DropDownList("selectOrder", null, new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control selectpicker", style = "font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;" })
+            @*@Html.DropDownList("selectOrder", null, new { onchange = "window.location.href = this.options[this.selectedIndex].value;", @class = "form-control selectpicker", style = "font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;" })*@
+            @Html.TextBoxFor(x => ViewBag.SelectOrder, new { @placeholder = ViewBag.PlaceHolderText, @class = "form-control" })
+            @*@Html.HiddenFor(model => model.OrderID)*@
         </div>
     </form>
 }
 
+
+
 @section scripts {
-@Scripts.Render("~/bundles/selectPicker")
+    <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+
     <script type="text/javascript">
-        $(document).ready(function() {
 
-            $('.selectpicker').selectpicker({
-                liveSearch: true,
-                showSubtext: true
-            });
+        function selectAllText(textbox) {
+            textbox.focus();
+            textbox.select();
+        }
+
+        $('#SelectOrder').click(function () { selectAllText(jQuery(this)) });
+
+        var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '30%', valueField: 'title' }, { name: 'Edition', minWidth: '10%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Supplier', minWidth: '20%', valueField: 'suppliername' }, { name: 'Order No.', minWidth: '10%', valueField: 'orderno' }, { name: 'Ordered', minWidth: '10%', valueField: 'orderdate' }];
+
+        $("#SelectOrder").mcautocomplete({
+            showHeader: true,
+            columns: columns,
+            source: function (request, response) {
+                var title = new Array();
+                var urlGetTerms = "@Url.Action("AutoComplete", "OrderDetails")";
+                $.ajax({
+                    async: false,
+                    cache: false,
+                    type: "POST",
+                    url: urlGetTerms,
+                    data: { "term": request.term },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            title[i] = { OrderId: data[i].OrderId, title: data[i].Title, edition: data[i].Edition, year: data[i].Year, suppliername: data[i].SupplierName, orderno: data[i].OrderNo, orderdate: data[i].OrderDate };
+                        }
+                    }
+                });
+                response(title);
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                if (ui.item) {
+                    if (ui.item.OrderId != null) {
+                        $('#SelectOrder').val(ui.item.title);
+                        $('#OrderID').val(ui.item.OrderId);
+                        var url = $("#DestUrl").val();
+                        window.location.href = url.replace('REPLACEME', ui.item.OrderId);
+                    }
+                }
+                return true;
+            }
         });
 
-        $("#selectOrder").change(function() {
-            sessionStorage.removeItem('lastTab_EditOrder');
-        });
-    </Script>
+    </script>
 }

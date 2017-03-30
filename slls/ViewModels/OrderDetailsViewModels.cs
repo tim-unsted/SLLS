@@ -153,6 +153,7 @@ namespace slls.ViewModels
             WarningMsg = "";
             SelectedTab = "#orderdetails";
             CallingAction = "Edit";
+            //PlaceHolderText = "To view/edit another order, start typing part of the name of the ordered item ...";
         }
         
         [Key]
@@ -278,6 +279,9 @@ namespace slls.ViewModels
         [LocalDisplayName("Orders.Links", "FieldDisplayName")]
         public virtual ICollection<OrderLink> OrderLinks { get; set; }
 
+        public string SelectOrder { get; set; }
+        public string PlaceHolderText { get; set; }
+
     }
 
     public class OrderReceiptsViewModel
@@ -393,6 +397,7 @@ namespace slls.ViewModels
         public SelectOrderViewmodel()
         {
             Tab = "#orderdetails";
+            PlaceHolderText = "Start typing the name of the ordered item you wish to view";
         }
         
         public string Title { get; set; }
@@ -409,7 +414,11 @@ namespace slls.ViewModels
         [Required(ErrorMessage = "Please select an Order!")]
         public int OrderID { get; set; }
 
-        public string Tab { get; set; } 
+        public string Tab { get; set; }
+
+        public string SelectOrder { get; set; }
+
+        public string PlaceHolderText { get; set; }
     }
     
 }

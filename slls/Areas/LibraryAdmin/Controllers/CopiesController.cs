@@ -397,7 +397,7 @@ namespace slls.Areas.LibraryAdmin
             ViewData["LocationID"] = SelectListHelper.OfficeLocationList(copy.LocationID ?? 0, null, false); 
             ViewData["StatusID"] = SelectListHelper.StatusList(copy.StatusID ?? 0, null, false, true);
             ViewData["CancelledYear"] = SelectListHelper.AccountYearsList(id:copy.AccountYearID ?? 0, addNew:false);
-            ViewData["CancelledBy"] = new SelectList(_db.Users.Where(u => u.IsLive).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname), "Id", "FullnameRev");
+            ViewData["CancelledBy"] = SelectListHelper.SelectUsersByLastname(); //new SelectList(_db.Users.Where(u => u.IsLive).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname), "Id", "FullnameRev");
             //ViewData["CopyId"] = SelectListHelper.AllCopiesList(id: id, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName"));
             ViewBag.VolumesCount = copy.Volumes.Count();
             ViewBag.PartsCount = copy.PartsReceived.Count();

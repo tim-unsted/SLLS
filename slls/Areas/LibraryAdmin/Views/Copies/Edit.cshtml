@@ -60,7 +60,7 @@
     {
         tabs.Tab(DbRes.T("Loans", "EntityType") + ViewBag.LoansBadge, "tab5");
     }
-    tabs.Tab("<span class = 'glyphicon glyphicon-share-alt'></span> Back to " + DbRes.T("Titles.Title", "FieldDisplayName"), "BackToTitle");
+    tabs.Tab("<span class = 'glyphicon glyphicon-share-alt'></span> Go to " + DbRes.T("Titles.Title", "FieldDisplayName"), "BackToTitle");
 
     using (tabs.BeginPanel())
     {
@@ -69,7 +69,7 @@
             @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
         </div>
         <div>
-            <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="Back to @DbRes.T("titles.title", "FieldDisplayName")">@Model.Title</a></span>
+            <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="Go to @DbRes.T("Titles.Title", "FieldDisplayName")">@Model.Title</a></span>
         </div>
         <div id="CopyDetails">
             @Html.Partial("_CopyDetails", Model)
@@ -84,7 +84,7 @@
             @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
         </div>
         <div>
-            <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
+            <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="Go to @DbRes.T("Titles.Title", "FieldDisplayName")">@Model.Title</a></span>
         </div>
         <br />
         <p>
@@ -96,7 +96,7 @@
             {
                 <span class="pull-left" style="padding-right: 15px;">@Html.Partial("_PaginateDetails", Model)</span>
             }
-            <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete Copy"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
+            <a href="@Url.Action("Delete", new {id = Model.CopyId})" class="btn btn-danger modal-link" title="Delete @DbRes.T("Copies.Copy", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete Copy</a>
             &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
         </div>
     }
@@ -138,7 +138,7 @@
                 @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
             </div>
             <div>
-                <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="View/Edit Title">@Model.Title</a></span>
+                <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="Go to @DbRes.T("Titles.Title", "FieldDisplayName")">@Model.Title</a></span>
             </div>
     <br/>
             <div id="Loans">

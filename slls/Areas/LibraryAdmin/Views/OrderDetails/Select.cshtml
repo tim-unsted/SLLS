@@ -1,23 +1,6 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.SelectOrderViewmodel
 
-<link href="https://fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet">
-
-<style type="text/css">
-    .bootstrap-select .dropdown-toggle .filter-option {
-        font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;
-    }
-     .bootstrap-select .dropdown-toggle .filter-option:before {
-         font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;
-     }
-     .bootstrap-select.btn-group .dropdown-menu.inner {
-        font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;
-
-     }
-
-</style>
-
-
 @Html.Partial("_HeaderSeeAlso")
 
 <div class="alert alert-info">
@@ -27,74 +10,66 @@
     @using (Html.BeginForm("PostSelect", "OrderDetails", FormMethod.Post))
     {
         @Html.AntiForgeryToken()
-
-        @Html.HiddenFor(model => model.ReturnAction)
-        @Html.HiddenFor(model => model.Tab)
-
-        <div class="form-group" title="@Model.Message">
-            @Html.DropDownListFor(model => model.OrderID, Model.Orders, new { @class = "form-control selectpicker", style = "font-family: 'Source Code Pro', 'Courier New', 'Courier', monospace;", onchange = "this.form.submit();" })
-            <span class="pull-right"><button type="button" id="showOrders" name="showOrders" class="btn btn-link" value="showAll" title="Click to list all orders">[Show All]</button></span>
-            @Html.ValidationMessageFor(model => model.OrderID, "", new { @class = "text-danger" })
+        
+        <div class="form-group">
+            @Html.TextBoxFor(x => x.SelectOrder, new {@placeholder = @Model.PlaceHolderText, @class = "form-control"})
+            @Html.HiddenFor(model => model.OrderID)
         </div>
     }
 
 </div>
 
+@*@Html.HiddenFor(model => model.ReturnAction)*@
+@Html.HiddenFor(model => model.Tab)
+@Html.Hidden("DestUrl", @Url.Action(@Model.ReturnAction, "OrderDetails", new { id = "REPLACEME" }))
+
 @section scripts {
-@Scripts.Render("~/bundles/selectPicker")
+    <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+
     <script type="text/javascript">
-        $(document).ready(function() {
+        
+        function selectAllText(textbox) {
+            textbox.focus();
+            textbox.select();
+        }
 
-            $('.selectpicker').selectpicker({
-                liveSearch: true,
-                showSubtext: true
-            });
+        $('#SelectOrder').click(function () { selectAllText(jQuery(this)) });
 
-            //Get a list of orders ...
-            $("#showOrders").click(function() {
-                var select = $("#OrderID");
-                var showAll = $("#showOrders");
-                var status = showAll.attr("value");
-                //alert(status);
-                select.empty();
-                var filter;
-                var text;
-                var newStatus;
-                if (status === "showAll") {
-                    filter = { filter: "" };
-                    newStatus = "outstanding";
-                    text = "[Show Current]";
-                }
-                if (status === "outstanding") {
-                    filter = { filter: "outstanding" };
-                    newStatus = "showAll";
-                    text = "[Show All]";
-                }
+        var columns = [{ name: '', minWidth: '0%', valueField: 'Id' }, { name: 'Title', minWidth: '30%', valueField: 'title' }, { name: 'Edition', minWidth: '10%', valueField: 'edition' }, { name: 'Year', minWidth: '10%', valueField: 'year' }, { name: 'Supplier', minWidth: '20%', valueField: 'suppliername' }, { name: 'Order No.', minWidth: '10%', valueField: 'orderno' }, { name: 'Ordered', minWidth: '10%', valueField: 'orderdate' }];
 
+        $("#SelectOrder").mcautocomplete({
+            showHeader: true,
+            columns: columns,
+            source: function (request, response) {
+                var title = new Array();
+                var urlGetTerms = "@Url.Action("AutoComplete", "OrderDetails")";
                 $.ajax({
-                    url: '@Url.Action("GetOrderList", "OrderDetails")',
-                    type: 'Post',
-                    contentType: 'application/json',
-                    dataType: 'json',
-                    data: JSON.stringify(filter),
-                    success: function(data) {
-                        if (data.success) {
-                            $.each(data.AllOrders, function(index, itemData) {
-                                    select.append($('<option />', {
-                                        value: itemData.Value,
-                                        text: itemData.Text
-                                    }));
-                                }
-                            );
-                            showAll.attr('value', newStatus);
-                            showAll.Text(text);
-                        } else {
-                            alert('invalid ID' + data.success);
+                    async: false,
+                    cache: false,
+                    type: "POST",
+                    url: urlGetTerms,
+                    data: { "term": request.term },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            title[i] = { OrderId: data[i].OrderId, title: data[i].Title, edition: data[i].Edition, year: data[i].Year, suppliername: data[i].SupplierName, orderno: data[i].OrderNo, orderdate: data[i].OrderDate };
                         }
-                    },
-                    async: false
+                    }
                 });
-            });
-        })
+                response(title);
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                if (ui.item) {
+                    if (ui.item.OrderId != null) {
+                        $('#SelectOrder').val(ui.item.title);
+                        $('#OrderID').val(ui.item.OrderId);
+                        var url = $("#DestUrl").val();
+                        window.location.href = url.replace('REPLACEME', ui.item.OrderId);
+                    }
+                }
+                return true;
+            }
+        });
+
     </script>
 }

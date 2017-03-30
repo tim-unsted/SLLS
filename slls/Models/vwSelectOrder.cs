@@ -19,13 +19,17 @@ namespace slls.Models
 
         public string Title { get; set; }
 
+        public string Edition { get; set; }
+
+        public string Year { get; set; }
+
         public string SupplierName { get; set; }
 
-        public DateTime OrderDate { get; set; }
+        public string OrderDate { get; set; }
 
-        public DateTime? ReceivedDate { get; set; }
+        public string ReceivedDate { get; set; }
 
-        public DateTime? InvoiceDate { get; set; }
+        public string InvoiceDate { get; set; }
 
         public string InvoiceRef { get; set; }
 

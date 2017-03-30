@@ -307,11 +307,11 @@ namespace slls.Utils.Helpers
             }
 
             //Add the actual author names ...
-            foreach (var item in db.vwSelectTitles.OrderBy(t => t.Title.Substring(t.NonFilingChars)))
+            foreach (var item in db.vwSelectJustTitles.OrderBy(t => t.Title.Substring(t.NonFilingChars)))
             {
                 titlesList.Add(new SelectListItem
                 {
-                    Text = string.IsNullOrEmpty(item.Title) ? "<empty title>" : StringHelper.Truncate(item.Title, 100),
+                    Text = string.IsNullOrEmpty(item.Title) ? "<empty title>" : item.Title,
                     Value = item.TitleId.ToString()
                 });
             }

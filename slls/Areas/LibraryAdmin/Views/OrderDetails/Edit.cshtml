@@ -6,17 +6,21 @@
 @Html.Partial("_HeaderSeeAlso", Model)
 
 <div class="alert alert-info">
-    @Html.Partial("_Select")
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Add &bull; Print &bull; Duplicate &bull; Delete <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu">
-            <li><a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
-            <li><a href="@Url.Action("PrintOrder", "OrderDetails", new {id = Model.OrderID})" title="Print @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
-            <li><a href="@Url.Action("DuplicateOrder", "OrderDetails", new {id = Model.OrderID})" title="Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
-            <li><a href="@Url.Action("Delete", "OrderDetails", new {id = Model.OrderID, callingAction= "edit"})" title="Delete @DbRes.T("Orders.Order", "FieldDisplayName")" class="modal-link"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
-        </ul>
+    @Html.TextBoxFor(x => Model.SelectOrder, new { @placeholder = Model.PlaceHolderText, @class = "form-control" })
+    <div class="row" style="margin-right: 0">
+        <div class="col-md-12" style="margin-top: 10px;">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Add &bull; Print &bull; Duplicate &bull; Delete <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="@Url.Action("Create", "OrderDetails", new {id = ViewData["CopyID"]})" data-toggle="modal" data-target="#lrgModal" title="Add New @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+                    <li><a href="@Url.Action("PrintOrder", "OrderDetails", new {id = Model.OrderID})" title="Print @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-print"></span> Print @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+                    <li><a href="@Url.Action("DuplicateOrder", "OrderDetails", new {id = Model.OrderID})" title="Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-duplicate"></span> Duplicate @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+                    <li><a href="@Url.Action("Delete", "OrderDetails", new {id = Model.OrderID, callingAction = "edit"})" title="Delete @DbRes.T("Orders.Order", "FieldDisplayName")" class="modal-link"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span> Delete @DbRes.T("Orders.Order", "FieldDisplayName")</a></li>
+                </ul>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -50,17 +54,23 @@
     </div>
 }
 
+@Html.Hidden("DestUrl", @Url.Action("Edit", "OrderDetails", new { id = "REPLACEME" }))
+@Html.Hidden("AutoSuggestUrl", @Url.Action("AutoComplete", "OrderDetails"))
+
 @section scripts {
+    <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/_SelectOrder.js")" type="text/javascript"></script>
+
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             //REM: Hide the 'success' alert after x seconds ...
-            setTimeout(function() {
+            setTimeout(function () {
                 $(".alert-success").alert('close');
             }, 6000);
         });
 
-        $(function() {
-            $('a[data-toggle="tab"]').on('click', function(e) {
+        $(function () {
+            $('a[data-toggle="tab"]').on('click', function (e) {
                 //save the latest tab:
                 sessionStorage.setItem('lastTab_EditOrder', $(e.target).attr('href'));
             });
@@ -72,5 +82,6 @@
                 $('a[href="' + lastTab + '"]').click();
             }
         });
+
     </script>
 }

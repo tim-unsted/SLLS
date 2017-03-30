@@ -367,6 +367,7 @@
     <Compile Include="Models\vwSelectKeywordsUsed.cs" />
     <Compile Include="Models\vwSelectOrder.cs" />
     <Compile Include="Models\vwSelectSupplier.cs" />
+    <Compile Include="Models\vwSelectJustTitle.cs" />
     <Compile Include="Models\vwSelectTitleToRenewReturn.cs" />
     <Compile Include="Models\vwSelectTitleToBorrow.cs" />
     <Compile Include="Models\vwSelectTitle.cs" />
@@ -1083,6 +1084,7 @@
     <Content Include="Scripts\titles-autocat-partial.js" />
     <Content Include="Scripts\_ModalAddEditHeader.js" />
     <Content Include="Scripts\_SelectCopy.js" />
+    <Content Include="Scripts\_SelectOrder.js" />
     <Content Include="Scripts\_SelectTitle.js" />
     <Content Include="Views\Home\Dashboard\_Notifications.cshtml" />
     <Content Include="Customer\Settings\ExternalLogins.config" />

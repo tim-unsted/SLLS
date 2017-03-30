@@ -488,6 +488,22 @@ namespace slls.Areas.LibraryAdmin
             return View(viewModel);
         }
 
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult AutoComplete(string term)
+        {
+            //if (term.Length < 3) return null;
+
+            term = " " + term;
+            var titles = (from o in _db.vwSelectOrders
+                          where o.Title.Contains(term)
+                          orderby o.Title.Substring(o.NonFilingChars)
+                          select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName }).Take(250);
+
+            return Json(titles, JsonRequestBehavior.AllowGet);
+        }
+
+
         //GET: Select an order ...
         public ActionResult Select(string callingAction = "edit", string filter = "")
         {
@@ -503,7 +519,7 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.Message = "Select an " + _entityName.ToLower() + " to edit/update";
                         viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to edit/update from the dropdown list of available " + _entityType.ToLower() + " below.";
                         viewModel.ReturnAction = "Edit";
-                        viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
+                        //viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
                         break;
                     }
 
@@ -514,7 +530,7 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.Message = "Select an " + _entityName.ToLower() + " to print";
                         viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to print from the dropdown list of available " + _entityType.ToLower() + " below.";
                         viewModel.ReturnAction = "PrintOrder";
-                        viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
+                        //viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
                         break;
                     }
 
@@ -525,7 +541,7 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.Message = "Select an " + _entityName.ToLower() + " to Reprint";
                         viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to reprint from the dropdown list of available " + _entityType.ToLower() + " below.";
                         viewModel.ReturnAction = "PrintOrder";
-                        viewModel.Orders = SelectListHelper.OrdersList();
+                        //viewModel.Orders = SelectListHelper.OrdersList();
                         break;
                     }
 
@@ -536,7 +552,7 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.Message = "Select an " + _entityName.ToLower() + " to Duplicate";
                         viewModel.HelpText = "Select the " + _entityName.ToLower() + " you wish to duplicate from the dropdown list of available " + _entityType.ToLower() + " below.";
                         viewModel.ReturnAction = "DuplicateOrder";
-                        viewModel.Orders = SelectListHelper.OrdersList();
+                        //viewModel.Orders = SelectListHelper.OrdersList();
                         break;
                     }
 
@@ -548,7 +564,7 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.HelpText = "<strong>Note: </strong>The list below <emp>only</emp> shows " + _entityType.ToLower() + " with no invoice. To see all " + _entityType.ToLower() + ", choose another option.";
                         viewModel.ReturnAction = "AddInvoice";
                         viewModel.Tab = "#invoice";
-                        viewModel.Orders = SelectListHelper.OrdersList(filter: "noinvoice");
+                        //viewModel.Orders = SelectListHelper.OrdersList(filter: "noinvoice");
                         break;
                     }
 
@@ -559,7 +575,7 @@ namespace slls.Areas.LibraryAdmin
                         viewModel.Message = "Select an " + _entityName;
                         viewModel.HelpText = "Select an " + _entityName.ToLower() + " from the dropdown list of available " + _entityType.ToLower() + " below.";
                         viewModel.ReturnAction = "Edit";
-                        viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
+                        //viewModel.Orders = SelectListHelper.OrdersList(filter: "outstanding");
                         break;
                     }
             }
@@ -579,6 +595,9 @@ namespace slls.Areas.LibraryAdmin
             TempData["GoToTab"] = viewModel.Tab;
             return RedirectToAction(viewModel.ReturnAction, new { id = viewModel.OrderID });
         }
+
+
+
 
         public ActionResult PrintOrder(int id = 0)
         {
@@ -1016,18 +1035,21 @@ namespace slls.Areas.LibraryAdmin
                 Item = orderDetail.Item,
                 TitleID = orderDetail.TitleID,
                 Link = orderDetail.Link,
+                OrderLinks = orderDetail.OrderLinks,
                 Notes = orderDetail.Notes,
                 Price = orderDetail.Price,
                 Passed = orderDetail.Passed,
                 Report = orderDetail.Report,
                 SupplierID = orderDetail.SupplierID,
                 VAT = orderDetail.VAT,
-                Titles = new SelectList(_db.Titles, "TitleID", "Title1"),
-                Suppliers = new SelectList(_db.Suppliers, "SupplierID", "SupplierName"),
-                RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
-                AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
+                Titles = SelectListHelper.TitlesList(orderDetail.TitleID),
+                Suppliers = SelectListHelper.SupplierList(id: orderDetail.SupplierID ?? 0),
+                RequestUsers = SelectListHelper.SelectUsersByLastname(),
+                AuthorityUsers = SelectListHelper.SelectUsersByLastname(),
                 CallingAction = "AddInvoice",
-                SelectedTab = "#invoice"
+                SelectedTab = "#invoice",
+                PlaceHolderText = "To view/edit another order, start typing part of the name of the ordered item ...",
+                SelectOrder = orderDetail.Title.Title1
             };
 
             if (success && viewModel.InvoiceDate != null)
@@ -1164,12 +1186,13 @@ namespace slls.Areas.LibraryAdmin
                 Report = orderDetail.Report,
                 SupplierID = orderDetail.SupplierID,
                 VAT = orderDetail.VAT,
-                //Titles = new SelectList(_db.Titles, "TitleID", "Title1"),
                 Titles = SelectListHelper.TitlesList(orderDetail.TitleID),
                 Suppliers = SelectListHelper.SupplierList(id:orderDetail.SupplierID ?? 0),
                 RequestUsers = SelectListHelper.SelectUsersByLastname(),
                 AuthorityUsers = SelectListHelper.SelectUsersByLastname(),
-                CallingAction = "Edit"
+                CallingAction = "Edit",
+                PlaceHolderText = "To view/edit another order, start typing part of the name of the ordered item ...",
+                SelectOrder = orderDetail.Title.Title1
             };
 
             if (success)
@@ -1194,13 +1217,14 @@ namespace slls.Areas.LibraryAdmin
                     "<strong>Info: </strong>This " + _entityName.ToLower() + " has been marked as received but no invoice has been entered. You can add an invoice on the 'Invoices' tab'.";
             }
 
-            ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
+            //ViewData["selectOrder"] = SelectListHelper.OrdersList(id: viewModel.OrderID);
             ViewData["AccountYearID"] = SelectListHelper.AccountYearsList(id: orderDetail.AccountYearID ?? 0, addNew: false);
             ViewData["BudgetCodeID"] = SelectListHelper.BudgetCodesList(id: orderDetail.BudgetCodeID ?? 0, addNew: false);
             ViewData["OrderCategoryID"] = SelectListHelper.OrderCategoriesList(id: orderDetail.OrderCategoryID ?? 0, addNew: false);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "Edit");
             ViewBag.Title = "Edit/Update Order";
             return View(viewModel);
+            ;
         }
 
         // POST: LibraryAdmin/OrderDetails/Update/5
