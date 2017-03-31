@@ -1,12 +1,4 @@
-﻿@*@model DateTime?
-@Html.TextBox("", (Model.HasValue ? Model.Value.ToString("d") : string.Empty), new
-{
-    @class = "form-control datepicker",
-    //data_date_format = System.Globalization.CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern.ToLower()
-
-})*@
-
-@model System.DateTime?
+﻿@model System.DateTime?
 @{
     var value = "";
     if (Model.HasValue) {

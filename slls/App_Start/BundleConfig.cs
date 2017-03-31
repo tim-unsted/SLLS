@@ -82,10 +82,10 @@ namespace slls
 
             //Scripts for the modal edit pop-up ...
             var modalAddEditHeader = new ScriptBundle("~/bundles/modalAddEditHeader");
+            modalAddEditHeader.Include("~/Scripts/jquery-ui-1.12.1.js");
             modalAddEditHeader.Include("~/Scripts/jquery.validate.min.js");
             modalAddEditHeader.Include("~/Scripts/jquery.validate.unobtrusive.min.js");
             modalAddEditHeader.Include("~/Scripts/jquery.unobtrusive-ajax.min.js");
-            modalAddEditHeader.Include("~/Scripts/bootstrap-datepicker.min.js");
             modalAddEditHeader.Include("~/Scripts/DatePickerReady.js");
             modalAddEditHeader.Include("~/Scripts/_ModalAddEditHeader.js");
             bundles.Add(modalAddEditHeader);
@@ -93,12 +93,11 @@ namespace slls
 
             //Scripts for the modal edit pop-up that don't receive JSon ...
             var modalAddEditHeaderNoJson = new ScriptBundle("~/bundles/modalAddEditHeaderNoJson");
+            modalAddEditHeader.Include("~/Scripts/jquery-ui-1.12.1.js");
             modalAddEditHeader.Include("~/Scripts/jquery.validate.min.js");
             modalAddEditHeader.Include("~/Scripts/jquery.validate.unobtrusive.min.js");
             modalAddEditHeader.Include("~/Scripts/jquery.unobtrusive-ajax.min.js");
-            modalAddEditHeader.Include("~/Scripts/bootstrap-datepicker.min.js");
             modalAddEditHeader.Include("~/Scripts/DatePickerReady.js");
-            //modalAddEditHeader.Include("~/Scripts/_ModalAddEditHeader.js");
             bundles.Add(modalAddEditHeaderNoJson);
             
 
@@ -131,8 +130,8 @@ namespace slls
 
             // Bootstrap CSS, etc ...
             var cssBundle = new StyleBundle("~/styles/css").Include(
-                "~/Content/bootstrap.css",
-                "~/Content/bootstrap-datepicker.min.css",
+                "~/Content/bootstrap.min.css",
+                //"~/Content/bootstrap-datepicker.css",
                 "~/Content/bootstrap-select.min.css",
                 "~/Content/datatables.min.css",
                 "~/Content/site.css"
