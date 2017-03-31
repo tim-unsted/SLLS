@@ -1225,7 +1225,6 @@
     <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\Create.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Suppliers\Select.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\SupplierPeople\Select.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\Copies\ByTitle.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Copies\_IndexNoTitle.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Volumes\_VolumesWithTitles.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Volumes\_Select.cshtml" />
