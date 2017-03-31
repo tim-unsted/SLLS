@@ -7,6 +7,12 @@ namespace slls
     {
         public static void RegisterBundles(BundleCollection bundles)
         {
+            bundles.Clear();
+            bundles.ResetAll();
+
+            BundleTable.EnableOptimizations = false;
+
+            
             // Modernizr ...
             var modernizrBundle = new ScriptBundle("~/bundles/modernizr").Include(
                 "~/Scripts/modernizr-2.8.3.js");
@@ -38,33 +44,6 @@ namespace slls
             bundles.Add(datatablesBundle);
             
             
-            // Bootstrap CSS, etc ...
-            var cssBundle = new StyleBundle("~/Content/css").Include(
-                "~/Content/bootstrap.css",
-                "~/Content/bootstrap-datepicker.min.css",
-                "~/Content/bootstrap-select.min.css",
-                "~/Content/datatables.min.css",
-                "~/Content/site.css"
-                );
-            bundles.Add(cssBundle);
-
-
-            // Site CSS ...
-            var siteCssBundle = new StyleBundle("~/Content/sitecss").Include(
-                "~/Content/site.css"
-                );
-            bundles.Add(siteCssBundle);
-
-
-            // JQuery-ui CSS ...
-            var jqueryuicssBundle = new StyleBundle("~/Content/jqueryuicss").Include(
-                "~/Content/jquery-ui.css",
-                "~/Content/jquery-ui-structure.css",
-                "~/Content/jquery-ui.theme.css"
-                );
-            bundles.Add(jqueryuicssBundle);
-
-
             // Bootstrap JS ...
             var bootstrapJsBundle = new ScriptBundle("~/bundles/otherjavascripts").Include(
                 "~/Scripts/bootstrap.min.js",
@@ -146,6 +125,36 @@ namespace slls
                 "~/Scripts/titles-autocat-partial.js"
                 );
             bundles.Add(titlesAutoCatPartial);
+
+
+            //CSS Styling ...
+
+            // Bootstrap CSS, etc ...
+            var cssBundle = new StyleBundle("~/styles/css").Include(
+                "~/Content/bootstrap.css",
+                "~/Content/bootstrap-datepicker.min.css",
+                "~/Content/bootstrap-select.min.css",
+                "~/Content/datatables.min.css",
+                "~/Content/site.css"
+                );
+            bundles.Add(cssBundle);
+
+
+            //// Print and Customer CSS ...
+            //var siteCssBundle = new StyleBundle("~/Content/customer-and-print").Include(
+            //    "~/Content/print.css",
+            //    "~/Customer/Styling/customer.css"
+            //    );
+            //bundles.Add(siteCssBundle);
+
+
+            // JQuery-ui CSS ...
+            var jqueryuicssBundle = new StyleBundle("~/styles/jqueryuicss").Include(
+                "~/Content/jquery-ui.css",
+                "~/Content/jquery-ui-structure.css",
+                "~/Content/jquery-ui.theme.css"
+                );
+            bundles.Add(jqueryuicssBundle);
 
         }
     }
