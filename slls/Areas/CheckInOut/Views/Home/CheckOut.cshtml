@@ -27,29 +27,14 @@
 
         <div class="well">
 
-            <div class="form-group has-feedback" id="barcodeGroup">
-                @Html.Label(DbRes.T("Borrowing.Item_To_Loan", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-md-4">
-                    @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode), title = "Enter or scan the " + Html.DisplayNameFor(x => x.Barcode) + " of the item you wish to borrow." } })
-                    @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
-                    <i class="glyphicon glyphicon-barcode form-control-feedback"></i>
-                </div>
-            </div>
-
-            <div class="form-group" id="_barcodeDetails" style="display: none;">
-                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                <div class="col-sm-10">
-                    <p class="form-control-static"><span id="title"></span></p>
-                </div>
-            </div>
-
             @if (Model.SelectBorrowerOption == "dropdownlist")
             {
                 <div class="form-group has-feedback">
                     @Html.Label(DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-9">
                         @Html.DropDownList("CheckOutUserId", Model.Users, "Select a Borrower", htmlAttributes: new { @class = "form-control selectpicker" })
-                        @Html.ValidationMessageFor(model => model.CheckOutUserId, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.UserID, "", new { @class = "text-danger" })
+                        <span id="no-user-msg" class="text-danger" style="display: none;">Who are you? Please select yourself, or another borrower, from the dropdown list!</span>
                         <i class="glyphicon glyphicon-user form-control-feedback"></i>
                     </div>
                 </div>
@@ -60,7 +45,8 @@
                     @Html.Label(DbRes.T("Users.Username", "FieldDisplayName") + "/" + DbRes.T("Users.Barcode", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                     <div class="col-md-9">
                         @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter your " + DbRes.T("Users.Username", "FieldDisplayName") + " or Scan your " + DbRes.T("Users.Barcode", "FieldDisplayName"), title = "Enter your " + DbRes.T("Users.Username", "FieldDisplayName") + " or Scan your " + DbRes.T("Users.Barcode", "FieldDisplayName") } })
-                        @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+                        @Html.ValidationMessageFor(model => model.UserID, "", new { @class = "text-danger" })
+                        <span id="no-user-msg" class="text-danger" style="display: none;">Who are you? Please enter your @DbRes.T("Users.Username", "FieldDisplayName") or scan your @DbRes.T("Users.Barcode", "FieldDisplayName")!</span>
                         <i class="glyphicon glyphicon-user form-control-feedback"></i>
                     </div>
                 </div>
@@ -70,6 +56,31 @@
                 @Html.Label(DbRes.T("Borrowing.Borrowed_By", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="col-sm-10">
                     <p class="form-control-static"><span id="userFullName"></span></p>
+                </div>
+            </div>
+
+            <div class="form-group has-feedback" id="barcodeGroup">
+                @Html.Label(DbRes.T("Borrowing.Item_To_Loan", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-4">
+                    @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control", placeholder = "Enter or Scan the " + Html.DisplayNameFor(x => x.Barcode), title = "Enter or scan the " + Html.DisplayNameFor(x => x.Barcode) + " of the item you wish to borrow." } })
+                    @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
+                    <span id="no-barcode-msg" class="text-danger" style="display: none;">Please enter or scan the @Html.DisplayNameFor(x => x.Barcode) of the item you wish to borrow!</span>
+                    <i class="glyphicon glyphicon-barcode form-control-feedback"></i>
+                </div>
+            </div>
+
+            <div class="form-group" id="_barcodeDetails" style="display: none; ">
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static"><span id="title"></span></p>
+                </div>
+                @Html.Label(DbRes.T("Titles.Author", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static"><span id="author"></span></p>
+                </div>
+                @Html.Label(DbRes.T("Titles.Edition", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <p class="form-control-static"><span id="edition"></span></p>
                 </div>
             </div>
 
@@ -167,6 +178,45 @@
             }, timespan);
         }
 
+        //Do some validation checks before submitting the form ...
+        $('#cmdOk').click(function (e) {
+            e.preventDefault();
+            var allok = valrequired();
+
+            if (allok) {
+                $('#frmNewloan').submit();
+            }
+
+        });
+
+        function valrequired() {
+            if ($('#UserID').val() === "") {
+                $('#no-user-msg').show();
+                return false;
+            } else {
+                $('#no-user-msg').hide();
+            }
+
+            if ($('#Barcode').val() === "") {
+                $('#no-barcode-msg').show();
+                return false;
+            } else {
+                $('#no-barcode-msg').hide();
+            }
+            
+            return true;
+        }
+
+        $('#frmNewloan').submit(function (e) {
+            //alert('Here');
+            e.preventDefault();
+            if ($(this).valid()) {
+                $("#warning-msg").hide();
+                $('#confirmDialog').dialog("open");
+            }
+            return false;
+        });
+
         $('#confirmDialog').dialog({
             dialogClass: "no-close",
             autoOpen: false,
@@ -191,15 +241,6 @@
             ]
         });
 
-        $('#frmNewloan').submit(function (e) {
-            e.preventDefault();
-            if ($(this).valid()) {
-                $("#warning-msg").hide();
-                $('#confirmDialog').dialog("open");
-            }
-            return false;
-        });
-
         //Set the UserId, depending on what option is used to enter user credentials ...
         $("#CheckOutUserId").change(function () {
             clearTimeout(successTimeout);
@@ -216,6 +257,7 @@
                     if (data.success) {
                         confirmBorrowedBy.text(data.Fullname);
                         $("#UserID").val(data.UserId);
+                        $('#no-user-msg').hide();
                     }
                 },
                 async: false
@@ -248,6 +290,7 @@
                         $("#UserID").val(data.UserId);
                         button.prop('disabled', false);
                         borrowerGroup.removeClass("has-error");
+                        $('#no-user-msg').hide();
                     } else {
                         details.hide();
                         errorMsg.text(data.Fullname);
@@ -335,12 +378,15 @@
             doTitleCopyDetails();
             $("#barcodeInvalid").hide();
             $("#barcodeGroup").removeClass("has-error");
+            $('#no-barcode-msg').hide();
             $("#cmdOk").prop('disabled', false);
         }
 
         function doTitleCopyDetails() {
             var details = $("#_barcodeDetails");
             var title = $("#title");
+            var author = $("#author");
+            var edition = $("#edition");
             var confirmTitle = $("#confirmTitle");
             var confirmBarcode = $("#confirmBarcode");
             var returnDue = $("#ReturnDue");
@@ -362,6 +408,8 @@
                     if (data.success) {
                         details.show();
                         title.text(data.BarcodeDetails);
+                        author.text(data.Author);
+                        edition.text(data.Edition);
                         confirmTitle.text(data.BarcodeDetails);
                         confirmBarcode.text($("#Barcode").val());
                         returnDue.val(data.ReturnDue);
@@ -427,7 +475,7 @@
             source: function (request, response) {
                 //alert('Here');
                 var title = new Array();
-                var urlGetTerms = "@Url.Action("GetAvailableTitles", "Borrowing", new { area = "" })";
+                var urlGetTerms = "@Url.Action("GetAvailableTitles", "Borrowing", new {area = ""})";
                 $.ajax({
                     async: false,
                     cache: false,

@@ -56,10 +56,9 @@ namespace slls.Controllers
                 Volumes = new SelectList(""),
                 Copies = new SelectList(""),
                 Titles = new SelectList(""),
-                SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
+                //SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
-
-            ViewData["SeeAlso"] = viewModel.SeeAlso; //MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
+            
             if (success)
             {
                 TempData["SuccessMsg"] = "Item loaned successfully. Add another?";
@@ -68,6 +67,7 @@ namespace slls.Controllers
             {
                 TempData["ErrorMsg"] = "The " + DbRes.T("Users.Username", "FieldDisplayName") + " or " + DbRes.T("Users.Barcode", "FieldDisplayName") + " you entered cannot be found. Please check and try again.";
             }
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
             ViewBag.Title = "Borrow an Item";
             return View(viewModel);
         }
@@ -101,7 +101,7 @@ namespace slls.Controllers
                 return RedirectToAction("NewLoan", new { userId = viewModel.UserID, success = true });
             }
 
-            ViewData["SeeAlso"] = viewModel.SeeAlso;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
             ViewBag.Title = "Borrow an Item";
             return View("NewLoan", viewModel);
         }
@@ -124,7 +124,7 @@ namespace slls.Controllers
             var viewModel = new ReturnLoanViewModel()
             {
                 Volumes = new SelectList(volumes, "barcode", "title"),
-                SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
+                //SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
             if (success)
@@ -146,7 +146,7 @@ namespace slls.Controllers
                 TempData["InfoDialogMsg"] = "You don't currently have any " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "!";
             }
 
-            ViewData["SeeAlso"] = viewModel.SeeAlso;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
             ViewBag.Title = "Return an Item";
             return View(viewModel);
         }
@@ -337,7 +337,9 @@ namespace slls.Controllers
             }
             catch (Exception)
             {
-                ViewData["SeeAlso"] = viewModel.SeeAlso;
+                //ViewData["SeeAlso"] = viewModel.SeeAlso;
+                MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null,
+                    "SortOrder");
                 ViewBag.Title = "Return Item";
                 return View("ReturnLoan", viewModel);
             }
@@ -351,7 +353,9 @@ namespace slls.Controllers
             }
             catch (Exception)
             {
-                ViewData["SeeAlso"] = viewModel.SeeAlso;
+                //ViewData["SeeAlso"] = viewModel.SeeAlso;
+                MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null,
+                    "SortOrder");
                 ViewBag.Title = "Return Item";
                 return View("ReturnLoan", viewModel);
             }
@@ -415,7 +419,7 @@ namespace slls.Controllers
             {
                 Volumes = new SelectList(volumes, "barcode", "title"),
                 ReturnDue = DateTime.Today.AddDays(21),
-                SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
+                //SeeAlso = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder")
             };
 
             if (success)
@@ -437,7 +441,8 @@ namespace slls.Controllers
                 TempData["InfoDialogMsg"] = "You don't currently have any " + DbRes.T("Borrowing.Items_On_Loan", "FieldDisplayName").ToLower() + "!";
             }
 
-            ViewData["SeeAlso"] = viewModel.SeeAlso;
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("SelfLoansSeeAlso",
+                ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
             ViewBag.Title = "Renew an Item";
             return View(viewModel);
         }
@@ -470,7 +475,7 @@ namespace slls.Controllers
             }
             catch (Exception)
             {
-                ViewData["SeeAlso"] = viewModel.SeeAlso;
+                ViewData["SeeAlso"] = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
                 ViewBag.Title = "Renew Loan";
                 return View("RenewLoan", viewModel);
             }
@@ -497,7 +502,7 @@ namespace slls.Controllers
             }
             catch (Exception)
             {
-                ViewData["SeeAlso"] = viewModel.SeeAlso;
+                ViewData["SeeAlso"] = MenuHelper.SeeAlso("SelfLoansSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "SortOrder");
                 ViewBag.Title = "Renew Loan";
                 return View("RenewLoan", viewModel);
             }
@@ -717,12 +722,15 @@ namespace slls.Controllers
                 });
             }
 
-            var title = volume.Copy.Title.Title1;
-            var copy = volume.Copy.CopyNumber;
+            var title = volume.Copy.Title;
+            var copy = volume.Copy;
             return Json(new
             {
                 success = true,
-                BarcodeDetails = title + " - Copy " + copy,
+                //BarcodeDetails = title + " - Copy " + copy,
+                BarcodeDetails = title.Title1 + " - Copy " + copy.CopyNumber,
+                Author = title.AuthorString,
+                Edition = title.Edition,
                 ReturnDue = DateTime.Today.AddDays(volume.LoanType.LengthDays).ToShortDateString()
             });
         }
