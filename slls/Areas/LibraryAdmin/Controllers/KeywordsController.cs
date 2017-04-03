@@ -281,7 +281,7 @@ namespace slls.Areas.LibraryAdmin
         public JsonResult Autocomplete(string term)
         {
             var keywords = new List<Keyword>();
-            if (term.Length < 3)
+            if (term.Length < 2)
             {
                 keywords = (from k in _db.Keywords
                             where k.KeywordTerm.StartsWith(term)
@@ -314,7 +314,7 @@ namespace slls.Areas.LibraryAdmin
         {
             var keywords = new List<Keyword>();
             var usedKeywords = _db.Keywords.Where(k => k.SubjectIndexes.Any());
-            if (term.Length < 3)
+            if (term.Length < 2)
             {
                 keywords = (from k in usedKeywords
                             where k.KeywordTerm.StartsWith(term)

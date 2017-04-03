@@ -1594,7 +1594,7 @@ namespace slls.Controllers
         public JsonResult KeywordsUsed(string term)
         {
             var keywords = new List<vwSelectKeywordUsed>();
-            if (term.Length < 3)
+            if (term.Length < 2)
             {
                 keywords = (from k in _db.vwSelectKeywordsUsed
                             where k.KeywordTerm.StartsWith(term)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -89,5 +90,15 @@ namespace slls.ViewModels
             NoDataTitle = "No Data!";
             NoDataMsg = "There is no data available for this report.";
         }
+    }
+
+    public class SelectCirculatedCopy
+    {
+        public int CopyId { get; set; }
+        public int TitleId { get; set; }
+        public int CopyNumber { get; set; }
+        public string Title { get; set; }
+        public string Location { get; set; }
+        //public int NonFilingChars { get; set; }
     }
 }

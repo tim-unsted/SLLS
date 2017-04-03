@@ -1133,6 +1133,7 @@ h5 {
 .ui-menu .ui-menu-item:hover {
 	background-color: #0088cc;
 	font-weight: normal;
+    list-style-image: none;
 	/*color: #ffffff;*/
 }
 
@@ -1144,18 +1145,21 @@ h5 {
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
     background-image: none;
+    margin: 0;
 }
 
-.ui-state-active, .ui-menu-item.ui-state-focus,
+.ui-state-active, .ui-menu-item .ui-state-focus,
 .ui-widget-content .ui-state-active,
 .ui-widget-header .ui-state-active {
     border: none;
-    background:#0088cc;;
+    background:#0088cc;
+    color:#ffffff;
+    margin: 0;
 }
 
-.ui-widget-content .ui-icon {
+/*.ui-widget-content .ui-icon {
     background-image: none;
-}
+}*/
 
 .ui-state-active .ui-icon {
 	background-image: none;

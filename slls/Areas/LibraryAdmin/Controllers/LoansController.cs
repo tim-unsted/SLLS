@@ -606,12 +606,26 @@ namespace slls.Areas.LibraryAdmin
         public JsonResult GetAvailableTitles(string term)
         {
             term = " " + term;
-            var titles = (from t in _db.VwSelectTitlesToBorrow
-                          where t.Title.Contains(term)
-                          orderby t.Title.Substring(t.NonFilingChars)
-                          select new { Title = t.Title, TitleId = t.TitleId, Year = t.Year, Edition = t.Edition, Authors = t.AuthorString }).Take(250);
 
-            return Json(titles, JsonRequestBehavior.AllowGet);
+            if (term.Length < 3)
+            {
+                var titles = (from t in _db.VwSelectTitlesToBorrow
+                              where t.Title.StartsWith(term)
+                              orderby t.Title.Substring(t.NonFilingChars)
+                              select new { Title = t.Title.Trim(), TitleId = t.TitleId, Year = t.Year, Edition = t.Edition, Authors = t.AuthorString }).Take(100);
+
+                return Json(titles, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var titles = (from t in _db.VwSelectTitlesToBorrow
+                              where t.Title.Contains(term)
+                              orderby t.Title.Substring(t.NonFilingChars)
+                              select new { Title = t.Title.Trim(), TitleId = t.TitleId, Year = t.Year, Edition = t.Edition, Authors = t.AuthorString }).Take(100);
+
+                return Json(titles, JsonRequestBehavior.AllowGet);
+            }
+            return null;
         }
 
         //Get a list of titles on-loan (Ajax stuff) ...

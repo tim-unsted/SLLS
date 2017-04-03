@@ -69,15 +69,51 @@ namespace slls.Areas.LibraryAdmin
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult SelectCirculatedCopies(string term)
         {
-            //if (term.Length < 3) return null;
-
             term = " " + term;
-            var titles = (from c in _db.vwSelectCirculatedCopies
-                          where c.Title.Contains(term)
-                          orderby c.Title.Substring(c.NonFilingChars)
-                          select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title, CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(250);
+            //var titles = new List<SelectCirculatedCopy>();
 
-            return Json(titles, JsonRequestBehavior.AllowGet);
+            if (term.Length < 3)
+            {
+                var titles = (from c in _db.Copies
+                    join t in _db.vwSelectJustTitles on c.TitleID equals t.TitleId
+                    where t.Title.StartsWith(term) && c.Circulated
+                    orderby t.Title.Substring(t.NonFilingChars + 1)
+                    select
+                        new
+                        {
+                            CopyId = c.CopyID,
+                            TitleId = c.TitleID,
+                            CopyNumber = c.CopyNumber,
+                            Title = t.Title.Trim(),
+                            Location =
+                                c.Location.ParentLocation != null
+                                    ? c.Location.ParentLocation.Location1 + " - " + c.Location.Location1
+                                    : c.Location.Location1
+                        }).Take(250).ToList();
+
+                return Json(titles, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var titles = (from c in _db.Copies
+                              join t in _db.vwSelectJustTitles on c.TitleID equals t.TitleId
+                              where t.Title.Contains(term) && c.Circulated
+                              orderby t.Title.Substring(t.NonFilingChars + 1)
+                              select 
+                                    new
+                                    {
+                                        CopyId = c.CopyID, 
+                                        TitleId = c.TitleID, 
+                                        CopyNumber = c.CopyNumber, 
+                                        Title = t.Title.Trim(), 
+                                        Location = c.Location.ParentLocation != null 
+                                            ? c.Location.ParentLocation.Location1 + " - " + c.Location.Location1 
+                                            : c.Location.Location1
+                                }).Take(250).ToList();
+
+                return Json(titles, JsonRequestBehavior.AllowGet);
+            }
+            return null;
         }
 
 

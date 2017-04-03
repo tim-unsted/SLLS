@@ -984,12 +984,26 @@ namespace slls.Areas.LibraryAdmin
             //if (term.Length < 3) return null;
 
             term = " " + term;
-            var titles = (from c in _db.vwSelectCopies
-                          where c.Title.Contains(term)
-                          orderby c.Title.Substring(c.NonFilingChars)
-                          select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title, CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(250);
 
-            return Json(titles, JsonRequestBehavior.AllowGet);
+            if (term.Length < 3)
+            {
+                var titles = (from c in _db.vwSelectCopies
+                              where c.Title.StartsWith(term)
+                              orderby c.Title.Substring(c.NonFilingChars)
+                              select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title.Trim(), CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(100);
+
+                return Json(titles, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var titles = (from c in _db.vwSelectCopies
+                              where c.Title.Contains(term)
+                              orderby c.Title.Substring(c.NonFilingChars)
+                              select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title.Trim(), CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(100);
+
+                return Json(titles, JsonRequestBehavior.AllowGet);
+            }
+            return null;
         }
 
         protected override void Dispose(bool disposing)

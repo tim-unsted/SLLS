@@ -5601,7 +5601,7 @@ $.widget( "ui.autocomplete", {
 	options: {
 		appendTo: null,
 		autoFocus: false,
-		delay: 100,
+		delay: 300,
 		minLength: 1,
 		position: {
 			my: "left top",

@@ -774,7 +774,6 @@
     <Content Include="Areas\LibraryAdmin\Views\Titles\_ListOrders.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Edit.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Select.cshtml" />
-    <Content Include="Areas\LibraryAdmin\Views\OrderDetails\_Select.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Delete.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\AllReceived.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\OrderDetails\Index.cshtml" />

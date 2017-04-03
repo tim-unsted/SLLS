@@ -16,7 +16,9 @@ namespace slls.Models
         public string Title { get; set; }
         public string Year { get; set; }
         public string Edition { get; set; }
-        public string AuthorString { get; set; }
+
+        [Column("AuthorString")]
+        public string Authors { get; set; }
         public int NonFilingChars { get; set; }
     }
 }

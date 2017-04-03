@@ -1644,15 +1644,27 @@ namespace slls.Areas.LibraryAdmin
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult AutoComplete(string term)
         {
-            //if (term.Length < 3) return null;
-
+            //var titles = new List<vwSelectTitle>();
             term = " " + term;
-            var titles = (from t in _db.vwSelectTitles
-                          where t.Title.Contains(term)
+
+            if (term.Length < 3)
+            {
+                var titles = (from t in _db.vwSelectTitles
+                          where t.Title.StartsWith(term)
                           orderby t.Title.Substring(t.NonFilingChars)
-                          select new { Title = t.Title, TitleId = t.TitleId, Year = t.Year, Edition = t.Edition, Authors = t.AuthorString }).Take(250);
-            
-            return Json(titles, JsonRequestBehavior.AllowGet);
+                          select new { TitleId = t.TitleId, Title = t.Title.Trim(), Year = t.Year, Edition = t.Edition, Authors = t.Authors }).Take(100);
+                return Json(titles, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                var titles = (from t in _db.vwSelectTitles
+                              where t.Title.Contains(term)
+                              orderby t.Title.Substring(t.NonFilingChars)
+                              select new { TitleId = t.TitleId, Title = t.Title.Trim(), Year = t.Year, Edition = t.Edition, Authors = t.Authors }).Take(100);
+                return Json(titles, JsonRequestBehavior.AllowGet);
+            }
+
+            return null;
         }
 
 
