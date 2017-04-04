@@ -241,7 +241,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 CopyId = id.Value,
                 TitleId = titleid,
-                Barcode = Utils.PublicFunctions.NewBarcode(),
+                //Barcode = Utils.PublicFunctions.NewBarcode(),
                 Title = title.Title1,
                 CopyNumber = copynumber.ToString(),
                 LoanTypeId = Utils.PublicFunctions.GetDefaultLoanType(title.MediaID),
@@ -270,7 +270,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 CopyID = viewModel.CopyId,
                 LabelText = viewModel.LabelText,
-                Barcode = viewModel.Barcode ?? Utils.PublicFunctions.NewBarcode(),
+                Barcode = viewModel.Barcode ?? null,
                 PrintLabel = viewModel.PrintLabel,
                 LoanTypeID = viewModel.LoanTypeId <= 0 ? Utils.PublicFunctions.GetDefaultLoanType(title.MediaID) : viewModel.LoanTypeId,
                 InputDate = DateTime.Now
@@ -287,6 +287,7 @@ namespace slls.Areas.LibraryAdmin
                 {
                     ModelState.AddModelError("", e.Message.ToString());
                 }
+
 
                 if (viewModel.AddMore)
                 {

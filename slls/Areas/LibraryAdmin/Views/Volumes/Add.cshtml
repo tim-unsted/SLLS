@@ -44,7 +44,7 @@
             @Html.Label(DbRes.T("CopyItems.Barcode", "FieldDisplayName"), new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Barcode, new { htmlAttributes = new { @class = "form-control" } })
-                <span class="help-inline">This is the unique barcode or indentifier for the @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName"). This should be the same as any barcode (e.g. label) attached to the item.</span>
+                <span class="help-inline">This is the unique barcode or indentifier for the @DbRes.T("CopyItems.Copy_Item", "FieldDisplayName"). This should be the same as any barcode (e.g. label) attached to the item. Leave blank to generate a system-defined number.</span>
                 @Html.ValidationMessageFor(model => model.Barcode, "", new { @class = "text-danger" })
             </div>
         </div>
