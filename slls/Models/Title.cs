@@ -342,5 +342,16 @@ namespace slls.Models
         [LocalDisplayName("Titles.Links", "FieldDisplayName")]
         public virtual ICollection<TitleLink> TitleLinks { get; set; }
 
+        [NotMapped]
+        public bool HasData { get; set; }
+
+        [NotMapped]
+        public string NoDataTitle { get; set; }
+
+        [NotMapped]
+        public string NoDataMsg { get; set; }
+
+
+
     }
 }

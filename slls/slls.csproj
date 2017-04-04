@@ -1166,6 +1166,7 @@
     <Content Include="Areas\LibraryAdmin\Views\Shared\_PaginateCopiesInLine.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Shared\_SelectTitle.cshtml" />
     <Content Include="Areas\CheckInOut\Views\Shared\_ViewStart.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\TitleDetails.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

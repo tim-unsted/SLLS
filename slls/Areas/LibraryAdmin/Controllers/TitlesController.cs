@@ -3625,7 +3625,12 @@ namespace slls.Areas.LibraryAdmin
                 return RedirectToAction("Select", new { callingAction = "printdetails" });
             }
 
-            return RedirectToAction("NotFound", "Home");
+            title.HasData = true;
+            title.NoDataTitle = "No Data!";
+            title.NoDataMsg = "There is no data available for this report.";
+
+            ViewBag.Title = _entityName + " Details";
+            return View("Reports/TitleDetails", title);
         }
 
         protected override void Dispose(bool disposing)

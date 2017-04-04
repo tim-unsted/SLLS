@@ -1,0 +1,173 @@
+﻿@using System.Linq
+@using Westwind.Globalization
+@model slls.Models.Title
+
+
+@Html.Partial("_PrintHeader")
+
+<h2>@ViewBag.Title</h2>
+<hr />
+
+<dl class="dl-horizontal">
+    <dt>@DbRes.T("Titles.Title", "FieldDisplayName"):</dt>
+    <dd>@Html.DisplayFor(model => model.Title1)</dd>
+</dl>
+@if (!string.IsNullOrEmpty(Model.Edition))
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.Edition", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.Edition)</dd>
+    </dl>
+}
+@if (!string.IsNullOrEmpty(Model.Series))
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.Series", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.Series)</dd>
+    </dl>
+}
+@if (!string.IsNullOrEmpty(Model.Year))
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.Published_Year", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.Year)</dd>
+    </dl>
+}
+@if (Model.Publisher != null)
+{
+    if (!string.IsNullOrEmpty(Model.Publisher.PublisherName))
+    {
+        <dl class="dl-horizontal">
+            <dt>@DbRes.T("Titles.Publisher", "FieldDisplayName"):</dt>
+            <dd>@Html.DisplayFor(model => model.Publisher.PublisherName)</dd>
+        </dl>
+    }
+}
+@if (!string.IsNullOrEmpty(Model.PlaceofPublication))
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.Place_of_Publication", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.PlaceofPublication)</dd>
+    </dl>
+}
+@if (!string.IsNullOrEmpty(Model.ISBN10))
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.ISBN_10", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.ISBN10)</dd>
+    </dl>
+}
+@if (!string.IsNullOrEmpty(Model.ISBN13))
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.ISBN_13", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.ISBN13)</dd>
+    </dl>
+}
+@if (Model.TitleAuthors.Any())
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.Authors", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.AuthorString)</dd>
+    </dl>
+}
+@if (Model.TitleEditors.Any())
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.Editors", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.EditorString)</dd>
+    </dl>
+}
+@if (Model.Classmark != null)
+{
+    if (!string.IsNullOrEmpty(Model.Classmark.Classmark1))
+    {
+        <dl class="dl-horizontal">
+            <dt>@DbRes.T("Classmarks.Classmark", "FieldDisplayName"):</dt>
+            <dd>@Html.DisplayFor(model => model.Classmark.Classmark1)</dd>
+        </dl>
+    }
+}
+@if (Model.MediaType != null)
+{
+    if (!string.IsNullOrEmpty(Model.MediaType.Media))
+    {
+        <dl class="dl-horizontal">
+            <dt>@DbRes.T("MediaTypes.Media_Type", "FieldDisplayName"):</dt>
+            <dd>@Html.DisplayFor(model => model.MediaType.Media)</dd>
+        </dl>
+    }
+}
+@if (Model.Language != null)
+{
+    if (!string.IsNullOrEmpty(Model.Language.Language1))
+    {
+        <dl class="dl-horizontal">
+            <dt>@DbRes.T("Languages.Language", "FieldDisplayName"):</dt>
+            <dd>@Html.DisplayFor(model => model.Language.Language1)</dd>
+        </dl>
+    }
+}
+@if (!string.IsNullOrEmpty(Model.Source))
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.Source", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.Source)</dd>
+    </dl>
+}
+@if (!string.IsNullOrEmpty(Model.Citation))
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.Citation", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.Citation)</dd>
+    </dl>
+}
+@if (Model.Frequency != null)
+{
+    if (!string.IsNullOrEmpty(Model.Frequency.Frequency1))
+    {
+        <dl class="dl-horizontal">
+            <dt>@DbRes.T("Frequency.Frequency", "FieldDisplayName"):</dt>
+            <dd>@Html.DisplayFor(model => model.Frequency.Frequency1)</dd>
+        </dl>
+    }
+}
+@if (!string.IsNullOrEmpty(Model.Notes))
+{
+    <dl class="dl-horizontal">
+        <dt>@DbRes.T("Titles.Notes", "FieldDisplayName"):</dt>
+        <dd>@Html.DisplayFor(model => model.Notes)</dd>
+    </dl>
+}
+@foreach (var customField in Model.TitleAdditionalFieldDatas.Where(t => t.TitleAdditionalFieldDef.IsLongText == false))
+{
+    <dl class="dl-horizontal">
+        <dt>@customField.TitleAdditionalFieldDef.FieldName:</dt>
+        <dd>@Html.Display(customField.FieldData)</dd>
+    </dl>
+}
+@foreach (var longText in Model.TitleAdditionalFieldDatas.Where(t => t.TitleAdditionalFieldDef.IsLongText == true))
+{
+    <dl class="dl-horizontal">
+        <dt>@longText.TitleAdditionalFieldDef.FieldName:</dt>
+        <dd>@Html.Raw(longText.FieldData)</dd>
+    </dl>
+}
+<hr />
+<dl class="dl-horizontal">
+    <dt>@DbRes.T("Titles.Copies", "FieldDisplayName"):</dt>
+    <dd>
+        @foreach (var copy in Model.Copies)
+        {
+            @Html.DisplayFor(model => copy.CopyLocationStatus)<br/>
+        }
+
+</dd>
+</dl>
+
+
+
+
+@section scripts {
+    <script src="@Url.Content("~/Scripts/report-no-data.js")" type="text/javascript"></script>
+}
