@@ -1,7 +1,7 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.EnterTextValuePopupViewModel
 
-@Html.Partial("_ModalEditHeader")
+@Html.Partial("_ModalAddEditHeader")
 
 @using (Html.BeginForm(Model.PostSelectAction, Model.PostSelectController, FormMethod.Post, new { @class = "form-horizontal", id="frmSelect" }))
 {

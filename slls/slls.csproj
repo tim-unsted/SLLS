@@ -1275,8 +1275,6 @@
     <Content Include="Areas\LibraryAdmin\Views\PartsReceived\BySupplier.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\PartsReceived\NextPartsExpected.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\PartsReceived\_IndexPartsExpected.cshtml" />
-    <Content Include="Views\Shared\_ModalEditHeader.cshtml" />
-    <Content Include="Views\Shared\_ModalAddHeader.cshtml" />
     <Content Include="Views\Shared\_ModalDeleteHeader.cshtml" />
     <Content Include="Views\Shared\_ModalDeleteFooter.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Copies\_ThumbnailDetails.cshtml" />
@@ -1591,6 +1589,7 @@
     <Content Include="Views\Shared\_CheckInOutFooter.cshtml" />
     <Content Include="Views\Shared\Forbidden.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Shared\AddLink.cshtml" />
+    <Content Include="Views\Shared\_ModalAddEditHeader.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Areas\CheckInOut\Models\" />

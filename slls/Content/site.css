@@ -450,17 +450,21 @@ textarea.form-control.xlarge {
 }
 
 .datepicker {
-    z-index: 100000 !important;
+    z-index: 1151 !important;
 }
 
-body.modal-open .datepicker {
-    z-index: 100000 !important;
+/*.modal-open .datepicker {
+    z-index: 1151 !important;
 }
 
 #ui-datepicker-div
     {
-        z-index: 9999999;
+        z-index: 1151 !important;
     }
+
+.ui-datepicker {
+     z-index:1151 !important;
+}*/
 
 
 .btn-long {

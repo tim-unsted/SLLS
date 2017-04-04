@@ -2,7 +2,7 @@
 @using Westwind.Globalization
 @model slls.ViewModels.UploadFileViewModel
 
-@Html.Partial("_ModalAddHeader")
+@Html.Partial("_ModalAddEditHeader")
 
 @using (Html.BeginForm("PostAdd", "Images", FormMethod.Post, new { enctype = "multipart/form-data", id = "myForm" }))
 {

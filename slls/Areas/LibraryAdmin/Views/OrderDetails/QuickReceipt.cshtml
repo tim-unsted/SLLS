@@ -2,7 +2,9 @@
 @using Westwind.Globalization
 @model slls.ViewModels.OrderReceiptsViewModel
 
-@Html.Partial("_ModalAddHeader")
+<script src="@Url.Content("~/Scripts/DatePickerReady.js")" type="text/javascript"></script>
+
+@Html.Partial("_ModalAddEditHeader")
 
 @using (Html.BeginForm("PostQuickReceipt", "OrderDetails", FormMethod.Post))
 {

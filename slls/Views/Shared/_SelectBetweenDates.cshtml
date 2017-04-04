@@ -1,7 +1,9 @@
 ﻿@using Westwind.Globalization
 @model slls.ViewModels.SelectTwoDatesViewModel
 
-@Html.Partial("_ModalEditHeader")
+<script src="@Url.Content("~/Scripts/DatePickerReady.js")" type="text/javascript"></script>
+
+@Html.Partial("_ModalAddEditHeader")
 
 @using (Html.BeginForm(Model.PostSelectAction, Model.PostSelectController, FormMethod.Post, new { @class = "form-horizontal", id="frmSelect" }))
 {

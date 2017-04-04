@@ -2,7 +2,7 @@
 @using Westwind.Globalization
 @model slls.ViewModels.LoansSelectorViewModel
 
-@Html.Partial("_ModalEditHeader")
+@Html.Partial("_ModalAddEditHeader")
 
 @using (Html.BeginForm("Post_ItemBorrowingHistoryReport", "Loans", FormMethod.Post, new { @class = "form-horizontal", id = "frmSelect" }))
 {

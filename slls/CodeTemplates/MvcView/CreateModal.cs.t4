@@ -72,7 +72,7 @@ if (ReferenceScriptLibraries) {
 }
 #>
 
-@Html.Partial("_ModalAddHeader")
+@Html.Partial("_ModalAddEditHeader")
 
 @using (Html.BeginForm()) 
 {
