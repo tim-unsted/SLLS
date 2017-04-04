@@ -86,7 +86,7 @@ namespace slls.Areas.LibraryAdmin
 
                 case "printdetails":
                 {
-                    ViewBag.Title = "Print " + _entityName;
+                    ViewBag.Title = "Print " + _entityName + " Details";
                     viewModel.BtnText = "Print " + _entityName;
                     viewModel.Message = "Select an " + _entityName.ToLower() + " to print";
                     viewModel.HelpText = "Start typing part of the " + _entityName.ToLower() +
