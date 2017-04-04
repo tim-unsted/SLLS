@@ -2,7 +2,7 @@
 @model slls.ViewModels.VolumesWithLoansIndexViewModel
 
 <div class="row">
-    @foreach (var item in Model.VolumesWithLoans)
+    @foreach (var item in Model.VolumesWithLoans.OrderBy(v => v.VolumeID))
     {
         <div class="col-md-12">
             <div class="thumbnail">

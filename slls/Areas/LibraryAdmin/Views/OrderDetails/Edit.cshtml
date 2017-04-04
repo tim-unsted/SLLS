@@ -59,34 +59,47 @@
 
 @Html.Hidden("DestUrl", @Url.Action("Edit", "OrderDetails", new { id = "REPLACEME" }))
 @Html.Hidden("AutoSuggestUrl", @Url.Action(@Model.AutoCompleteSource, "OrderDetails"))
+@Html.Hidden("BackToTitleUrl", @Url.Action("Edit", "Titles", new { id = "REPLACEME" }));
 
 @section scripts {
     <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/_SelectOrder.js")" type="text/javascript"></script>
 
     <script type="text/javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
             //REM: Hide the 'success' alert after x seconds ...
-            setTimeout(function () {
+            setTimeout(function() {
                 $(".alert-success").alert('close');
             }, 6000);
         });
 
-        $(function () {
-            $('a[data-toggle="tab"]').on('click', function (e) {
-                //save the latest tab:
-                sessionStorage.setItem('lastTab_EditOrder', $(e.target).attr('href'));
+        $(function() {
+            $('a[data-toggle="tab"]').on('click', function(e) {
+                var target = $(e.target).attr("href"); // active tab
+
+                if (target === "#backToTitle") {
+                    var url = $("#BackToTitleUrl").val();
+                    window.location.href = url.replace('REPLACEME', @Model.TitleID);
+                } else {
+                    // Save the latest tab:
+                    sessionStorage.setItem('lastTab_EditOrder', target);
+                }
+
             });
 
             //go to the latest tab, if it exists:
             var lastTab = sessionStorage.getItem('lastTab_EditOrder');
 
             if (lastTab) {
-                $('a[href="' + lastTab + '"]').click();
+                if (lastTab !== "#backToTitle") {
+                    $('a[href="' + lastTab + '"]').click();
+                }
+            } else {
+                $('a[href="#orderdetails"]').click();
             }
         });
 
-        $('#btnUpdateOrder').click(function (e) {
+        $('#btnUpdateOrder').click(function(e) {
             $('#_orderDetails').submit();
         });
 
