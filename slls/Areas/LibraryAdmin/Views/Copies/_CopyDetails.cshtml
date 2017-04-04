@@ -3,7 +3,7 @@
 @using Westwind.Globalization
 @model slls.ViewModels.CopyDetailsEditViewModel
 
-@using (Html.BeginForm("PostEdit", "Copies", FormMethod.Post))
+@using (Html.BeginForm("PostEdit", "Copies", FormMethod.Post, new { id = "_copyDetails", name = "_copyDetails" }))
 {
     @Html.AntiForgeryToken()
 
@@ -13,7 +13,7 @@
         @Html.HiddenFor(model => model.CopyId)
         @Html.HiddenFor(model => model.TitleId)
         @Html.HiddenFor(model => model.CancelledByUser)
-        @Html.HiddenFor(model => model.Cancellation)
+        @Html.HiddenFor(model => model.Cancellation, new { id = "_xxx" })
         @Html.HiddenFor(model => model.AccountYearId)
         @Html.HiddenFor(model => model.Saving)
 

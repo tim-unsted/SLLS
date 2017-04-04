@@ -36,29 +36,35 @@
 
         <div class="row" style="margin-right: 0">
             <div class="col-md-12" style="margin-top: 10px;">
+                <span id="saveDetails" class="pull-right" style="display: none;">
+                    <button type="button" id="btnSaveCopyDetails" value="Save Copy Details" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Copy Details</button>
+                </span>
+                <span id="saveCancellations" class="pull-right" style="display: none;">
+                    <button type="button" id="btnSaveCancellations" value="Save Cancellations" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Cancellations</button>
+                </span>
                 <a href="@Url.Action("Add", "Copies", new {id = @Model.TitleId, returnAction = "Edit", returnController = "Copies"})" title="Add new @DbRes.T("Copies.Copy", "FieldDisplayName")" class="btn btn-primary"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New @DbRes.T("Copies.Copy", "FieldDisplayName")</a>
             </div>
         </div>
     </div>
 </div>
 
-
+@Html.Partial("_PostSuccess")
 
 @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
 {
-    tabs.Tab(DbRes.T("Copies.Copy", "FieldDisplayName") + " Details", "tab1");
-    tabs.Tab(DbRes.T("CopyItems", "EntityType") + ViewBag.VolumesBadge, "tab2");
+    tabs.Tab(DbRes.T("Copies.Copy", "FieldDisplayName") + " Details", "details");
+    tabs.Tab(DbRes.T("CopyItems", "EntityType") + ViewBag.VolumesBadge, "copyitems");
     if (Model.IsSerialsAdmin)
     {
-        tabs.Tab(DbRes.T("Holdings", "EntityType") + ViewBag.PartsBadge, "tab3");
+        tabs.Tab(DbRes.T("Holdings", "EntityType") + ViewBag.PartsBadge, "holdings");
     }
     if (Model.IsSerialsAdmin)
     {
-        tabs.Tab(DbRes.T("Cancellations", "EntityType"), "tab4");
+        tabs.Tab(DbRes.T("Cancellations", "EntityType"), "cancellations");
     }
     if (Model.IsLoansAdmin)
     {
-        tabs.Tab(DbRes.T("Loans", "EntityType") + ViewBag.LoansBadge, "tab5");
+        tabs.Tab(DbRes.T("Loans", "EntityType") + ViewBag.LoansBadge, "loans");
     }
     tabs.Tab("<span class = 'glyphicon glyphicon-share-alt'></span> Go to " + DbRes.T("Titles.Title", "FieldDisplayName"), "BackToTitle");
 
@@ -190,16 +196,39 @@
                     // Save the latest tab:
                     sessionStorage.setItem('lastTab_EditCopy', target);
                 }
+
+                if (target == "#details") {
+                    $('#saveDetails').show();
+                } else {
+                    $('#saveDetails').hide();
+                }
+
+                if (target == "#cancellations") {
+                    $('#saveCancellations').show();
+                } else {
+                    $('#saveCancellations').hide();
+                }
             });
 
             // Go to the latest tab, if it exists:
             var lastTab = sessionStorage.getItem('lastTab_EditCopy');
 
             if (lastTab) {
-                if (lastTab !== "#tab6") {
+                if (lastTab !== "#BackToTitle") {
                     $('a[href="' + lastTab + '"]').click();
                 }
+            } else {
+                $('a[href="#details"]').click();
             }
         });
+
+        $('#btnSaveCopyDetails').click(function(e) {
+            $('#_copyDetails').submit();
+        });
+
+        $('#btnSaveCancellations').click(function (e) {
+            $('#_cancellations').submit();
+        });
+
     </script>
 }

@@ -2,7 +2,7 @@
 @using Westwind.Globalization
 @model slls.ViewModels.TitleDetailsViewModel
 
-@using (Html.BeginForm("Update", "Titles"))
+@using (Html.BeginForm("Update", "Titles", FormMethod.Post, new { id = "_details", name = "_details"}))
 {
     @Html.AntiForgeryToken()
 
@@ -17,6 +17,10 @@
             </div>
         }
         @Html.HiddenFor(model => model.TitleID)
+        
+        @*<span class="pull-right">
+            <button type="submit" value="Save Details" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Details</button>
+        </span>*@
 
         <div class="form-group">
             <div class="col-md-10">

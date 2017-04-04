@@ -9,6 +9,9 @@
     @Html.TextBoxFor(x => Model.SelectOrder, new { @placeholder = Model.PlaceHolderText, @class = "form-control" })
     <div class="row" style="margin-right: 0">
         <div class="col-md-12" style="margin-top: 10px;">
+            <span id="saveDetails" class="pull-right">
+                <button type="button" id="btnUpdateOrder" value="Save Details" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> @DbRes.T("Buttons.Confirm_Update", "Terminology")</button>
+            </span>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Add &bull; Print &bull; Duplicate &bull; Delete <span class="caret"></span>
@@ -35,7 +38,7 @@
     </div>
 }
 
-@using (Html.BeginForm("Update", "OrderDetails", FormMethod.Post))
+@using (Html.BeginForm("Update", "OrderDetails", FormMethod.Post, new { id = "_orderDetails", name = "_orderDetails" }))
 {
     @Html.AntiForgeryToken()
     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -81,6 +84,10 @@
             if (lastTab) {
                 $('a[href="' + lastTab + '"]').click();
             }
+        });
+
+        $('#btnUpdateOrder').click(function (e) {
+            $('#_orderDetails').submit();
         });
 
     </script>

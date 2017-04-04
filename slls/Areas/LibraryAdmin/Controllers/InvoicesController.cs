@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
 using slls.Models;
+using slls.Utils.Helpers;
 
 namespace slls.Areas.LibraryAdmin.Controllers
 {
@@ -57,8 +58,8 @@ namespace slls.Areas.LibraryAdmin.Controllers
             var users = UserManager.Users.ToList();
             ViewBag.AccountYearID = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", orderDetail.AccountYearID);
             ViewBag.BudgetCodeID = new SelectList(_db.BudgetCodes, "BudgetCodeID", "BudgetCode1", orderDetail.BudgetCodeID);
-            ViewBag.Authority = new SelectList(users, "Id", "Username", orderDetail.AuthoriserUser.Id);
-            ViewBag.RequestedBy = new SelectList(users, "Id", "Username", orderDetail.RequesterUser.Id);
+            ViewBag.Authority = SelectListHelper.SelectUsersByLastname(liveOnly: false, id: orderDetail.AuthoriserUser.Id);
+            ViewBag.RequestedBy = SelectListHelper.SelectUsersByLastname(liveOnly: false, id: orderDetail.RequesterUser.Id);
             ViewBag.OrderCategoryID = new SelectList(_db.OrderCategories, "OrderCategoryID", "OrderCategory1", orderDetail.OrderCategoryID);
             ViewBag.SupplierID = new SelectList(_db.Suppliers, "SupplierID", "SupplierName", orderDetail.SupplierID);
             ViewBag.TitleID = new SelectList(_db.Titles, "TitleID", "Title1", orderDetail.TitleID);
@@ -70,7 +71,7 @@ namespace slls.Areas.LibraryAdmin.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "OrderID,OrderNo,OrderDate,SupplierID,TitleID,Item,NumCopies,Price,VAT,Authority,RequestedBy,OnApproval,Expected,AccountYearID,OrderCategoryID,BudgetCodeID,Cancelled,Chased,Report,ReceivedDate,Accepted,ReturnedDate,InvoiceRef,Passed,MonthSubDue,InvoiceDate,Link,Notes,LastModified,Deleted,RowVersion")] OrderDetail orderDetail)
+        public ActionResult Edit(OrderDetail orderDetail)
         {
             if (ModelState.IsValid)
             {
@@ -81,8 +82,8 @@ namespace slls.Areas.LibraryAdmin.Controllers
             var users = UserManager.Users.ToList();
             ViewBag.AccountYearID = new SelectList(_db.AccountYears, "AccountYearID", "AccountYear1", orderDetail.AccountYearID);
             ViewBag.BudgetCodeID = new SelectList(_db.BudgetCodes, "BudgetCodeID", "BudgetCode1", orderDetail.BudgetCodeID);
-            ViewBag.Authority = new SelectList(users, "Id", "Username", orderDetail.AuthoriserUser.Id);
-            ViewBag.RequestedBy = new SelectList(users, "Id", "Username", orderDetail.RequesterUser.Id);
+            ViewBag.Authority = SelectListHelper.SelectUsersByLastname(liveOnly: false,id: orderDetail.AuthoriserUser.Id);
+            ViewBag.RequestedBy = SelectListHelper.SelectUsersByLastname(liveOnly: false, id: orderDetail.RequesterUser.Id);
             ViewBag.OrderCategoryID = new SelectList(_db.OrderCategories, "OrderCategoryID", "OrderCategory1", orderDetail.OrderCategoryID);
             ViewBag.SupplierID = new SelectList(_db.Suppliers, "SupplierID", "SupplierName", orderDetail.SupplierID);
             ViewBag.TitleID = new SelectList(_db.Titles, "TitleID", "Title1", orderDetail.TitleID);

@@ -2,7 +2,7 @@
 @using Westwind.Globalization
 @model slls.ViewModels.CopyDetailsEditViewModel
 
-@using (Html.BeginForm("PostEdit", "Copies", FormMethod.Post))
+@using (Html.BeginForm("PostEdit", "Copies", FormMethod.Post, new { id = "_cancellations", name = "_cancellations" }))
 {
     @Html.AntiForgeryToken()
 
@@ -39,7 +39,7 @@
         <div class="form-group">
             <div class="col-md-3">
                 @Html.LabelFor(model => model.Cancellation)
-                @Html.EditorFor(model => model.Cancellation, new { @class = "form-control", id = "dateCancelled", placeholder = "" })
+                @Html.EditorFor(model => model.Cancellation, new { @class = "form-control", @id = "_cancellationDate" })
                 @Html.ValidationMessageFor(model => model.Cancellation, "", new { @class = "text-danger" })
             </div>
             <div class="col-md-6">

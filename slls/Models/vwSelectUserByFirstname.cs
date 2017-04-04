@@ -13,5 +13,6 @@ namespace slls.Models
         [Key]
         public string Id { get; set; }
         public string FullName { get; set; }
+        public bool IsLive { get; set; }
     }
 }

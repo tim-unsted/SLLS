@@ -148,7 +148,7 @@ namespace slls.Areas.LibraryAdmin
                     viewModel.BorrowerUserId
                 });
 
-                ViewBag.UserID = new SelectList(users, "Id", "Fullname", viewModel.BorrowerUserId);
+                ViewBag.UserID = SelectListHelper.SelectUsersByLastname(liveOnly: false, id: viewModel.BorrowerUserId);
                 ViewBag.Title = "Edit Loan";
                 return PartialView(viewModel);
             }
@@ -193,7 +193,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 Borrowed = DateTime.Today,
                 ReturnDue = DateTime.Today.AddDays(21),
-                Users = new SelectList(users, "Id", "Fullname", userId),
+                Users = SelectListHelper.SelectUsersByLastname(liveOnly: true, id:userId),
                 Volumes = new SelectList(volumes, "VolumeID", "Barcode"),
                 Copies = new SelectList(copies, "CopyID", "CopyNumber"),
                 //Titles = new SelectList(titles, "TitleID", "Title"),

@@ -941,8 +941,9 @@ namespace slls.Areas.LibraryAdmin
                 OrderCategories = SelectListHelper.OrderCategoryList(PublicFunctions.GetDefaultValue("OrderDetails", "OrderCategoryID")),
                 BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a ", true, false),
                 AccountYears = SelectListHelper.AccountYearsList(id: GetCurrentAccountYearId(), addNew: false),
-                RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
-                AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
+                RequestUsers = SelectListHelper.SelectUsersByLastname(liveOnly: true),
+                AuthorityUsers = SelectListHelper.SelectUsersByLastname(liveOnly: true),
+                //AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
                 CallingAction = "Edit",
                 CallingController = "Titles"
             };
@@ -967,8 +968,8 @@ namespace slls.Areas.LibraryAdmin
                 OrderCategories = SelectListHelper.OrderCategoryList(PublicFunctions.GetDefaultValue("OrderDetails", "OrderCategoryID")),
                 AccountYears = SelectListHelper.AccountYearsList(id:GetCurrentAccountYearId(), addNew:false),
                 BudgetCodes = SelectListHelper.BudgetCodesList(PublicFunctions.GetDefaultValue("OrderDetails", "BudgetCodeID"), "Select a ", true, false),
-                RequestUsers = new SelectList(UserManager.Users, "Id", "FullnameRev"),
-                AuthorityUsers = new SelectList(UserManager.Users, "Id", "FullnameRev")
+                RequestUsers = SelectListHelper.SelectUsersByLastname(liveOnly: true),
+                AuthorityUsers = SelectListHelper.SelectUsersByLastname(liveOnly: true)
             };
 
             ViewBag.Title = "Add " + DbRes.T("Orders.New_Order", "FieldDisplayName");
@@ -1221,8 +1222,8 @@ namespace slls.Areas.LibraryAdmin
                 VAT = orderDetail.VAT,
                 Titles = SelectListHelper.TitlesList(orderDetail.TitleID),
                 Suppliers = SelectListHelper.SupplierList(id:orderDetail.SupplierID ?? 0),
-                RequestUsers = SelectListHelper.SelectUsersByLastname(),
-                AuthorityUsers = SelectListHelper.SelectUsersByLastname(),
+                RequestUsers = SelectListHelper.SelectUsersByLastname(liveOnly:false),
+                AuthorityUsers = SelectListHelper.SelectUsersByLastname(liveOnly: false),
                 CallingAction = "Edit",
                 PlaceHolderText = "To view/edit another order, start typing part of the name of the ordered item ...",
                 SelectOrder = _db.vwSelectJustTitles.Find(orderDetail.TitleID).Title, //orderDetail.Title.Title1,
@@ -1264,7 +1265,7 @@ namespace slls.Areas.LibraryAdmin
         // POST: LibraryAdmin/OrderDetails/Update/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Update([Bind(Include = "OrderID,OrderNo,OrderDate,SupplierID,TitleID,Item,NumCopies,Price,VAT,Authority,RequestedBy,OnApproval,Expected,AccountYearID,OrderCategoryID,BudgetCodeID,Cancelled,Chased,Report,ReceivedDate,Accepted,ReturnedDate,InvoiceRef,Passed,MonthSubDue,InvoiceDate,Link,Notes,CallingAction,SelectedTab")] OrderDetailsEditViewModel viewModel)
+        public ActionResult Update(OrderDetailsEditViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -1314,8 +1315,8 @@ namespace slls.Areas.LibraryAdmin
             ViewData["AccountYearID"] = SelectListHelper.AccountYearsList(id: viewModel.AccountYearID ?? 0, addNew: false);
             ViewData["BudgetCodeID"] = SelectListHelper.BudgetCodesList(id: viewModel.BudgetCodeID ?? 0, addNew: false);
             ViewData["OrderCategoryID"] = SelectListHelper.OrderCategoriesList(id: viewModel.OrderCategoryID ?? 0, addNew: false);
-            ViewData["Authority"] = new SelectList(UserManager.Users, "Id", "Username", viewModel.Authority);
-            ViewData["RequestedBy"] = new SelectList(UserManager.Users, "Id", "Username", viewModel.RequestedBy);
+            ViewData["Authority"] =SelectListHelper.SelectUsersByLastname(liveOnly: false, id: viewModel.Authority);
+            ViewData["RequestedBy"] = SelectListHelper.SelectUsersByLastname(liveOnly: false, id: viewModel.RequestedBy);
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("ordersSeeAlso", "Edit");
 
             switch (viewModel.CallingAction)

@@ -46,9 +46,15 @@
 
 <div class="alert alert-info">
     @Html.Partial("_Select")
-
+    
     <div class="row" style="margin-right: 0">
         <div class="col-md-12" style="margin-top: 10px;">
+            <span id="saveDetails" class="pull-right" style="display: none;">
+                <button type="button" id="btnSaveDetails" value="Save Details" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Details</button>
+            </span>
+            <span id="saveCustomFields" class="pull-right" style="display: none;">
+                <button type="button" id="btnSaveCustomFields" value="Save Details" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Save Custom Fields</button>
+            </span>
             <div class="btn-group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Add &bull; Print &bull; Duplicate &bull; Delete <span class="caret"></span>
@@ -64,7 +70,7 @@
     </div>
 </div>
 
-
+@*@Html.Partial("_PostSuccess")*@
 @Html.Partial("_PostAlert")
 
 @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
@@ -244,11 +250,11 @@
 @Html.Hidden("AddPublisherUrl", @Url.Action("_add", "Publishers"))
 
 @section Scripts{
-@*@Scripts.Render("~/bundles/datatables")*@
-<script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/DataTables/LibraryAdmin/OrderDetails/_ListOrders.js")" type="text/javascript"></script>
-@Scripts.Render("~/bundles/selectTitle")
-@Scripts.Render("~/bundles/titlesAddEdit")
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/OrderDetails/_ListOrders.js")" type="text/javascript"></script>
+    @Scripts.Render("~/bundles/selectTitle")
+    @Scripts.Render("~/bundles/titlesAddEdit")
 
     <script type="text/javascript">
 
@@ -262,7 +268,21 @@
         $(function() {
             $('a[data-toggle="tab"]').on('click', function(e) {
                 //save the latest tab:
-                sessionStorage.setItem('lastTab_EditTitle', $(e.target).attr('href'));
+                var currentTab = $(e.target).attr('href');
+
+                sessionStorage.setItem('lastTab_EditTitle', currentTab);
+
+                if (currentTab == "#details") {
+                    $('#saveDetails').show();
+                } else {
+                    $('#saveDetails').hide();
+                }
+
+                if (currentTab == "#custom") {
+                    $('#saveCustomFields').show();
+                } else {
+                    $('#saveCustomFields').hide();
+                }
             });
 
             //go to the latest tab, if it exists:
@@ -270,6 +290,8 @@
 
             if (lastTab) {
                 $('a[href="' + lastTab + '"]').click();
+            } else {
+                $('a[href="#details"]').click();
             }
         });
 
@@ -279,6 +301,14 @@
         var isChanged = false;
         $('input,select,textarea').change(function() {
             isChanged = true;
+        });
+
+        $('#btnSaveDetails').click(function(e) {
+            $('#_details').submit();
+        });
+
+        $('#btnSaveCustomFields').click(function (e) {
+            $('#_customFields').submit();
         });
 
     </script>

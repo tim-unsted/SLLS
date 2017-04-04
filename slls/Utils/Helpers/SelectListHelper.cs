@@ -1342,16 +1342,18 @@ namespace slls.Utils.Helpers
             return list.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
         }
 
-        public static IEnumerable<SelectListItem> SelectUsersByFirstname(string id = "", string msg = "Select a ")
+        public static IEnumerable<SelectListItem> SelectUsersByFirstname(string id = "", string msg = "Select a ", bool addDefault = false, bool liveOnly = true)
         {
             DbEntities db = new DbEntities();
-            var usersList = new List<SelectListItem>
+            var usersList = new List<SelectListItem>();
+            
+            if (addDefault)
             {
-                new SelectListItem
+                usersList.Add(new SelectListItem
                 {
                     Text = msg + DbRes.T("Users.User", "FieldDisplayName"),
                     Value = "0"
-                }
+                });
             };
 
             //Add the actual users ...
@@ -1368,20 +1370,28 @@ namespace slls.Utils.Helpers
             return usersList.Select(x => new SelectListItem { Selected = (x.Value == id.ToString()), Text = x.Text, Value = x.Value });
         }
 
-        public static IEnumerable<SelectListItem> SelectUsersByLastname(string id = "", string msg = "Select a ")
+        public static IEnumerable<SelectListItem> SelectUsersByLastname(string id = "", string msg = "Select a ", bool addDefault = false, bool liveOnly = true)
         {
             DbEntities db = new DbEntities();
-            var usersList = new List<SelectListItem>
+            var usersList = new List<SelectListItem>();
+            
+            if (addDefault)
             {
-                new SelectListItem
+                usersList.Add(new SelectListItem
                 {
                     Text = msg + DbRes.T("Users.User", "FieldDisplayName"),
                     Value = "0"
-                }
+                });
             };
 
             //Add the actual users ...
-            var users = db.vwSelectUsersByLastnames;
+            var users = db.vwSelectUsersByLastnames.ToList();
+
+            if (liveOnly)
+            {
+                users = users.Where(u => u.IsLive).ToList();
+            }
+
             foreach (var item in users.OrderBy(x => x.FullNameRev))
             {
                 usersList.Add(new SelectListItem

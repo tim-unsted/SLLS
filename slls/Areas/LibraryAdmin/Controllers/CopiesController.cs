@@ -317,7 +317,7 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: Copies/Edit/5
-        public ActionResult Edit(int id = 0)
+        public ActionResult Edit(int id = 0, bool success = false)
         {
             //if (id == null)
             //{
@@ -393,12 +393,16 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.RecordCount = query.Count();
             ViewBag.RecordType = "Copy";
 
+            if (success)
+            {
+                TempData["SuccessMsg"] = _entityName + " details have been updated successfully.";
+            }
+
             ViewData["CirculationMsgID"] = SelectListHelper.CirculationMessageList(id: copy.CirculationMsgID ?? 0, msg: null, addDefault: false, addNew: false);
             ViewData["LocationID"] = SelectListHelper.OfficeLocationList(copy.LocationID ?? 0, null, false); 
             ViewData["StatusID"] = SelectListHelper.StatusList(copy.StatusID ?? 0, null, false, true);
             ViewData["CancelledYear"] = SelectListHelper.AccountYearsList(id:copy.AccountYearID ?? 0, addNew:false);
-            ViewData["CancelledBy"] = SelectListHelper.SelectUsersByLastname(); //new SelectList(_db.Users.Where(u => u.IsLive).OrderBy(u => u.Lastname).ThenBy(u => u.Firstname), "Id", "FullnameRev");
-            //ViewData["CopyId"] = SelectListHelper.AllCopiesList(id: id, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName"));
+            ViewData["CancelledBy"] = SelectListHelper.SelectUsersByLastname(liveOnly:false, addDefault: true);
             ViewBag.VolumesCount = copy.Volumes.Count();
             ViewBag.PartsCount = copy.PartsReceived.Count();
             ViewBag.LoansCount = copy.Volumes.Count(v => v.OnLoan);
@@ -436,7 +440,7 @@ namespace slls.Areas.LibraryAdmin
                 var opacCopy = copy.StatusType.Opac;
 
                 copy.CopyID = viewModel.CopyId;
-                copy.AccountYearID = viewModel.AccountYearId;
+                copy.AccountYearID = viewModel.AccountYearId == 0 ? null : viewModel.AccountYearId;
                 copy.AcquisitionsList = viewModel.AcquisitionsList;
                 copy.AcquisitionsNo = viewModel.AcquisitionsNo;
                 copy.Bind = viewModel.Bind;
@@ -463,7 +467,7 @@ namespace slls.Areas.LibraryAdmin
                     CacheProvider.RemoveCache("newtitles");
                 }
                 
-                return RedirectToAction("Edit", "Copies", new { id = copy.CopyID });
+                return RedirectToAction("Edit", "Copies", new { id = copy.CopyID, success = true });
             }
 
             return RedirectToAction("Edit", "Copies", new { id = viewModel.CopyId });

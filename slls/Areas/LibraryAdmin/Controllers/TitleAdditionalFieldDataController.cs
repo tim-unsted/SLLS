@@ -102,13 +102,12 @@ namespace slls.Areas.LibraryAdmin
                         _db.TitleAdditionalFieldDatas.Add(newData);
                         _db.SaveChanges();
                     }
-
                 }
             }
 
             var titleId = from t in viewModel
                           select t.TitleId;
-            return RedirectToAction("Edit", "Titles", new { id = titleId.FirstOrDefault() });
+            return RedirectToAction("Edit", "Titles", new { id = titleId.FirstOrDefault(), success = true });
         }
 
 

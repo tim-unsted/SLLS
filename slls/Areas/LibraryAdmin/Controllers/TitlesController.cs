@@ -1398,7 +1398,7 @@ namespace slls.Areas.LibraryAdmin
         // GET: Titles/Edit/5
         [Route("Edit/{id}")]
         [Route("~/LibraryAdmin/Titles/Edit/{id}")]
-        public ActionResult Edit(int id = 0)
+        public ActionResult Edit(int id = 0, bool success = false)
         {
             if (id == 0)
             {
@@ -1424,7 +1424,11 @@ namespace slls.Areas.LibraryAdmin
                 SelectTitle = title.Title1
             };
 
-            //ViewData["TitleId"] = SelectListHelper.TitlesList(id);
+            if (success)
+            {
+                TempData["SuccessMsg"] = _entityName + " details have been updated successfully.";
+            }
+
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
             ViewBag.SubjectCount = viewModel.SubjectIndexes.Count();
             ViewBag.CopiesCount = viewModel.Copies.Count();
@@ -1493,7 +1497,7 @@ namespace slls.Areas.LibraryAdmin
                 title.ModifiedBy = Utils.PublicFunctions.GetCurrentUserName();
                 _repository.Update(title);
 
-                return RedirectToAction("Edit", new { id = titleId });
+                return RedirectToAction("Edit", new { id = titleId, success = true });
             }
             return RedirectToAction("Edit", new { id = titleId });
         }
