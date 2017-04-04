@@ -41,7 +41,7 @@
             <td>
                 @if (item.Circulations.Any())
                 {
-                    <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn-link" title="View/Edit Circulation List"><span class="badge badge-link">@item.Circulations.Count</span></a>
+                    <a href="@Url.Action("CirculationList", new {id = item.CopyID})" class="btn-link" title="View/Edit Circulation List"><span class="badge badge-link">@item.Circulations.Count</span></a>
                 }
             </td>
             <td>
@@ -58,7 +58,7 @@
                 {
                     <a href="@Url.Action("EmailAllRecipients", new {id = item.CopyID})" class="modal-link" title="Email All @DbRes.T("Circulation.Recipients", "FieldDisplayName")"><span class="glyphicon glyphicon-envelope"></span></a>
                 }
-                <a href="@Url.Action("CirculationList", new {copy = item.CopyID})" class="btn btn-link" title="View/Edit Circulation List"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
+                <a href="@Url.Action("CirculationList", new {id = item.CopyID})" class="btn btn-link" title="View/Edit Circulation List"><span aria-hidden="true" class="glyphicon glyphicon-user"></span></a>
                 <a href="@Url.Action("RemoveFromCirculation", new {id = item.CopyID})" class="btn btn-link modal-link" title="Remove from Circulation"><span aria-hidden="true" class="glyphicon glyphicon-minus-sign"></span></a>
             </td>
         </tr>

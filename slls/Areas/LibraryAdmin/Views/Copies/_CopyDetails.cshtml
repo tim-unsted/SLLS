@@ -108,7 +108,7 @@
                 <div class="form-group">
                     @Html.Label(DbRes.T("Circulation.Circulation_List", "FieldDisplayName"), htmlAttributes: new { @class = "control-label-left col-md-2" })
                     <div class="col-md-10">
-                        @Html.ActionLink(Model.Circulations.Any() ? "No recipients" : Model.Circulations.Count().ToString() + " recipient(s)", "CirculationList", "Circulation", new { copy = Model.CopyId }, new { @class = "form-control btn-link" })
+                        @Html.ActionLink(!Model.Circulations.Any() ? "No recipients" : Model.Circulations.Count().ToString() + " recipient(s)", "CirculationList", "Circulation", new { id = Model.CopyId }, new { @class = "form-control btn-link" })
                     </div>
                 </div>
 
