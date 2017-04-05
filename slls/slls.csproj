@@ -364,6 +364,7 @@
     <Compile Include="Models\vwSelectCirculatedCopy.cs" />
     <Compile Include="Models\vwSelectCopy.cs" />
     <Compile Include="Models\vwSelectCopyWithCheckins.cs" />
+    <Compile Include="Models\vwSelectKeywords.cs" />
     <Compile Include="Models\vwSelectKeywordsUsed.cs" />
     <Compile Include="Models\vwSelectOrder.cs" />
     <Compile Include="Models\vwSelectSupplier.cs" />

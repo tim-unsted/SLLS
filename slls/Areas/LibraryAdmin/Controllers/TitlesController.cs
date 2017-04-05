@@ -1447,6 +1447,18 @@ namespace slls.Areas.LibraryAdmin
             return PartialView("_ListKeywords", subjectIndexes);
         }
 
+        public ActionResult _ListAuthors(int id = 0)
+        {
+            var titleAuthors = _db.TitleAuthors.Where(ta => ta.TitleId == id);
+            return PartialView("_ListAuthors", titleAuthors);
+        }
+
+        public ActionResult _ListEditors(int id = 0)
+        {
+            var titleEditors = _db.TitleEditors.Where(ta => ta.TitleID == id);
+            return PartialView("_ListEditors", titleEditors);
+        }
+
         public ActionResult _ListTitleLinks(int id = 0)
         {
             var titleLinks = _db.TitleLinks.Where(l => l.TitleID == id);

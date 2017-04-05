@@ -1,3 +1,32 @@
-﻿@model System.Collections.Generic.IEnumerable<slls.Models.TitleEditor>
+﻿@using System
+@using System.Linq
+@using Westwind.Globalization
+@model System.Collections.Generic.IEnumerable<slls.Models.TitleEditor>
 
-@Html.Partial("~/Areas/LibraryAdmin/Views/TitleEditors/_EditorList.cshtml", Model)
+<div class="panel listpanel">
+
+    @if (Model.Any())
+    {
+        <table class="listtable">
+            @foreach (var item in Model.OrderBy(x => x.OrderSeq))
+            {
+                <tr>
+                    <td>
+                        @if (String.IsNullOrEmpty(item.Author.DisplayName))
+                        {
+                            <a href="@Url.Action("Edit", "Authors", new {id = item.AuthorID})" class="btn-link modal-link" title="Edit this @DbRes.T("Authors.Editor", "FieldDisplayName")"></a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Action("Edit", "Authors", new { id = item.AuthorID })" class="btn-link modal-link" title="Edit this @DbRes.T("Authors.Editor", "FieldDisplayName")">@item.Author.DisplayName</a>
+                        }
+                    </td>
+                    <td class="just-right">
+                        <a href="@Url.Action("Edit", "TitleEditors", new {id = item.TitleEditorID})" class="btn btn-link modal-link" title="Edit Title @DbRes.T("Authors.Editor", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil" /></a>
+                        <a href="@Url.Action("Delete", "TitleEditors", new { id = item.TitleEditorID })" class="btn btn-link modal-link" title="Remove this @DbRes.T("Authors.Editor", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash" /></a>
+                    </td>
+                </tr>
+            }
+        </table>
+    }
+</div>

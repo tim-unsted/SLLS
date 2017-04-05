@@ -134,7 +134,6 @@
                     @if (ViewBag.LinksCount > 0)
                     {
                         @Html.Partial("_ListTitleLinks", Model.TitleLinks)
-                        @*@Html.Action("_ListTitleLinks", new { id = Model.TitleID })*@
                     }
                     else
                     {
@@ -156,7 +155,6 @@
                     @if (ViewBag.LongTextsCount > 0)
                     {
                         @Html.Partial("_ListLongTexts", Model.TitleAdditionalFieldDatas)
-                        @*@Html.Action("_ListLongTexts", new { id = Model.TitleID })*@
                     }
                     else
                     {

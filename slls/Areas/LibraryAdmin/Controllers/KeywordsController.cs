@@ -280,17 +280,18 @@ namespace slls.Areas.LibraryAdmin
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult Autocomplete(string term)
         {
-            var keywords = new List<Keyword>();
-            if (term.Length < 2)
+            term = " " + term;
+            var keywords = new List<vwSelectKeyword>();
+            if (term.Length < 3)
             {
-                keywords = (from k in _db.Keywords
+                keywords = (from k in _db.vwSelectKeywords
                             where k.KeywordTerm.StartsWith(term)
                             orderby k.KeywordTerm
                             select k).Take(100).ToList();
             }
             else
             {
-                keywords = (from k in _db.Keywords
+                keywords = (from k in _db.vwSelectKeywords
                             where k.KeywordTerm.Contains(term)
                             orderby k.KeywordTerm
                             select k).Take(100).ToList();
@@ -300,7 +301,7 @@ namespace slls.Areas.LibraryAdmin
 
             foreach (var x in keywords)
             {
-                list.Add(new SelectListItem { Text = x.KeywordTerm, Value = x.KeywordID.ToString() });
+                list.Add(new SelectListItem { Text = x.KeywordTerm, Value = x.KeywordId.ToString() });
             }
 
             var result = list.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();

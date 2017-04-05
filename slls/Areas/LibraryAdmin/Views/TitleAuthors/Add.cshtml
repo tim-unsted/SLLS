@@ -47,4 +47,29 @@
     </div>
 }
 
-@Scripts.Render("~/bundles/modalAddEditHeader")
+@Scripts.Render("~/bundles/modalAddEditHeaderNoJson")
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        $('#SelectedAuthors').focus();
+
+        $('form').submit(function (e) {
+            e.preventDefault();
+            $.post(this.action, $(this).serialize(), function (response) {
+                if (response.error) {
+                    alert(response.error);
+                } else {
+                    $('#stdModal').modal('hide');
+                    $('#lrgModal').modal('hide');
+                    var titleId = $('#TitleId').val();
+                    var url = '@Url.Action("_ListAuthors", "Titles", new { id = "REPLACEME" })';
+                    $.get(url.replace('REPLACEME', titleId), function (data) {
+                        $("#_listAuthors").html(data);
+                    });
+
+                }
+            }, 'json');
+        });
+    });
+
+</script>
