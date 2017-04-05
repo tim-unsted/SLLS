@@ -1419,7 +1419,7 @@ namespace slls.Areas.LibraryAdmin
                 OrderDetails = title.OrderDetails,
                 TitleImages = title.TitleImages,
                 TitleLinks = title.TitleLinks,
-                TitleAdditionalFieldDatas = title.TitleAdditionalFieldDatas, 
+                TitleAdditionalFieldDatas = title.TitleAdditionalFieldDatas.Where(d => d.TitleAdditionalFieldDef.IsLongText).ToList(), 
                 SubjectIndexes = title.SubjectIndexes,
                 SelectTitle = title.Title1
             };
@@ -1434,7 +1434,7 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.CopiesCount = viewModel.Copies.Count();
             ViewBag.ImagesCount = viewModel.TitleImages.Count();
             ViewBag.LinksCount = viewModel.TitleLinks.Count();
-            ViewBag.LongTextsCount = viewModel.TitleAdditionalFieldDatas.Count;
+            ViewBag.LongTextsCount = viewModel.TitleAdditionalFieldDatas.Count();
             ViewBag.OrdersCount = viewModel.OrderDetails.Count();
             ViewBag.Message = _entityName + " to edit:";
             ViewBag.Title = _entityName + " Details (View/Edit)";

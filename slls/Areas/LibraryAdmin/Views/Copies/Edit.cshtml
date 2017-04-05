@@ -31,7 +31,7 @@
 
     <h2>@ViewBag.Title</h2>
     <div class="alert alert-info">
-        
+
         @Html.Partial("_SelectCopy")
 
         <div class="row" style="margin-right: 0">
@@ -146,7 +146,7 @@
             <div>
                 <span class="form-control"><a href="@Url.Action("Edit", "Titles", new {id = @Model.TitleId}, null)" title="Go to @DbRes.T("Titles.Title", "FieldDisplayName")">@Model.Title</a></span>
             </div>
-    <br/>
+            <br />
             <div id="Loans">
                 @Html.Action("_ItemsOnLoanByCopy", "Loans", new { id = Model.CopyId })
             </div>
@@ -160,21 +160,28 @@
                 &nbsp;&nbsp;or&nbsp;<input type="button" value="Cancel" class="btn-link" onclick="window.history.back();" />
             </div>
         }
+    }
 
-        using (tabs.BeginPanel())
-        {
-            
-        }
+    using (tabs.BeginPanel())
+    {
+        <br /><br />
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-md-12">
+                    <p>Please wait ... loading @DbRes.T("Titles.Title", "FieldDisplayName") details</p>
+                </div>
+            </div>
+        </div>
     }
 }
 
 @Html.Hidden("AutoSuggestUrl", @Url.Action("AutoComplete", "Copies"))
-@Html.Hidden("BackToTitleUrl", @Url.Action("Edit", "Titles", new {id = "REPLACEME"}));
+@Html.Hidden("BackToTitleUrl", @Url.Action("Edit", "Titles", new { id = "REPLACEME" }));
 @Html.Hidden("DestUrl", @Url.Action("Edit", "Copies", new { id = "REPLACEME" }))
 
 @section scripts {
-<script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
-<script src="@Url.Content("~/Scripts/_SelectCopy.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/Scripts/_SelectCopy.js")" type="text/javascript"></script>
 
 
     <script type="text/javascript">
@@ -185,7 +192,7 @@
                 $(".alert-dismissable").alert('close');
             }, 6000);
         });
-        
+
         $(function() {
             $('a[data-toggle="tab"]').on('click', function(e) {
                 var target = $(e.target).attr("href"); // active tab

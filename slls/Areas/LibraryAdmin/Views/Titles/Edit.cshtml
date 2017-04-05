@@ -154,7 +154,7 @@
                     </p>
                     @if (ViewBag.LongTextsCount > 0)
                     {
-                        @Html.Partial("_ListLongTexts", Model.TitleAdditionalFieldDatas.Where(x => x.TitleAdditionalFieldDef.IsLongText))
+                        @Html.Partial("_ListLongTexts", Model.TitleAdditionalFieldDatas)
                         @*@Html.Action("_ListLongTexts", new { id = Model.TitleID })*@
                     }
                     else
