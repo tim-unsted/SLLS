@@ -68,12 +68,7 @@
     $(document).ready(function () {
 
         $('#PartReceived').focus();
-
-        $('#btnCancel').click(function () {
-            $('#lrgModal').modal('hide');
-            $('#stdModal').modal('hide');
-        });
-
+        
         $('form').submit(function (e) {
             e.preventDefault();
             $.post(this.action, $(this).serialize(), function (response) {

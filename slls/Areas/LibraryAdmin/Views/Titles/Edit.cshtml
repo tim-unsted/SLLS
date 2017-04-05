@@ -111,8 +111,9 @@
                     </p>
                     @if (ViewBag.SubjectCount > 0)
                     {
-                        @Html.Partial("_ListKeywords", Model.SubjectIndexes)
-                        @*@Html.Action("_ListKeywords", new { id = Model.TitleID })*@
+                        <span id="_listKeywords">
+                            @Html.Partial("_ListKeywords", Model.SubjectIndexes)
+                        </span>
                     }
                     else
                     {

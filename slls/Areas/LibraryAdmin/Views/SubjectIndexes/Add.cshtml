@@ -13,18 +13,9 @@
             @Html.HiddenFor(model => model.TitleId)
 
             <div class="alert alert-info">
-                @*@if (Model.LargeData)
-                    {*@
                 <p>
                     <strong><span class="glyphicon glyphicon-info-sign"></span></strong> Start typing the @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() you wish to add in the box below. You can add a new @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() if the one you require does not already exist.
                 </p>
-                @*}
-                    else
-                    {
-                        <p>
-                            <strong><span class="glyphicon glyphicon-info-sign"></span></strong> Select the @DbRes.T("Keywords.Keyword", "FieldDisplayName").ToLower() you wish to add from the drop-down list below.
-                        </p>
-                    }*@
             </div>
 
             <div class="form-group">
@@ -34,8 +25,6 @@
                 </div>
             </div>
 
-            @*@if (Model.LargeData)
-                {*@
             <div class="form-group">
                 @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
                 <div class="input-group col-md-9">
@@ -43,29 +32,46 @@
                     @Html.HiddenFor(model => model.KeywordId)
                 </div>
             </div>
-            @*}
-                else
-                {
-                    <div class="form-group">
-                        @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownListFor(x => x.KeywordId, Model.AvailableKeywords, new { @class = "form-control selectpicker" })
-                            @Html.ValidationMessageFor(model => model.KeywordId, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                }*@
+            
         </div>
     </div>
 
     <div class="modal-footer">
-        <button id="add_btn" type="submit" value="Add" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Add selected @DbRes.T("Keywords.Keyword", "FieldDisplayName")</button>
-        &nbsp;&nbsp;or&nbsp;<button type="button" class="btn-link" data-dismiss="modal">@DbRes.T("Buttons.Cancel", "Terminology")</button>
+        <button id="add_btn" type="submit" value="Add" class="btn btn-success"><span aria-hidden="true" class="glyphicon glyphicon-ok"></span> Add @DbRes.T("Keywords.Keyword", "FieldDisplayName")</button>
+        &nbsp;&nbsp;or&nbsp;<input type="button" id="btnCancel" class="btn-link" data-dismiss="modal" value="@DbRes.T("Buttons.Cancel", "Terminology")"/>
     </div>
 }
 
-@Scripts.Render("~/bundles/modalAddEditHeader")
+@Scripts.Render("~/bundles/modalAddEditHeaderNoJson")
 <script type="text/javascript">
-    
+
+    $(document).ready(function() {
+        $('#Keyword').focus();
+    });
+
+    $('form').submit(function (e) {
+        e.preventDefault();
+        $.post(this.action, $(this).serialize(), function (response) {
+            if (response.error) {
+                alert(response.error);
+            } else {
+                //$('#stdModal').modal('hide');
+                //$('#lrgModal').modal('hide');
+                var copyId = $('#TitleId').val();
+                var url = '@Url.Action("_ListKeywords", "Titles", new { id = "REPLACEME" })';
+                $.get(url.replace('REPLACEME', copyId), function (data) {
+                    $("#_listKeywords").html(data);
+                });
+                //$('#Keyword').val('');
+                var textbox = $('#Keyword');
+                textbox.focus();
+                textbox.select();
+                $('#btnCancel').prop('value', 'Done'); 
+                //$('#Keyword').focus();
+            }
+        }, 'json');
+    });
+
     $("#Keyword").autocomplete({
         appendTo: "#stdModal",
         source: function (request, response) {
