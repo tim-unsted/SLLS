@@ -1,12 +1,19 @@
-﻿@model slls.ViewModels.SimpleSearchingViewModel
+﻿@using Westwind.Globalization
+@model slls.ViewModels.SimpleSearchingViewModel
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
 @using (Html.BeginForm("BrowseBySubject", "Home", FormMethod.Get, new { id = "frmSelect", name = "frmSelect", area = "" }))
 {
     <div class="alert alert-info">
-        @Html.TextBoxFor(x => x.SelectItem, new { @placeholder = "Start typing the term you are looking for ...", @class = "form-control" })
-        @Html.HiddenFor(model => model.SelectedId)
+        <div class="row" style="margin-right: 0">
+            <div class="col-md-12">
+                <p><span class="glyphicon glyphicon-info-sign"></span> Start searching for an @DbRes.T("Keywords.Keyword", "FieldDisplayName") by entering part of the term you are looking for in the box below:</p>
+            </div>
+            <div class="col-md-12">
+                @Html.TextBoxFor(x => x.SelectItem, new { @placeholder = "Start typing the term you are looking for ...", @class = "form-control" })
+            </div>
+        </div>
     </div>
 }
 

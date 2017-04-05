@@ -78,4 +78,10 @@ namespace slls.ViewModels
         //    TitleEditors = new HashSet<TitleEditor>();
         //}
     }
+
+    public class SelectAuthor
+    {
+        public int AuthorID { get; set; }
+        public string DisplayName { get; set; }
+    }
 }

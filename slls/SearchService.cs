@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using slls.Models;
+using slls.ViewModels;
 
 namespace slls
 {
@@ -50,6 +51,15 @@ namespace slls
                 Console.WriteLine(e);
                 return false;
             }
+        }
+
+        public static List<SelectAuthor> SelectAuthors(string searchTerm)
+        {
+            var db = new DbEntities();
+            var param1 = new SqlParameter("@SearchTerm", searchTerm);
+            var authors = db.Database.SqlQuery<SelectAuthor>("DoAuthorSearch @SearchTerm", param1).ToList();
+            var result = authors.ToList();
+            return result;
         }
     }
 

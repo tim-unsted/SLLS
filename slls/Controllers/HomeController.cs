@@ -353,29 +353,19 @@ namespace slls.Controllers
             return View(notifications);
         }
 
-        public ActionResult BrowseByAuthor(int listAuthors = 0)
+        public ActionResult BrowseByAuthor(int id = 0)
         {
             var viewModel = new SimpleSearchingViewModel();
 
-            //Get a list of all authors in use
-            var authors = (from a in _db.Authors
-                           join t in _db.TitleAuthors on a.AuthorID equals t.AuthorId
-                           where t.AuthorId != 0
-                           select new { a.AuthorID, DisplayName = a.DisplayName.TrimStart() + " (" + a.TitleAuthors.Count + ")" }).Distinct().OrderBy(x => x.DisplayName);
-
-            //Start a new list selectlist items ...
-            List<SelectListItem> authorList = new List<SelectListItem>();
-
-            //Add the authors ...
-            foreach (var item in authors)
+            if (id > 0)
             {
-                authorList.Add(new SelectListItem
+                var author = _db.Authors.Find(id);
+                if (author != null)
                 {
-                    Text = item.DisplayName,
-                    Value = item.AuthorID.ToString()
-                });
+                    viewModel.SelectItem = author.DisplayName;
+                }
             }
-
+            
             //Get the actual results if the user has selected anything ...
             viewModel.Results =
                 (from t in
@@ -383,13 +373,14 @@ namespace slls.Controllers
                  join c in _db.Copies on t.TitleID equals c.TitleID
                  join a in _db.TitleAuthors on t.TitleID equals a.TitleId
                  where
-                     t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && a.AuthorId == listAuthors && a.AuthorId != 0
+                     t.Copies.Any() && c.StatusType.Opac && c.Volumes.Any() && a.AuthorId == id && a.AuthorId != 0
                  select t).Distinct().ToList();
+            
             viewModel.LibraryStaff = Roles.IsLibraryStaff();
             viewModel.IsActualSearch = false;
             viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text");
 
-            ViewData["ListAuthors"] = authorList;
+            //ViewData["ListAuthors"] = authorList;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", "");
             ViewBag.Title = "Browse By " + DbRes.T("Authors.Author", "FieldDisplayName");
             ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
@@ -1593,8 +1584,9 @@ namespace slls.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult KeywordsUsed(string term)
         {
+            term = " " + term;
             var keywords = new List<vwSelectKeywordUsed>();
-            if (term.Length < 2)
+            if (term.Length < 3)
             {
                 keywords = (from k in _db.vwSelectKeywordsUsed
                             where k.KeywordTerm.StartsWith(term)
@@ -1614,6 +1606,24 @@ namespace slls.Controllers
             foreach (var x in keywords)
             {
                 list.Add(new SelectListItem { Text = x.KeywordTerm, Value = x.KeywordId.ToString() });
+            }
+
+            var result = list.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
+
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult AutoCompleteAuthors(string term)
+        {
+            //term = " " + term;
+            var authors = SearchService.SelectAuthors(term);
+            
+            IList<SelectListItem> list = new List<SelectListItem>();
+
+            foreach (var x in authors)
+            {
+                list.Add(new SelectListItem { Text = x.DisplayName, Value = x.AuthorID.ToString() });
             }
 
             var result = list.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
