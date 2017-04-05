@@ -573,6 +573,7 @@
     <Content Include="Customer\Images\slls-logo.png" />
     <Content Include="DataTables\LibraryAdmin\CatalogueSearchResults.js" />
     <Content Include="DataTables\LibraryAdmin\Circulation\_CirculationListSubForm.js" />
+    <Content Include="DataTables\LibraryAdmin\Circulation\_PartsReceivedSubForm.js" />
     <Content Include="DataTables\LibraryAdmin\Copies\_Index.js" />
     <Content Include="DataTables\LibraryAdmin\Copies\_IndexNoLocations.js" />
     <Content Include="DataTables\LibraryAdmin\Copies\_IndexNoStatus.js" />

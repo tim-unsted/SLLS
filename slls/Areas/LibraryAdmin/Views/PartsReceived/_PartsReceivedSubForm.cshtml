@@ -18,27 +18,29 @@
     </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
+    @foreach (var item in Model.OrderByDescending(p => p.PartID))
+    {
+        <tr>
 
-                <td>
-                    @Html.DisplayFor(modelItem => item.PartReceived)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateReceived)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.PrintList)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateReceivedSortable)
-                </td>
-                <td class="just-right">
-                    <a href="@Url.Action("Edit", "PartsReceived", new {id = item.PartID})" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                    <a href="@Url.Action("Delete", "PartsReceived", new { id = item.PartID })" class="btn btn-link modal-link" title="Delete @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
-                </td>
-            </tr>
-        }
+            <td>
+                @Html.DisplayFor(modelItem => item.PartReceived)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateReceived)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PrintList)
+            </td>
+            <td style="display: none">
+                @Html.DisplayFor(modelItem => item.DateReceivedSortable)
+            </td>
+            <td class="just-right">
+                <a href="@Url.Action("Edit", "PartsReceived", new {id = item.PartID})" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                <a href="@Url.Action("Delete", "PartsReceived", new {id = item.PartID})" class="btn btn-link modal-link" title="Delete @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+            </td>
+        </tr>
+    }
     </tbody>
 </table>
+
+@*<script src="@Url.Content("~/DataTables/LibraryAdmin/Circulation/_PartsReceivedSubForm.js")" type="text/javascript"></script>*@ 

@@ -161,6 +161,8 @@ namespace slls.ViewModels
 
         public virtual ICollection<Circulation> Circulations { get; set; }
 
+        public virtual ICollection<PartsReceived> PartsReceived { get; set; }
+
         public virtual CirculationMessage CirculationMessage { get; set; }
 
         public bool IsSerialsAdmin { get; set; }

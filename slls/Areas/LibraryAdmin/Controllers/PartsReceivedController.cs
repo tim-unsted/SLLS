@@ -241,6 +241,7 @@ namespace slls.Areas.LibraryAdmin
                 viewModel.CopyId = id;
                 viewModel.SelectCopy = copy.Title.Title1 + " - Copy: " + copy.CopyNumber;
                 viewModel.SelectCopyTip = "To check-in another item, start typing the item's title ...";
+                viewModel.PartsReceived = copy.PartsReceived;
             }
 
             List<SelectListItem> listOrder = new List<SelectListItem>();
@@ -266,21 +267,34 @@ namespace slls.Areas.LibraryAdmin
         // GET: LibraryAdmin/PartsReceived/Create
         public ActionResult Create(int id = 0)
         {
+            if (id == 0)
+            {
+                return null;
+            }
+            var copy = _db.Copies.Find(id);
+            if (copy == null)
+            {
+                return HttpNotFound();
+            }
+            
             var viewModel = new PartsReceivedAddViewModel
             {
                 PrintList = true,
-                DateReceived = DateTime.Now
+                DateReceived = DateTime.Now,
+                CopyID = copy.CopyID,
+                Title = copy.Title.Title1,
+                Copy = copy.CopyLocationStatus
             };
             
             ViewBag.Title = "Check-In New " + DbRes.T("CheckIn.Part","FieldDisplayName");
-            ViewData["CopyID"] = SelectListHelper.AllCopiesList(id: id, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
+            //ViewData["CopyID"] = SelectListHelper.AllCopiesList(id: id, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
             return PartialView(viewModel);
         }
 
         // POST: LibraryAdmin/PartsReceived/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CopyID,PartReceived,DateReceived,PrintList,Returned")] PartsReceivedAddViewModel viewModel)
+        public ActionResult Create(PartsReceivedAddViewModel viewModel)
         {
             var newPart = new PartsReceived
             {
@@ -294,8 +308,10 @@ namespace slls.Areas.LibraryAdmin
             {
                 _db.PartsReceiveds.Add(newPart);
                 _db.SaveChanges();
-                //return RedirectToAction("Index");
                 return Json( new {success = true});
+
+                //var partsReceived = _db.PartsReceiveds.Where(p => p.CopyID == newPart.CopyID);
+                //return Json(new { success = true, data = partsReceived });
             }
             ViewBag.Title = "Check-In new " + DbRes.T("CheckIn.Part", "FieldDisplayName");
             ViewData["CopyID"] = SelectListHelper.AllCopiesList(id:viewModel.CopyID, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");

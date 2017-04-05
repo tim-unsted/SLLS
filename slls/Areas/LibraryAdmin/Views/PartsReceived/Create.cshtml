@@ -14,13 +14,19 @@
         <div class="form-horizontal">
 
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @*@Html.HiddenFor(model => model.PartID)*@
+            @Html.HiddenFor(model => model.CopyID)
 
             <div class="form-group">
-                @Html.LabelFor(model => model.CopyID, htmlAttributes: new { @class = "control-label col-md-3" })
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-8">
-                    @Html.DropDownList("CopyID", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.CopyID, "", new { @class = "text-danger" })
+                    <p class="form-control-static">@Html.DisplayFor(model => model.Title)</p>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Copy, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-8">
+                    <p class="form-control-static">@Html.DisplayFor(model => model.Copy)</p>
                 </div>
             </div>
            
@@ -56,4 +62,34 @@
     </div>
 }
 
-@Scripts.Render("~/bundles/modalAddEditHeader")
+@Scripts.Render("~/bundles/modalAddEditHeaderNoJson")
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#PartReceived').focus();
+
+        $('#btnCancel').click(function () {
+            $('#lrgModal').modal('hide');
+            $('#stdModal').modal('hide');
+        });
+
+        $('form').submit(function (e) {
+            e.preventDefault();
+            $.post(this.action, $(this).serialize(), function (response) {
+                if (response.error) {
+                    alert(response.error);
+                } else {
+                    $('#stdModal').modal('hide');
+                    $('#lrgModal').modal('hide');
+                    var copyId = $('#CopyID').val();
+                    var url = '@Url.Action("_PartsReceivedSubForm", "PartsReceived", new { id = "REPLACEME" })';
+                    $.get(url.replace('REPLACEME', copyId), function (data) {
+                        $("#_partsReceived").html(data);
+                    });
+
+                }
+            }, 'json');
+        });
+    });
+</script>

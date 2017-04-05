@@ -31,8 +31,9 @@
                         <h4>@DbRes.T("CheckIn.Parts_Received", "FieldDisplayName")</h4>
                     </span>
                 </div>
-                <div class="panel-body">
-                    @Html.Action("_PartsReceivedSubForm", "PartsReceived", new { id = Model.CopyId })
+                <div class="panel-body" id="_partsReceived">
+                    @*@Html.Action("_PartsReceivedSubForm", "PartsReceived", new { id = Model.CopyId })*@
+                    @Html.Partial("_PartsReceivedSubForm", Model.PartsReceived)
                 </div>
             </div>
         }
@@ -63,35 +64,11 @@
 @section scripts {
     <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
 @*@Scripts.Render("~/bundles/datatables")*@
-<script src="@Url.Content("~/DataTables/LibraryAdmin/Circulation/_CirculationListSubForm.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Circulation/_CirculationListSubForm.js")" type="text/javascript"></script>
+    <script src="@Url.Content("~/DataTables/LibraryAdmin/Circulation/_PartsReceivedSubForm.js")" type="text/javascript"></script> 
 
     <script type="text/javascript">
-
-        $(document).ready(function () {
-            $('#partsreceived').DataTable({
-                "dom": 'rt<"inline"i><"inline float-right"p><"clear">',
-                "pageLength": 10,
-                "order": [[3, 'desc'], [0, 'asc']],
-                "columnDefs": [
-                    {
-                        "searchable": false,
-                        "sortable": false,
-                        "visible": false,
-                        "targets": [3]
-                    },
-                    {
-                        "searchable": false,
-                        "sortable": false,
-                        "targets": [2, 4]
-                    },
-                    {
-                        "orderData": [3],
-                        "targets": [1]
-                    }
-                ]
-            });
-        });
-
+        
         function selectAllText(textbox) {
             textbox.focus();
             textbox.select();

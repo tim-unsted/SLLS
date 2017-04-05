@@ -82,6 +82,10 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Copies.Copy_Number", "FieldDisplayName")]
         public int CopyID { get; set; }
+
+        public string Title { get; set; }
+
+        public string Copy { get; set; }
         
         [StringLength(255)]
         [LocalDisplayName("CheckIn.Part_Issue_Desc", "FieldDisplayName")]
