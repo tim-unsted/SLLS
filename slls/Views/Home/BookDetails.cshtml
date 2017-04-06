@@ -131,15 +131,19 @@
                     <dd>@Html.DisplayFor(modelItem => Model.Description)</dd>
                 }
 
+                @*Custom fields ...*@
+                @if (Model.OpacCustomFields.Any())
+                {
+                    foreach (var customField in Model.OpacCustomFields)
+                    {
+                        <dt>@Html.Label(customField.TitleAdditionalFieldDef.FieldName):</dt>
+                        <dd>@Html.Raw(customField.FieldData)</dd>
+                    }
+                }
+
                 @if (Model.SubjectIndexes.Any())
                 {
                     <dt>@Html.DisplayName(DbRes.T("Titles.Keywords", "FieldDisplayName")):</dt>
-                    @*foreach (var x in Model.SubjectIndexes)
-                        {
-                            <dd>
-                                <a href="@Url.Action("BrowseBySubject", "Home", new { listSubjects = x.KeywordID }, null)" title="View other items with this Keyword">@x.Keyword.KeywordTerm</a><br />
-                            </dd>
-                        }*@
                     <dd>
                         @foreach (var index in Model.SubjectIndexes)
                         {
@@ -173,21 +177,22 @@
                     }
                 }
 
+                @*Long texts ...*@
+                @if (Model.OpacLongTexts.Any())
+                {
+                    foreach (var longText in Model.OpacLongTexts)
+                    {
+                        <dt>@Html.Label(longText.TitleAdditionalFieldDef.FieldName):</dt>
+                        <dd>@Html.Raw(longText.FieldData)</dd>
+                    }
+                }
+
                 @if (Model.Copies.Any(x => x.StatusType.Opac))
                 {
                     <dt>@Html.DisplayName(DbRes.T("Titles.Copies", "FieldDisplayName")):</dt>
                     <dd>
                         <span class="badge">@Model.Copies.Count(x => x.StatusType.Opac)</span>
                     </dd>
-                }
-
-                @if (Model.TitleAdditionalFieldDatas.Any())
-                {
-                    foreach (var data in Model.TitleAdditionalFieldDatas)
-                    {
-                        <dt>@Html.Label(data.TitleAdditionalFieldDef.FieldName):</dt>
-                        <dd>@Html.Raw(data.FieldData)</dd>
-                    }
                 }
 
             </dl>

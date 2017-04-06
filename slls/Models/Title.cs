@@ -351,7 +351,29 @@ namespace slls.Models
         [NotMapped]
         public string NoDataMsg { get; set; }
 
+        [NotMapped]
+        public IEnumerable<TitleAdditionalFieldData> CustomFields
+        {
+            get { return TitleAdditionalFieldDatas.Where(d => d.TitleAdditionalFieldDef.IsLongText == false); }
+        }
 
+        [NotMapped]
+        public IEnumerable<TitleAdditionalFieldData> OpacCustomFields
+        {
+            get { return TitleAdditionalFieldDatas.Where(d => d.TitleAdditionalFieldDef.IsLongText == false && d.TitleAdditionalFieldDef.ShowOnOPAC); }
+        }
+
+        [NotMapped]
+        public IEnumerable<TitleAdditionalFieldData> LongTexts
+        {
+            get { return TitleAdditionalFieldDatas.Where(d => d.TitleAdditionalFieldDef.IsLongText); }
+        }
+
+        [NotMapped]
+        public IEnumerable<TitleAdditionalFieldData> OpacLongTexts
+        {
+            get { return TitleAdditionalFieldDatas.Where(d => d.TitleAdditionalFieldDef.IsLongText && d.TitleAdditionalFieldDef.ShowOnOPAC); }
+        }
 
     }
 }
