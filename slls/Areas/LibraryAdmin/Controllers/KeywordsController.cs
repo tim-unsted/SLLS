@@ -280,31 +280,11 @@ namespace slls.Areas.LibraryAdmin
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult Autocomplete(string term)
         {
-            term = " " + term;
-            var keywords = new List<vwSelectKeyword>();
-            if (term.Length < 3)
-            {
-                keywords = (from k in _db.vwSelectKeywords
-                            where k.KeywordTerm.StartsWith(term)
-                            orderby k.KeywordTerm
-                            select k).Take(100).ToList();
-            }
-            else
-            {
-                keywords = (from k in _db.vwSelectKeywords
-                            where k.KeywordTerm.Contains(term)
-                            orderby k.KeywordTerm
-                            select k).Take(100).ToList();
-            }
+            var keywords = SearchService.SelectKeywords(term, 100, true);
 
-            IList<SelectListItem> list = new List<SelectListItem>();
+            IList<SelectListItem> keywordsList = keywords.Select(x => new SelectListItem {Text = x.KeywordTerm, Value = x.KeywordId.ToString()}).ToList();
 
-            foreach (var x in keywords)
-            {
-                list.Add(new SelectListItem { Text = x.KeywordTerm, Value = x.KeywordId.ToString() });
-            }
-
-            var result = list.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
+            var result = keywordsList.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -315,12 +295,7 @@ namespace slls.Areas.LibraryAdmin
         {
             var keywords = SearchService.SelectKeywords(term, 100, true);
 
-            IList<SelectListItem> keywordsList = new List<SelectListItem>();
-
-            foreach (var x in keywords)
-            {
-                keywordsList.Add(new SelectListItem { Text = x.KeywordTerm, Value = x.KeywordId.ToString() });
-            }
+            IList<SelectListItem> keywordsList = keywords.Select(x => new SelectListItem {Text = x.KeywordTerm, Value = x.KeywordId.ToString()}).ToList();
 
             var result = keywordsList.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
 
