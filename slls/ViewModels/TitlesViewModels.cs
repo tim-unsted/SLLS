@@ -512,6 +512,14 @@ namespace slls.ViewModels
         public string Tab { get; set; }
     }
 
-    
+    public class SelectTitles
+    {
+        public int TitleID { get; set; }
+        public string Title { get; set; }
+        public string Year { get; set; }
+        public string Edition { get; set; }
+        public string Authors { get; set; }
+        public int NonFilingChars { get; set; }
+    }
 
 }

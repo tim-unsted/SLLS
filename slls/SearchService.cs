@@ -53,12 +53,45 @@ namespace slls
             }
         }
 
-        public static List<SelectAuthor> SelectAuthors(string searchTerm)
+        public static List<SelectAuthor> SelectAuthors(string searchTerm, int take = 100, bool inUseOnly = false)
         {
             var db = new DbEntities();
             var param1 = new SqlParameter("@SearchTerm", searchTerm);
-            var authors = db.Database.SqlQuery<SelectAuthor>("DoAuthorSearch @SearchTerm", param1).ToList();
+            var param2 = new SqlParameter("@Take", take);
+            var param3 = new SqlParameter("@InUseOnly", inUseOnly);
+            var authors = db.Database.SqlQuery<SelectAuthor>("DoAuthorSearch @SearchTerm, @Take, @InUseOnly", param1, param2, param3).ToList();
             var result = authors.ToList();
+            return result;
+        }
+
+        public static List<SelectKeyword> SelectKeywords(string searchTerm, int take = 100, bool inUseOnly = false)
+        {
+            var db = new DbEntities();
+            var param1 = new SqlParameter("@SearchTerm", searchTerm);
+            var param2 = new SqlParameter("@Take", take);
+            var param3 = new SqlParameter("@InUseOnly", inUseOnly);
+            var keywords = db.Database.SqlQuery<SelectKeyword>("DoKeywordSearch @SearchTerm, @Take, @InUseOnly", param1, param2, param3).ToList();
+            var result = keywords.ToList();
+            return result;
+        }
+
+        public static List<SelectTitles> SelectTitles(string searchTerm, int take = 100)
+        {
+            var db = new DbEntities();
+            var param1 = new SqlParameter("@SearchTerm", searchTerm);
+            var param2 = new SqlParameter("@Take", take);
+            var titles = db.Database.SqlQuery<SelectTitles>("SelectTitle @SearchTerm, @Take", param1, param2).ToList();
+            var result = titles.ToList();
+            return result;
+        }
+
+        public static List<SelectCopy> SelectCopies(string searchTerm, int take = 100)
+        {
+            var db = new DbEntities();
+            var param1 = new SqlParameter("@SearchTerm", searchTerm);
+            var param2 = new SqlParameter("@Take", take);
+            var titles = db.Database.SqlQuery<SelectCopy>("SelectCopy @SearchTerm, @Take", param1, param2).ToList();
+            var result = titles.ToList();
             return result;
         }
     }

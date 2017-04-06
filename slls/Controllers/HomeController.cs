@@ -380,7 +380,6 @@ namespace slls.Controllers
             viewModel.IsActualSearch = false;
             viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text");
 
-            //ViewData["ListAuthors"] = authorList;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", "");
             ViewBag.Title = "Browse By " + DbRes.T("Authors.Author", "FieldDisplayName");
             ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
@@ -1584,31 +1583,16 @@ namespace slls.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult KeywordsUsed(string term)
         {
-            term = " " + term;
-            var keywords = new List<vwSelectKeywordUsed>();
-            if (term.Length < 3)
-            {
-                keywords = (from k in _db.vwSelectKeywordsUsed
-                            where k.KeywordTerm.StartsWith(term)
-                            orderby k.KeywordTerm
-                            select k).Take(100).ToList();
-            }
-            else
-            {
-                keywords = (from k in _db.vwSelectKeywordsUsed
-                            where k.KeywordTerm.Contains(term)
-                            orderby k.KeywordTerm
-                            select k).Take(100).ToList();
-            }
+            var keywords = SearchService.SelectKeywords(term, 100, true);
 
-            IList<SelectListItem> list = new List<SelectListItem>();
+            IList<SelectListItem> keywordsList = new List<SelectListItem>();
 
             foreach (var x in keywords)
             {
-                list.Add(new SelectListItem { Text = x.KeywordTerm, Value = x.KeywordId.ToString() });
+                keywordsList.Add(new SelectListItem { Text = x.KeywordTerm, Value = x.KeywordId.ToString() });
             }
 
-            var result = list.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
+            var result = keywordsList.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
@@ -1616,17 +1600,11 @@ namespace slls.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult AutoCompleteAuthors(string term)
         {
-            //term = " " + term;
-            var authors = SearchService.SelectAuthors(term);
+            var authors = SearchService.SelectAuthors(term, 100, true);
             
-            IList<SelectListItem> list = new List<SelectListItem>();
+            IList<SelectListItem> authorsList = authors.Select(x => new SelectListItem {Text = x.DisplayName, Value = x.AuthorID.ToString()}).ToList();
 
-            foreach (var x in authors)
-            {
-                list.Add(new SelectListItem { Text = x.DisplayName, Value = x.AuthorID.ToString() });
-            }
-
-            var result = list.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
+            var result = authorsList.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }

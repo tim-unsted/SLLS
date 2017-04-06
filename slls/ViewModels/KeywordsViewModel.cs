@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 using slls.Localization;
@@ -78,5 +79,15 @@ namespace slls.ViewModels
 
         [DisplayName("Can delete?")]
         public bool CanDelete { get; set; }
+    }
+
+    public class SelectKeyword
+    {
+        [Column("KeywordID")]
+        public int KeywordId { get; set; }
+
+        [Column("KeywordTerm")]
+        public string KeywordTerm { get; set; }
+
     }
 }

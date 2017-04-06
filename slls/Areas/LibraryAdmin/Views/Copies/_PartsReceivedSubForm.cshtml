@@ -1,0 +1,50 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.CopyDetailsEditViewModel
+
+<table id="partsreceived" class="table table-condensed table-bordered-outeronly table-hover" style="width: 100%;">
+    <thead>
+    <tr>
+        <th>
+            @Html.Label(DbRes.T("CheckIn.Part_Issue_Desc", "FieldDisplayName"))
+        </th>
+        <th>
+            @Html.Label(DbRes.T("CheckIn.Date_Received", "FieldDisplayName"))
+        </th>
+        <th>
+            @Html.Label(DbRes.T("CheckIn.Print_Circulation_List", "FieldDisplayName"))
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @if (Model.PartsReceived != null && Model.PartsReceived.Any())
+    {
+        foreach (var item in Model.PartsReceived.OrderByDescending(p => p.PartID))
+        {
+            <tr>
+
+                <td>
+                    @Html.DisplayFor(modelItem => item.PartReceived)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateReceived)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PrintList)
+                </td>
+                <td style="display: none">
+                    @Html.DisplayFor(modelItem => item.DateReceivedSortable)
+                </td>
+                <td class="just-right">
+                    <a href="@Url.Action("Edit", "PartsReceived", new {id = item.PartID})" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                    <a href="@Url.Action("Delete", "PartsReceived", new {id = item.PartID})" class="btn btn-link modal-link" title="Delete @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                </td>
+            </tr>
+        }
+    }
+   
+    </tbody>
+</table>
+
+@*<script src="@Url.Content("~/DataTables/LibraryAdmin/Circulation/_PartsReceivedSubForm.js")" type="text/javascript"></script>*@ 

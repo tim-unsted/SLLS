@@ -240,5 +240,17 @@ namespace slls.ViewModels
         [DataType(DataType.MultilineText)]
         public string Notes { get; set; }
     }
+
+    public class SelectCopy
+    {
+        public int CopyID { get; set; }
+        public int TitleID { get; set; }
+        public int CopyNumber { get; set; }
+        public string Title { get; set; }
+        public string Edition { get; set; }
+        public string Year { get; set; }
+        public string Authors { get; set; }
+        public int NonFilingChars { get; set; }
+    }
  
 }

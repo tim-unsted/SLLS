@@ -352,6 +352,7 @@ namespace slls.Areas.LibraryAdmin
                 Title = copy.Title.Title1,
                 CancelledByUser = copy.CancelledByUser == null ? "" : copy.CancelledByUser.Id,
                 Circulations = copy.Circulations,
+                PartsReceived = copy.PartsReceived,
                 CirculationMessage = copy.CirculationMessage,
                 SelectCopy = copy.Title.Title1 + " - Copy: " + copy.CopyNumber
             };
@@ -767,7 +768,7 @@ namespace slls.Areas.LibraryAdmin
             }
 
             //ViewData["CirculationMsgID"] = new SelectList(_db.CirculationMessages, "CirculationMsgID", "CirculationMsg", copy.CirculationMsgID);
-            return PartialView(copy);
+            return PartialView(copy.Holdings);
         }
 
 
@@ -985,29 +986,35 @@ namespace slls.Areas.LibraryAdmin
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult Autocomplete(string term)
         {
-            //if (term.Length < 3) return null;
+            ////if (term.Length < 3) return null;
 
-            term = " " + term;
+            //term = " " + term;
 
-            if (term.Length < 3)
-            {
-                var titles = (from c in _db.vwSelectCopies
-                              where c.Title.StartsWith(term)
+            //if (term.Length < 3)
+            //{
+            //    var titles = (from c in _db.vwSelectCopies
+            //                  where c.Title.StartsWith(term)
+            //                  orderby c.Title.Substring(c.NonFilingChars)
+            //                  select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title.Trim(), CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(100);
+
+            //    return Json(titles, JsonRequestBehavior.AllowGet);
+            //}
+            //else
+            //{
+            //    var titles = (from c in _db.vwSelectCopies
+            //                  where c.Title.Contains(term)
+            //                  orderby c.Title.Substring(c.NonFilingChars)
+            //                  select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title.Trim(), CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(100);
+
+            //    return Json(titles, JsonRequestBehavior.AllowGet);
+            //}
+            //return null;
+            var copies = SearchService.SelectCopies(term, 100);
+
+            var copiesList = (from c in copies
                               orderby c.Title.Substring(c.NonFilingChars)
-                              select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title.Trim(), CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(100);
-
-                return Json(titles, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                var titles = (from c in _db.vwSelectCopies
-                              where c.Title.Contains(term)
-                              orderby c.Title.Substring(c.NonFilingChars)
-                              select new { CopyId = c.CopyId, TitleId = c.TitleId, Title = c.Title.Trim(), CopyNumber = c.CopyNumber, Year = c.Year, Edition = c.Edition, AuthorString = c.AuthorString }).Take(100);
-
-                return Json(titles, JsonRequestBehavior.AllowGet);
-            }
-            return null;
+                              select new { c.CopyID, c.TitleID, Title = c.Title.Trim(), c.CopyNumber, c.Year, c.Edition, c.Authors });
+            return Json(copiesList, JsonRequestBehavior.AllowGet);
         }
 
         protected override void Dispose(bool disposing)

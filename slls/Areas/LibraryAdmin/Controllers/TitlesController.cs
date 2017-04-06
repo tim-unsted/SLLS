@@ -478,39 +478,31 @@ namespace slls.Areas.LibraryAdmin
         }
 
         [Route("BrowseByAuthor")]
-        ////[Route("~/Admin/Catalogue/BrowseByAuthor")]
         [Route("~/LibraryAdmin/Titles/BrowseByAuthor")]
-        public ActionResult BrowseByAuthor(int listAuthors = 0)
+        public ActionResult BrowseByAuthor(int id = 0)
         {
             var viewModel = new TitlesListViewModel();
 
-            //Get a list of all authors in use
-            var authors = (from a in _db.Authors
-                           join t in _db.TitleAuthors on a.AuthorID equals t.AuthorId
-                           where t.AuthorId != 0
-                           select new { a.AuthorID, DisplayName = a.DisplayName.TrimStart() + " (" + a.TitleAuthors.Count + ")" }).Distinct().OrderBy(x => x.DisplayName);
-
-            //Start a new list selectlist items ...
-            List<SelectListItem> authorList = authors.Select(item => new SelectListItem
+            if (id > 0)
             {
-                Text = item.DisplayName,
-                Value = item.AuthorID.ToString()
-            }).ToList();
-
-            //Add the authors ...
-
-            ViewData["ListAuthors"] = authorList;
-            ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
-            ViewBag.Title = ViewBag.Title + " By " +
-                            DbRes.T("Authors.Author", "FieldDisplayName");
+                var author = _db.Authors.Find(id);
+                if (author != null)
+                {
+                    viewModel.SelectItem = author.DisplayName;
+                }
+            }
 
             //Get the actual results if the user has selected anything ...
             viewModel.Titles =
                 (from t in
                      _db.Titles
                  join a in _db.TitleAuthors on t.TitleID equals a.TitleId
-                 where a.AuthorId == listAuthors && a.AuthorId != 0
+                 where a.AuthorId == id && a.AuthorId != 0
                  select t).ToList();
+
+            ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", ControllerContext.RouteData.Values["action"].ToString());
+            ViewBag.Title = ViewBag.Title + " By " +
+                            DbRes.T("Authors.Author", "FieldDisplayName");
             return View(viewModel);
         }
 
@@ -1660,27 +1652,24 @@ namespace slls.Areas.LibraryAdmin
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult AutoComplete(string term)
         {
-            //var titles = new List<vwSelectTitle>();
-            term = " " + term;
-
-            if (term.Length < 3)
-            {
-                var titles = (from t in _db.vwSelectTitles
-                          where t.Title.StartsWith(term)
+            var titles = SearchService.SelectTitles(term, 100);
+            
+            var titlesList = (from t in titles
                           orderby t.Title.Substring(t.NonFilingChars)
-                          select new { TitleId = t.TitleId, Title = t.Title.Trim(), Year = t.Year, Edition = t.Edition, Authors = t.Authors }).Take(100);
-                return Json(titles, JsonRequestBehavior.AllowGet);
-            }
-            else
-            {
-                var titles = (from t in _db.vwSelectTitles
-                              where t.Title.Contains(term)
-                              orderby t.Title.Substring(t.NonFilingChars)
-                              select new { TitleId = t.TitleId, Title = t.Title.Trim(), Year = t.Year, Edition = t.Edition, Authors = t.Authors }).Take(100);
-                return Json(titles, JsonRequestBehavior.AllowGet);
-            }
+                          select new { TitleId = t.TitleID, t.Title, t.Year, t.Edition, t.Authors });
+            return Json(titlesList, JsonRequestBehavior.AllowGet);
+        }
 
-            return null;
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult AutoCompleteAuthors(string term)
+        {
+            var authors = SearchService.SelectAuthors(term, 100, true);
+
+            IList<SelectListItem> authorsList = authors.Select(x => new SelectListItem {Text = x.DisplayName, Value = x.AuthorID.ToString()}).ToList();
+
+            var result = authorsList.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
         }
 
 

@@ -112,7 +112,8 @@
         using (tabs.BeginPanel())
         {
             <div id="PartsReceived">
-                @Html.Action("_Holdings", "Copies", new { id = Model.CopyId })
+                @*@Html.Action("_Holdings", "Copies", new { id = Model.CopyId })*@
+                @Html.Partial("_Holdings", Model)
             </div>
             <div class="form-footer">
                 @if (ViewBag.RecordCount > 1)
@@ -182,6 +183,8 @@
 @section scripts {
     <script src="@Url.Content("~/Scripts/jquery.mcautocomplete.js")" type="text/javascript"></script>
     <script src="@Url.Content("~/Scripts/_SelectCopy.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/DataTables/LibraryAdmin/Circulation/_CirculationListSubForm.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/DataTables/LibraryAdmin/Circulation/_PartsReceivedSubForm.js")" type="text/javascript"></script>
 
 
     <script type="text/javascript">
