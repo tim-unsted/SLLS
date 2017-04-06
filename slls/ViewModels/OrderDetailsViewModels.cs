@@ -427,5 +427,23 @@ namespace slls.ViewModels
 
         public string AutoCompleteSource { get; set; }
     }
+
+    public class SelectOrder
+    {
+        public int OrderId { get; set; }
+        public string OrderNo { get; set; }
+        public string Title { get; set; }
+        public string Edition { get; set; }
+        public string Year { get; set; }
+        public string SupplierName { get; set; }
+        public string OrderDate { get; set; }
+        public string ReceivedDate { get; set; }
+        public string InvoiceDate { get; set; }
+        public string InvoiceRef { get; set; }
+        public int NonFilingChars { get; set; }
+        public DateTime? _ReceivedDate { get; set; }
+        public string _InvoiceRef { get; set; }
+        public DateTime? _InvoiceDate { get; set; }
+    }
     
 }

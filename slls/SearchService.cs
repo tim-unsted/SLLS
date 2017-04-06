@@ -94,6 +94,16 @@ namespace slls
             var result = titles.ToList();
             return result;
         }
+
+        public static IEnumerable<SelectOrder> SelectOrders(string searchTerm, int take = 100)
+        {
+            var db = new DbEntities();
+            var param1 = new SqlParameter("@SearchTerm", searchTerm);
+            var param2 = new SqlParameter("@Take", take);
+            var titles = db.Database.SqlQuery<SelectOrder>("SelectOrder @SearchTerm, @Take", param1, param2).ToList();
+            var result = titles.ToList();
+            return result;
+        }
     }
 
 

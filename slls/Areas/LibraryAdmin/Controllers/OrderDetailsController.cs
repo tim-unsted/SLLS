@@ -493,45 +493,41 @@ namespace slls.Areas.LibraryAdmin
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult AutoComplete(string term)
         {
-            //if (term.Length < 3) return null;
+            var orders = SearchService.SelectOrders(term, 100);
 
-            term = " " + term;
-            var titles = (from o in _db.vwSelectOrders
-                          where o.Title.Contains(term)
+            var ordersList = (from o in orders
                           orderby o.Title.Substring(o.NonFilingChars) ascending ,o.OrderId descending 
                           select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName }).Take(250);
 
-            return Json(titles, JsonRequestBehavior.AllowGet);
+            return Json(ordersList, JsonRequestBehavior.AllowGet);
         }
 
 
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult AutoCompleteNoInvoice(string term)
         {
-            //if (term.Length < 3) return null;
+            var orders = SearchService.SelectOrders(term, 100);
 
-            term = " " + term;
-            var titles = (from o in _db.vwSelectOrders
-                          where o.Title.Contains(term) && o._InvoiceDate == null && o._InvoiceRef == null
+            var ordersList = (from o in orders
+                          where o._InvoiceDate == null && o._InvoiceRef == null
                           orderby o.Title.Substring(o.NonFilingChars) ascending, o.OrderId descending
                           select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName }).Take(250);
 
-            return Json(titles, JsonRequestBehavior.AllowGet);
+            return Json(ordersList, JsonRequestBehavior.AllowGet);
         }
 
 
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult AutoCompleteOutstanding(string term)
         {
-            //if (term.Length < 3) return null;
+            var orders = SearchService.SelectOrders(term, 100);
 
-            term = " " + term;
-            var titles = (from o in _db.vwSelectOrders
-                          where o.Title.Contains(term) && o._ReceivedDate == null
+            var ordersList = (from o in orders
+                          where o._ReceivedDate == null
                           orderby o.Title.Substring(o.NonFilingChars) ascending, o.OrderId descending
                           select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName }).Take(250);
 
-            return Json(titles, JsonRequestBehavior.AllowGet);
+            return Json(ordersList, JsonRequestBehavior.AllowGet);
         }
 
 
