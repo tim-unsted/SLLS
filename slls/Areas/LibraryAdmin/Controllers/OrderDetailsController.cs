@@ -497,7 +497,7 @@ namespace slls.Areas.LibraryAdmin
 
             var ordersList = (from o in orders
                           orderby o.Title.Substring(o.NonFilingChars) ascending ,o.OrderId descending 
-                          select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName }).Take(250);
+                          select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName });
 
             return Json(ordersList, JsonRequestBehavior.AllowGet);
         }
@@ -511,7 +511,7 @@ namespace slls.Areas.LibraryAdmin
             var ordersList = (from o in orders
                           where o._InvoiceDate == null && o._InvoiceRef == null
                           orderby o.Title.Substring(o.NonFilingChars) ascending, o.OrderId descending
-                          select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName }).Take(250);
+                          select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName });
 
             return Json(ordersList, JsonRequestBehavior.AllowGet);
         }
@@ -525,7 +525,7 @@ namespace slls.Areas.LibraryAdmin
             var ordersList = (from o in orders
                           where o._ReceivedDate == null
                           orderby o.Title.Substring(o.NonFilingChars) ascending, o.OrderId descending
-                          select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName }).Take(250);
+                          select new { Title = o.Title, OrderId = o.OrderId, Year = o.Year, Edition = o.Edition, OrderNo = o.OrderNo, InvoiceRef = o.InvoiceRef, OrderDate = o.OrderDate, ReceivedDate = o.ReceivedDate, InvoiceDate = o.InvoiceDate, SupplierName = o.SupplierName });
 
             return Json(ordersList, JsonRequestBehavior.AllowGet);
         }
