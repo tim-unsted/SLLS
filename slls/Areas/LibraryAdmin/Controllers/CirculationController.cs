@@ -1284,17 +1284,15 @@ namespace slls.Areas.LibraryAdmin
 
         public ActionResult PostRemoveNonLiveRecipients(DeleteConfirmationViewModel viewModel)
         {
-            var recipients = _db.Users.Where(u => u.IsLive && u.CanDelete && u.Lastname != null);
-            var circulations = from c in _db.Circulations
-                               join u in recipients on c.RecipientUser.Id equals u.Id
-                               where u.IsLive != true
+            var deadRecipients = _db.Users.Where(u => u.IsLive == false);
+            var circulationsToRemove = from c in _db.Circulations
+                               join u in deadRecipients on c.RecipientUser.Id equals u.Id
                                select c;
             var success = true;
 
-            foreach (var circulation in circulations.ToList())
+            foreach (var circulation in circulationsToRemove.ToList())
             {
                 var copyId = circulation.CopyID;
-                
 
                 try
                 {
