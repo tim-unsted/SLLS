@@ -477,7 +477,7 @@ namespace slls.Areas.LibraryAdmin
         [HttpGet]
         //[Route("Delete/{id}")]
         //[Route("~/LibraryAdmin/Copies/Delete/{id}")]
-        public ActionResult Delete(int id = 0)
+        public ActionResult Delete(int id = 0, string action = "edit", string controller = "copies")
         {            
             var copy = _db.Copies.Find(id);
             if (copy == null)
@@ -491,7 +491,9 @@ namespace slls.Areas.LibraryAdmin
                 HeaderText = _entityName,
                 PostDeleteAction = "Delete",
                 PostDeleteController = "Copies",
-                DetailsText = copy.Title.Title1 + " - Copy: " +  copy.CopyNumber
+                DetailsText = copy.Title.Title1 + " - Copy: " +  copy.CopyNumber,
+                CallingAction = action,
+                CallingController = controller
             };
             return PartialView("_DeleteConfirmation", deleteConfirmationViewModel);
         }
@@ -501,19 +503,51 @@ namespace slls.Areas.LibraryAdmin
         {
             // Get item which we need to delete from EntityFramework 
             var copy = _db.Copies.Find(dcvm.DeleteEntityId);
-
+            
             if (copy == null)
             {
                 return HttpNotFound();
             }
-
+            var titleId = copy.TitleID;
+            
             if (ModelState.IsValid)
             {
                 try
                 {
                     _db.Copies.Remove(copy);
                     _db.SaveChanges();
-                    return Json(new { success = true });
+
+                    UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
+
+                    if (dcvm.CallingController == "titles")
+                    {
+                        string actionUrl = urlHelper.Action(dcvm.CallingAction, "Titles", new {id = titleId});
+                        return Json(new {success = true, redirectTo = actionUrl});
+                    }
+                    else
+                    {
+                        //var otherCopies = _db.Copies.Any(c => c.TitleID == titleId);
+                        //if (otherCopies)
+                        //{
+                            var firstOrDefault = _db.Copies.FirstOrDefault(c => c.TitleID == titleId);
+                            if (firstOrDefault != null)
+                            {
+                                var copyId = firstOrDefault.CopyID;
+                                string actionUrl = urlHelper.Action("Edit", "Copies", new {id = copyId});
+                                return Json(new {success = true, redirectTo = actionUrl});
+                            }
+                            else
+                            {
+                                string actionUrl = urlHelper.Action("Edit", "Titles", new {id = titleId});
+                                return Json(new {success = true, redirectTo = actionUrl});
+                            }
+                        }
+                        //else
+                        //{
+                        //    string actionUrl = urlHelper.Action("Edit", "Titles", new { id = titleId });
+                        //    return Json(new { success = true, redirectTo = actionUrl });
+                        //}
+                    //}
                 }
                 catch (Exception e)
                 {
