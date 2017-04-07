@@ -1635,18 +1635,17 @@ namespace slls.Areas.LibraryAdmin
             var title = _repository.GetById<Title>(viewModel.TitleId);
             _repository.Delete(title);
 
-            //var returnView = viewModel.CurrentViewName;
-            //if (string.IsNullOrEmpty(returnView))
-            //{
-            //    returnView = "Index";
-            //}
-
-            ////return RedirectToAction("Index");
-            //return RedirectToAction(returnView);
-            return Json(new
+            var returnView = viewModel.CurrentViewName;
+            if (string.IsNullOrEmpty(returnView))
             {
-                success = true
-            });
+                returnView = "Index";
+            }
+
+            return RedirectToAction(returnView);
+            //return Json(new
+            //{
+            //    success = true
+            //});
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
