@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
@@ -45,21 +46,23 @@ namespace slls.Areas.LibraryAdmin
 
         public ActionResult CirculationList(int id = 0)
         {
-            IEnumerable<Circulation> circulationList = from c in _db.Circulations where c.CopyID == id select c;
-
-            var viewModel = new CirculationListViewModel()
-            {
-                CirculationList = circulationList
-            };
-
+            var viewModel = new CirculationListViewModel();
             if (id > 0)
             {
                 var copy = _db.Copies.Find(id);
-                viewModel.SelectCopy = copy.Title.Title1 + " - Copy: " + copy.CopyNumber;
+                
+                if (copy != null)
+                {
+                    viewModel.CopyId = copy.CopyID;
+                    viewModel.TitleId = copy.TitleID;
+                    viewModel.SelectCopy = copy.Title.Title1 + " - Copy: " + copy.CopyNumber;
+                }
+
+                var circulations = from c in _db.Circulations where c.CopyID == id select c;
+                viewModel.CirculationList = circulations;
+                viewModel.HasCirculations = circulations.Any();
             }
             
-            //ViewData["Copy"] = allCirculatedItems;
-            ViewData["CopyID"] = id;
             ViewBag.Title = DbRes.T("Circulation.Circulation_List", "FieldDisplayName") + " By Item";
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("circulationSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "sortOrder");
             return View(viewModel);
@@ -69,8 +72,8 @@ namespace slls.Areas.LibraryAdmin
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult SelectCirculatedCopies(string term)
         {
-            term = " " + term;
-            //var titles = new List<SelectCirculatedCopy>();
+            //term = " " + term;
+            ////var titles = new List<SelectCirculatedCopy>();
 
             if (term.Length < 3)
             {

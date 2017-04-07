@@ -33,7 +33,7 @@
     {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Title.Title1)
+                <a href="@Url.Action("CirculationList", new {id = item.CopyID})" class="btn-link" title="View/Edit Circulation List">@item.Title.Title1</a>
             </td>
             <td>
                 @Html.ActionLink(item.CopyNumber.ToString(), "Edit", "Copies", new {id = item.CopyID}, null)
@@ -85,9 +85,6 @@
                     {
                         "data": [0],
                         "orderData": [3],
-                        "render": function (data, type, row) {
-                            return '<a href="Circulation/CirculationList?copy=' + row[5] + '" class="btn-link">' + data + '</a>';
-                        },
                         "targets": [0]
                     },
                     {
