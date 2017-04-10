@@ -116,7 +116,6 @@ namespace slls.Areas.LibraryAdmin
 
                 return Json(titles, JsonRequestBehavior.AllowGet);
             }
-            return null;
         }
 
 
@@ -1102,7 +1101,7 @@ namespace slls.Areas.LibraryAdmin
                         _db.SaveChanges();
                         ReSortRecipients(item.CopyID.Value);
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                        // ModelState.AddModelError("", e.Message);
                         return false;
@@ -1119,7 +1118,7 @@ namespace slls.Areas.LibraryAdmin
                     _db.Entry(toUpdate).State = EntityState.Modified;
                     _db.SaveChanges();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     //ModelState.AddModelError("", e.Message);
                     return false;

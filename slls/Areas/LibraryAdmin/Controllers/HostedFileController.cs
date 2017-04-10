@@ -113,7 +113,7 @@ namespace slls.Areas.LibraryAdmin
                         _db.TitleLinks.Remove(link);
                         _db.SaveChanges();
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         //ModelState.AddModelError("", e.Message);
                         success = false;
@@ -129,7 +129,7 @@ namespace slls.Areas.LibraryAdmin
                         _db.OrderLinks.Remove(link);
                         _db.SaveChanges();
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         //ModelState.AddModelError("", e.Message);
                         success = false;
@@ -148,7 +148,7 @@ namespace slls.Areas.LibraryAdmin
                     success = false;
                 }
                 
-                return Json(new { success = true });
+                return Json(new { success = success });
             }
             catch (Exception e)
             {

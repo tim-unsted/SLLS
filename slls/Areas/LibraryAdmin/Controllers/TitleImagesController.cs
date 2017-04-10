@@ -120,7 +120,6 @@ namespace slls.Areas.LibraryAdmin
                         ModelState.AddModelError("", e.Message);
                         return Json(new { success = false });
                     }
-                    return Json(new { success = false });
                 }
             }
 
@@ -153,7 +152,6 @@ namespace slls.Areas.LibraryAdmin
                     return Json(new { success = false });
                     throw;
                 }
-                return Json(new { success = false });
             }
             return Json(new { success = false });
         }

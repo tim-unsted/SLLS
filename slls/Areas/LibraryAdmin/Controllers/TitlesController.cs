@@ -81,7 +81,6 @@ namespace slls.Areas.LibraryAdmin
                     viewModel.PlaceHolderText = "Enter a " + _entityName.ToLower() + " to duplicate ...";
                     //viewModel.Titles = SelectListHelper.TitlesList();
                     return View("SelectDuplicate", viewModel);
-                    break;
                 }
 
                 case "printdetails":

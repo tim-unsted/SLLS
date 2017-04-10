@@ -99,7 +99,6 @@ namespace slls.Areas.LibraryAdmin
 
                 return Json(titles, JsonRequestBehavior.AllowGet);
             }
-            return null;
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
@@ -149,7 +148,6 @@ namespace slls.Areas.LibraryAdmin
 
                 return Json(titles, JsonRequestBehavior.AllowGet);
             }
-            return null;
         }
 
         public ActionResult PartsOverdue()

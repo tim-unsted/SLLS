@@ -866,7 +866,6 @@ namespace slls.Controllers
 
                     ViewBag.Title = "Change " + DbRes.T("Borrowing.Borrower", "FieldDisplayName");
                     return PartialView("_SelectPopup", viewModel);
-                    break;
                 }
                 case "swipecard":
                 {
@@ -877,7 +876,6 @@ namespace slls.Controllers
                     };
                     ViewBag.Title = "Change " + DbRes.T("Borrowing.Borrower", "FieldDisplayName");
                     return PartialView("_SwipeBorrower ", viewModel);
-                    break;
                 }
                 case "username":
                 {
@@ -888,7 +886,6 @@ namespace slls.Controllers
                     };
                     ViewBag.Title = "Change " + DbRes.T("Borrowing.Borrower", "FieldDisplayName");
                     return PartialView("_EnterBorrower", viewModel);
-                    break;
                 }
                 default:
                 {
@@ -899,12 +896,8 @@ namespace slls.Controllers
                         PostSelectAction = "PostEnterUsername"
                     };
                     return PartialView("_EnterBorrower", viewModel);
-                    break;
                 }
             }
-
-            return null;
-
         }
 
         [HttpPost]

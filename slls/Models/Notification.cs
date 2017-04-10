@@ -35,7 +35,6 @@ namespace slls.Models
                     default:
                         return "";
                 }
-                return "";
             }
         }
 

@@ -177,7 +177,7 @@ namespace slls.Areas.LibraryAdmin
                 _db.Images.Remove(image);
                 _db.SaveChanges();
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return Json(new { success = false }); 
                 throw;

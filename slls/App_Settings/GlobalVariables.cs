@@ -83,7 +83,7 @@ namespace slls.App_Settings
                 {
                     HttpContext.Current.Application.Lock();
                     var seconds = Int16.Parse(Settings.GetParameterValue("General.PopupTimeout", "3", "The number of seconds a confirmation or acknowledgement pop-up stays on screen. The default is 3 seconds.", dataType: "int"));
-                    if (seconds == 0 || seconds == null)
+                    if (seconds == 0)
                     {
                         seconds = 3;
                     }

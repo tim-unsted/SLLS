@@ -215,7 +215,7 @@ namespace slls.Areas.LibraryAdmin
                 _db.SaveChanges();
 
                 // Add an email address if one has been supplied ...
-                if (newContact.ContactID != null && !string.IsNullOrEmpty(viewModel.Email))
+                if (newContact.ContactID != 0 && !string.IsNullOrEmpty(viewModel.Email))
                 {
                     var commMethodType = _db.CommMethodTypes.FirstOrDefault(m => m.Method == "Work email");
                     if (commMethodType == null)
@@ -250,7 +250,7 @@ namespace slls.Areas.LibraryAdmin
                 }
 
                 // Add a phone number of one has been supplied ...
-                if (newContact.ContactID != null && !string.IsNullOrEmpty(viewModel.Phone))
+                if (newContact.ContactID != 0 && !string.IsNullOrEmpty(viewModel.Phone))
                 {
                     CommMethodType commMethodType;
                     if (viewModel.Phone.StartsWith("07"))

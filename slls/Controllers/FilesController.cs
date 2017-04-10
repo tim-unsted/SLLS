@@ -36,7 +36,7 @@ namespace slls.Controllers
 
                         return img.ImageId;
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
                         return 0;
                     }
@@ -89,7 +89,7 @@ namespace slls.Controllers
                         return image.ImageId;
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                     return 0;
                 }
@@ -154,7 +154,7 @@ namespace slls.Controllers
                     }
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return 0;
             }
@@ -172,7 +172,7 @@ namespace slls.Controllers
                     return compressStream.ToArray();
                 }
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 return null;
             }

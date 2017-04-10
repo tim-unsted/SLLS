@@ -1588,17 +1588,13 @@ namespace slls.Areas.LibraryAdmin
                 UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
                 string actionUrl = urlHelper.Action("AdminSearch", new { q = viewModel.Isbn, f = "isbn" });
                 return Json(new { success = true, redirectTo = actionUrl });
-                //return RedirectToAction("AdminSearch", new {q = viewModel.Isbn, f = "isbn"});
             }
             else
             {
                 UrlHelper urlHelper = new UrlHelper(HttpContext.Request.RequestContext);
                 string actionUrl = urlHelper.Action("Edit", "Titles", new { id = titles.FirstOrDefault().TitleID });
                 return Json(new { success = true, redirectTo = actionUrl });
-                //return RedirectToAction("Edit", "Titles", new {id = titles.FirstOrDefault().TitleID});
             }
-
-            return Json(new {success = false});
         }
 
         public ActionResult EditTitle(int id)

@@ -625,7 +625,6 @@ namespace slls.Areas.LibraryAdmin
 
                 return Json(titles, JsonRequestBehavior.AllowGet);
             }
-            return null;
         }
 
         //Get a list of titles on-loan (Ajax stuff) ...
@@ -977,7 +976,7 @@ namespace slls.Areas.LibraryAdmin
                 if (dateRangeType == "span")
                 {
                     var weeks = viewModel.Weeks;
-                    var daysToAdd = 7;
+                    //var daysToAdd = 7;
                     if (weeks > 0)
                     {
                         switch (weeks)
