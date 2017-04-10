@@ -90,7 +90,7 @@
                                     @if (!string.IsNullOrEmpty(item.Title1))
                                     {
                                         <dt>@Html.DisplayName(DbRes.T("Titles.Title", "FieldDisplayName")):</dt>
-                                        <dd>@Html.DisplayFor(modelItem => item.Title1)</dd>
+                                        <dd><a href="@Url.Action("BookDetails", new {id = item.TitleID})" class="btn btn-link" title="View @DbRes.T("Titles.Title", "FieldDisplayName")">@Html.DisplayFor(modelItem => item.Title1)</a></dd>
                                     }
 
                                     @if (!string.IsNullOrEmpty(item.Edition))
@@ -105,7 +105,7 @@
                                         foreach (var author in item.TitleAuthors)
                                         {
                                             <dd>
-                                                <a href="@Url.Action("BrowseByAuthor", "Home", new {listAuthors = author.AuthorId}, null)" title="Browse other items by this Author">@author.Author.DisplayName</a><br />
+                                                <a href="@Url.Action("BrowseByAuthor", "Home", new {id = author.AuthorId}, null)" title="Browse other items by this Author">@author.Author.DisplayName</a><br />
                                             </dd>
                                         }
                                     }
@@ -127,18 +127,7 @@
                                         <dt>@Html.DisplayName(DbRes.T("MediaTypes.Media_Type", "FieldDisplayName")):</dt>
                                         <dd>@Html.DisplayFor(modelItem => item.MediaType.Media)</dd>
                                     }
-
-                                    @if (item.Copies.Any(x => x.StatusType.Opac))
-                                    {
-                                        <dt>@Html.DisplayName(DbRes.T("Titles.Copies", "FieldDisplayName"))&nbsp;<span class="badge">@item.Copies.Count(x => x.StatusType != null && x.StatusType.Opac)</span>:</dt>
-                                        foreach (var copy in item.Copies)
-                                        {
-                                            <dd>
-                                                @Html.DisplayFor(x => copy.Location.LocationString)
-                                            </dd>
-                                        }
-                                    }
-
+                                    
                                     @if (!string.IsNullOrEmpty(item.Classmark.Classmark1))
                                     {
                                         <dt>@Html.DisplayName(DbRes.T("Classmarks.Classmark", "FieldDisplayName")):</dt>
@@ -176,9 +165,20 @@
                                         <dd>
                                             @foreach (var index in item.SubjectIndexes)
                                             {
-                                                <a href="@Url.Action("BrowseBySubject", "Home", new {listSubjects = index.KeywordID}, null)" title="Browse other items catalogued against this subject" style="text-decoration: underline;">@index.Keyword.KeywordTerm</a>
+                                                <a href="@Url.Action("BrowseBySubject", "Home", new {id = index.KeywordID}, null)" title="Browse other items catalogued against this subject" style="text-decoration: underline;">@index.Keyword.KeywordTerm</a>
                                             }
                                         </dd>
+                                    }
+
+                                    @if (item.Copies.Any(x => x.StatusType.Opac))
+                                    {
+                                        <dt>@Html.DisplayName(DbRes.T("Titles.Copies", "FieldDisplayName"))&nbsp;<span class="badge">@item.Copies.Count(x => x.StatusType != null && x.StatusType.Opac)</span>:</dt>
+                                        foreach (var copy in item.Copies)
+                                        {
+                                            <dd>
+                                                @Html.DisplayFor(x => copy.Location.LocationString)
+                                            </dd>
+                                        }
                                     }
                                 </dl>
                             </div>

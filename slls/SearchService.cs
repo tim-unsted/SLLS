@@ -53,7 +53,7 @@ namespace slls
             }
         }
 
-        public static List<SelectAuthor> SelectAuthors(string searchTerm, int take = 100, bool inUseOnly = false)
+        public static List<SelectAuthor> SelectAuthors(string searchTerm, int take = 100, bool inUseOnly = false, bool opac = false)
         {
             var db = new DbEntities();
             var param1 = new SqlParameter("@SearchTerm", searchTerm);
@@ -64,7 +64,7 @@ namespace slls
             return result;
         }
 
-        public static List<SelectKeyword> SelectKeywords(string searchTerm, int take = 100, bool inUseOnly = false)
+        public static List<SelectKeyword> SelectKeywords(string searchTerm, int take = 100, bool inUseOnly = false, bool opac = false)
         {
             var db = new DbEntities();
             var param1 = new SqlParameter("@SearchTerm", searchTerm);

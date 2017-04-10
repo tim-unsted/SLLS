@@ -61,6 +61,12 @@
         }
         <div class=@colClass>
             <dl class="dl-horizontal">
+                @if (!string.IsNullOrEmpty(Model.Title1))
+                {
+                    <dt>@Html.DisplayName(DbRes.T("Titles.Title", "FieldDisplayName")):</dt>
+                    <dd>@Html.DisplayFor(modelItem => Model.Title1)</dd>
+                }
+
                 @if (!string.IsNullOrEmpty(Model.Edition))
                 {
                     <dt>@Html.DisplayName(DbRes.T("Titles.Edition", "FieldDisplayName")):</dt>

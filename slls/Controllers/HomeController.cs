@@ -389,14 +389,12 @@ namespace slls.Controllers
         public ActionResult BrowseByClassmark(int listClassmarks = 0)
         {
             //Get the list of classmarks in use ...
-            var classmarks = (from c in _db.Classmarks
-                              where c.Titles.Count > 0
-                              select
-                                  new { c.ClassmarkID, Classmark = c.Classmark1 + " (" + c.Titles.Count + ")" })
-                .Distinct();
+            var classmarks = (from c in _db.vwSelectClassmarksOpac.OrderBy(x => x.Classmark)
+                select
+                    new {ClassmarkID = c.ClassmarkId, Classmark = c.Classmark + " (" + c.Titles + ")"});
 
             //Start a new list selectlist items ...
-            List<SelectListItem> classmarkList = new List<SelectListItem>
+            var classmarkList = new List<SelectListItem>
             {
                 new SelectListItem
                 {
@@ -405,16 +403,11 @@ namespace slls.Controllers
                 }
             };
 
-            //Add the actual classmarks ...
-            foreach (var item in classmarks.OrderBy(c => c.Classmark))
+            classmarkList.AddRange(classmarks.OrderBy(c => c.Classmark).Select(item => new SelectListItem
             {
-                classmarkList.Add(new SelectListItem
-                {
-                    Text = item.Classmark,
-                    Value = item.ClassmarkID.ToString()
-                });
-            }
-
+                Text = item.Classmark, Value = item.ClassmarkID.ToString()
+            }));
+            
             //Get the actual results if the user has selected anything ...
             var viewModel = new SimpleSearchingViewModel
             {
@@ -440,11 +433,9 @@ namespace slls.Controllers
         public ActionResult BrowseByMedia(int listMedia = 0)
         {
             //Get the list of media types in use ...
-            var media = (from m in CacheProvider.GetAll<MediaType>("mediatypes")
-                         where m.Deleted == false && m.Titles.Count > 0
+            var media = (from m in _db.vwSelectMediaTypesOpac.OrderBy(x => x.Media)
                          select
-                             new { m.MediaID, Media = m.Media + " (" + m.Titles.Count + ")" })
-                .Distinct().OrderBy(x => x.Media);
+                             new { m.MediaID, Media = m.Media + " (" + m.Titles + ")" });
 
             //Start a new list selectlist items ...
             List<SelectListItem> mediaList = new List<SelectListItem>
@@ -491,11 +482,9 @@ namespace slls.Controllers
         public ActionResult BrowseByPublisher(int listPublishers = 0)
         {
             //Get the list of publishers in use ...
-            var publishers = (from c in CacheProvider.GetAll<Publisher>("publishers")
-                              where c.Titles.Count > 0
+            var publishers = (from p in _db.vwSelectPublishersOpac.OrderBy(x => x.PublisherName)
                               select
-                                  new { c.PublisherID, PublisherName = c.PublisherName + " (" + c.Titles.Count + ")" })
-                .Distinct().OrderBy(x => x.PublisherName);
+                                  new { p.PublisherID, PublisherName = p.PublisherName + " (" + p.Titles + ")" });
 
             //Start a new list selectlist items ...
             List<SelectListItem> publisherList = new List<SelectListItem>
@@ -537,10 +526,9 @@ namespace slls.Controllers
         public ActionResult BrowseByLanguage(int listLanguage = 0)
         {
             //Get the list of languages in use ...
-            var language = (from l in CacheProvider.GetAll<Language>("languages")
-                            where l.Titles.Count > 0
+            var language = (from l in _db.vwSelectLanguagesOpac.OrderBy(x => x.Language)
                             select
-                                new { l.LanguageID, Language = l.Language1 + " (" + l.Titles.Count + ")" })
+                                new { l.LanguageID, Language = l.Language + " (" + l.Titles + ")" })
                 .Distinct().OrderBy(x => x.Language);
 
             //Start a new list selectlist items ...
@@ -552,17 +540,11 @@ namespace slls.Controllers
                     Value = "0"
                 }
             };
-
-            //Add the actual languages ...
-            foreach (var item in language)
+            languageList.AddRange(language.Select(item => new SelectListItem
             {
-                languageList.Add(new SelectListItem
-                {
-                    Text = item.Language,
-                    Value = item.LanguageID.ToString()
-                });
-            }
-
+                Text = item.Language, Value = item.LanguageID.ToString()
+            }));
+            
             //Get the actual results if the user has selected anything ...
             var viewModel = new SimpleSearchingViewModel
             {
@@ -588,31 +570,29 @@ namespace slls.Controllers
         public ActionResult BrowseByLocation(int listLocation = 0)
         {
             //Get the list of locations in use ...
-            var location = (from l in _db.Locations
-                            where l.Copies.Count > 0
-                            select
-                                new { locationID = l.LocationID, location = l.Location1 })
-                .Distinct().OrderBy(x => x.location);
+            var locations = (from l in _db.Locations
+                join c in _db.Copies on l.LocationID equals c.LocationID
+                where c.StatusType.Opac && c.Volumes.Any()
+            select l).Distinct();
 
-            ////Start a new list selectlist items ...
-            //List<SelectListItem> locationList = new List<SelectListItem>
-            //{
-            //    new SelectListItem
-            //    {
-            //        Text = "Select a " + DbRes.T("Locations.Location", "FieldDisplayName"),
-            //        Value = "0"
-            //    }
-            //};
+            //Start a new list selectlist items ...
+            List<SelectListItem> locationList = new List<SelectListItem>
+            {
+                new SelectListItem
+                {
+                    Text = "Select a " + DbRes.T("Locations.Location", "FieldDisplayName"),
+                    Value = "0"
+                }
+            };
 
-            ////Add the actual locations ...
-            //foreach (var item in location)
-            //{
-            //    locationList.Add(new SelectListItem
-            //    {
-            //        Text = item.location,
-            //        Value = item.locationID.ToString()
-            //    });
-            //}
+
+            //Add the actual locations ...
+            locationList.AddRange(locations.OrderBy(x => x.ParentLocationID == null ? x.Location1 : x.ParentLocation.Location1 + x.Location1).Select(item => new SelectListItem
+            {
+                Text = (item.ParentLocation == null ? item.Location1 : item.ParentLocation.Location1 + ": " + item.Location1),
+                Value = item.LocationID.ToString()
+            }));
+
 
             //Get the actual results if the user has selected anything ...
             var viewModel = new SimpleSearchingViewModel
@@ -629,7 +609,7 @@ namespace slls.Controllers
                 OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text")
             };
 
-            ViewData["Listlocation"] = SelectListHelper.OfficeLocationList(); //locationList;
+            ViewData["Listlocation"] = locationList;  //SelectListHelper.OfficeLocationList(); 
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("browseBySeeAlso", ControllerContext.RouteData.Values["action"].ToString());
             ViewBag.Title = "Browse By " + DbRes.T("Locations.Location", "FieldDisplayName");
             ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
@@ -649,7 +629,7 @@ namespace slls.Controllers
 
             if (id > 0)
             {
-                var keyword = _db.vwSelectKeywordsUsed.Find(id);
+                var keyword = _db.Keywords.Find(id);
                 viewModel.SelectItem = keyword.KeywordTerm;
                 viewModel.Results = (from t in
                     _db.Titles
@@ -1583,7 +1563,7 @@ namespace slls.Controllers
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult KeywordsUsed(string term)
         {
-            var keywords = SearchService.SelectKeywords(term, 100, true);
+            var keywords = SearchService.SelectKeywords(term, 100, true, true);
 
             IList<SelectListItem> keywordsList = new List<SelectListItem>();
 
@@ -1596,11 +1576,11 @@ namespace slls.Controllers
 
             return Json(result, JsonRequestBehavior.AllowGet);
         }
-
+        
         [AcceptVerbs(HttpVerbs.Post)]
         public JsonResult AutoCompleteAuthors(string term)
         {
-            var authors = SearchService.SelectAuthors(term, 100, true);
+            var authors = SearchService.SelectAuthors(term, 100, true, true);
             
             IList<SelectListItem> authorsList = authors.Select(x => new SelectListItem {Text = x.DisplayName, Value = x.AuthorID.ToString()}).ToList();
 

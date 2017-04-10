@@ -111,6 +111,11 @@ namespace slls.Models
         public virtual DbSet<vwTitleSummary> VwTitlesSummary { get; set; }
         public virtual DbSet<vwSelectKeyword> vwSelectKeywords { get; set; }
         public virtual DbSet<vwSelectKeywordUsed> vwSelectKeywordsUsed { get; set; }
+        public virtual DbSet<vwSelectClassmarkOpac> vwSelectClassmarksOpac { get; set; }
+        public virtual DbSet<vwSelectMediaOpac> vwSelectMediaTypesOpac { get; set; }
+        public virtual DbSet<vwSelectPublisherOpac> vwSelectPublishersOpac { get; set; }
+        public virtual DbSet<vwSelectLanguageOpac> vwSelectLanguagesOpac { get; set; }
+
 
         //public virtual DbSet<vwBinding> vwBinding { get; set; } 
         //public virtual DbSet<vwBorrowing> vwBorrowing { get; set; }

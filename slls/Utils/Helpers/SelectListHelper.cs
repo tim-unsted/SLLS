@@ -867,8 +867,6 @@ namespace slls.Utils.Helpers
             var locations = CacheProvider.GetAll<Location>("locations");
             locationList.AddRange(locations.OrderBy(x => x.ParentLocationID == null ? x.Location1 : x.ParentLocation.Location1 + x.Location1).Select(item => new SelectListItem
             {
-                //Text = (item.ParentLocation == null ? item.Location1 : "\x230A" + "\xA0" + "\xA0" + "\xA0" + "\xA0" + item.Location1),
-                //Text = (item.ParentLocation == null ? item.Location1 : "\xA0" + item.ParentLocation.Location1 + " \x2192 " + item.Location1),
                 Text = (item.ParentLocation == null ? item.Location1 : item.ParentLocation.Location1 + separator + item.Location1),
                 Value = item.LocationID.ToString()
             }));

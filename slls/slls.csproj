@@ -364,8 +364,12 @@
     <Compile Include="Models\vwSelectCirculatedCopy.cs" />
     <Compile Include="Models\vwSelectCopy.cs" />
     <Compile Include="Models\vwSelectCopyWithCheckins.cs" />
+    <Compile Include="Models\vwSelectClassmarkOpac.cs" />
     <Compile Include="Models\vwSelectKeywords.cs" />
     <Compile Include="Models\vwSelectKeywordsUsed.cs" />
+    <Compile Include="Models\vwSelectLanguageOpac.cs" />
+    <Compile Include="Models\vwSelectPublisherOpac.cs" />
+    <Compile Include="Models\vwSelectMediaOpac.cs" />
     <Compile Include="Models\vwSelectOrder.cs" />
     <Compile Include="Models\vwSelectSupplier.cs" />
     <Compile Include="Models\vwSelectJustTitle.cs" />

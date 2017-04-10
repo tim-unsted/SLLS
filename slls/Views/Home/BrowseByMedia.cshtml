@@ -1,12 +1,23 @@
-﻿@model slls.ViewModels.SimpleSearchingViewModel
+﻿@using Westwind.Globalization
+@model slls.ViewModels.SimpleSearchingViewModel
 
 @Html.Partial("_HeaderSeeAlso", Model)
 
 @using (Html.BeginForm(null, null, FormMethod.Get, new { id = "TitlesTable" }))
 {
     <div class="alert alert-info">
-        @Html.DropDownList("ListMedia", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
+        <div class="row" style="margin-right: 0">
+            <div class="col-md-12">
+                <p><span class="glyphicon glyphicon-info-sign"></span> Select a @DbRes.T("MediaTypes.Media_Type", "FieldDisplayName") from the drop-down list below to view all items of that  @DbRes.T("MediaTypes.Media_Type", "FieldDisplayName").ToLower():</p>
+            </div>
+            <div class="col-md-12">
+                @Html.DropDownList("ListMedia", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
+            </div>
+        </div>
     </div>
+    @*<div class="alert alert-info">
+        @Html.DropDownList("ListMedia", null, new { @class = "form-control selectpicker", onchange = "this.form.submit();" })
+    </div>*@
 }
 
 <div id="TitlesTable">
