@@ -56,6 +56,8 @@ namespace slls.ViewModels
         public string SearchStyle { get; set; }
         public string SelectItem { get; set; }
         public int SelectedId { get; set; }
+
+        public bool AutoSuggestEnabled { get; set; }
         
         public SimpleSearchingViewModel()
         {
@@ -73,7 +75,9 @@ namespace slls.ViewModels
             this.OrderBy = "title";
             this.LibraryStaff = Roles.IsUserInRole("Catalogue Admin");
             this.SearchField = "all";
-
+            this.AutoSuggestEnabled =
+                Settings.GetParameterValue("Searching.EnableAutoSuggest", "true",
+                    "When enabled, displays other similar searched terms as suggestions.", dataType: "bool") == "true";
         }
 
         public IEnumerable<int> GetSelectedClassmarkIds()

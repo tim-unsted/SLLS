@@ -19,7 +19,7 @@ namespace slls
             var param2 = new SqlParameter("@IgnoreTerm", ignoreTerm);
             var param3 = new SqlParameter("@Field", field);
             var param4 = new SqlParameter("@Table", table);
-            var param5 = new SqlParameter("@UserId", PublicFunctions.GetUserId());
+            var param5 = new SqlParameter("@UserId", HttpContext.Current.Session["currentUserId"] ?? "");
             var titleIds = db.Database.SqlQuery<int>("DoFtSearch @SearchTerm, @IgnoreTerm, @Field, @Table, @UserId", param1, param2, param3, param4, param5).ToList();
             var result = db.Titles.Where(t => titleIds.Contains(t.TitleID)).ToList();
             return result;
