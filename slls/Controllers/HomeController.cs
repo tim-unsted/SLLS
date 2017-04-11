@@ -1589,6 +1589,17 @@ namespace slls.Controllers
             return Json(result, JsonRequestBehavior.AllowGet);
         }
 
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult AutoCompleteSearchTerm(string term)
+        {
+            var searchTerms = SearchService.GetSearchTerms(term, 20);
+
+            IList<SelectListItem> searchTermList = searchTerms.Select(x => new SelectListItem { Text = x.SearchTerm, Value = "0" }).ToList();
+
+            var result = searchTermList.Select(item => new KeyValuePair<string, string>(item.Value.ToString(), item.Text)).ToList();
+
+            return Json(result, JsonRequestBehavior.AllowGet);
+        }
         
     }
 }

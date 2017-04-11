@@ -271,4 +271,9 @@ namespace slls.ViewModels
         public int OrderCount { get; set; }
     }
 
+    public class SearchTerms
+    {
+        public string SearchTerm { get; set; }
+    }
+
 }

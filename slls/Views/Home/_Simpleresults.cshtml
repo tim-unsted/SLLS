@@ -9,6 +9,11 @@
     {
         <span class="pull-right">Sort Results: @Html.DropDownList("OrderBy", null, new { @class = "form-control", id = "OrderResults" })</span>
     }
+    @if (Model.IsActualSearch && Model.Results.Any())
+    {
+        <h3 style="margin-top: 0;">Search results for '@Model.SearchString'</h3>
+    }
+    
     @if (Model.IsActualSearch && Model.Results.Any() && User.Identity.IsAuthenticated)
     {
         //Only show the 'Save Search' button for actual searches ...

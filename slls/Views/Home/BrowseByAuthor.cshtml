@@ -59,7 +59,7 @@
                 event.preventDefault();
                 if (ui.item) {
                     if (ui.item.Id != null) {
-                        $('#SelectItem').val(ui.item.title);
+                        $('#SelectItem').val(ui.item.label);
                         var url = $("#DestUrl").val();
                         window.location.href = url.replace('REPLACEME', ui.item.Id);
                     }

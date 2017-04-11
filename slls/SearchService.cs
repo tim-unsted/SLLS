@@ -5,6 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using slls.Models;
+using slls.Utils;
 using slls.ViewModels;
 
 namespace slls
@@ -18,7 +19,8 @@ namespace slls
             var param2 = new SqlParameter("@IgnoreTerm", ignoreTerm);
             var param3 = new SqlParameter("@Field", field);
             var param4 = new SqlParameter("@Table", table);
-            var titleIds = db.Database.SqlQuery<int>("DoFtSearch @SearchTerm, @IgnoreTerm, @Field, @Table", param1, param2, param3, param4).ToList();
+            var param5 = new SqlParameter("@UserId", PublicFunctions.GetUserId());
+            var titleIds = db.Database.SqlQuery<int>("DoFtSearch @SearchTerm, @IgnoreTerm, @Field, @Table, @UserId", param1, param2, param3, param4, param5).ToList();
             var result = db.Titles.Where(t => titleIds.Contains(t.TitleID)).ToList();
             return result;
         }
@@ -102,6 +104,16 @@ namespace slls
             var param2 = new SqlParameter("@Take", take);
             var titles = db.Database.SqlQuery<SelectOrder>("SelectOrder @SearchTerm, @Take", param1, param2).ToList();
             var result = titles.ToList();
+            return result;
+        }
+
+        public static IEnumerable<SearchTerms> GetSearchTerms(string searchTerm, int take = 100)
+        {
+            var db = new DbEntities();
+            var param1 = new SqlParameter("@SearchTerm", searchTerm);
+            var param2 = new SqlParameter("@Take", take);
+            var searchTerms = db.Database.SqlQuery<SearchTerms>("GetSearchTerms @SearchTerm, @Take", param1, param2).ToList();
+            var result = searchTerms.ToList();
             return result;
         }
     }
