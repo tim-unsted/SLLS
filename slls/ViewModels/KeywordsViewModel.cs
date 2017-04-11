@@ -46,6 +46,8 @@ namespace slls.ViewModels
         [Required]
         [LocalDisplayName("Keywords.Parent_Keyword", "FieldDisplayName")]
         public int? ParentKeywordID { get; set; }
+
+        public string ParentKeyword { get; set; }
     }
 
     public class KeywordsEditViewModel
@@ -62,6 +64,8 @@ namespace slls.ViewModels
         [LocalDisplayName("Keywords.Parent_Keyword", "FieldDisplayName")]
         public int? ParentKeywordID { get; set; }
 
+        public string ParentKeyword { get; set; }
+
         public KeywordsEditViewModel()
         {
             
@@ -72,6 +76,7 @@ namespace slls.ViewModels
             this.KeywordID = _keyword.KeywordID;
             this.KeywordTerm = _keyword.KeywordTerm;
             this.ParentKeywordID = _keyword.ParentKeywordID;
+            this.ParentKeyword = _keyword.Keyword2.KeywordTerm;
         }
 
         [DisplayName("Can update?")]

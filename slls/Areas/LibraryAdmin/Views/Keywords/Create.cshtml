@@ -21,10 +21,12 @@
                 </div>
             }
 
+            @Html.HiddenFor(x => x.ParentKeywordID)
+
             <div class="form-group">
                 @Html.Label(DbRes.T("Keywords.Keyword", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-8">
-                    @Html.EditorFor(model => model.KeywordTerm, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.KeywordTerm, new { htmlAttributes = new { @placeholder = "Enter your new term ...", @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.KeywordTerm, "", new { @class = "text-danger" })
                     <span class="help-inline">This is the actual @DbRes.T("Keywords.Keyword", "FieldDisplayName") used to categorize items and help in searches.</span>
                 </div>
@@ -33,8 +35,8 @@
             <div class="form-group">
                 @Html.Label(DbRes.T("Keywords.Parent_Keyword", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-3" })
                 <div class="col-md-8">
-                    @Html.DropDownList("ParentKeywordID", null, htmlAttributes: new { @class = "form-control" })
-                    @Html.ValidationMessageFor(model => model.ParentKeywordID, "", new { @class = "text-danger" })
+                    @Html.TextBoxFor(x => x.ParentKeyword, new { @placeholder = "Enter the 'Parent' term, if applicable ...", @class = "form-control" })
+                    @*@Html.DropDownList("ParentKeywordID", null, htmlAttributes: new { @class = "form-control" })*@
                     <span class="help-inline">This is the 'parent' of the @DbRes.T("Keywords.Keyword", "FieldDisplayName") above if your data is hierachical.</span>
                 </div>
             </div>
@@ -47,4 +49,45 @@
 }
 
 @Scripts.Render("~/bundles/modalAddEditHeader")
+<script type="text/javascript">
 
+    $(document).ready(function () {
+        $('#KeywordTerm').focus();
+
+        function selectAllText(textbox) {
+            textbox.focus();
+            textbox.select();
+        }
+
+        $('#ParentKeyword').click(function () { selectAllText(jQuery(this)) });
+        
+        $("#ParentKeyword").autocomplete({
+            appendTo: "#stdModal",
+            source: function (request, response) {
+                var title = new Array();
+                var urlGetTerms = "@Url.Action("Autocomplete", "Keywords")";
+                $.ajax({
+                    async: false,
+                    cache: false,
+                    type: "POST",
+                    url: urlGetTerms,
+                    data: { "term": request.term },
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            title[i] = { label: data[i].Value, Id: data[i].Key };
+                        }
+                    }
+                });
+                response(title);
+            },
+            select: function (event, ui) {
+                if (ui.item) {
+                    if (ui.item.Id != null) {
+                        $('#ParentKeywordID').val(ui.item.Id);
+                        $('#ParentKeyword').val(ui.item.label);
+                    }
+                }
+            }
+        });
+    });
+</script>

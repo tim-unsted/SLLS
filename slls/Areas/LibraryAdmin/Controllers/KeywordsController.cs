@@ -89,16 +89,20 @@ namespace slls.Areas.LibraryAdmin
         // GET: Keywords/Create
         public ActionResult Create()
         {
-            ViewData["ParentKeywordID"] = SelectListHelper.KeywordList(addNew:false);
-            KeywordsCreateViewModel kcvm = new KeywordsCreateViewModel();
+            //ViewData["ParentKeywordID"] = SelectListHelper.KeywordList(addNew:false);
+            var viewModel = new KeywordsCreateViewModel()
+            {
+                ParentKeywordID = -1,
+                //ParentKeyword = "--- Subjects ---"
+            };
             ViewBag.Title = "Add New " + _entityName;
-            return PartialView();
+            return PartialView(viewModel);
         }
 
         // POST: Keywords/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(KeywordsCreateViewModel kvm)
+        public ActionResult Create(KeywordsCreateViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
@@ -106,8 +110,8 @@ namespace slls.Areas.LibraryAdmin
                 {
                     var keyword = new Keyword
                     {
-                        KeywordTerm = kvm.KeywordTerm,
-                        ParentKeywordID = kvm.ParentKeywordID == 0 ? -1 : kvm.ParentKeywordID,
+                        KeywordTerm = viewModel.KeywordTerm,
+                        ParentKeywordID = viewModel.ParentKeywordID == 0 ? -1 : viewModel.ParentKeywordID,
                         CanUpdate = true,
                         CanDelete = true,
                         InputDate = DateTime.Now
@@ -122,8 +126,8 @@ namespace slls.Areas.LibraryAdmin
                 }
             }
 
-            ViewData["ParentKeywordID"] = SelectListHelper.KeywordList(kvm.ParentKeywordID.Value); //new SelectList(_db.Keywords, "KeywordID", "KeywordTerm", kvm.ParentKeywordID);
-            return PartialView(kvm);
+            //ViewData["ParentKeywordID"] = SelectListHelper.KeywordList(kvm.ParentKeywordID.Value); //new SelectList(_db.Keywords, "KeywordID", "KeywordTerm", kvm.ParentKeywordID);
+            return PartialView(viewModel);
         }
 
         public ActionResult _add()
@@ -212,7 +216,8 @@ namespace slls.Areas.LibraryAdmin
             {
                 KeywordID = keyword.KeywordID,
                 ParentKeywordID = keyword.ParentKeywordID,
-                KeywordTerm = keyword.KeywordTerm
+                KeywordTerm = keyword.KeywordTerm,
+                ParentKeyword = keyword.Keyword2.KeywordTerm
             };
 
             ViewData["ParentKeywordID"] = SelectListHelper.KeywordList(selected:viewModel.ParentKeywordID.Value, addNew:false, avoid:id.Value);
@@ -278,9 +283,9 @@ namespace slls.Areas.LibraryAdmin
         }
 
         [AcceptVerbs(HttpVerbs.Post)]
-        public JsonResult Autocomplete(string term)
+        public JsonResult Autocomplete(string term, bool inuse = false)
         {
-            var keywords = SearchService.SelectKeywords(term, 100, true);
+            var keywords = SearchService.SelectKeywords(term, 100, inuse);
 
             IList<SelectListItem> keywordsList = keywords.Select(x => new SelectListItem {Text = x.KeywordTerm, Value = x.KeywordId.ToString()}).ToList();
 
