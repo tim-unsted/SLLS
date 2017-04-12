@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using slls.App_Settings;
 using slls.Models;
 
 namespace slls.ViewModels
@@ -18,5 +19,13 @@ namespace slls.ViewModels
         public List<NewTitlesSimpleViewModel> NewTitles { get; set; }
         public List<Notification> Notifications { get; set; }
         public bool LibraryStaff { get; set; }
+        public bool AutoSuggestEnabled { get; set; }
+
+        public OPACHomePageViewModel()
+        {
+            this.AutoSuggestEnabled =
+                Settings.GetParameterValue("Searching.EnableAutoSuggest", "true",
+                    "When enabled, displays other similar searched terms as suggestions.", dataType: "bool") == "true";
+        }
     }
 }

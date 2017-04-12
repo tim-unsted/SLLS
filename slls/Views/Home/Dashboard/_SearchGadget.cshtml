@@ -8,13 +8,13 @@
         </span>
     </div>
     <div class="panel-body">
-    @using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm", role = "search", defaultbutton = "btnSubmit" }))
+    @using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm", name = "searchForm", role = "search", defaultbutton = "btnSubmit" }))
     {
         <div class="form-horizontal">
             <div class="form-group">
                 <div class="col-md-12">
                     @Html.LabelFor(model => model.SearchString)
-                    @Html.EditorFor(model => model.SearchString, new { htmlAttributes = new { @class = "form-control", placeholder = "Find ..." } })
+                    @Html.TextBoxFor(model => model.SearchString, new { @placeholder = "Find ...", @class = "form-control", id = "MainSearchString" })
                 </div>
             </div>
             <div class="form-group">

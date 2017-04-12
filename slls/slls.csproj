@@ -1019,6 +1019,7 @@
     <Content Include="Scripts\titles-add-publisher.js" />
     <Content Include="Scripts\titles-autocat-partial.js" />
     <Content Include="Scripts\_ModalAddEditHeader.js" />
+    <Content Include="Scripts\_SearchAutoComplete.js" />
     <Content Include="Scripts\_SelectCopy.js" />
     <Content Include="Scripts\_SelectOrder.js" />
     <Content Include="Scripts\_SelectTitle.js" />

@@ -9,9 +9,9 @@
     {
         <span class="pull-right">Sort Results: @Html.DropDownList("OrderBy", null, new { @class = "form-control", id = "OrderResults" })</span>
     }
-    @if (Model.IsActualSearch && Model.Results.Any())
+    @if (!string.IsNullOrEmpty(Model.SearchString))
     {
-        <h3 style="margin-top: 0;">Search results for '@Model.SearchString'</h3>
+        <h3 style="margin-top: 0; margin-bottom: 10px">Search results for '@Model.SearchString'</h3>
     }
     
     @if (Model.IsActualSearch && Model.Results.Any() && User.Identity.IsAuthenticated)
@@ -19,9 +19,9 @@
         //Only show the 'Save Search' button for actual searches ...
         <a href="@Url.Action("SaveSearch", "Home")" title="Save Search" class="btn btn-success modal-link"><span aria-hidden="true" class="glyphicon glyphicon-floppy-disk"></span> Save</a>
     }
-    <div class="btn-group">
-        @if (Model.LibraryStaff && Model.Results.Any()) //Only show the 'Export' button for library staff ...
-        {
+    @if (Model.LibraryStaff && Model.Results.Any()) //Only show the 'Export' button for library staff ...
+    {
+        <div class="btn-group">
             <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" title="Export results to Excel">
                 <span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Export <span class="caret"></span>
             </button>
@@ -30,8 +30,9 @@
                 <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopies"})" title="Export Titles & Copy details" class="btn-link">Titles & Copy details</a></li>
                 <li><a href="@Url.Action("ExportCatalogueResults", "Searching", new {exportType = "titlescopiesvolumes"})" title="Export Titles, Copies & Copy Item (Volume) details" class="btn-link">Titles, Copies & Copy Item details</a></li>
             </ul>
-        }
-    </div>
+        </div>
+    }
+    
 </div>
 <br />
 <table id="titles" class="table table-condensed table-no-border">

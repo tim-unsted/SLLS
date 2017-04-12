@@ -631,6 +631,7 @@ namespace slls.Controllers
             {
                 var keyword = _db.Keywords.Find(id);
                 viewModel.SelectItem = keyword.KeywordTerm;
+                viewModel.SearchString = keyword.KeywordTerm;
                 viewModel.Results = (from t in
                     _db.Titles
                     join c in _db.Copies on t.TitleID equals c.TitleID
