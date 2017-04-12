@@ -25,6 +25,7 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Searching.SearchTerm", "FieldDisplayName")]
         [Required (ErrorMessage = "Please enter a word or phrase to search for.")]
+        [MinLength(2, ErrorMessage = "Your search string or term must contain at least 2 characters!")]
         public string SearchString { get; set; }
 
         [LocalDisplayName("Searching.SearchWhere", "FieldDisplayName")]
@@ -53,9 +54,11 @@ namespace slls.ViewModels
 
         public int NarrowByDefaultRecordCount { get; set; }
         public int SearchResultSize { get; set; }
+        public int SearchTake { get; set; }
         public string SearchStyle { get; set; }
         public string SelectItem { get; set; }
         public int SelectedId { get; set; }
+        public bool MoreResults { get; set; }
 
         public bool AutoSuggestEnabled { get; set; }
         
@@ -71,6 +74,7 @@ namespace slls.ViewModels
             this.ResultsBeforeFilter = new List<Title>();
             this.NarrowByDefaultRecordCount = int.Parse(Settings.GetParameterValue("Searching.NarrowByDefaultRecordCount", "5", dataType: "int"));
             this.SearchResultSize = int.Parse(Settings.GetParameterValue("Searching.SearchResultSize", "10", dataType: "int"));
+            this.SearchTake = int.Parse(Settings.GetParameterValue("Searching.MaxResults", "100", "Sets the initial maximum number of most relevant results returned from a search. Often there is no need to return all results if many are ranked as less relevant. Returning fewer results improves the performance of searches.", dataType: "int"));
             this.SearchStyle = "prefix";
             this.OrderBy = "title";
             this.LibraryStaff = Roles.IsUserInRole("Catalogue Admin");
@@ -78,6 +82,7 @@ namespace slls.ViewModels
             this.AutoSuggestEnabled =
                 Settings.GetParameterValue("Searching.EnableAutoSuggest", "true",
                     "When enabled, displays other similar searched terms as suggestions.", dataType: "bool") == "true";
+            MoreResults = false;
         }
 
         public IEnumerable<int> GetSelectedClassmarkIds()

@@ -2,10 +2,6 @@
 @model slls.ViewModels.SimpleSearchingViewModel
 @*<h2>@ViewBag.Title</h2>*@
 
-@Html.HiddenFor(x => Model.ClassmarksFilter)
-@Html.HiddenFor(x => Model.IsActualSearch)
-@Html.HiddenFor(x => Model.OrderBy)
-
 @using (Html.BeginForm("SimpleSearchResults", "Home", FormMethod.Post, new { id = "searchForm", name = "searchForm", defaultbutton = "btnSubmit" }))
 {
     <div class="alert alert-info" id="searchHeader" style="margin-top: 20px;">
@@ -33,6 +29,17 @@
     if (TempData["NoData"] != null)
     {
         @Html.Partial("_NoData", TempData["NoData"])
+    }
+
+    if (Model.MoreResults)
+    {
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <span aria-hidden="true" class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                <span class="sr-only">Message:</span>
+                Only the @Model.SearchTake most relevant results are shown below. You can reduce the number of results by making your search more specific.
+                Alternatively,<button type="button" id="btnSubmitAgain" value="Find more" class="btn-link" title="Clcik here to view all results">click here</button>to return all possible results.
+        </div>
     }
 
     if (Model.Results != null && Model.Results.Any())
@@ -82,10 +89,16 @@
             </div>
         </div>
     }
+    
+    @*@Html.HiddenFor(x => Model.ClassmarksFilter)*@
+    @Html.HiddenFor(x => Model.IsActualSearch)
+    @Html.HiddenFor(x => Model.OrderBy)
+    @Html.HiddenFor(x => Model.SearchTake)
+    @Html.HiddenFor(x => Model.SearchResultSize)
+    @Html.HiddenFor(x => Model.OrderBy)
 }
 
-@Html.Hidden("SearchResultSize", Model.SearchResultSize)
-@Html.Hidden("OrderBy", Model.OrderBy)
+
 
 @section scripts {
     @*@Scripts.Render("~/bundles/datatables")*@
@@ -98,6 +111,11 @@
                 $("input[type='checkbox']").change(function () {
                     $(this).closest("form").submit();
                 });
+            });
+
+            $('#btnSubmitAgain').click(function() {
+                $('#SearchTake').val("1000000");
+                $('form#searchForm').submit();
             });
             
             var autoSuggestEnabled = @Json.Encode(Model.AutoSuggestEnabled);

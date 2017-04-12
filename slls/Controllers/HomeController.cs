@@ -682,16 +682,20 @@ namespace slls.Controllers
         }
 
         [HttpGet]
-        public ActionResult SimpleSearch(string q = "")
+        public ActionResult SimpleSearch(string q = "", int take = 0)
         {
             var viewModel = new SimpleSearchingViewModel()
             {
-                //LibraryStaff = Roles.IsUserInRole("Catalogue Admin"),
                 Area = "opac",
                 OrderBy = "title",
                 IsActualSearch = true,
                 SearchString = q
             };
+
+            if (take > 0)
+            {
+                viewModel.SearchTake = take;
+            }
 
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(scope: "opac");
             ViewBag.SearchTips = HelpTextHelper.GetHelpText("searchingtips");
@@ -705,6 +709,7 @@ namespace slls.Controllers
             viewModel.IsActualSearch = true;
             viewModel.OrderBy = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text");
             ViewData["OrderBy"] = SelectListHelper.OpacResultsOrderBy(viewModel.OrderBy);
+            
             var take = viewModel.NarrowByDefaultRecordCount;
 
             if (TempData["SearchTerm"] != null)
@@ -803,7 +808,7 @@ namespace slls.Controllers
 
             if (!string.IsNullOrEmpty(q))
             {
-                var results = SearchService.DoFullTextSearch(q, qIgnore.Trim(), viewModel.SearchField == "all" ? "*" : viewModel.SearchField);
+                var results = SearchService.DoFullTextSearch(searchTerm: q, ignoreTerm: qIgnore.Trim(), field: viewModel.SearchField == "all" ? "*" : viewModel.SearchField, table: "OpacFullTextSearch", take: viewModel.SearchTake);
                 viewModel.ResultsBeforeFilter = results;
 
                 //Order the results ...
@@ -1213,7 +1218,13 @@ namespace slls.Controllers
             {
                 TempData["NoData"] = "Sorry, your search did not find any results. Please try again.";
             }
+            if (viewModel.Results.Count() == viewModel.SearchTake)
+            {
+                //TempData["MoreResults"] = "Only the " + viewModel.SearchTake + " most relevant results are shown below. You can reduce the number of results by making yoursearch more specific. AlternativelyTo return all possible results, please press here.";
+                viewModel.MoreResults = true;
+            }
 
+            viewModel.SearchTake = int.Parse(Settings.GetParameterValue("Searching.MaxResults", "100", "Sets the initial maximum number of most relevant results returned from a search. Often there is no need to return all results if many are ranked as less relevant. Returning fewer results improves the performance of searches.", dataType: "int"));
             viewModel.LibraryStaff = Roles.IsLibraryStaff();
             ViewData["SearchField"] = SelectListHelper.SearchFieldsList(viewModel.SearchField);
             ViewBag.SearchTips = HelpTextHelper.GetHelpText("searchingtips");

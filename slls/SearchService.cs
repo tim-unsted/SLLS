@@ -12,15 +12,20 @@ namespace slls
 {
     public class SearchService
     {
-        public static List<Title> DoFullTextSearch(string searchTerm, string ignoreTerm = "", string field = "*", string table = "OpacFullTextSearch")
+        public static List<Title> DoFullTextSearch(string searchTerm, string ignoreTerm = "", string field = "*", string table = "OpacFullTextSearch", int take = 100)
         {
+            if (searchTerm.Length < 2)
+            {
+                return null;
+            }
             var db = new DbEntities();
             var param1 = new SqlParameter("@SearchTerm", searchTerm);
             var param2 = new SqlParameter("@IgnoreTerm", ignoreTerm);
             var param3 = new SqlParameter("@Field", field);
             var param4 = new SqlParameter("@Table", table);
-            var param5 = new SqlParameter("@UserId", HttpContext.Current.Session["currentUserId"] ?? "");
-            var titleIds = db.Database.SqlQuery<int>("DoFtSearch @SearchTerm, @IgnoreTerm, @Field, @Table, @UserId", param1, param2, param3, param4, param5).ToList();
+            var param5 = new SqlParameter("@Take", take);
+            var param6 = new SqlParameter("@UserId", HttpContext.Current.Session["currentUserId"] ?? "");
+            var titleIds = db.Database.SqlQuery<int>("DoFtSearch @SearchTerm, @IgnoreTerm, @Field, @Table, @Take, @UserId", param1, param2, param3, param4, param5, param6).ToList();
             var result = db.Titles.Where(t => titleIds.Contains(t.TitleID)).ToList();
             return result;
         }

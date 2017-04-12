@@ -41,17 +41,7 @@ namespace slls.Areas.Config
 
         public ActionResult Searchoptions(bool success = false)
         {
-            var viewModel = new SearchOptionsViewModel()
-            {
-                DefaultSearchOrder = Settings.GetParameterValue("Searching.DefaultSortOrder", "title.asc", "Sets the default sort order for search results.", dataType: "text"),
-                DefaultSearchOrderTip = "Sets the default sort order for search results.",
-                DefaultNewTitlesOrder = Settings.GetParameterValue("Searching.DefaultNewTitlesSortOrder", "commenced.desc", "Sets the default sort order for the 'New Titles' list.", dataType: "text"),
-                DefaultNewTitlesOrderTip = "Sets the default sort order for the 'New Titles' list.",
-                SearchResultsPageSize = int.Parse(Settings.GetParameterValue("Searching.SearchResultSize", "10", "Sets the page size for OPAC simple search.", dataType: "int")),
-                SearchResultsPageSizeTip = "Sets the page size for OPAC simple search",
-                NarrowByDefaultRecordCount = int.Parse(Settings.GetParameterValue("Searching.NarrowByDefaultRecordCount", "5", "Sets the number of initial narrow-by options for each narrow-by source (e.g. Media Types).", dataType: "int")),
-                NarrowByDefaultRecordCountTip = "Sets the number of initial narrow-by options for each narrow-by source (e.g. Media Types)."
-            };
+            var viewModel = new SearchOptionsViewModel();
 
             if (success)
             {
@@ -83,6 +73,14 @@ namespace slls.Areas.Config
             if (viewModel.NarrowByDefaultRecordCount != 0)
             {
                 Settings.UpdateParameter("Searching.NarrowByDefaultRecordCount", viewModel.NarrowByDefaultRecordCount.ToString());
+            }
+            if (viewModel.SearchTake > 0)
+            {
+                Settings.UpdateParameter("Searching.MaxResults", viewModel.SearchTake.ToString());
+            }
+            if (viewModel.AutoSuggestEnabled)
+            {
+                Settings.UpdateParameter("Searching.EnableAutoSuggest", viewModel.AutoSuggestEnabled ? "true" : "false");
             }
             
             return RedirectToAction("Searchoptions", new { success = true });
