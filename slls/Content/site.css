@@ -150,6 +150,8 @@ body {
 /*This is the backgound colour for the main menu and login links*/
 .navbar-inverse {
     background-color: #222;
+    border-left: none;
+    border-right: none;
 }
 
 /*This is the font colour for the main menu and login links*/
