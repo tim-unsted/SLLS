@@ -11,6 +11,7 @@ using Microsoft.Ajax.Utilities;
 using slls.App_Settings;
 using slls.DAO;
 using slls.Models;
+using slls.Utils;
 using slls.Utils.Helpers;
 using slls.ViewModels;
 using Westwind.Globalization;
@@ -178,10 +179,10 @@ namespace slls.Areas.LibraryAdmin
         {
             // Open a new PDF document - uses Avery L7162 as default label
             ViewBag.Title = "Book Labels for Selected Copies";
-            float fltPageMarginLeft = viewModel.leftMargin;
-            float fltPageMarginRight = viewModel.rightMargin;
-            float fltPageMarginTop = viewModel.topMargin;
-            float fltPageMarginBottom = viewModel.bottomMargin;
+            float fltPageMarginLeft = PublicFunctions.MillimetersToPoints(viewModel.rightMargin);
+            float fltPageMarginRight = PublicFunctions.MillimetersToPoints(viewModel.rightMargin);
+            float fltPageMarginTop = PublicFunctions.MillimetersToPoints(viewModel.topMargin);
+            float fltPageMarginBottom = PublicFunctions.MillimetersToPoints(viewModel.bottomMargin);
             int intPageRows = viewModel.labelsDown;
             int intPageColumns = viewModel.labelsAcross;
             int labelsUsed = ((viewModel.StartPositionRow - 1) * viewModel.labelsAcross) + (viewModel.StartPositioncolumn - 1);
@@ -239,7 +240,7 @@ namespace slls.Areas.LibraryAdmin
 
                 PdfPCell cell = new PdfPCell();
                 cell.Border = 0;
-                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginLeft + fltPageMarginRight)) / intPageRows;
+                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginTop + fltPageMarginBottom)) / intPageRows;
                 cell.VerticalAlignment = Element.ALIGN_MIDDLE;
 
                 var contents = new Paragraph();
@@ -259,7 +260,7 @@ namespace slls.Areas.LibraryAdmin
 
                 PdfPCell cell = new PdfPCell();
                 cell.Border = 0;
-                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginLeft + fltPageMarginRight)) / intPageRows;
+                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginTop + fltPageMarginBottom)) / intPageRows;
                 cell.VerticalAlignment = Element.ALIGN_MIDDLE;
 
                 var contents = new Paragraph();
@@ -295,12 +296,12 @@ namespace slls.Areas.LibraryAdmin
                         new Font(baseFont, 8f)));
                 }
 
-                // Copy Number (miss line if empty)
-                if (volume.Copy.CopyNumber > 0)
-                {
-                    contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("Copies.Copy_Number", "FieldDisplayName"), volume.Copy.CopyNumber), 
-                        new Font(baseFont, 8f)));
-                }
+                //// Copy Number (miss line if empty)
+                //if (volume.Copy.CopyNumber > 0)
+                //{
+                //    contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("Copies.Copy_Number", "FieldDisplayName"), volume.Copy.CopyNumber),
+                //        new Font(baseFont, 8f)));
+                //}
 
                 // Label Text : Barcode (miss line if empty)
                 if (!string.IsNullOrEmpty(volume.LabelText) && !string.IsNullOrEmpty(volume.Barcode))
@@ -380,10 +381,10 @@ namespace slls.Areas.LibraryAdmin
         {
             // Open a new PDF document - uses Avery L7162 as default label
 
-            float fltPageMarginLeft = viewModel.leftMargin;
-            float fltPageMarginRight = viewModel.rightMargin;
-            float fltPageMarginTop = viewModel.topMargin;
-            float fltPageMarginBottom = viewModel.bottomMargin;
+            float fltPageMarginLeft = PublicFunctions.MillimetersToPoints(viewModel.rightMargin);
+            float fltPageMarginRight = PublicFunctions.MillimetersToPoints(viewModel.rightMargin);
+            float fltPageMarginTop = PublicFunctions.MillimetersToPoints(viewModel.topMargin);
+            float fltPageMarginBottom = PublicFunctions.MillimetersToPoints(viewModel.bottomMargin);
             int intPageRows = viewModel.labelsDown;
             int intPageColumns = viewModel.labelsAcross;
             int lablesUsed = ((viewModel.StartPositionRow - 1) * viewModel.labelsAcross) + (viewModel.StartPositioncolumn - 1);
@@ -441,7 +442,7 @@ namespace slls.Areas.LibraryAdmin
 
                 PdfPCell cell = new PdfPCell();
                 cell.Border = 0;
-                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginLeft + fltPageMarginRight)) / intPageRows;
+                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginTop + fltPageMarginBottom)) / intPageRows;
                 cell.VerticalAlignment = Element.ALIGN_MIDDLE;
 
                 var contents = new Paragraph();
@@ -461,7 +462,7 @@ namespace slls.Areas.LibraryAdmin
 
                 PdfPCell cell = new PdfPCell();
                 cell.Border = 0;
-                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginLeft + fltPageMarginRight)) / intPageRows;
+                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginTop + fltPageMarginBottom)) / intPageRows;
                 cell.VerticalAlignment = Element.ALIGN_MIDDLE;
 
                 var contents = new Paragraph();
@@ -497,12 +498,12 @@ namespace slls.Areas.LibraryAdmin
                         new Font(baseFont, 8f)));
                 }
 
-                // Copy Number (miss line if empty)
-                if (volume.Copy.CopyNumber > 0)
-                {
-                    contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("Copies.Copy_Number", "FieldDisplayName"), volume.Copy.CopyNumber),
-                        new Font(baseFont, 8f)));
-                }
+                //// Copy Number (miss line if empty)
+                //if (volume.Copy.CopyNumber > 0)
+                //{
+                //    contents.Add(new Chunk(string.Format("{0}: {1}\n", DbRes.T("Copies.Copy_Number", "FieldDisplayName"), volume.Copy.CopyNumber),
+                //        new Font(baseFont, 8f)));
+                //}
 
                 // Label Text : Barcode (miss line if empty)
                 if (!string.IsNullOrEmpty(volume.LabelText) && !string.IsNullOrEmpty(volume.Barcode))
@@ -551,9 +552,9 @@ namespace slls.Areas.LibraryAdmin
             var pageMarginBottom = Settings.GetParameterValue("Labels.SpineLabels.MarginBottom", "4.7",
                 "Book label sheet bottom margin. The default is 4.7(mm) - Avery L7651 (5x13)", dataType: "double").Replace("mm", "").Trim();
             var pageRows = Settings.GetParameterValue("Labels.SpineLabels.NumberDown", "13",
-                "Book label sheet number of labels down the page. The default is 8 - Avery L7651 (5x13))", dataType: "int");
+                "Book label sheet number of labels down the page. The default is 13 - Avery L7651 (5x13))", dataType: "int");
             var pageCols = Settings.GetParameterValue("Labels.SpineLabels.NumberAcross", "5",
-                "Book label sheet number of labels across the page. The default is 2 -Avery L7651 (5x13)", dataType: "int");
+                "Book label sheet number of labels across the page. The default is 5 - Avery L7651 (5x13)", dataType: "int");
 
             var viewModel = new PrintLabelsViewModel()
             {
@@ -583,10 +584,10 @@ namespace slls.Areas.LibraryAdmin
         {
             // Open a new PDF document - uses Avery L7651 as default label
 
-            float fltPageMarginLeft = viewModel.leftMargin;
-            float fltPageMarginRight = viewModel.rightMargin;
-            float fltPageMarginTop = viewModel.topMargin;
-            float fltPageMarginBottom = viewModel.bottomMargin;
+            float fltPageMarginLeft = PublicFunctions.MillimetersToPoints(viewModel.rightMargin);
+            float fltPageMarginRight = PublicFunctions.MillimetersToPoints(viewModel.rightMargin);
+            float fltPageMarginTop = PublicFunctions.MillimetersToPoints(viewModel.topMargin);
+            float fltPageMarginBottom = PublicFunctions.MillimetersToPoints(viewModel.bottomMargin);
             int intPageRows = viewModel.labelsDown;
             int intPageColumns = viewModel.labelsAcross;
             int lablesUsed = ((viewModel.StartPositionRow - 1) * viewModel.labelsAcross) + (viewModel.StartPositioncolumn - 1);
@@ -614,7 +615,7 @@ namespace slls.Areas.LibraryAdmin
 
                 PdfPCell cell = new PdfPCell();
                 cell.Border = 0;
-                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginLeft + fltPageMarginRight)) / intPageRows;
+                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginTop + fltPageMarginBottom)) / intPageRows;
                 cell.VerticalAlignment = Element.ALIGN_MIDDLE;
 
                 var contents = new Paragraph();
@@ -636,7 +637,7 @@ namespace slls.Areas.LibraryAdmin
 
                 PdfPCell cell = new PdfPCell();
                 cell.Border = 0;
-                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginLeft + fltPageMarginRight)) / intPageRows;
+                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginTop + fltPageMarginBottom)) / intPageRows;
                 cell.VerticalAlignment = Element.ALIGN_MIDDLE;
 
                 var contents = new Paragraph();
@@ -705,10 +706,10 @@ namespace slls.Areas.LibraryAdmin
         {
             // Open a new PDF document - uses Avery L7651 as default label
 
-            float fltPageMarginLeft = viewModel.leftMargin;
-            float fltPageMarginRight = viewModel.rightMargin;
-            float fltPageMarginTop = viewModel.topMargin;
-            float fltPageMarginBottom = viewModel.bottomMargin;
+            float fltPageMarginLeft = PublicFunctions.MillimetersToPoints(viewModel.rightMargin);
+            float fltPageMarginRight = PublicFunctions.MillimetersToPoints(viewModel.rightMargin);
+            float fltPageMarginTop = PublicFunctions.MillimetersToPoints(viewModel.topMargin);
+            float fltPageMarginBottom = PublicFunctions.MillimetersToPoints(viewModel.bottomMargin);
             int intPageRows = viewModel.labelsDown;
             int intPageColumns = viewModel.labelsAcross;
             int lablesUsed = ((viewModel.StartPositionRow - 1) * viewModel.labelsAcross) + (viewModel.StartPositioncolumn - 1);
@@ -736,7 +737,7 @@ namespace slls.Areas.LibraryAdmin
 
                 PdfPCell cell = new PdfPCell();
                 cell.Border = 0;
-                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginLeft + fltPageMarginRight)) / intPageRows;
+                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginTop + fltPageMarginBottom)) / intPageRows;
                 cell.VerticalAlignment = Element.ALIGN_MIDDLE;
 
                 var contents = new Paragraph();
@@ -758,7 +759,7 @@ namespace slls.Areas.LibraryAdmin
 
                 PdfPCell cell = new PdfPCell();
                 cell.Border = 0;
-                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginLeft + fltPageMarginRight)) / intPageRows;
+                cell.FixedHeight = (doc.PageSize.Height - (fltPageMarginTop + fltPageMarginBottom)) / intPageRows;
                 cell.VerticalAlignment = Element.ALIGN_MIDDLE;
 
                 var contents = new Paragraph();

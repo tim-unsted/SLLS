@@ -37,10 +37,26 @@
                     </div>
                 </div>
 
-                @*<hr class="hr-compact"/>*@
+                <div class="strike">
+                    <span>Label Design:</span>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.labelsAcross, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.labelsAcross, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.labelsAcross, "", new { @class = "text-danger" })
+                    </div>
+
+                    @Html.LabelFor(model => model.labelsDown, htmlAttributes: new { @class = "control-label col-md-3" })
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.labelsDown, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.labelsDown, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
                 <div class="strike">
-                    <span>Label Dimensions:</span>
+                    <span>Page Set-up (millimeters):</span>
                 </div>
 
                 <div class="form-group">
@@ -58,33 +74,19 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.leftMargin, htmlAttributes: new { @class = "control-label col-md-3" })
+                    @Html.LabelFor(model => model.leftMargin, htmlAttributes: new {@class = "control-label col-md-3"})
                     <div class="col-md-2">
-                        @Html.EditorFor(model => model.leftMargin, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.leftMargin, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.leftMargin, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.leftMargin, "", new {@class = "text-danger"})
                     </div>
 
-                    @Html.LabelFor(model => model.rightMargin, htmlAttributes: new { @class = "control-label col-md-3" })
+                    @Html.LabelFor(model => model.rightMargin, htmlAttributes: new {@class = "control-label col-md-3"})
                     <div class="col-md-2">
-                        @Html.EditorFor(model => model.rightMargin, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.rightMargin, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.labelsAcross, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-2">
-                        @Html.EditorFor(model => model.labelsAcross, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.labelsAcross, "", new { @class = "text-danger" })
-                    </div>
-
-                    @Html.LabelFor(model => model.labelsDown, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-2">
-                        @Html.EditorFor(model => model.labelsDown, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.labelsDown, "", new { @class = "text-danger" })
+                        @Html.EditorFor(model => model.rightMargin, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.rightMargin, "", new {@class = "text-danger"})
                     </div>
                 </div>
-
+                
                 <div class="strike">
                     <span>Partially-used Labels:</span>
                 </div>

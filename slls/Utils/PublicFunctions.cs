@@ -71,5 +71,71 @@ namespace slls.Utils
             var currentUser = context.Users.FirstOrDefault(u => u.UserName == userName);
             return currentUser != null ? currentUser.Id : null;
         }
+
+        /**
+        * Measurement conversion from millimeters to points.
+        * @param    value   a value in millimeters
+        * @return   a value in points
+        */
+
+        public static float MillimetersToPoints(float value)
+        {
+            return InchesToPoints(MillimetersToInches(value));
+        }
+
+        /**
+        * Measurement conversion from millimeters to inches.
+        * @param    value   a value in millimeters
+        * @return   a value in inches
+        */
+
+        public static float MillimetersToInches(float value)
+        {
+            return value / 25.4f;
+        }
+
+        /**
+        * Measurement conversion from points to millimeters.
+        * @param    value   a value in points
+        * @return   a value in millimeters
+        */
+
+        public static float PointsToMillimeters(float value)
+        {
+            return InchesToMillimeters(PointsToInches(value));
+        }
+
+        /**
+        * Measurement conversion from points to inches.
+        * @param    value   a value in points
+        * @return   a value in inches
+        */
+
+        public static float PointsToInches(float value)
+        {
+            return value / 72f;
+        }
+        
+        /**
+        * Measurement conversion from inches to millimeters.
+        * @param    value   a value in inches
+        * @return   a value in millimeters
+        */
+
+        public static float InchesToMillimeters(float value)
+        {
+            return value * 25.4f;
+        }
+
+        /**
+        * Measurement conversion from inches to points.
+        * @param    value   a value in inches
+        * @return   a value in points
+        */
+
+        public static float InchesToPoints(float value)
+        {
+            return value * 72f;
+        }
     }
 }
