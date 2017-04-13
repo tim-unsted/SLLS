@@ -150,4 +150,10 @@ namespace slls.ViewModels
         public IEnumerable<Copy> PartsOverdue { get; set; }
     }
 
+    public class PartsReceivedDeleteSelectedViewModel
+    {
+        public int Count { get; set; }
+        public List<int> Selected { get; set; }
+    }
+
 }

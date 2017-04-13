@@ -4,42 +4,44 @@
 <div id="partslist">
     <table id="partsreceived" class="table table-condensed table-hover">
         <thead>
-            <tr>
-                <th>
-                    @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
-                </th>
-                <th>
-                    @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PartReceived)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DateReceived)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Returned)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PrintList)
-                </th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
+        <tr>
+            <th><input name="select_all" value="1" type="checkbox"></th>
+            <th>
+                @Html.Label(DbRes.T("Titles.Title", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.Label(DbRes.T("Copies.Copy_Number", "FieldDisplayName"))
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PartReceived)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateReceived)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Returned)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PrintList)
+            </th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.PartsReceivedList)
             {
                 <tr>
+                    <td></td>
                     <td>
-                        @Html.ActionLink(item.Copy.Title.Title1, "Edit", "Titles", new { id = item.Copy.TitleID }, null)
+                        @Html.ActionLink(item.Copy.Title.Title1, "Edit", "Titles", new {id = item.Copy.TitleID}, null)
                     </td>
                     <td>
-                        @Html.ActionLink(item.Copy.CopyNumber.ToString(), "Edit", "Copies", new { id = item.CopyID }, null)
+                        @Html.ActionLink(item.Copy.CopyNumber.ToString(), "Edit", "Copies", new {id = item.CopyID}, null)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.PartReceived)
@@ -69,8 +71,9 @@
                         @Html.Raw(item.DateReceivedSortable)
                     </td>
                     <td class="just-right">
-                        <a href="@Url.Action("Edit", "PartsReceived", new { id = item.PartID })" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
-                        <a href="@Url.Action("Create", "PartsReceived", new { id = item.CopyID })" class="btn btn-link modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span></a>
+                        <a href="@Url.Action("Delete", "PartsReceived", new {id = item.PartID})" class="btn btn-link modal-link" title="Delete @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                        <a href="@Url.Action("Edit", "PartsReceived", new {id = item.PartID})" class="btn btn-link modal-link" title="Edit @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                        <a href="@Url.Action("Create", "PartsReceived", new {id = item.CopyID})" class="btn btn-link modal-link" title="Check-In New @DbRes.T("CheckIn.Part", "FieldDisplayName")"><span aria-hidden="true" class="glyphicon glyphicon-check"></span></a>
                     </td>
                 </tr>
             }

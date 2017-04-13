@@ -27,7 +27,7 @@ namespace slls.Areas.LibraryAdmin
         }
 
         // GET: LibraryAdmin/PartsReceived
-        public ActionResult Index(int id = 0)
+        public ActionResult Index(int id = 0, bool deleteSuccess = false)
         {
             //Get any parts received for the selected copy, if any ...
             var partsReceivedList = id == -1
@@ -46,7 +46,11 @@ namespace slls.Areas.LibraryAdmin
                 viewModel.CopyID = id;
             }
 
-            //ViewData["SelectedCopy"] = SelectListHelper.AllCopiesList(addAll: true, msg: "Select a " + DbRes.T("Copies.Copy", "FieldDisplayName") + " to Check-In");
+            if (deleteSuccess)
+            {
+                TempData["SuccessMsg"] = "Parts deleted successfully.";
+            }
+
             ViewData["CopyID"] = id;
             ViewBag.Title = _entityName;
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("checkInSeeAlso", ControllerContext.RouteData.Values["action"].ToString(), null, "sortOrder");
@@ -476,6 +480,35 @@ namespace slls.Areas.LibraryAdmin
             return PartialView("_DeleteConfirmation", dcvm);
         }
 
+        [AcceptVerbs(HttpVerbs.Post)]
+        public JsonResult DeleteSelected(List<int> selectedIds)
+        {
+            var deleteSuccess = true;
+            //var copyId = 0;
+
+            foreach (var partId in selectedIds)
+            {
+                var part = _db.PartsReceiveds.Find(partId);
+                if (part != null)
+                {
+                    try
+                    {
+                        //if (copyId == 0)
+                        //{
+                        //    copyId = part.CopyID.Value;
+                        //}
+                        _db.PartsReceiveds.Remove(part);
+                        _db.SaveChanges();
+                    }
+                    catch (Exception e)
+                    {
+                        deleteSuccess = false;
+                    }
+                }
+            }
+            //return RedirectToAction("Index", new { id = copyId, deleteSuccess });
+            return Json(new {success = true});
+        }
 
         protected override void Dispose(bool disposing)
         {

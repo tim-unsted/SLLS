@@ -39,6 +39,7 @@ namespace slls.ViewModels
         /// </summary>
         public int DeleteEntityId { get; set; }
         public string DeleteEntityIdString { get; set; }
+        public List<int> DeleteEntityList { get; set; }
 
         /// <summary>
         /// Delete Confirmation dialog header text. For example 
@@ -46,6 +47,7 @@ namespace slls.ViewModels
         /// </summary>
         public string HeaderText { get; set; }
 
+        [AllowHtml]
         public string DetailsText { get; set; }
 
         public string ButtonText { get; set; }

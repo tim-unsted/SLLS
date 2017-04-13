@@ -93,7 +93,7 @@
                     data: { "term": request.term },
                     success: function(data) {
                         for (var i = 0; i < data.length; i++) {
-                            title[i] = { CopyId: data[i].CopyId, title: data[i].Title, copyNumber: data[i].CopyNumber, edition: data[i].Edition, year: data[i].Year, authors: data[i].AuthorString };
+                            title[i] = { CopyId: data[i].CopyID, title: data[i].Title, copyNumber: data[i].CopyNumber, edition: data[i].Edition, year: data[i].Year, authors: data[i].AuthorString };
                         }
                     }
                 });
