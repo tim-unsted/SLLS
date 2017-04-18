@@ -59,6 +59,9 @@ namespace slls.ViewModels
         [LocalDisplayName("Users.Barcode", "FieldDisplayName")]
         public string UserBarcode { get; set; }
 
+        [LocalDisplayName("Genders.Gender", "FieldDisplayName")]
+        public int? GenderId { get; set; }
+
         [LocalDisplayName("Users.Is_Live", "FieldDisplayName")]
         public bool IsLive { get; set; }
 
@@ -67,6 +70,15 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Departments.Department", "FieldDisplayName")]
         public int? DepartmentId { get; set; }
+
+        [LocalDisplayName("Classes.Class", "FieldDisplayName")]
+        public int? ClassId { get; set; }
+
+        [LocalDisplayName("Cohorts.Cohort", "FieldDisplayName")]
+        public int? CohortId { get; set; }
+
+        [LocalDisplayName("UserType.UserType", "FieldDisplayName")]
+        public int? UserTypeID { get; set; }
 
         [LocalDisplayName("Users.Position", "FieldDisplayName")]
         public string Position { get; set; }
@@ -85,6 +97,17 @@ namespace slls.ViewModels
         public string Roles { get; set; }
         
         public IEnumerable<SelectListItem> RolesList { get; set; }
+
+        public LibraryUserAddViewModel()
+        {
+            UserTypeID = 1;
+            CohortId = 1;
+            ClassId = 1;
+            UserTypeID = 1;
+            SelfLoansAllowed = true;
+            IgnoreAd = false;
+            IsLive = true;
+        }
     }
 
     public class LibraryUserEditViewModel

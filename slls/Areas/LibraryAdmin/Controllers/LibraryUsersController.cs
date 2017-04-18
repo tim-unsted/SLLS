@@ -176,6 +176,10 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.Title = "Add New " + _entityName;
             ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1");
             ViewBag.LocationID = new SelectList(_db.Locations, "LocationID", "Location1");
+            ViewBag.CohortID = new SelectList(_db.Cohorts, "CohortId", "Cohort1", 1);
+            ViewBag.GenderID = new SelectList(_db.Genders, "GenderId", "Gender1", 1);
+            ViewBag.ClassID = new SelectList(_db.Classes, "ClassId", "Class1", 1);
+            ViewBag.UserTypeID = new SelectList(_db.UserTypes, "UserTypeId", "UserType1", 1);
 
             return View(viewModel);
         }
@@ -198,6 +202,10 @@ namespace slls.Areas.LibraryAdmin
                     Lastname = viewModel.Lastname,
                     UserBarcode = viewModel.UserBarcode,
                     DepartmentId = viewModel.DepartmentId,
+                    ClassID = viewModel.ClassId,
+                    GenderID = viewModel.GenderId,
+                    CohortID = viewModel.CohortId,
+                    UserTypeID = viewModel.UserTypeID,
                     LocationID = viewModel.LocationId,
                     SelfLoansAllowed = viewModel.SelfLoansAllowed,
                     IgnoreAd = viewModel.IgnoreAd,
