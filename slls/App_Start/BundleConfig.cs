@@ -107,6 +107,8 @@ namespace slls
             //Scripts to use when adding or editing titles  ...
             var titlesAddEdit = new ScriptBundle("~/bundles/titlesAddEdit").Include(
                 "~/Scripts/titles-add-classmarks.js",
+                "~/Scripts/titles-add-genre.js",
+                "~/Scripts/titles-add-audience.js",
                 "~/Scripts/titles-add-media.js",
                 "~/Scripts/titles-add-frequency.js",
                 "~/Scripts/titles-add-publisher.js",

@@ -278,6 +278,11 @@
     <Compile Include="Areas\Config\Controllers\ParametersController.cs" />
     <Compile Include="Areas\Config\Controllers\PartialMenuController.cs" />
     <Compile Include="Areas\Config\Controllers\SearchConfigController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\AudiencesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\ClassesController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\CohortsController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\GendersController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\GenresController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\HostedFileController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\ImagesController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\LoansBaseController.cs" />
@@ -316,6 +321,7 @@
     <Compile Include="Areas\LibraryAdmin\Controllers\TitleImagesController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\TitleLinksController.cs" />
     <Compile Include="Areas\LibraryAdmin\Controllers\UsefulLinksController.cs" />
+    <Compile Include="Areas\LibraryAdmin\Controllers\UserTypesController.cs" />
     <Compile Include="ConnectionMapping.cs" />
     <Compile Include="Controllers\BorrowingController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -339,10 +345,15 @@
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationRole.cs" />
+    <Compile Include="Models\Audience.cs" />
+    <Compile Include="Models\Class.cs" />
+    <Compile Include="Models\Cohort.cs" />
     <Compile Include="Models\CopacLibrary.cs" />
     <Compile Include="Models\CopacLanguage.cs" />
     <Compile Include="Models\DashboardGadget.cs" />
     <Compile Include="Models\DefaultValue.cs" />
+    <Compile Include="Models\Gender.cs" />
+    <Compile Include="Models\Genre.cs" />
     <Compile Include="Models\HostedFile.cs" />
     <Compile Include="Models\IpAddress.cs" />
     <Compile Include="Models\LibraryUserSavedSearch.cs" />
@@ -360,6 +371,7 @@
     <Compile Include="Models\Notification.cs" />
     <Compile Include="Models\OrderLink.cs" />
     <Compile Include="Models\UsefulLink.cs" />
+    <Compile Include="Models\UserType.cs" />
     <Compile Include="Models\vwAccountQry.cs" />
     <Compile Include="Models\vwSelectCirculatedCopy.cs" />
     <Compile Include="Models\vwSelectCopy.cs" />
@@ -402,12 +414,15 @@
     <Compile Include="ViewModels\ActivityTypesViewModels.cs" />
     <Compile Include="ViewModels\AdminToolsViewModels.cs" />
     <Compile Include="ViewModels\AlphabeticalPagingViewModel.cs" />
+    <Compile Include="ViewModels\AudiencesViewModels.cs" />
     <Compile Include="ViewModels\AuthoritySelectorViewModels.cs" />
     <Compile Include="ViewModels\BorrowingViewModels.cs" />
     <Compile Include="ViewModels\BudgetCodeViewModels.cs" />
     <Compile Include="ViewModels\CacheViewModels.cs" />
     <Compile Include="ViewModels\CirculationViewModels.cs" />
+    <Compile Include="ViewModels\ClassesViewModels.cs" />
     <Compile Include="ViewModels\ClassmarksViewModels.cs" />
+    <Compile Include="ViewModels\CohortsViewModels.cs" />
     <Compile Include="ViewModels\ConnectionViewModels.cs" />
     <Compile Include="ViewModels\CopiesViewModels.cs" />
     <Compile Include="ViewModels\ConfirmationViewModels.cs" />
@@ -416,6 +431,8 @@
     <Compile Include="ViewModels\DataImportViewModels.cs" />
     <Compile Include="ViewModels\DefaultValueViewModels.cs" />
     <Compile Include="ViewModels\EmailViewModels.cs" />
+    <Compile Include="ViewModels\GendersViewModels.cs" />
+    <Compile Include="ViewModels\GenresViewModels.cs" />
     <Compile Include="ViewModels\HostedFilesViewModel.cs" />
     <Compile Include="ViewModels\IpAddressViewModels.cs" />
     <Compile Include="ViewModels\LoanTypesViewModels.cs" />
@@ -567,6 +584,7 @@
     <Compile Include="ViewModels\TitleReportsViewModels.cs" />
     <Compile Include="ViewModels\TitlesViewModels.cs" />
     <Compile Include="ViewModels\UsefulLinksViewModels.cs" />
+    <Compile Include="ViewModels\UserTypesViewModels.cs" />
     <Compile Include="ViewModels\VolumesViewModels.cs" />
     <Compile Include="App_Start\AppBuilderExtensions.cs" />
   </ItemGroup>
@@ -1010,6 +1028,8 @@
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
     <Content Include="Scripts\jquery.mcautocomplete.js" />
+    <Content Include="Scripts\titles-add-audience.js" />
+    <Content Include="Scripts\titles-add-genre.js" />
     <Content Include="Scripts\titles-add-frequency.js" />
     <Content Include="Scripts\titles-add-language.js" />
     <Content Include="Scripts\titles-add-media.js" />
@@ -1175,6 +1195,32 @@
     <Content Include="Areas\CheckInOut\Views\Shared\_ViewStart.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Titles\Reports\TitleDetails.cshtml" />
     <Content Include="Areas\LibraryAdmin\Views\Copies\_PartsReceivedSubForm.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Audiences\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Audiences\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Audiences\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Classes\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Classes\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Classes\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Cohorts\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Cohorts\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Cohorts\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Genders\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Genders\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Genders\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Genres\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Genres\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Genres\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\UserTypes\Create.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\UserTypes\Edit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\UserTypes\Index.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_selectGenreViewEdit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Genres\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Titles\_selectAudienceViewEdit.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Audiences\_add.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectAudience.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectGenre.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectGenreInLine.cshtml" />
+    <Content Include="Areas\LibraryAdmin\Views\Shared\_selectAudienceInLine.cshtml" />
     <None Include="MvcSiteMapSchema.xsd">
       <SubType>Designer</SubType>
     </None>

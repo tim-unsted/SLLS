@@ -525,6 +525,84 @@ namespace slls.Utils.Helpers
             return classmarkList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
         }
 
+        public static IEnumerable<SelectListItem> GenreList(int id = 0, string msg = "Select a ", bool addDefault = true, bool addNew = true)
+        {
+            DbEntities db = new DbEntities();
+            var genreList = new List<SelectListItem>();
+
+            //Add a default value if required ...
+            if (addDefault)
+            {
+                genreList.Add(new SelectListItem
+                {
+                    Text = msg + DbRes.T("Genres.Genre", "FieldDisplayName"),
+                    Value = "0"
+                });
+            };
+
+            //Add New
+            if (addNew)
+            {
+                genreList.Add(new SelectListItem
+                {
+                    Text = "[Add New " + DbRes.T("Genres.Genre", "FieldDisplayName") + "]",
+                    Value = "-1"
+                });
+            }
+
+            //Add the actual Genres ...
+            foreach (var item in CacheProvider.GetAll<Genre>("Genres").Where(c => c.Deleted == false).OrderBy(c => c.Genre1))
+            {
+                genreList.Add(new SelectListItem
+                {
+                    //Text = string.IsNullOrEmpty(item.Genre1) ? "<no name>" : item.Genre1,
+                    Text = item.Genre1 ?? "",
+                    Value = item.GenreId.ToString()
+                });
+            }
+
+            return genreList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
+        }
+
+        public static IEnumerable<SelectListItem> AudienceList(int id = 0, string msg = "Select a ", bool addDefault = true, bool addNew = true)
+        {
+            DbEntities db = new DbEntities();
+            var audienceList = new List<SelectListItem>();
+
+            //Add a default value if required ...
+            if (addDefault)
+            {
+                audienceList.Add(new SelectListItem
+                {
+                    Text = msg + DbRes.T("Audiences.Audience", "FieldDisplayName"),
+                    Value = "0"
+                });
+            };
+
+            //Add New
+            if (addNew)
+            {
+                audienceList.Add(new SelectListItem
+                {
+                    Text = "[Add New " + DbRes.T("Audiences.Audience", "FieldDisplayName") + "]",
+                    Value = "-1"
+                });
+            }
+
+            //Add the actual Audiences ...
+            foreach (var item in CacheProvider.GetAll<Audience>("Audiences").Where(c => c.Deleted == false).OrderBy(c => c.Audience1))
+            {
+                audienceList.Add(new SelectListItem
+                {
+                    //Text = string.IsNullOrEmpty(item.Audience1) ? "<no name>" : item.Audience1,
+                    Text = item.Audience1 ?? "",
+                    Value = item.AudienceId.ToString()
+                });
+            }
+
+            return audienceList.Select(l => new SelectListItem { Selected = (l.Value == id.ToString()), Text = l.Text, Value = l.Value });
+        }
+
         public static IEnumerable<SelectListItem> PublisherList(int id = 0, string msg = "Select a ", bool addDefault = true, bool addNew = true)
         {
             DbEntities db = new DbEntities();

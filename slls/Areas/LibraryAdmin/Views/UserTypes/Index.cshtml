@@ -1,0 +1,65 @@
+﻿@using System
+@using System.Linq
+@using System.Web.UI.HtmlControls
+@using Westwind.Globalization
+@model System.Collections.Generic.IEnumerable<slls.Models.UserType>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "UserTypes")" title="Add new @DbRes.T("UserTypes.UserType", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<table id="UserTypes" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("UserTypes.UserType", "FieldDisplayName")
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.UserType1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "UserTypes", new { id = item.UserTypeId }, new { @Class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.UserType1, "Edit", "UserTypes", new { id = item.UserTypeId }, new { @Class = "modal-link" })
+                    }
+                </td>
+
+                <td class="just-right">
+                    @if (item.CanDelete && !item.LibraryUsers.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.UserTypeId})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.UserTypeId})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#UserTypes').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                }
+            });
+        });
+    </script>
+}

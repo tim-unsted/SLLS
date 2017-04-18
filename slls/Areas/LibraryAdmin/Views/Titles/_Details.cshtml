@@ -34,13 +34,13 @@
         <div class="form-group">
             <div class="col-md-3">
                 @Html.Label(DbRes.T("Titles.ISBN_10", "FieldDisplayName"))
-                @Html.EditorFor(model => model.ISBN10, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ISBN10, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.ISBN10, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.ISBN10, "", new {@class = "text-danger"})
             </div>
             <div class="col-md-3">
                 @Html.Label(DbRes.T("Titles.ISBN_13", "FieldDisplayName"))
-                @Html.EditorFor(model => model.ISBN13, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ISBN13, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.ISBN13, new {htmlAttributes = new {@class = "form-control"}})
+                @Html.ValidationMessageFor(model => model.ISBN13, "", new {@class = "text-danger"})
             </div>
             <div class="col-md-6">
                 @Html.Partial("_selectClassmarkViewEdit")
@@ -123,6 +123,15 @@
             </div>
             <div class="col-md-6">
                 @Html.Partial("_selectFrequencyViewEdit")
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                @Html.Partial("_selectGenreViewEdit")
+            </div>
+            <div class="col-md-6">
+                @Html.Partial("_selectAudienceViewEdit")
             </div>
         </div>
 

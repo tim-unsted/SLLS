@@ -1,0 +1,16 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleAddViewModel
+
+@Html.LabelFor(model => model.AudienceID, new { @class = "control-label col-md-2" })
+
+<div class="col-md-5">
+    @Html.DropDownList("AudienceID", null, new {@class = "form-control"})
+    @Html.ValidationMessageFor(model => model.AudienceID, "", new {@class = "text-danger"})
+</div>
+
+<div class="col-sm-1 hidden-sm hidden-xs" style="padding-top: 5px; padding-left: 0">
+    <a href="@Url.Action("_add", "Audiences")" class="button" id="addAudienceLink" title="@DbRes.T("Audiences.Audience", "FieldDisplayName") not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
+</div>
+
+<div id="newAudienceDialog" title="Add New @DbRes.T("Audiences.Audience", "FieldDisplayName")"></div>
+

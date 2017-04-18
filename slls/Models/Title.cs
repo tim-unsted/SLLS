@@ -55,6 +55,12 @@ namespace slls.Models
         [LocalDisplayName("Classmarks.Classmark", "FieldDisplayName")]
         public int ClassmarkID { get; set; }
 
+        [LocalDisplayName("Genres.Genre", "FieldDisplayName")]
+        public int GenreID { get; set; }
+
+        [LocalDisplayName("Audiences.Audience", "FieldDisplayName")]
+        public int AudienceID { get; set; }
+
         [LocalDisplayName("Titles.Publisher", "FieldDisplayName")]
         public int PublisherID { get; set; }
 
@@ -321,6 +327,10 @@ namespace slls.Models
         public virtual Language Language { get; set; }
 
         public virtual MediaType MediaType { get; set; }
+
+        public virtual Genre Genre { get; set; }
+
+        public virtual Audience Audience { get; set; }
 
         [LocalDisplayName("Titles.Order_Details", "FieldDisplayName")]
         public virtual ICollection<OrderDetail> OrderDetails { get; set; }

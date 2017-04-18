@@ -132,6 +132,12 @@ namespace slls.ViewModels
         [LocalDisplayName("Classmarks.Classmark", "FieldDisplayName")]
         public int ClassmarkID { get; set; }
 
+        [LocalDisplayName("Audiences.Audience", "FieldDisplayName")]
+        public int AudienceID { get; set; }
+
+        [LocalDisplayName("Genres.Genre", "FieldDisplayName")]
+        public int GenreID { get; set; }
+
         [LocalDisplayName("Titles.Publisher", "FieldDisplayName")]
         public int PublisherID { get; set; }
 
@@ -282,6 +288,12 @@ namespace slls.ViewModels
         [LocalDisplayName("Languages.Language", "FieldDisplayName")]
         public int LanguageID { get; set; }
 
+        [LocalDisplayName("Genres.Genre", "FieldDisplayName")]
+        public int GenreID { get; set; }
+
+        [LocalDisplayName("Audiences.Audience", "FieldDisplayName")]
+        public int AudienceID { get; set; }
+
         [StringLength(255)]
         [LocalDisplayName("Titles.Series", "FieldDisplayName")]
         public string Series { get; set; }
@@ -326,6 +338,8 @@ namespace slls.ViewModels
         public string Notes { get; set; }
 
         public Classmark Classmark { get; set; }
+        public Genre Genre { get; set; }
+        public Audience Audience { get; set; }
         public Supplier Supplier { get; set; }
         public Frequency Frequency { get; set; }
         public Language Language { get; set; }

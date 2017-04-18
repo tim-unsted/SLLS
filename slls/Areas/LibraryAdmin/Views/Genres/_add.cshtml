@@ -1,0 +1,11 @@
+﻿@model slls.Models.Genre
+
+@using (Html.BeginForm("_add", "Genres", FormMethod.Post, new { id = "addGenreForm" }))
+{
+    <div class="form-group">
+        <br />
+        @Html.EditorFor(model => model.Genre1, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Genre1, "", new { @class = "text-danger" })
+    </div>
+    
+}

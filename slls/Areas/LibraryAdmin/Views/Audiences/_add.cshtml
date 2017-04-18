@@ -1,0 +1,11 @@
+﻿@model slls.Models.Audience
+
+@using (Html.BeginForm("_add", "Audiences", FormMethod.Post, new { id = "addAudienceForm" }))
+{
+    <div class="form-group">
+        <br />
+        @Html.EditorFor(model => model.Audience1, new { htmlAttributes = new { @class = "form-control" } })
+        @Html.ValidationMessageFor(model => model.Audience1, "", new { @class = "text-danger" })
+    </div>
+    
+}

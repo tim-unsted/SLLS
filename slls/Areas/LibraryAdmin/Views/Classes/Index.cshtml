@@ -1,0 +1,65 @@
+﻿@using System
+@using System.Linq
+@using System.Web.UI.HtmlControls
+@using Westwind.Globalization
+@model System.Collections.Generic.IEnumerable<slls.Models.Class>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "Classes")" title="Add new @DbRes.T("Classes.Class", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<table id="Classes" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("Classes.Class", "FieldDisplayName")
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Class1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Classes", new { id = item.ClassId }, new { @Class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Class1, "Edit", "Classes", new { id = item.ClassId }, new { @Class = "modal-link" })
+                    }
+                </td>
+
+                <td class="just-right">
+                    @if (item.CanDelete && !item.LibraryUsers.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.ClassId})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.ClassId})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#Classes').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,65 @@
+﻿@using System
+@using System.Linq
+@using System.Web.UI.HtmlControls
+@using Westwind.Globalization
+@model System.Collections.Generic.IEnumerable<slls.Models.Gender>
+
+@Html.Partial("_HeaderSeeAlso", Model)
+
+<p>
+    <a href="@Url.Action("Create", "Genders")" title="Add new @DbRes.T("Genders.Gender", "FieldDisplayName")" class="btn btn-primary modal-link"><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span> Add New</a>
+</p>
+
+<table id="Genders" class="table table-hover">
+    <thead>
+        <tr>
+            <th>
+                @DbRes.T("Genders.Gender", "FieldDisplayName")
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (String.IsNullOrEmpty(item.Gender1))
+                    {
+                        @Html.ActionLink(" ", "Edit", "Genders", new { id = item.GenderId }, new { @Class = "modal-link" })
+                    }
+                    else
+                    {
+                        @Html.ActionLink(item.Gender1, "Edit", "Genders", new { id = item.GenderId }, new { @Class = "modal-link" })
+                    }
+                </td>
+
+                <td class="just-right">
+                    @if (item.CanDelete && !item.LibraryUsers.Any())
+                    {
+                        <a href="@Url.Action("Delete", new {id = item.GenderId})" class="btn btn-link modal-link" title="Delete"><span aria-hidden="true" class="glyphicon glyphicon-trash"></span></a>
+                    }
+                    <a href="@Url.Action("Edit", new {id = item.GenderId})" class="btn btn-link modal-link" title="Edit"><span aria-hidden="true" class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section scripts {
+    @*@Scripts.Render("~/bundles/datatables")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var table = $('#Genders').DataTable({
+                "dom": sDom,
+                "pagingType": sPagingType,
+                "pageLength": sPageLength,
+                "lengthMenu": sLengthMenu,
+                "language": {
+                    "url": "/DataTables/lang.txt"
+                }
+            });
+        });
+    </script>
+}

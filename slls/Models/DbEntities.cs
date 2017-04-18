@@ -91,7 +91,12 @@ namespace slls.Models
         public virtual DbSet<SearchOrderType> SearchOrderTypes { get; set; }
         public virtual DbSet<DashboardGadget> DashboardGadgets { get; set; }
         public virtual DbSet<HostedFile> HostedFiles { get; set; }
-        //public virtual DbSet<OpacSearchResults> OpacSearchResults { get; set; }
+        public virtual DbSet<UserType> UserTypes { get; set; }
+        public virtual DbSet<Audience> Audiences { get; set; }
+        public virtual DbSet<Class> Classes { get; set; }
+        public virtual DbSet<Cohort> Cohorts { get; set; }
+        public virtual DbSet<Gender> Genders { get; set; }
+        public virtual DbSet<Genre> Genres { get; set; }
 
         //Views
         

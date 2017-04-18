@@ -44,6 +44,10 @@ namespace slls.Models
         public bool IgnoreAd { get; set; }
         public string Position { get; set; }
         public int? DepartmentId { get; set; }
+        public int? ClassID { get; set; }
+        public int? CohortID { get; set; }
+        public int? GenderID { get; set; }
+        public int? UserTypeID { get; set; }
 
         [Column("LocationId")]
         public int? LocationID { get; set; }
@@ -105,6 +109,10 @@ namespace slls.Models
         public virtual ICollection<Circulation> Circulations { get; set; }
         public virtual Department Department { get; set; }
         public virtual Location Location { get; set; }
+        public virtual Class Class { get; set; }
+        public virtual Cohort Cohort { get; set; }
+        public virtual Gender Gender { get; set; }
+        public virtual UserType UserType { get; set; }
         public virtual ICollection<LibraryUserEmailAddress> LibraryUserEmailAddresses { get; set; }
         public virtual ICollection<OrderDetail> AuthorisedOrders { get; set; }
         public virtual ICollection<OrderDetail> RequestedOrders { get; set; }

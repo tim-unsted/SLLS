@@ -243,6 +243,8 @@
 @Html.Hidden("AutoSuggestUrl", @Url.Action("AutoComplete", "Titles"))
 @Html.Hidden("DestUrl", @Url.Action("Edit", "Titles", new {id = "REPLACEME"}))
 @Html.Hidden("AddClassmarkUrl", @Url.Action("_add", "Classmarks"))
+@Html.Hidden("AddGenreUrl", @Url.Action("_add", "Genres"))
+@Html.Hidden("AddAudienceUrl", @Url.Action("_add", "Audiences"))
 @Html.Hidden("AddMediaUrl", @Url.Action("_add", "MediaTypes"))
 @Html.Hidden("AddFrequencyUrl", @Url.Action("_add", "Frequencies"))
 @Html.Hidden("AddLanguageUrl", @Url.Action("_add", "Languages"))

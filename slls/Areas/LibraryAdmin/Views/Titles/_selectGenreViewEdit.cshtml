@@ -1,0 +1,8 @@
+﻿@using Westwind.Globalization
+@model slls.ViewModels.TitleDetailsViewModel
+
+@Html.Label(DbRes.T("Genres.Genre", "FieldDisplayName"))&nbsp;&nbsp;<a href="@Url.Action("_add","Genres")" class="button modal-link" id="addGenreLink" title="@DbRes.T("Genres.Genre", "FieldDisplayName") not in the list?&#013;Add a new one now."><span aria-hidden="true" class="glyphicon glyphicon-plus-sign"></span></a>
+@Html.DropDownList("GenreID", null, new { @class = "form-control" })
+@Html.ValidationMessageFor(model => model.GenreID, "", new { @class = "text-danger" })
+
+<div id="newGenreDialog" title="Add New @DbRes.T("Genres.Genre", "FieldDisplayName")"></div>

@@ -775,6 +775,8 @@ namespace slls.Areas.LibraryAdmin
         public ActionResult Create(string isbn = "", bool notFound = false, int step = 1)
         {
             ViewData["ClassmarkID"] = SelectListHelper.ClassmarkList(Utils.PublicFunctions.GetDefaultValue("Titles", "ClassmarkID"));
+            ViewData["AudienceID"] = SelectListHelper.AudienceList(1);
+            ViewData["GenreID"] = SelectListHelper.GenreList(1);
             ViewData["publisherID"] = SelectListHelper.PublisherList(Utils.PublicFunctions.GetDefaultValue("Titles", "PublisherID"));
             ViewData["FrequencyID"] = SelectListHelper.FrequencyList(Utils.PublicFunctions.GetDefaultValue("Titles", "FrequencyID"));
             ViewData["LanguageID"] = SelectListHelper.LanguageList(Utils.PublicFunctions.GetDefaultValue("Titles", "LanguageID"));
@@ -821,6 +823,8 @@ namespace slls.Areas.LibraryAdmin
                     PublisherID = viewModel.PublisherID <= 0 ? Utils.PublicFunctions.GetDefaultValue("Titles", "PublisherID") : viewModel.PublisherID,
                     FrequencyID = viewModel.FrequencyID <= 0 ? Utils.PublicFunctions.GetDefaultValue("Titles", "FrequencyID") : viewModel.FrequencyID,
                     LanguageID = viewModel.LanguageID <= 0 ? Utils.PublicFunctions.GetDefaultValue("Titles", "LanguageID") : viewModel.LanguageID,
+                    GenreID = viewModel.GenreID <= 0 ? 1 : viewModel.GenreID,
+                    AudienceID = viewModel.AudienceID <= 0 ? 1 : viewModel.AudienceID,
                     Source = viewModel.Source,
                     Series = viewModel.Series,
                     ISBN10 = viewModel.ISBN10,
@@ -858,6 +862,8 @@ namespace slls.Areas.LibraryAdmin
             }
             ViewData["SeeAlso"] = MenuHelper.SeeAlso("titlesSeeAlso", "Add");
             ViewData["ClassmarkID"] = SelectListHelper.ClassmarkList(viewModel.ClassmarkID);
+            ViewData["AudienceID"] = SelectListHelper.AudienceList(viewModel.AudienceID);
+            ViewData["GenreID"] = SelectListHelper.GenreList(viewModel.AudienceID);
             ViewData["publisherID"] = SelectListHelper.PublisherList(viewModel.PublisherID);
             ViewData["FrequencyID"] = SelectListHelper.FrequencyList(viewModel.FrequencyID);
             ViewData["LanguageID"] = SelectListHelper.LanguageList(viewModel.LanguageID);
@@ -1516,6 +1522,8 @@ namespace slls.Areas.LibraryAdmin
                 }
 
                 ViewData["ClassmarkID"] = SelectListHelper.ClassmarkList(title.ClassmarkID, null, false);
+                ViewData["GenreID"] = SelectListHelper.GenreList(title.GenreID, null, false);
+                ViewData["AudienceID"] = SelectListHelper.AudienceList(title.AudienceID, null, false);
                 ViewData["FrequencyID"] = SelectListHelper.FrequencyList(title.FrequencyID, null, false);
                 ViewData["publisherID"] = SelectListHelper.PublisherList(title.PublisherID, null, false);
                 ViewData["LanguageID"] = SelectListHelper.LanguageList(title.LanguageID, null, false);
