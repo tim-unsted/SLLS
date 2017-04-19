@@ -30,7 +30,7 @@ namespace slls.Areas.LibraryAdmin
         // GET: LibraryAdmin/UserTypes/Create
         public ActionResult Create()
         {
-            ViewBag.Title = "Add New " + DbRes.T("UserTypes.UserType", "FieldDisplayName");
+            ViewBag.Title = "Add New " + DbRes.T("UserTypes.User_Type", "FieldDisplayName");
             var viewModel = new UserTypesAddViewModel();
             return PartialView(viewModel);
         }
@@ -74,7 +74,7 @@ namespace slls.Areas.LibraryAdmin
                 UserType = userType.UserType1,
                 UserTypeId = userType.UserTypeId
             };
-            ViewBag.Title = "Edit " + DbRes.T("UserTypes.UserType", "FieldDisplayName");
+            ViewBag.Title = "Edit " + DbRes.T("UserTypes.User_Type", "FieldDisplayName");
             return PartialView(viewModel);
         }
 
@@ -118,7 +118,7 @@ namespace slls.Areas.LibraryAdmin
             DeleteConfirmationViewModel dcvm = new DeleteConfirmationViewModel
             {
                 DeleteEntityId = id,
-                HeaderText = DbRes.T("UserTypes.UserType", "FieldDisplayName"),
+                HeaderText = DbRes.T("UserTypes.User_Type", "FieldDisplayName"),
                 PostDeleteAction = "Delete",
                 PostDeleteController = "UserTypes",
                 DetailsText = userType.UserType1

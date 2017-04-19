@@ -48,6 +48,9 @@ namespace slls.Models
         public int? CohortID { get; set; }
         public int? GenderID { get; set; }
         public int? UserTypeID { get; set; }
+
+        [Column("ReadingGroupID")]
+        public int? AudienceID { get; set; }
         public DateTime? DoB { get; set; }
 
         [Column("LocationId")]
@@ -61,6 +64,15 @@ namespace slls.Models
         public string Notes { get; set; }
         public bool CanDelete { get; set; }
         public string TempPassword { get; set; }
+
+        public string AddressLine1 { get; set; }
+        public string AddressLine2 { get; set; }
+        public string AddressTownCity { get; set; }
+        public string AddressCountyState { get; set; }
+        public string AddressPostZipCode { get; set; }
+        public string AddressCountry { get; set; }
+        public string AltPhoneNumber { get; set; }
+        public string AltEmailAddress { get; set; }
 
         [NotMapped]
         [LocalDisplayName("Users.Fullname", "FieldDisplayName")]
@@ -114,6 +126,7 @@ namespace slls.Models
         public virtual Cohort Cohort { get; set; }
         public virtual Gender Gender { get; set; }
         public virtual UserType UserType { get; set; }
+        public virtual Audience Audience { get; set; }
         public virtual ICollection<LibraryUserEmailAddress> LibraryUserEmailAddresses { get; set; }
         public virtual ICollection<OrderDetail> AuthorisedOrders { get; set; }
         public virtual ICollection<OrderDetail> RequestedOrders { get; set; }

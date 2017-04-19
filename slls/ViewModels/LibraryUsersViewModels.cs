@@ -81,6 +81,9 @@ namespace slls.ViewModels
         [LocalDisplayName("UserType.UserType", "FieldDisplayName")]
         public int? UserTypeID { get; set; }
 
+        [LocalDisplayName("Users.Reading_Group", "FieldDisplayName")]
+        public int? ReadingGroupID { get; set; }
+
         [LocalDisplayName("Users.Position", "FieldDisplayName")]
         public string Position { get; set; }
 
@@ -102,6 +105,30 @@ namespace slls.ViewModels
         [DataType(DataType.MultilineText)]
         [LocalDisplayName("Users.Notes", "FieldDisplayName")]
         public string Notes { get; set; }
+
+        [LocalDisplayName("Users.Address_Line_1", "FieldDisplayName")]
+        public string AddressLine1 { get; set; }
+
+        [LocalDisplayName("Users.Address_Line_2", "FieldDisplayName")]
+        public string AddressLine2 { get; set; }
+
+        [LocalDisplayName("Users.Address_Town_City", "FieldDisplayName")]
+        public string AddressTownCity { get; set; }
+
+        [LocalDisplayName("Users.Address_County_State", "FieldDisplayName")]
+        public string AddressCountyState { get; set; }
+
+        [LocalDisplayName("Users.Address_Post_ZipCode", "FieldDisplayName")]
+        public string AddressPostZipCode { get; set; }
+
+        [LocalDisplayName("Users.Address_Country", "FieldDisplayName")]
+        public string AddressCountry { get; set; }
+
+        [LocalDisplayName("Users.Alt_Phone_Number", "FieldDisplayName")]
+        public string AltPhoneNumber { get; set; }
+
+        [LocalDisplayName("Users.Alt_Email_Address", "FieldDisplayName")]
+        public string AltEmailAddress { get; set; }
 
         [DisplayName("Roles/Permissions")]
         public string Roles { get; set; }
@@ -173,6 +200,9 @@ namespace slls.ViewModels
         [LocalDisplayName("UserType.UserType", "FieldDisplayName")]
         public int? UserTypeID { get; set; }
 
+        [LocalDisplayName("Users.Reading_Group", "FieldDisplayName")]
+        public int? ReadingGroupID { get; set; }
+
         [LocalDisplayName("Departments.Department", "FieldDisplayName")]
         public int? DepartmentId { get; set; }
 
@@ -189,6 +219,30 @@ namespace slls.ViewModels
         [DataType(DataType.MultilineText)]
         [LocalDisplayName("Users.Notes", "FieldDisplayName")]
         public string Notes { get; set; }
+
+        [LocalDisplayName("Users.Address_Line_1", "FieldDisplayName")]
+        public string AddressLine1 { get; set; }
+
+        [LocalDisplayName("Users.Address_Line_2", "FieldDisplayName")]
+        public string AddressLine2 { get; set; }
+
+        [LocalDisplayName("Users.Address_Town_City", "FieldDisplayName")]
+        public string AddressTownCity { get; set; }
+
+        [LocalDisplayName("Users.Address_County_State", "FieldDisplayName")]
+        public string AddressCountyState { get; set; }
+
+        [LocalDisplayName("Users.Address_Post_ZipCode", "FieldDisplayName")]
+        public string AddressPostZipCode { get; set; }
+
+        [LocalDisplayName("Users.Address_Country", "FieldDisplayName")]
+        public string AddressCountry { get; set; }
+
+        [LocalDisplayName("Users.Alt_Phone_Number", "FieldDisplayName")]
+        public string AltPhoneNumber { get; set; }
+
+        [LocalDisplayName("Users.Alt_Email_Address", "FieldDisplayName")]
+        public string AltEmailAddress { get; set; }
 
         [DisplayName("Roles/Permissions")]
         public string Roles { get; set; }

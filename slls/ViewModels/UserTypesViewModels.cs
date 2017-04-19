@@ -11,7 +11,7 @@ namespace slls.ViewModels
     public class UserTypesAddViewModel
     {
         [DisplayFormat(ConvertEmptyStringToNull = false)]
-        [LocalDisplayName("UserTypes.UserType", "FieldDisplayName")]
+        [LocalDisplayName("UserTypes.User_Type", "FieldDisplayName")]
         public string UserType { get; set; }
 
         public bool CanUpdate { get; set; }
@@ -23,7 +23,7 @@ namespace slls.ViewModels
         public int UserTypeId { get; set; }
 
         [DisplayFormat(ConvertEmptyStringToNull = false)]
-        [LocalDisplayName("UserTypes.UserType", "FieldDisplayName")]
+        [LocalDisplayName("UserTypes.User_Type", "FieldDisplayName")]
         public string UserType { get; set; }
 
         [DisplayName("Can update?")]

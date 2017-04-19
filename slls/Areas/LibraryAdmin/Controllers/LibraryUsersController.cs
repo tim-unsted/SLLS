@@ -188,6 +188,7 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.GenderID = new SelectList(_db.Genders, "GenderId", "Gender1", 1);
             ViewBag.ClassID = new SelectList(_db.Classes, "ClassId", "Class1", 1);
             ViewBag.UserTypeID = new SelectList(_db.UserTypes, "UserTypeId", "UserType1", 1);
+            ViewBag.ReadingGroupID = new SelectList(_db.Audiences, "AudienceId", "Audience1", 1);
 
             return View(viewModel);
         }
@@ -214,6 +215,7 @@ namespace slls.Areas.LibraryAdmin
                     GenderID = viewModel.GenderId,
                     CohortID = viewModel.CohortId,
                     UserTypeID = viewModel.UserTypeID,
+                    AudienceID = viewModel.ReadingGroupID,
                     LocationID = viewModel.LocationId,
                     DoB = viewModel.DobString != null ? DateTime.ParseExact(viewModel.DobString, "dd/MM/yyyy", CultureInfo.CurrentCulture) : (DateTime?)null,
                     SelfLoansAllowed = viewModel.SelfLoansAllowed,
@@ -221,6 +223,14 @@ namespace slls.Areas.LibraryAdmin
                     IsLive = viewModel.IsLive,
                     FoundInAd = false,
                     Notes = viewModel.Notes,
+                    AddressLine1 = viewModel.AddressLine1,
+                    AddressLine2 = viewModel.AddressLine2,
+                    AddressTownCity = viewModel.AddressTownCity,
+                    AddressCountyState = viewModel.AddressCountyState,
+                    AddressPostZipCode = viewModel.AddressPostZipCode,
+                    AddressCountry = viewModel.AddressCountry,
+                    AltEmailAddress = viewModel.AltEmailAddress,
+                    AltPhoneNumber = viewModel.AltPhoneNumber,
                     InputDate = DateTime.Now,
                     CanDelete = true
                 };
@@ -276,7 +286,18 @@ namespace slls.Areas.LibraryAdmin
 
             ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1", viewModel.DepartmentId);
             ViewBag.LocationID = new SelectList(_db.Locations, "LocationID", "Location1", viewModel.LocationId);
+            ViewBag.CohortID = new SelectList(_db.Cohorts, "CohortId", "Cohort1", 1);
+            //ViewBag.GenderID = new SelectList(_db.Genders, "GenderId", "Gender1", 1);
+            ViewBag.ClassID = new SelectList(_db.Classes, "ClassId", "Class1", 1);
+            ViewBag.UserTypeID = new SelectList(_db.UserTypes, "UserTypeId", "UserType1", 1);
+            ViewBag.ReadingGroupID = new SelectList(_db.Audiences, "AudienceId", "Audience1", 1);
             ViewBag.Title = "Add New " + _entityName;
+            viewModel.GenderList = _db.Genders.ToList().Select(x => new SelectListItem
+            {
+                Selected = x.GenderId == viewModel.GenderId,
+                Text = x.Gender1,
+                Value = x.GenderId.ToString()
+            });
             return View(viewModel);
         }
 
@@ -340,12 +361,21 @@ namespace slls.Areas.LibraryAdmin
                 ClassId = libraryUser.ClassID,
                 CohortId = libraryUser.CohortID,
                 UserTypeID = libraryUser.UserTypeID,
+                ReadingGroupID = libraryUser.AudienceID,
                 IsLive = libraryUser.IsLive,
                 IgnoreAd = libraryUser.IgnoreAd,
                 SelfLoansAllowed = libraryUser.SelfLoansAllowed,
                 Email = libraryUser.Email,
                 Notes = libraryUser.Notes,
                 DobString = libraryUser.DoB.ToString(),
+                AddressLine1 = libraryUser.AddressLine1,
+                AddressLine2 = libraryUser.AddressLine2,
+                AddressTownCity = libraryUser.AddressTownCity,
+                AddressCountyState = libraryUser.AddressCountyState,
+                AddressPostZipCode = libraryUser.AddressPostZipCode,
+                AddressCountry = libraryUser.AddressCountry,
+                AltPhoneNumber = libraryUser.AltPhoneNumber,
+                AltEmailAddress = libraryUser.AltEmailAddress,
                 RolesList = rolesList
             };
 
@@ -362,6 +392,7 @@ namespace slls.Areas.LibraryAdmin
             ViewBag.ClassID = new SelectList(_db.Classes, "ClassId", "Class1", libraryUser.ClassID);
             ViewBag.CohortID = new SelectList(_db.Cohorts, "CohortId", "Cohort1", libraryUser.CohortID);
             ViewBag.UserTypeID = new SelectList(_db.UserTypes, "UserTypeId", "UserType1", libraryUser.UserTypeID);
+            ViewBag.ReadingGroupID = new SelectList(_db.Audiences, "AudienceId", "Audience1", libraryUser.AudienceID);
             ViewBag.LocationID = SelectListHelper.OfficeLocationList(id: libraryUser.LocationID ?? 0, addDefault: false);//new SelectList(_db.Locations, "LocationID", "Location1", libraryUser.LocationID);
             return PartialView(viewModel);
         }
@@ -389,6 +420,7 @@ namespace slls.Areas.LibraryAdmin
                 libraryUser.ClassID = viewModel.ClassId;
                 libraryUser.CohortID = viewModel.CohortId;
                 libraryUser.UserTypeID = viewModel.UserTypeID;
+                libraryUser.AudienceID = viewModel.ReadingGroupID;
                 libraryUser.Firstname = viewModel.Firstname;
                 libraryUser.Lastname = viewModel.Lastname;
                 libraryUser.IsLive = viewModel.IsLive;
@@ -396,6 +428,14 @@ namespace slls.Areas.LibraryAdmin
                 libraryUser.Position = viewModel.Position;
                 libraryUser.DoB = viewModel.DobString != null ? DateTime.ParseExact(viewModel.DobString, "dd/MM/yyyy", CultureInfo.CurrentCulture) : (DateTime?)null;
                 libraryUser.Notes = viewModel.Notes;
+                libraryUser.AddressLine1 = viewModel.AddressLine1;
+                libraryUser.AddressLine2 = viewModel.AddressLine2;
+                libraryUser.AddressTownCity = viewModel.AddressTownCity;
+                libraryUser.AddressCountyState = viewModel.AddressCountyState;
+                libraryUser.AddressPostZipCode = viewModel.AddressPostZipCode;
+                libraryUser.AddressCountry = viewModel.AddressCountry;
+                libraryUser.AltEmailAddress = viewModel.AltEmailAddress;
+                libraryUser.AltPhoneNumber = viewModel.AltPhoneNumber;
                 libraryUser.LastModified = DateTime.Now;
 
                 var result = await UserManager.UpdateAsync(libraryUser);
@@ -425,12 +465,19 @@ namespace slls.Areas.LibraryAdmin
                 //return RedirectToAction("Index");
                 return Json(new { success = true });
             }
-            ViewBag.GenderID = new SelectList(_db.Genders, "GenderId", "Gender1", viewModel.GenderId);
+            //ViewBag.GenderID = new SelectList(_db.Genders, "GenderId", "Gender1", viewModel.GenderId);
+            viewModel.GenderList = _db.Genders.ToList().Select(x => new SelectListItem
+            {
+                Selected = x.GenderId == viewModel.GenderId,
+                Text = x.Gender1,
+                Value = x.GenderId.ToString()
+            });
             ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1", viewModel.DepartmentId);
             ViewBag.ClassID = new SelectList(_db.Classes, "ClassId", "Class1", viewModel.ClassId);
             ViewBag.CohortID = new SelectList(_db.Cohorts, "CohortId", "Cohort1", viewModel.CohortId);
             ViewBag.UserTypeID = new SelectList(_db.UserTypes, "UserTypeId", "UserType1", viewModel.UserTypeID);
             ViewBag.LocationID = new SelectList(_db.Locations, "LocationID", "Location1", viewModel.LocationId);
+            ViewBag.ReadingGroupID = new SelectList(_db.Audiences, "AudienceId", "Audience1", viewModel.ReadingGroupID);
             ViewBag.Title = "Edit " + _entityName;
             return PartialView(viewModel);
         }

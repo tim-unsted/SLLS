@@ -18,7 +18,7 @@ namespace slls.Models
 
         [Column("UserType")]
         [DisplayFormat(ConvertEmptyStringToNull = false)]
-        [LocalDisplayName("UserTypes.UserType", "FieldDisplayName")]
+        [LocalDisplayName("UserTypes.User_Type", "FieldDisplayName")]
         public string UserType1 { get; set; }
 
         [DisplayName("Can update?")]

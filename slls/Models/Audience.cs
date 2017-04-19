@@ -38,5 +38,8 @@ namespace slls.Models
 
         [LocalDisplayName("Audiences.Titles", "FieldDisplayName")]
         public virtual ICollection<Title> Titles { get; set; }
+
+        [LocalDisplayName("Audiences.Users", "FieldDisplayName")]
+        public virtual ICollection<ApplicationUser> LibraryUsers { get; set; }
     }
 }
