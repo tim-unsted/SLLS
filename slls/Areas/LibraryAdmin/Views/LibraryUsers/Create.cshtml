@@ -14,7 +14,7 @@
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
 
         @Html.Raw(HttpUtility.HtmlDecode(Html.ValidationSummary(false, "", new { @class = "text-danger" }).ToHtmlString()))
@@ -23,6 +23,7 @@
         @using (var tabs = Html.Bootstrap().Begin(new Tabs()))
         {
             tabs.Tab("User Details", "details");
+            tabs.Tab("Location, Department, etc.", "classifications");
             tabs.Tab("Roles & Permissions", "roles");
             tabs.Tab("Notes", "notes");
 
@@ -38,20 +39,35 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Lastname, htmlAttributes: new {@class = "control-label col-md-2"})
+                        @Html.LabelFor(model => model.Lastname, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.Lastname, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.Lastname, "", new {@class = "text-danger"})
+                            @Html.EditorFor(model => model.Lastname, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Lastname, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
                         @Html.LabelFor(model => model.GenderId, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.DropDownList("GenderID", null, htmlAttributes: new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.GenderId, "", new { @class = "text-danger" })
+                        <div class=" col-md-10">
+                            <ul class="list-unstyled list-inline">
+                                @foreach (var item in Model.GenderList)
+                                {
+                                    <li>
+                                        <input type="radio" name="GenderId" value="@item.Value" checked="@item.Selected" />
+                                        <span>@item.Text</span>
+                                    </li>
+                                }
+                            </ul>
                         </div>
                     </div>
+
+                    @*<div class="form-group">
+                        @Html.LabelFor(model => model.DoB, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-3">
+                            @Html.EditorFor(model => model.DobString, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.DobString, "", new { @class = "text-danger" })
+                        </div>
+                    </div>*@
 
                     <div class="form-group">
                         @Html.Label(DbRes.T("Users.Username", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })
@@ -97,6 +113,12 @@
                         </div>
                     </div>
 
+                </div>
+            }
+            using (tabs.BeginPanel())
+            {
+                <div style="padding: 15px 0;">
+
                     <div class="form-group">
                         @Html.LabelFor(model => model.LocationId, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
@@ -114,22 +136,6 @@
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.Position, htmlAttributes: new {@class = "control-label col-md-2"})
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Position, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.Position, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.CohortId, htmlAttributes: new {@class = "control-label col-md-2"})
-                        <div class="col-md-10">
-                            @Html.DropDownList("CohortID", null, htmlAttributes: new {@class = "form-control"})
-                            @Html.ValidationMessageFor(model => model.CohortId, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-
-                    <div class="form-group">
                         @Html.LabelFor(model => model.ClassId, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
                             @Html.DropDownList("ClassID", null, htmlAttributes: new { @class = "form-control" })
@@ -137,29 +143,44 @@
                         </div>
                     </div>
 
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.CohortId, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.DropDownList("CohortID", null, htmlAttributes: new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.CohortId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.Position, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.Position, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Position, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
 
                 </div>
             }
-
             using (tabs.BeginPanel())
             {
                 <div style="padding: 15px 0;">
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.IsLive, htmlAttributes: new {@class = "control-label col-md-2"})
-                        <div class="col-md-10">
-                            <div class="checkbox">
-                                @Html.EditorFor(model => model.IsLive)
-                                <span class="help-inline">Only Live users can access the system.</span>
-                                @Html.ValidationMessageFor(model => model.IsLive, "", new {@class = "text-danger"})
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="form-group">
                         @Html.LabelFor(model => model.UserTypeID, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-10">
                             @Html.DropDownList("UserTypeID", null, htmlAttributes: new { @class = "form-control" })
                             @Html.ValidationMessageFor(model => model.UserTypeID, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.IsLive, htmlAttributes: new { @class = "control-label col-md-2" })
+                        <div class="col-md-10">
+                            <div class="checkbox">
+                                @Html.EditorFor(model => model.IsLive)
+                                <span class="help-inline">Only Live users can access the system.</span>
+                                @Html.ValidationMessageFor(model => model.IsLive, "", new { @class = "text-danger" })
+                            </div>
                         </div>
                     </div>
 
@@ -223,13 +244,18 @@
 }
 
 @section scripts {
-@Scripts.Render("~/bundles/selectPicker")
+    @Scripts.Render("~/bundles/selectPicker")
+    <script src="@Url.Content("~/Scripts/jquery.maskedinput.js")" type="text/javascript"></script>
+
     <script type="text/javascript">
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('.selectpicker').selectpicker({
                 liveSearch: true,
                 showSubtext: true
             });
+
+            $("#DobString").mask("99/99/9999", { placeholder: "dd/mm/yyyy" });
+
         });
     </script>
 }

@@ -17,7 +17,7 @@ namespace slls.ViewModels
         public string Id { get; set; }
 
         public int LibraryUserId { get; set; }
-        
+
         [Required]
         [StringLength(255)]
         [LocalDisplayName("Users.Username", "FieldDisplayName")]
@@ -31,7 +31,7 @@ namespace slls.ViewModels
         [LocalDisplayName("Users.Password", "FieldDisplayName")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
-       
+
         [Required(ErrorMessage = "Please confirm the Password")]
         [DataType(DataType.Password)]
         [LocalDisplayName("Users.Confirm_Password", "FieldDisplayName")]
@@ -83,9 +83,18 @@ namespace slls.ViewModels
         [LocalDisplayName("Users.Position", "FieldDisplayName")]
         public string Position { get; set; }
 
+        [LocalDisplayName("Users.DoB", "FieldDisplayName")]
+        public DateTime? DoB { get; set; }
+
+        public int? DobDay { get; set; }
+        public int? DobMonth { get; set; }
+        public int? DobYear { get; set; }
+
+        public string DobString { get; set; }
+
         [LocalDisplayName("Users.Can_Self_Loan", "FieldDisplayName")]
         public bool SelfLoansAllowed { get; set; }
-        
+
         [LocalDisplayName("Users.Ignore_AD", "FieldDisplayName")]
         public bool IgnoreAd { get; set; }
 
@@ -95,8 +104,10 @@ namespace slls.ViewModels
 
         [DisplayName("Roles/Permissions")]
         public string Roles { get; set; }
-        
+
         public IEnumerable<SelectListItem> RolesList { get; set; }
+
+        public IEnumerable<SelectListItem> GenderList { get; set; }
 
         public LibraryUserAddViewModel()
         {
@@ -115,7 +126,7 @@ namespace slls.ViewModels
         public string Id { get; set; }
 
         public int LibraryUserID { get; set; }
-        
+
         [StringLength(255)]
         [LocalDisplayName("Users.Username", "FieldDisplayName")]
         public string UserName { get; set; }
@@ -123,12 +134,24 @@ namespace slls.ViewModels
         //[Required(ErrorMessage = "An email address is required")]
         [EmailAddress]
         public string Email { get; set; }
-        
+
         [LocalDisplayName("Users.Firstnames", "FieldDisplayName")]
         public string Firstname { get; set; }
 
         [LocalDisplayName("Users.Lastnames", "FieldDisplayName")]
         public string Lastname { get; set; }
+
+        [LocalDisplayName("Genders.Gender", "FieldDisplayName")]
+        public int? GenderId { get; set; }
+
+        [LocalDisplayName("Users.DoB", "FieldDisplayName")]
+        public DateTime? DoB { get; set; }
+
+        public int? DobDay { get; set; }
+        public int? DobMonth { get; set; }
+        public int? DobYear { get; set; }
+
+        public string DobString { get; set; }
 
         [LocalDisplayName("Users.Barcode", "FieldDisplayName")]
         public string UserBarcode { get; set; }
@@ -139,6 +162,15 @@ namespace slls.ViewModels
         [LocalDisplayName("Locations.Location", "FieldDisplayName")]
         public int? LocationId { get; set; }
 
+        [LocalDisplayName("Classes.Class", "FieldDisplayName")]
+        public int? ClassId { get; set; }
+
+        [LocalDisplayName("Cohorts.Cohort", "FieldDisplayName")]
+        public int? CohortId { get; set; }
+
+        [LocalDisplayName("UserType.UserType", "FieldDisplayName")]
+        public int? UserTypeID { get; set; }
+
         [LocalDisplayName("Departments.Department", "FieldDisplayName")]
         public int? DepartmentId { get; set; }
 
@@ -147,7 +179,7 @@ namespace slls.ViewModels
 
         [LocalDisplayName("Users.Can_Self_Loan", "FieldDisplayName")]
         public bool SelfLoansAllowed { get; set; }
-        
+
         [DisplayName("Exclude user from Active Directory updates?")]
         [LocalDisplayName("Users.Ignore_AD", "FieldDisplayName")]
         public bool IgnoreAd { get; set; }
@@ -160,6 +192,8 @@ namespace slls.ViewModels
         public string Roles { get; set; }
 
         public IEnumerable<SelectListItem> RolesList { get; set; }
+
+        public IEnumerable<SelectListItem> GenderList { get; set; }
     }
 
     public class LibraryUserResetPasswordViewModel
@@ -186,16 +220,16 @@ namespace slls.ViewModels
         [System.ComponentModel.DataAnnotations.Compare("NewPassword", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
     }
-    
+
     public class LibraryUsersIndexViewModel
     {
         // A list of users ...
-        public IEnumerable<ApplicationUser> LibraryUsers { get; set; } 
-        
+        public IEnumerable<ApplicationUser> LibraryUsers { get; set; }
+
         //Stuff to handle the alphabetical paging links on the index view ...
         public List<string> FirstLetters { get; set; }
         public string SelectedLetter { get; set; }
-        
+
         //Show Live-only or All users?
         public bool ShowAll { get; set; }
     }

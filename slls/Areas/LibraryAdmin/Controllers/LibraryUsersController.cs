@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Validation;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading;
@@ -114,7 +115,7 @@ namespace slls.Areas.LibraryAdmin
                 else
                 {
                     libraryUsers = allUsers.ToList()
-                        .Where(u => u.Lastname.StartsWith(selectedLetter,StringComparison.InvariantCultureIgnoreCase))
+                        .Where(u => u.Lastname.StartsWith(selectedLetter, StringComparison.InvariantCultureIgnoreCase))
                         .ToList();
                 }
 
@@ -171,7 +172,14 @@ namespace slls.Areas.LibraryAdmin
                 IgnoreAd = false,
                 RolesList = rolesList
             };
-            
+
+            viewModel.GenderList = _db.Genders.ToList().Select(x => new SelectListItem
+            {
+                Selected = x.GenderId == 1,
+                Text = x.Gender1,
+                Value = x.GenderId.ToString()
+            });
+
             viewModel.PasswordTip = GetPasswordTips();
             ViewBag.Title = "Add New " + _entityName;
             ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1");
@@ -207,6 +215,7 @@ namespace slls.Areas.LibraryAdmin
                     CohortID = viewModel.CohortId,
                     UserTypeID = viewModel.UserTypeID,
                     LocationID = viewModel.LocationId,
+                    //DoB = DateTime.Parse(viewModel.DobString),
                     SelfLoansAllowed = viewModel.SelfLoansAllowed,
                     IgnoreAd = viewModel.IgnoreAd,
                     IsLive = viewModel.IsLive,
@@ -325,19 +334,34 @@ namespace slls.Areas.LibraryAdmin
                 UserName = libraryUser.UserName,
                 Firstname = libraryUser.Firstname,
                 Lastname = libraryUser.Lastname,
+                GenderId = libraryUser.GenderID,
                 LocationId = libraryUser.LocationID,
                 DepartmentId = libraryUser.DepartmentId,
+                ClassId = libraryUser.ClassID,
+                CohortId = libraryUser.CohortID,
+                UserTypeID = libraryUser.UserTypeID,
                 IsLive = libraryUser.IsLive,
                 IgnoreAd = libraryUser.IgnoreAd,
                 SelfLoansAllowed = libraryUser.SelfLoansAllowed,
                 Email = libraryUser.Email,
                 Notes = libraryUser.Notes,
+                //DobString = libraryUser.DoB.ToString(),
                 RolesList = rolesList
             };
 
+            viewModel.GenderList = _db.Genders.ToList().Select(x => new SelectListItem
+            {
+                Selected = libraryUser.GenderID == x.GenderId,
+                Text = x.Gender1,
+                Value = x.GenderId.ToString()
+            });
+
             ViewBag.Title = "Edit " + _entityName;
-            ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1",
-                libraryUser.DepartmentId);
+            //ViewBag.GenderID = new SelectList(_db.Genders, "GenderId", "Gender1",libraryUser.GenderID);
+            ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1", libraryUser.DepartmentId);
+            ViewBag.ClassID = new SelectList(_db.Classes, "ClassId", "Class1", libraryUser.ClassID);
+            ViewBag.CohortID = new SelectList(_db.Cohorts, "CohortId", "Cohort1", libraryUser.CohortID);
+            ViewBag.UserTypeID = new SelectList(_db.UserTypes, "UserTypeId", "UserType1", libraryUser.UserTypeID);
             ViewBag.LocationID = SelectListHelper.OfficeLocationList(id: libraryUser.LocationID ?? 0, addDefault: false);//new SelectList(_db.Locations, "LocationID", "Location1", libraryUser.LocationID);
             return PartialView(viewModel);
         }
@@ -360,21 +384,26 @@ namespace slls.Areas.LibraryAdmin
                 libraryUser.Email = viewModel.Email;
                 libraryUser.SelfLoansAllowed = viewModel.SelfLoansAllowed;
                 libraryUser.IgnoreAd = viewModel.IgnoreAd;
+                libraryUser.GenderID = viewModel.GenderId;
                 libraryUser.DepartmentId = viewModel.DepartmentId;
+                libraryUser.ClassID = viewModel.ClassId;
+                libraryUser.CohortID = viewModel.CohortId;
+                libraryUser.UserTypeID = viewModel.UserTypeID;
                 libraryUser.Firstname = viewModel.Firstname;
                 libraryUser.Lastname = viewModel.Lastname;
                 libraryUser.IsLive = viewModel.IsLive;
                 libraryUser.LocationID = viewModel.LocationId;
                 libraryUser.Position = viewModel.Position;
+                //libraryUser.DoB = DateTime.ParseExact(viewModel.DobString, "dd/MM/yyyy", CultureInfo.CurrentCulture);
                 libraryUser.Notes = viewModel.Notes;
                 libraryUser.LastModified = DateTime.Now;
-                
+
                 var result = await UserManager.UpdateAsync(libraryUser);
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", result.Errors.First());
                 }
-                
+
                 //Update roles/permissions ...
                 var userRoles = await UserManager.GetRolesAsync(viewModel.Id);
                 selectedRoles = selectedRoles ?? new string[] { };
@@ -396,7 +425,11 @@ namespace slls.Areas.LibraryAdmin
                 //return RedirectToAction("Index");
                 return Json(new { success = true });
             }
+            ViewBag.GenderID = new SelectList(_db.Genders, "GenderId", "Gender1", viewModel.GenderId);
             ViewBag.DepartmentID = new SelectList(_db.Departments, "DepartmentID", "Department1", viewModel.DepartmentId);
+            ViewBag.ClassID = new SelectList(_db.Classes, "ClassId", "Class1", viewModel.ClassId);
+            ViewBag.CohortID = new SelectList(_db.Cohorts, "CohortId", "Cohort1", viewModel.CohortId);
+            ViewBag.UserTypeID = new SelectList(_db.UserTypes, "UserTypeId", "UserType1", viewModel.UserTypeID);
             ViewBag.LocationID = new SelectList(_db.Locations, "LocationID", "Location1", viewModel.LocationId);
             ViewBag.Title = "Edit " + _entityName;
             return PartialView(viewModel);
@@ -410,7 +443,7 @@ namespace slls.Areas.LibraryAdmin
             {
                 PasswordTip = GetPasswordTips()
             };
-            
+
             if (!string.IsNullOrEmpty(id))
             {
                 var libraryUser = UserManager.FindById(id);
@@ -431,7 +464,7 @@ namespace slls.Areas.LibraryAdmin
                 });
                 viewModel.LibraryUsers = new SelectList(users, "Id", "Fullname");
             }
-            
+
             ViewBag.Title = "Reset Password";
             return PartialView(viewModel);
         }
@@ -444,11 +477,11 @@ namespace slls.Areas.LibraryAdmin
             {
                 return HttpNotFound();
             }
-            
+
             var store = new UserStore<ApplicationUser>(_db);
             var newPassword = viewModel.NewPassword;
             var hashedNewPassword = UserManager.PasswordHasher.HashPassword(newPassword);
-            
+
             await store.SetPasswordHashAsync(libraryUser, hashedNewPassword);
             var result = await UserManager.UpdateAsync(libraryUser);
 
@@ -552,7 +585,7 @@ namespace slls.Areas.LibraryAdmin
                 Settings.GetParameterValue("Security.Passwords.RequireNonLetterOrDigit", "false",
                     "Specifies whether the password requires at least one non-alphanumeric character (e.g. '$', '~', '?', etc.", dataType: "bool") ==
                 "true";
-                
+
             var passwordRequirements = new List<string>();
             if (passwordMinLength > 0)
             {
