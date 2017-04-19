@@ -215,7 +215,7 @@ namespace slls.Areas.LibraryAdmin
                     CohortID = viewModel.CohortId,
                     UserTypeID = viewModel.UserTypeID,
                     LocationID = viewModel.LocationId,
-                    //DoB = DateTime.Parse(viewModel.DobString),
+                    DoB = viewModel.DobString != null ? DateTime.ParseExact(viewModel.DobString, "dd/MM/yyyy", CultureInfo.CurrentCulture) : (DateTime?)null,
                     SelfLoansAllowed = viewModel.SelfLoansAllowed,
                     IgnoreAd = viewModel.IgnoreAd,
                     IsLive = viewModel.IsLive,
@@ -345,7 +345,7 @@ namespace slls.Areas.LibraryAdmin
                 SelfLoansAllowed = libraryUser.SelfLoansAllowed,
                 Email = libraryUser.Email,
                 Notes = libraryUser.Notes,
-                //DobString = libraryUser.DoB.ToString(),
+                DobString = libraryUser.DoB.ToString(),
                 RolesList = rolesList
             };
 
@@ -394,7 +394,7 @@ namespace slls.Areas.LibraryAdmin
                 libraryUser.IsLive = viewModel.IsLive;
                 libraryUser.LocationID = viewModel.LocationId;
                 libraryUser.Position = viewModel.Position;
-                //libraryUser.DoB = DateTime.ParseExact(viewModel.DobString, "dd/MM/yyyy", CultureInfo.CurrentCulture);
+                libraryUser.DoB = viewModel.DobString != null ? DateTime.ParseExact(viewModel.DobString, "dd/MM/yyyy", CultureInfo.CurrentCulture) : (DateTime?)null;
                 libraryUser.Notes = viewModel.Notes;
                 libraryUser.LastModified = DateTime.Now;
 

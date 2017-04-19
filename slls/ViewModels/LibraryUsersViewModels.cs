@@ -25,6 +25,7 @@ namespace slls.ViewModels
 
         [Required]
         [EmailAddress]
+        [RegularExpression("^[a-z0-9_\\+-]+(\\.[a-z0-9_\\+-]+)*@[a-z0-9-]+(\\.[a-z0-9]+)*\\.([a-z]{2,4})$", ErrorMessage = "Invalid email address!")]
         public string Email { get; set; }
 
         [Required(ErrorMessage = "A Password is required")]
@@ -133,6 +134,7 @@ namespace slls.ViewModels
 
         //[Required(ErrorMessage = "An email address is required")]
         [EmailAddress]
+        [RegularExpression( "^[a-z0-9_\\+-]+(\\.[a-z0-9_\\+-]+)*@[a-z0-9-]+(\\.[a-z0-9]+)*\\.([a-z]{2,4})$" , ErrorMessage = "Invalid email address!")]
         public string Email { get; set; }
 
         [LocalDisplayName("Users.Firstnames", "FieldDisplayName")]

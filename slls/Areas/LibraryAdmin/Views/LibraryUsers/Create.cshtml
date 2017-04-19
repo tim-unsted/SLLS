@@ -1,4 +1,5 @@
 ﻿@using System.Web
+@using slls.Utils.Helpers
 @using VortexSoft.Bootstrap
 @using Westwind.Globalization
 @model slls.ViewModels.LibraryUserAddViewModel
@@ -61,13 +62,14 @@
                         </div>
                     </div>
 
-                    @*<div class="form-group">
+                    <div class="form-group">
                         @Html.LabelFor(model => model.DoB, htmlAttributes: new { @class = "control-label col-md-2" })
                         <div class="col-md-3">
                             @Html.EditorFor(model => model.DobString, new { htmlAttributes = new { @class = "form-control" } })
                             @Html.ValidationMessageFor(model => model.DobString, "", new { @class = "text-danger" })
+                            @Html.HelpInline("Optional")
                         </div>
-                    </div>*@
+                    </div>
 
                     <div class="form-group">
                         @Html.Label(DbRes.T("Users.Username", "FieldDisplayName"), htmlAttributes: new { @class = "control-label col-md-2" })

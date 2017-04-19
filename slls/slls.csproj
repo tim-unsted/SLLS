@@ -1027,6 +1027,7 @@
     <Content Include="Scripts\idle.min.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.js" />
     <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\jquery.maskedinput.js" />
     <Content Include="Scripts\jquery.mcautocomplete.js" />
     <Content Include="Scripts\titles-add-audience.js" />
     <Content Include="Scripts\titles-add-genre.js" />

@@ -48,6 +48,7 @@ namespace slls.Models
         public int? CohortID { get; set; }
         public int? GenderID { get; set; }
         public int? UserTypeID { get; set; }
+        public DateTime? DoB { get; set; }
 
         [Column("LocationId")]
         public int? LocationID { get; set; }
