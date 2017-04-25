@@ -1065,7 +1065,9 @@ namespace slls.Areas.LibraryAdmin
                 FrequencyID = frequencyId,
                 NonFilingChars = GetNonFilingChars(newTitle.Title),
                 DateCatalogued = DateTime.Now,
-                CataloguedBy = Utils.PublicFunctions.GetCurrentUserName()
+                CataloguedBy = Utils.PublicFunctions.GetCurrentUserName(),
+                GenreID = 1,
+                AudienceID = 1
             };
 
             //Save the main title details as a new Title ...
@@ -3427,7 +3429,9 @@ namespace slls.Areas.LibraryAdmin
                 FrequencyID = existingTitle.FrequencyID,
                 NonFilingChars = GetNonFilingChars(existingTitle.Title1),
                 DateCatalogued = DateTime.Now,
-                CataloguedBy = Utils.PublicFunctions.GetCurrentUserName()
+                CataloguedBy = Utils.PublicFunctions.GetCurrentUserName(),
+                GenreID = existingTitle.GenreID <= 0 ? 1 : existingTitle.GenreID,
+                AudienceID = existingTitle.AudienceID <= 0 ? 1 : existingTitle.AudienceID
             };
 
             //Save the main title details as a new Title ...

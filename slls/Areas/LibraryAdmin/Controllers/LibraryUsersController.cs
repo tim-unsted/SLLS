@@ -222,6 +222,7 @@ namespace slls.Areas.LibraryAdmin
                     IgnoreAd = viewModel.IgnoreAd,
                     IsLive = viewModel.IsLive,
                     FoundInAd = false,
+                    Position = viewModel.Position,
                     Notes = viewModel.Notes,
                     AddressLine1 = viewModel.AddressLine1,
                     AddressLine2 = viewModel.AddressLine2,
